@@ -59,29 +59,30 @@ RevealDialogGroup.prototype = Object.create(Phaser.Group.prototype);
 RevealDialogGroup.prototype.constructor = RevealDialogGroup;
 
 //=========================================================
-var RevealMessage = function (game, text) {
-    Phaser.Sprite.call(this, game, 0, 0);
-
-    var width = 400;
-    var leftMargin = 10;
-    var rightMargin = 10;
-    var topMargin = 20;
-    var bottomMargin = 20;
-
-    var edgeSize = 1;
+var RevealText = function (game, text, width, topMargin, rightMargin, bottomMargin, leftMargin) {
     var localX = 0;
     var localY = 0;
     var textWidth = width - leftMargin - rightMargin;
-
     var style = { font: "16px Times New Romans", fill: "#ffffff", align: "center", wordWrap: true, wordWrapWidth: textWidth };
-    var myText = game.add.text(0, 0, text, style);
-    myText.tint = 0xFFFFFF;
 
-    // Calculate the width and height needed for the edges and for final position of the text
-    var bounds = myText.getLocalBounds();
+    Phaser.Text.call(this, game, 0, 0, text, style);
+
+    var bounds = this.getLocalBounds();
     var height = bounds.height + topMargin + bottomMargin;
-    myText.x = localX + Math.floor((width - bounds.width) / 2)
-    myText.y = localY + topMargin;
+    this.x = localX + Math.floor((width - bounds.width) / 2)
+    this.y = localY + topMargin;
+}
+
+RevealText.prototype = Object.create(Phaser.Text.prototype);
+RevealText.prototype.constructor = RevealText;
+
+//=========================================================
+var RevealBox = function (game, width, height) {
+    Phaser.Sprite.call(this, game, 0, 0);
+
+    var localX = 0;
+    var localY = 0;
+    var edgeSize = 1;
 
     // Create all of our corners and edges
     var borders = [
@@ -109,8 +110,31 @@ var RevealMessage = function (game, text) {
     for (var b = 0, len = borders.length; b < len; b++) {
         this.addChild(borders[b]);
     }
+}
 
-    this.addChild(myText);
+RevealBox.prototype = Object.create(Phaser.Sprite.prototype);
+RevealBox.prototype.constructor = RevealBox;
+
+//=========================================================
+var RevealMessage = function (game, text) {
+    Phaser.Sprite.call(this, game, 0, 0);
+
+    var width = 400;
+    var leftMargin = 10;
+    var rightMargin = 10;
+    var topMargin = 20;
+    var bottomMargin = 20;
+
+    var localX = 0;
+    var localY = 0;
+
+    var revealText = new RevealText(game, text, width, topMargin, rightMargin, bottomMargin, leftMargin);
+
+    var height = revealText.height + topMargin + bottomMargin;
+    var revealBox = new RevealBox(game, width, height);
+
+    this.addChild(revealBox);
+    this.addChild(revealText);
 
     this.pivot.set(Math.floor(width / 2), Math.floor(height / 2));
 }
@@ -118,5 +142,6 @@ var RevealMessage = function (game, text) {
 RevealMessage.prototype = Object.create(Phaser.Sprite.prototype);
 RevealMessage.prototype.constructor = RevealMessage;
 
+//=========================================================
 game.state.add('GameState', GameState)
 game.state.start('GameState')
