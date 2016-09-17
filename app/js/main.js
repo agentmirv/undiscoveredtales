@@ -50,7 +50,7 @@ var RevealDialogGroup = function (game, messageText)
 {
     Phaser.Group.call(this, game);
 
-    var revealMessage = this.add(new RevealMessage(game, 0, 0, messageText));
+    var revealMessage = this.add(new RevealMessage(game, messageText));
     revealMessage.fixedToCamera = true;
     revealMessage.cameraOffset.setTo(Math.floor(game.camera.width / 2), Math.floor(game.camera.height / 2));
 }
@@ -59,17 +59,18 @@ RevealDialogGroup.prototype = Object.create(Phaser.Group.prototype);
 RevealDialogGroup.prototype.constructor = RevealDialogGroup;
 
 //=========================================================
-var RevealMessage = function (game, x, y, text) {
-    Phaser.Sprite.call(this, game, x, y);
+var RevealMessage = function (game, text) {
+    Phaser.Sprite.call(this, game, 0, 0);
 
     var width = 400;
-
-    var edgeSize = 1;
     var leftMargin = 10;
     var rightMargin = 10;
     var topMargin = 20;
     var bottomMargin = 20;
 
+    var edgeSize = 1;
+    var localX = 0;
+    var localY = 0;
     var textWidth = width - leftMargin - rightMargin;
 
     var style = { font: "16px Times New Romans", fill: "#ffffff", align: "center", wordWrap: true, wordWrapWidth: textWidth };
@@ -79,29 +80,29 @@ var RevealMessage = function (game, x, y, text) {
     // Calculate the width and height needed for the edges and for final position of the text
     var bounds = myText.getLocalBounds();
     var height = bounds.height + topMargin + bottomMargin;
-    myText.y = y + topMargin;
-    myText.x = Math.floor((width - bounds.width) / 2)
+    myText.x = localX + Math.floor((width - bounds.width) / 2)
+    myText.y = localY + topMargin;
 
     // Create all of our corners and edges
     var borders = [
         // background
-        game.make.tileSprite(x + edgeSize, y + edgeSize, width - edgeSize, height - edgeSize, 'pixelBlack'),
+        game.make.tileSprite(localX + edgeSize, localY + edgeSize, width - edgeSize, height - edgeSize, 'pixelBlack'),
         // top left
-        game.make.image(x, y, 'pixelWhite'),
+        game.make.image(localX, localY, 'pixelWhite'),
         // top right
-        game.make.image(x + width, y, 'pixelWhite'),
+        game.make.image(localX + width, localY, 'pixelWhite'),
         // bottom right
-        game.make.image(x + width, y + height, 'pixelWhite'),
+        game.make.image(localX + width, localY + height, 'pixelWhite'),
         // bottom left
-        game.make.image(x, y + height, 'pixelWhite'),
+        game.make.image(localX, localY + height, 'pixelWhite'),
         // top
-        game.make.tileSprite(x + edgeSize, y, width - edgeSize, edgeSize, 'pixelWhite'),
+        game.make.tileSprite(localX + edgeSize, localY, width - edgeSize, edgeSize, 'pixelWhite'),
         // bottom
-        game.make.tileSprite(x + edgeSize, y + height, width - edgeSize, edgeSize, 'pixelWhite'),
+        game.make.tileSprite(localX + edgeSize, localY + height, width - edgeSize, edgeSize, 'pixelWhite'),
         // left
-        game.make.tileSprite(x, y + edgeSize, edgeSize, height - edgeSize, 'pixelWhite'),
+        game.make.tileSprite(localX, localY + edgeSize, edgeSize, height - edgeSize, 'pixelWhite'),
         // right
-        game.make.tileSprite(x + width, y + edgeSize, edgeSize, height - edgeSize, 'pixelWhite'),
+        game.make.tileSprite(localX + width, localY + edgeSize, edgeSize, height - edgeSize, 'pixelWhite'),
     ];
 
     // Add all of the above to this sprite
