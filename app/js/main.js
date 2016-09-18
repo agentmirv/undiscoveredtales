@@ -40,32 +40,38 @@ var GameState = {
     }
 }
 
-//function buttonHandler(sprite, pointer, isOver) {
-//    sprite.scale.x *= -1
-//    //alert(1)
-//}
-
 //=========================================================
-var RevealDialogGroup = function (game, messageText) {
+function RevealDialogGroup (game, messageText) {
     Phaser.Group.call(this, game);
 
-    var revealMessage = new RevealMessage(game, messageText);
-    revealMessage.x = Math.floor(this.game.width / 2) - Math.floor(revealMessage.totalWidth / 2);
-    revealMessage.y = Math.floor(this.game.height / 2) - Math.floor(revealMessage.totalHeight / 2);
+    this._revealMessage = new RevealMessage(game, messageText);
+    this._revealMessage.x = Math.floor(this.game.width / 2) - Math.floor(this._revealMessage.totalWidth / 2);
+    this._revealMessage.y = Math.floor(this.game.height / 2) - Math.floor(this._revealMessage.totalHeight / 2);
 
-    var revealContinue = new RevealContinue(game, "Continue");
-    revealContinue.x = Math.floor(this.game.width / 2) - Math.floor(revealContinue.totalWidth / 2);
-    revealContinue.y = revealMessage.y + revealMessage.totalHeight + 10;
+    this._revealContinue = new RevealContinue(game, "Continue");
+    this._revealContinue.x = Math.floor(this.game.width / 2) - Math.floor(this._revealContinue.totalWidth / 2);
+    this._revealContinue.y = this._revealMessage.y + this._revealMessage.totalHeight + 10;
 
-    this.addChild(revealMessage);
-    this.addChild(revealContinue);
+    this._revealContinue.inputEnabled = true;
+    this._revealContinue.events.onInputDown.add(this.continueClicked, this);
+
+    this.addChild(this._revealMessage);
+    this.addChild(this._revealContinue);
 }
 
 RevealDialogGroup.prototype = Object.create(Phaser.Group.prototype);
 RevealDialogGroup.prototype.constructor = RevealDialogGroup;
 
+RevealDialogGroup.prototype.continueClicked = function (group) {
+    group.removeChild(this._revealMessage);
+    group.removeChild(this._revealContinue);
+    this._revealMessage.destroy();
+    this._revealContinue.destroy();
+    group.destroy();
+}
+
 //=========================================================
-var OutlineBox = function (game, width, height) {
+function OutlineBox (game, width, height) {
     Phaser.Sprite.call(this, game, 0, 0);
 
     var localX = 0;
@@ -104,7 +110,7 @@ OutlineBox.prototype = Object.create(Phaser.Sprite.prototype);
 OutlineBox.prototype.constructor = OutlineBox;
 
 //=========================================================
-var RevealMessage = function (game, text) {
+function RevealMessage (game, text) {
     Phaser.Sprite.call(this, game, 0, 0);
 
     this.totalWidth = 400;
@@ -130,7 +136,7 @@ RevealMessage.prototype = Object.create(Phaser.Sprite.prototype);
 RevealMessage.prototype.constructor = RevealMessage;
 
 //=========================================================
-var RevealContinue = function (game, text) {
+function RevealContinue (game, text) {
     Phaser.Sprite.call(this, game, 0, 0);
 
     this.totalWidth = 130;
