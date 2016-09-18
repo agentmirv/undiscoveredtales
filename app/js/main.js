@@ -7,11 +7,12 @@ var GameState = {
         game.load.image('pixelWhite', 'assets/images/FFFFFF-1.png')
         game.load.image('pixelBlack', 'assets/images/000000-1.png')
         game.load.image('pixelTransparent', 'assets/images/1x1.png')
+        game.load.spritesheet('tileWallsSheet', 'assets/images/TileWalls.png', 96, 96);
     },
 
     create: function () {
-        game.add.tileSprite(0, 0, 1920, 1920, 'background');
-        game.world.setBounds(0, 0, 1920, 1920);
+        game.add.tileSprite(0, 0, 2560, 2560, 'background');
+        game.world.setBounds(0, 0, 2560, 2560);
         game.physics.startSystem(Phaser.Physics.P2JS);
         player = game.add.sprite(game.world.centerX, game.world.centerY, 'pixelTransparent');
         game.physics.p2.enable(player);
@@ -19,6 +20,7 @@ var GameState = {
         game.camera.follow(player);
 
         var revealDialogGroup = game.stage.addChild(new RevealDialogGroup(game, "You step into the warmth of the house. A strange stillness hangs in the air, and your footsteps echo through the quiet entrance. Place your Investigator figures as indicated."));
+        var exampleMapTile = game.world.add(new MapTileGroup(game, 900, 900));
     },
 
     update: function () {
@@ -40,6 +42,36 @@ var GameState = {
         }
     }
 }
+
+//=========================================================
+function MapTileGroup (game, x, y) {
+    Phaser.Group.call(this, game);
+
+    // example is 6x6 grid
+    // grid square is 96px
+    var gridWidth = 96;
+    var walls = [
+        0, 4, 1, 1, 4, 2,
+        4, 4, 4, 4, 4, 4,
+        3, 4, 4, 4, 4, 5,
+        3, 4, 4, 4, 4, 5,
+        4, 4, 4, 4, 4, 4,
+        6, 7, 7, 7, 7, 8
+    ];
+
+    for(var j = 0; j < 6; j++) {
+        for (var i = 0; i < 6; i++) {
+            var localX = i * gridWidth + x;
+            var localY = j * gridWidth + y;
+            var wallIndex = i + j * 6;
+            var sprite = game.make.tileSprite(localX, localY, gridWidth, gridWidth, 'tileWallsSheet', walls[wallIndex])
+            this.add(sprite);
+        }
+    }
+}
+
+MapTileGroup.prototype = Object.create(Phaser.Group.prototype);
+MapTileGroup.prototype.constructor = MapTileGroup;
 
 //=========================================================
 function RevealDialogGroup (game, messageText) {
