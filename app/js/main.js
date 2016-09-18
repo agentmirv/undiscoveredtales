@@ -1,5 +1,5 @@
 // JavaScript source code
-var game = new Phaser.Game(800, 600, Phaser.AUTO)
+var game = new Phaser.Game(1280, 720, Phaser.AUTO)
 
 var GameState = {
     preload: function () {
@@ -22,20 +22,21 @@ var GameState = {
     },
 
     update: function () {
+        var playerVelocity = 400;
         player.body.setZeroVelocity();
 
         if (cursors.up.isDown) {
-            player.body.moveUp(300)
+            player.body.moveUp(playerVelocity)
         }
         else if (cursors.down.isDown) {
-            player.body.moveDown(300);
+            player.body.moveDown(playerVelocity);
         }
 
         if (cursors.left.isDown) {
-            player.body.velocity.x = -300;
+            player.body.velocity.x = -playerVelocity;
         }
         else if (cursors.right.isDown) {
-            player.body.moveRight(300);
+            player.body.moveRight(playerVelocity);
         }
     }
 }
@@ -113,14 +114,14 @@ OutlineBox.prototype.constructor = OutlineBox;
 function RevealMessage (game, text) {
     Phaser.Sprite.call(this, game, 0, 0);
 
-    this.totalWidth = 400;
+    this.totalWidth = 600;
     var leftMargin = 10;
     var rightMargin = 10;
     var topMargin = 20;
     var bottomMargin = 20;
 
     var textWidth = this.totalWidth - leftMargin - rightMargin;
-    var textStyle = { font: "16px Times New Romans", fill: "#ffffff", align: "center", wordWrap: true, wordWrapWidth: textWidth };
+    var textStyle = { font: "20px Times New Romans", fill: "#ffffff", align: "center", wordWrap: true, wordWrapWidth: textWidth };
     var revealText = game.make.text(0, 0, text, textStyle);
     revealText.x = Math.floor((this.totalWidth - revealText.width) / 2)
     revealText.y = topMargin;
@@ -139,14 +140,14 @@ RevealMessage.prototype.constructor = RevealMessage;
 function RevealContinue (game, text) {
     Phaser.Sprite.call(this, game, 0, 0);
 
-    this.totalWidth = 130;
+    this.totalWidth = 180;
     var leftMargin = 10;
     var rightMargin = 10;
     var topMargin = 4;
     var bottomMargin = 0;
 
     var textWidth = this.totalWidth - leftMargin - rightMargin;
-    var textStyle = { font: "16px Times New Romans", fill: "#ffffff", align: "center", wordWrap: true, wordWrapWidth: textWidth };
+    var textStyle = { font: "20px Times New Romans", fill: "#ffffff", align: "center", wordWrap: true, wordWrapWidth: textWidth };
     var revealText = game.make.text(0, 0, text, textStyle);
     revealText.x = Math.floor((this.totalWidth - revealText.width) / 2)
     revealText.y = topMargin;
