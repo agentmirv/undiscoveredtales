@@ -75,23 +75,23 @@ var OutlineBox = function (game, width, height) {
     // Create all of our corners and edges
     var borders = [
         // background
-        game.make.tileSprite(localX + edgeSize, localY + edgeSize, width - edgeSize, height - edgeSize, 'pixelBlack'),
+        game.make.tileSprite(localX + edgeSize, localY + edgeSize, width - (edgeSize * 2), height - (edgeSize * 2), 'pixelBlack'),
         // top left
         game.make.image(localX, localY, 'pixelWhite'),
         // top right
-        game.make.image(localX + width, localY, 'pixelWhite'),
+        game.make.image(localX + width - edgeSize, localY, 'pixelWhite'),
         // bottom right
-        game.make.image(localX + width, localY + height, 'pixelWhite'),
+        game.make.image(localX + width - edgeSize, localY + height - edgeSize, 'pixelWhite'),
         // bottom left
-        game.make.image(localX, localY + height, 'pixelWhite'),
+        game.make.image(localX, localY + height - edgeSize, 'pixelWhite'),
         // top
-        game.make.tileSprite(localX + edgeSize, localY, width - edgeSize, edgeSize, 'pixelWhite'),
+        game.make.tileSprite(localX + edgeSize, localY, width - (edgeSize * 2), edgeSize, 'pixelWhite'),
         // bottom
-        game.make.tileSprite(localX + edgeSize, localY + height, width - edgeSize, edgeSize, 'pixelWhite'),
+        game.make.tileSprite(localX + edgeSize, localY + height - edgeSize, width - (edgeSize * 2), edgeSize, 'pixelWhite'),
         // left
-        game.make.tileSprite(localX, localY + edgeSize, edgeSize, height - edgeSize, 'pixelWhite'),
+        game.make.tileSprite(localX, localY + edgeSize, edgeSize, height - (edgeSize * 2), 'pixelWhite'),
         // right
-        game.make.tileSprite(localX + width, localY + edgeSize, edgeSize, height - edgeSize, 'pixelWhite'),
+        game.make.tileSprite(localX + width - edgeSize, localY + edgeSize, edgeSize, height - (edgeSize * 2), 'pixelWhite'),
     ];
 
     // Add all of the above to this sprite
