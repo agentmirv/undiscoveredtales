@@ -61,8 +61,8 @@ function ExploreToken(game, x, y) {
     text.strokeThickness = 5;
     text.setShadow(2, 2, "#333333", 2, true, false);
 
-    text.x = 48 - text.width / 2;
-    text.y = 48 - text.height / 2;
+    text.x = 48 - Math.floor(text.width / 2);
+    text.y = 48 - Math.floor(text.height / 2);
 
     this.addChild(text);
 }
@@ -80,8 +80,8 @@ function SearchToken(game, x, y) {
     text.strokeThickness = 5;
     text.setShadow(2, 2, "#333333", 2, true, false);
 
-    text.x = 48 - text.width / 2;
-    text.y = 48 - text.height / 2;
+    text.x = 48 - Math.floor(text.width / 2);
+    text.y = 48 - Math.floor(text.height / 2);
 
     this.addChild(text);
 }
