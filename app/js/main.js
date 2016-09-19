@@ -8,6 +8,7 @@ var GameState = {
         game.load.image('pixelBlack', 'assets/images/000000-1.png')
         game.load.image('pixelTransparent', 'assets/images/1x1.png')
         game.load.spritesheet('tileWallsSheet', 'assets/images/TileWalls.png', 96, 96);
+        game.load.image('circleToken', 'assets/images/CircleToken.png', 96, 96);
     },
 
     create: function () {
@@ -20,7 +21,14 @@ var GameState = {
         game.camera.follow(player);
 
         var revealDialogGroup = game.stage.addChild(new RevealDialogGroup(game, "You step into the warmth of the house. A strange stillness hangs in the air, and your footsteps echo through the quiet entrance. Place your Investigator figures as indicated."));
-        var exampleMapTile = game.world.add(new MapTileGroup(game, 900, 900));
+        var exampleMapTile = game.world.add(new MapTileGroup(game, 30 * 32, 30 * 32));
+        //game.world.add(new ExploreToken(game, 33 * 32, 29 * 32));
+        //game.world.add(new ExploreToken(game, 42 * 32, 29 * 32));
+        game.world.add(new ExploreToken(game, 29 * 32, 33 * 32));
+        //game.world.add(new ExploreToken(game, 46 * 32, 33 * 32));
+        game.world.add(new ExploreToken(game, 29 * 32, 42 * 32));
+        game.world.add(new ExploreToken(game, 46 * 32, 42 * 32));
+        game.world.add(new SearchToken(game, 40 * 30, 36 * 30));
     },
 
     update: function () {
@@ -44,11 +52,51 @@ var GameState = {
 }
 
 //=========================================================
+function ExploreToken(game, x, y) {
+    Phaser.Sprite.call(this, game, x, y, 'circleToken');
+
+    var textStyle = { font: "74px Arial Black", fill: "#ff0000", align: "center" };
+    var text = game.make.text(0, 0, 'E', textStyle)
+    text.stroke = "#aa0000";
+    text.strokeThickness = 5;
+    text.setShadow(2, 2, "#333333", 2, true, false);
+
+    text.x = 48 - text.width / 2;
+    text.y = 48 - text.height / 2;
+
+    this.addChild(text);
+}
+
+ExploreToken.prototype = Object.create(Phaser.Sprite.prototype);
+ExploreToken.prototype.constructor = ExploreToken;
+
+//=========================================================
+function SearchToken(game, x, y) {
+    Phaser.Sprite.call(this, game, x, y, 'circleToken');
+
+    var textStyle = { font: "74px Arial Black", fill: "#ffff00", align: "center" };
+    var text = game.make.text(0, 0, '?', textStyle)
+    text.stroke = "#aaaa00";
+    text.strokeThickness = 5;
+    text.setShadow(2, 2, "#333333", 2, true, false);
+
+    text.x = 48 - text.width / 2;
+    text.y = 48 - text.height / 2;
+
+    this.addChild(text);
+}
+
+SearchToken.prototype = Object.create(Phaser.Sprite.prototype);
+SearchToken.prototype.constructor = SearchToken;
+
+//=========================================================
 function MapTileGroup (game, x, y) {
     Phaser.Group.call(this, game);
 
     // example is 6x6 grid
     // grid square is 96px
+    var tileWidth = 6;
+    var tileHeight = 6;
     var gridWidth = 96;
     var walls = [
         0, 4, 1, 1, 4, 2,
@@ -59,12 +107,12 @@ function MapTileGroup (game, x, y) {
         6, 7, 7, 7, 7, 8
     ];
 
-    for(var j = 0; j < 6; j++) {
-        for (var i = 0; i < 6; i++) {
-            var localX = i * gridWidth + x;
-            var localY = j * gridWidth + y;
+    for (var j = 0; j < tileHeight; j++) {
+        for (var i = 0; i < tileWidth; i++) {
+            var localX = i * gridWidth;
+            var localY = j * gridWidth;
             var wallIndex = i + j * 6;
-            var sprite = game.make.tileSprite(localX, localY, gridWidth, gridWidth, 'tileWallsSheet', walls[wallIndex])
+            var sprite = game.make.tileSprite(x + localX, y + localY, gridWidth, gridWidth, 'tileWallsSheet', walls[wallIndex])
             this.add(sprite);
         }
     }
