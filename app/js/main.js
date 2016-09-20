@@ -18,7 +18,7 @@ var GameState = {
         player = game.add.sprite(game.world.centerX, game.world.centerY, 'pixelTransparent');
         game.physics.p2.enable(player);
         cursors = game.input.keyboard.createCursorKeys();
-        game.camera.follow(player);
+        game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.08, 0.08);
 
         var revealDialogGroup = game.stage.addChild(new RevealDialogGroup(game, "You step into the warmth of the house. A strange stillness hangs in the air, and your footsteps echo through the quiet entrance. Place your Investigator figures as indicated."));
         var exampleMapTile = game.world.add(new MapTileGroup(game, 30 * 32, 30 * 32));
@@ -63,12 +63,20 @@ function ExploreToken(game, x, y) {
 
     text.x = 48 - Math.floor(text.width / 2);
     text.y = 48 - Math.floor(text.height / 2);
-
+     
     this.addChild(text);
+
+    this.inputEnabled = true;
+    this.events.onInputDown.add(this.tokenClicked, this);
+    this.input.useHandCursor = true;
 }
 
 ExploreToken.prototype = Object.create(Phaser.Sprite.prototype);
 ExploreToken.prototype.constructor = ExploreToken;
+
+ExploreToken.prototype.tokenClicked = function (token) {
+    game.camera.follow(token, Phaser.Camera.FOLLOW_LOCKON, 0.05, 0.05);
+}
 
 //=========================================================
 function SearchToken(game, x, y) {
@@ -84,10 +92,19 @@ function SearchToken(game, x, y) {
     text.y = 48 - Math.floor(text.height / 2);
 
     this.addChild(text);
+
+    this.inputEnabled = true;
+    this.events.onInputDown.add(this.tokenClicked, this);
+    this.input.useHandCursor = true;
 }
 
 SearchToken.prototype = Object.create(Phaser.Sprite.prototype);
 SearchToken.prototype.constructor = SearchToken;
+
+SearchToken.prototype.tokenClicked = function (token) {
+    game.camera.follow(token, Phaser.Camera.FOLLOW_LOCKON, 0.05, 0.05);
+}
+
 
 //=========================================================
 function MapTileGroup (game, x, y) {
@@ -135,6 +152,7 @@ function RevealDialogGroup (game, messageText) {
 
     this._revealContinue.inputEnabled = true;
     this._revealContinue.events.onInputDown.add(this.continueClicked, this);
+    this._revealContinue.input.useHandCursor = true;
 
     this.addChild(this._revealMessage);
     this.addChild(this._revealContinue);
