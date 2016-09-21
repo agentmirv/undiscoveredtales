@@ -29,25 +29,50 @@ var GameState = {
         game.world.add(new ExploreToken(game, 29 * 32, 42 * 32));
         game.world.add(new ExploreToken(game, 46 * 32, 42 * 32));
         game.world.add(new SearchToken(game, 40 * 30, 36 * 30));
+
+        cutSceneCamera = false;
+        cameraHalfWidth = game.camera.width / 2;
+        cameraHalfHeight = game.camera.height / 2;
     },
 
     update: function () {
-        var playerVelocity = 400;
-        player.body.setZeroVelocity();
+        if (cutSceneCamera == true) {
+            if(game.camera.x == player.x && camera.y == player.y) {
+                cutSceneCamera = false;
+            }
+        } else {
+            var playerVelocity = 400;
+            player.body.setZeroVelocity();
 
-        if (cursors.up.isDown) {
-            player.body.moveUp(playerVelocity)
-        }
-        else if (cursors.down.isDown) {
-            player.body.moveDown(playerVelocity);
-        }
+            if (cursors.up.isDown) {
+                player.body.moveUp(playerVelocity)
+            }
+            else if (cursors.down.isDown) {
+                player.body.moveDown(playerVelocity);
+            }
 
-        if (cursors.left.isDown) {
-            player.body.velocity.x = -playerVelocity;
+            if (cursors.left.isDown) {
+                player.body.velocity.x = -playerVelocity;
+            }
+            else if (cursors.right.isDown) {
+                player.body.moveRight(playerVelocity);
+            }
         }
-        else if (cursors.right.isDown) {
-            player.body.moveRight(playerVelocity);
-        }
+    },
+
+    render : function () {
+        game.debug.cameraInfo(game.camera, 32, 32);
+        game.debug.spriteInfo(player, 32, 130);
+
+        var camerPosX = game.camera.x + cameraHalfWidth;
+        var camerPosY = game.camera.y + cameraHalfHeight;
+        var linearX = game.math.linear(player.x, camerPosX, game.camera.lerp.x)
+        var linearY = game.math.linear(player.y, camerPosY, game.camera.lerp.y)
+        var differenceX = player.x - camerPosX;
+        var differenceY = player.y - camerPosY;
+
+        game.debug.text(camerPosX + ", " + differenceX, 32, 230)
+        game.debug.text(camerPosY + ", " + differenceY, 32, 250)
     }
 }
 
