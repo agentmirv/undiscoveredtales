@@ -18,7 +18,8 @@ var GameState = {
         player = game.add.sprite(game.world.centerX, game.world.centerY, 'pixelTransparent');
         game.physics.p2.enable(player);
         cursors = game.input.keyboard.createCursorKeys();
-        game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.08, 0.08);
+        game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
+        game.camera.bounds = null
 
         var revealDialogGroup = game.stage.addChild(new RevealDialogGroup(game, "You step into the warmth of the house. A strange stillness hangs in the air, and your footsteps echo through the quiet entrance. Place your Investigator figures as indicated."));
         var exampleMapTile = game.world.add(new MapTileGroup(game, 30 * 32, 30 * 32));
@@ -30,15 +31,25 @@ var GameState = {
         game.world.add(new ExploreToken(game, 46 * 32, 42 * 32));
         game.world.add(new SearchToken(game, 40 * 30, 36 * 30));
 
-        cutSceneCamera = false;
+        game.cutSceneCamera = true;
         cameraHalfWidth = game.camera.width / 2;
         cameraHalfHeight = game.camera.height / 2;
     },
 
     update: function () {
-        if (cutSceneCamera == true) {
-            if(game.camera.x == player.x && camera.y == player.y) {
-                cutSceneCamera = false;
+        if (game.cutSceneCamera == true) {
+            var cameraPosX = game.camera.x + cameraHalfWidth;
+            var cameraPosY = game.camera.y + cameraHalfHeight;
+            var targetRectLarge = new Phaser.Rectangle(player.body.x - 60, player.body.y - 60, 120, 120)
+
+            if (Phaser.Rectangle.contains(targetRectLarge, cameraPosX, cameraPosY)) {
+                game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.2, 0.2);
+                var targetRectSmall = new Phaser.Rectangle(player.body.x - 10, player.body.y - 10, 20, 20)
+                if (Phaser.Rectangle.contains(targetRectSmall, cameraPosX, cameraPosY)) {
+                    game.cutSceneCamera = false;
+                    game.camera.focusOn(player)
+                    game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.5, 0.5);
+                }
             }
         } else {
             var playerVelocity = 400;
@@ -61,18 +72,30 @@ var GameState = {
     },
 
     render : function () {
-        game.debug.cameraInfo(game.camera, 32, 32);
-        game.debug.spriteInfo(player, 32, 130);
+        //game.debug.cameraInfo(game.camera, 32, 32);
+        ////game.debug.spriteInfo(player, 32, 130);
 
-        var camerPosX = game.camera.x + cameraHalfWidth;
-        var camerPosY = game.camera.y + cameraHalfHeight;
-        var linearX = game.math.linear(player.x, camerPosX, game.camera.lerp.x)
-        var linearY = game.math.linear(player.y, camerPosY, game.camera.lerp.y)
-        var differenceX = player.x - camerPosX;
-        var differenceY = player.y - camerPosY;
+        //var cameraPosX = game.camera.x + cameraHalfWidth;
+        //var cameraPosY = game.camera.y + cameraHalfHeight;
+        ////var linearX = game.math.linear(player.x, cameraPosX, game.camera.lerp.x)
+        ////var linearY = game.math.linear(player.y, cameraPosY, game.camera.lerp.y)
+        ////var differenceX = player.x - cameraPosX;
+        ////var differenceY = player.y - cameraPosY;
 
-        game.debug.text(camerPosX + ", " + differenceX, 32, 230)
-        game.debug.text(camerPosY + ", " + differenceY, 32, 250)
+        ////game.debug.text(cameraPosX, 32, 230)
+        ////game.debug.text(cameraPosY, 32, 250)
+
+        //var targetRectLarge = new Phaser.Rectangle(player.body.x - 60, player.body.y - 60, 120, 120)
+        //game.debug.geom(targetRectLarge, "#00FF00", false)
+
+        //var targetRectSmall = new Phaser.Rectangle(player.body.x - 10, player.body.y - 10, 20, 20)
+        //game.debug.geom(targetRectSmall, "#00FF00", false)
+
+        //var cameraRect = new Phaser.Rectangle(cameraPosX - 10, cameraPosY - 10, 20, 20)
+        //game.debug.geom(cameraRect, "#0000FF", true)
+        ////game.debug.pixel(game.camera.x, game.camera.y, '#ffffff', 1)
+        ////game.debug.text(game.camera.x, 32, 230)
+        ////game.debug.text(game.camera.y, 32, 250)
     }
 }
 
@@ -100,7 +123,10 @@ ExploreToken.prototype = Object.create(Phaser.Sprite.prototype);
 ExploreToken.prototype.constructor = ExploreToken;
 
 ExploreToken.prototype.tokenClicked = function (token) {
-    game.camera.follow(token, Phaser.Camera.FOLLOW_LOCKON, 0.05, 0.05);
+    game.cutSceneCamera = true;
+    game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
+    player.body.x = token.centerX
+    player.body.y = token.centerY
 }
 
 //=========================================================
@@ -127,9 +153,11 @@ SearchToken.prototype = Object.create(Phaser.Sprite.prototype);
 SearchToken.prototype.constructor = SearchToken;
 
 SearchToken.prototype.tokenClicked = function (token) {
-    game.camera.follow(token, Phaser.Camera.FOLLOW_LOCKON, 0.05, 0.05);
+    game.cutSceneCamera = true;
+    game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
+    player.body.x = token.centerX
+    player.body.y = token.centerY
 }
-
 
 //=========================================================
 function MapTileGroup (game, x, y) {
