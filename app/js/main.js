@@ -21,8 +21,8 @@ var GameState = {
         game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
         game.camera.bounds = null
 
-        //var revealDialogGroup = game.stage.addChild(new RevealDialogGroup(game, "You step into the warmth of the house. A strange stillness hangs in the air, and your footsteps echo through the quiet entrance. Place your Investigator figures as indicated."));
-        var imageDialogGroup = game.stage.addChild(new ImageDialogGroup(game, "A ruckus can be heard on the other side of this door: shouting, the crash of pots and pans, and is that hissing?"));
+        //var revealDialogGroup = game.stage.addChild(new RevealDialogGroup(game, "A disembodied voice speaks from the dim chamber, 'So, you have found me.'"));
+        var imageDialogGroup = game.stage.addChild(new ImageDialogGroup(game, "On the bureau lies a heavy wooden box, its hardware burnished from decades of use."));
         var exampleMapTile = game.world.add(new MapTileGroup(game, 30 * 32, 30 * 32));
         //game.world.add(new ExploreToken(game, 33 * 32, 29 * 32));
         //game.world.add(new ExploreToken(game, 42 * 32, 29 * 32));
@@ -245,10 +245,24 @@ function ImageMessage(game, text) {
 
     this.totalHeight = textHeight + topMargin + bottomMargin;
     var outlineBox = new OutlineBox(game, this.totalWidth, this.totalHeight);
-    console.log(this.totalHeight)
 
     this.addChild(outlineBox);
     this.addChild(revealText);
+
+    // Example
+    var imageBadge = game.make.image(leftMargin, Math.floor((this.totalHeight - imageHeight) / 2), 'circleToken');
+    this.addChild(imageBadge);
+
+    var imageBadgeTextStyle = { font: "74px Arial Black", fill: "#ffff00", align: "center" };
+    var imageBadgeText = game.make.text(0, 0, '?', imageBadgeTextStyle)
+    imageBadgeText.stroke = "#aaaa00";
+    imageBadgeText.strokeThickness = 5;
+    imageBadgeText.setShadow(2, 2, "#333333", 2, true, false);
+
+    imageBadgeText.x = imageBadge.x + 48 - Math.floor(imageBadgeText.width / 2);
+    imageBadgeText.y = imageBadge.y + 48 - Math.floor(imageBadgeText.height / 2);
+
+    this.addChild(imageBadgeText);
 }
 
 ImageMessage.prototype = Object.create(Phaser.Sprite.prototype);
