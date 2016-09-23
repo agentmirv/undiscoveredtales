@@ -22,7 +22,7 @@ var GameState = {
         game.camera.bounds = null
 
         //var revealDialogGroup = game.stage.addChild(new RevealDialogGroup(game, "A disembodied voice speaks from the dim chamber, 'So, you have found me.'"));
-        var imageDialogGroup = game.stage.addChild(new ImageDialogGroup(game, "On the bureau lies a heavy wooden box, its hardware burnished from decades of use."));
+        var imageDialogGroup = game.stage.addChild(new ImageDialogGroup(game, "A heavy wooden box lies on the bureau. The lid of the box is held shut by a thick metal latch."));
         var exampleMapTile = game.world.add(new MapTileGroup(game, 30 * 32, 30 * 32));
         //game.world.add(new ExploreToken(game, 33 * 32, 29 * 32));
         //game.world.add(new ExploreToken(game, 42 * 32, 29 * 32));
