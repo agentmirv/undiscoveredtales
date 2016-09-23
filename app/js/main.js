@@ -21,7 +21,8 @@ var GameState = {
         game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
         game.camera.bounds = null
 
-        var revealDialogGroup = game.stage.addChild(new RevealDialogGroup(game, "You step into the warmth of the house. A strange stillness hangs in the air, and your footsteps echo through the quiet entrance. Place your Investigator figures as indicated."));
+        //var revealDialogGroup = game.stage.addChild(new RevealDialogGroup(game, "You step into the warmth of the house. A strange stillness hangs in the air, and your footsteps echo through the quiet entrance. Place your Investigator figures as indicated."));
+        var imageDialogGroup = game.stage.addChild(new ImageDialogGroup(game, "A ruckus can be heard on the other side of this door: shouting, the crash of pots and pans, and is that hissing?"));
         var exampleMapTile = game.world.add(new MapTileGroup(game, 30 * 32, 30 * 32));
         //game.world.add(new ExploreToken(game, 33 * 32, 29 * 32));
         //game.world.add(new ExploreToken(game, 42 * 32, 29 * 32));
@@ -190,6 +191,68 @@ function MapTileGroup (game, x, y) {
 
 MapTileGroup.prototype = Object.create(Phaser.Group.prototype);
 MapTileGroup.prototype.constructor = MapTileGroup;
+
+//=========================================================
+function ImageDialogGroup(game, messageText) {
+    Phaser.Group.call(this, game);
+
+    this._imageMessage = new ImageMessage(game, messageText);
+    this._imageMessage.x = Math.floor(this.game.width / 2) - Math.floor(this._imageMessage.totalWidth / 2);
+    this._imageMessage.y = Math.floor(this.game.height / 2) - Math.floor(this._imageMessage.totalHeight / 2);
+
+    //this._revealContinue = new RevealContinue(game, "Continue");
+    //this._revealContinue.x = Math.floor(this.game.width / 2) - Math.floor(this._revealContinue.totalWidth / 2);
+    //this._revealContinue.y = this._revealMessage.y + this._revealMessage.totalHeight + 10;
+
+    //this._revealContinue.inputEnabled = true;
+    //this._revealContinue.events.onInputDown.add(this.continueClicked, this);
+    //this._revealContinue.input.useHandCursor = true;
+
+    this.addChild(this._imageMessage);
+    //this.addChild(this._revealContinue);
+}
+
+ImageDialogGroup.prototype = Object.create(Phaser.Group.prototype);
+ImageDialogGroup.prototype.constructor = ImageDialogGroup;
+
+//=========================================================
+function ImageMessage(game, text) {
+    Phaser.Sprite.call(this, game, 0, 0);
+
+    this.totalWidth = 600;
+    var leftMargin = 16;
+    var imageWidth = 96;
+    var imageHeight = 96;
+    var middleMargin = 16
+    var rightMargin = 10;
+    var topMargin = 20;
+    var bottomMargin = 20;
+
+    var textWidth = this.totalWidth - leftMargin - imageWidth - middleMargin - rightMargin;
+    var textStyle = { font: "20px Times New Romans", fill: "#ffffff", align: "left", wordWrap: true, wordWrapWidth: textWidth };
+    var revealText = game.make.text(0, 0, text, textStyle);
+
+    revealText.x = leftMargin + imageWidth + middleMargin
+
+    var textHeight = revealText.height
+    if (textHeight >= imageHeight)
+    {
+        revealText.y = topMargin;
+    } else {
+        revealText.y = topMargin + Math.floor((imageHeight - textHeight) / 2)
+        textHeight = imageHeight
+    }
+
+    this.totalHeight = textHeight + topMargin + bottomMargin;
+    var outlineBox = new OutlineBox(game, this.totalWidth, this.totalHeight);
+    console.log(this.totalHeight)
+
+    this.addChild(outlineBox);
+    this.addChild(revealText);
+}
+
+ImageMessage.prototype = Object.create(Phaser.Sprite.prototype);
+ImageMessage.prototype.constructor = ImageMessage;
 
 //=========================================================
 function RevealDialogGroup (game, messageText) {
