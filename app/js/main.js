@@ -217,6 +217,12 @@ MapTileGroup.prototype.constructor = MapTileGroup;
 function ImageDialogGroup(game, messageText) {
     Phaser.Group.call(this, game);
 
+    this._modalBackground = game.make.sprite(game.stageViewRect.x, game.stageViewRect.y, 'pixelTransparent');
+    this._modalBackground.width = game.stageViewRect.width;
+    this._modalBackground.height = game.stageViewRect.height;
+    this._modalBackground.inputEnabled = true;
+    this.addChild(this._modalBackground);
+
     this._imageMessage = new ImageMessage(game, messageText);
     this._imageMessage.alignIn(game.stageViewRect, Phaser.CENTER)
     this.addChild(this._imageMessage);
@@ -251,11 +257,13 @@ ImageDialogGroup.prototype.constructor = ImageDialogGroup;
 
 ImageDialogGroup.prototype.cancelClicked = function (group) {
     game.cutSceneCamera = false;
+    group.removeChild(this._modalBackground);
     group.removeChild(this._imageMessage);
     group.removeChild(this._imageCancel);
     group.removeChild(this._imageAction);
     group.removeChild(this._imageCancelButton);
     group.removeChild(this._imageActionButton);
+    this._modalBackground.destroy();
     this._imageMessage.destroy();
     this._imageCancel.destroy();
     this._imageAction.destroy();
@@ -336,6 +344,12 @@ ImageMessageButton.prototype.constructor = ImageMessageButton;
 function RevealDialogGroup (game, messageText) {
     Phaser.Group.call(this, game);
 
+    this._modalBackground = game.make.sprite(game.stageViewRect.x, game.stageViewRect.y, 'pixelTransparent');
+    this._modalBackground.width = game.stageViewRect.width;
+    this._modalBackground.height = game.stageViewRect.height;
+    this._modalBackground.inputEnabled = true;
+    this.addChild(this._modalBackground);
+
     this._revealMessage = new RevealMessage(game, messageText);
     this._revealMessage.alignIn(game.stageViewRect, Phaser.CENTER)
     this.addChild(this._revealMessage);
@@ -358,9 +372,11 @@ RevealDialogGroup.prototype.constructor = RevealDialogGroup;
 
 RevealDialogGroup.prototype.continueClicked = function (group) {
     game.cutSceneCamera = false;
+    group.removeChild(this._modalBackground);
     group.removeChild(this._revealMessage);
     group.removeChild(this._revealContinue);
     group.removeChild(this._revealContinueButton);
+    this._modalBackground.destroy();
     this._revealMessage.destroy();
     this._revealContinue.destroy();
     this._revealContinueButton.destroy();
