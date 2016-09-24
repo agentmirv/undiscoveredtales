@@ -38,14 +38,10 @@ var GameState = {
         game.add.tileSprite(0, 0, 2560, 2560, 'background');
         game.world.setBounds(0, 0, 2560, 2560);
         game.physics.startSystem(Phaser.Physics.P2JS);
-        player = game.add.sprite(game.world.centerX, game.world.centerY, 'pixelTransparent');
-        game.physics.p2.enable(player);
         cursors = game.input.keyboard.createCursorKeys();
-        game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
         game.camera.bounds = null
 
-        //this.revealDialogGroup = game.stage.addChild(new RevealDialogGroup(game, "A disembodied voice speaks from the dim chamber, 'So, you have found me.'"));
-        var imageDialogGroup = game.stage.addChild(new ImageDialogGroup(game, "A heavy wooden box lies on the bureau. The lid of the box is held shut by a thick metal latch."));
+        //=================================================
         var exampleMapTile = game.world.add(new MapTileGroup(game, 30 * 32, 30 * 32));
         //game.world.add(new ExploreToken(game, 33 * 32, 29 * 32));
         //game.world.add(new ExploreToken(game, 42 * 32, 29 * 32));
@@ -55,6 +51,17 @@ var GameState = {
         game.world.add(new ExploreToken(game, 46 * 32, 42 * 32));
         game.world.add(new SearchToken(game, 40 * 30, 36 * 30));
 
+        //=================================================
+        player = game.add.sprite(exampleMapTile.centerX, exampleMapTile.centerY, 'pixelTransparent');
+        game.physics.p2.enable(player);
+        game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
+        //game.camera.focusOn(player)
+
+        //=================================================
+        var revealDialogGroup = game.stage.addChild(new RevealDialogGroup(game, "A disembodied voice speaks from the dim chamber, 'So, you have found me.'"));
+        //var imageDialogGroup = game.stage.addChild(new ImageDialogGroup(game, "A heavy wooden box lies on the bureau. The lid of the box is held shut by a thick metal latch."));
+
+        //=================================================
         game.cutSceneCamera = true;
         cameraHalfWidth = game.camera.width / 2;
         cameraHalfHeight = game.camera.height / 2;
@@ -70,9 +77,10 @@ var GameState = {
                 game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.2, 0.2);
                 var targetRectSmall = new Phaser.Rectangle(player.body.x - 10, player.body.y - 10, 20, 20)
                 if (Phaser.Rectangle.contains(targetRectSmall, cameraPosX, cameraPosY)) {
-                    game.cutSceneCamera = false;
                     game.camera.focusOn(player)
                     game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.5, 0.5);
+                    // Do this in Dialogs
+                    //game.cutSceneCamera = false;
                 }
             }
         } else {
@@ -138,10 +146,10 @@ ExploreToken.prototype = Object.create(Phaser.Sprite.prototype);
 ExploreToken.prototype.constructor = ExploreToken;
 
 ExploreToken.prototype.tokenClicked = function (token) {
-    game.cutSceneCamera = true;
-    game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
     player.body.x = token.centerX + 300 - 16 - 48 //half message width - left margin - half image width
     player.body.y = token.centerY
+    game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
+    game.cutSceneCamera = true;
 }
 
 //=========================================================
@@ -157,10 +165,10 @@ SearchToken.prototype = Object.create(Phaser.Sprite.prototype);
 SearchToken.prototype.constructor = SearchToken;
 
 SearchToken.prototype.tokenClicked = function (token) {
-    game.cutSceneCamera = true;
-    game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
     player.body.x = token.centerX + 300 - 16 - 48 //half message width - left margin - half image width
-    player.body.y = token.centerY 
+    player.body.y = token.centerY
+    game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
+    game.cutSceneCamera = true;
 }
 
 //=========================================================
@@ -215,7 +223,7 @@ function ImageDialogGroup(game, messageText) {
     this._imageCancelButton.width = this._imageCancel.width;
     this._imageCancelButton.height = this._imageCancel.height;
     this._imageCancelButton.inputEnabled = true;
-    //this._imageCancelButton.events.onInputDown.add(this.continueClicked, this);
+    this._imageCancelButton.events.onInputDown.add(this.cancelClicked, this);
     this._imageCancelButton.input.useHandCursor = true;
     this.addChild(this._imageCancelButton);
 
@@ -230,6 +238,20 @@ function ImageDialogGroup(game, messageText) {
 
 ImageDialogGroup.prototype = Object.create(Phaser.Group.prototype);
 ImageDialogGroup.prototype.constructor = ImageDialogGroup;
+
+ImageDialogGroup.prototype.cancelClicked = function (group) {
+    group.removeChild(this._imageMessage);
+    group.removeChild(this._imageCancel);
+    group.removeChild(this._imageAction);
+    group.removeChild(this._imageCancelButton);
+    group.removeChild(this._imageActionButton);
+    this._imageMessage.destroy();
+    this._imageCancel.destroy();
+    this._imageAction.destroy();
+    this._imageCancelButton.destroy();
+    this._imageActionButton.destroy();
+    group.destroy();
+}
 
 //=========================================================
 function ImageMessage(game, text) {
@@ -324,6 +346,7 @@ RevealDialogGroup.prototype = Object.create(Phaser.Group.prototype);
 RevealDialogGroup.prototype.constructor = RevealDialogGroup;
 
 RevealDialogGroup.prototype.continueClicked = function (group) {
+    game.cutSceneCamera = false;
     group.removeChild(this._revealMessage);
     group.removeChild(this._revealContinue);
     group.removeChild(this._revealContinueButton);
