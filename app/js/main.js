@@ -12,6 +12,29 @@ var GameState = {
     },
 
     create: function () {
+        var exploreLetterStyle = { font: "74px Arial Black", fill: "#ff0000", align: "center", stroke: "#aa0000", strokeThickness: 5 };
+        var exploreLetter = game.make.text(0, 0, 'E', exploreLetterStyle)
+        exploreLetter.setShadow(2, 2, "#333333", 2, true, false);
+        exploreLetter.x = 48 - Math.floor(exploreLetter.width / 2);
+        exploreLetter.y = 48 - Math.floor(exploreLetter.height / 2);
+
+        var searchLetterStyle = { font: "74px Arial Black", fill: "#ffff00", align: "center", stroke: "#aaaa00", strokeThickness: 5 };
+        var searchLetter = game.make.text(0, 0, '?', searchLetterStyle)
+        searchLetter.setShadow(2, 2, "#333333", 2, true, false);
+        searchLetter.x = 48 - Math.floor(searchLetter.width / 2);
+        searchLetter.y = 48 - Math.floor(searchLetter.height / 2);
+
+        var exploreTokenBmd = game.make.bitmapData(96, 96);
+        exploreTokenBmd.copy('circleToken');
+        exploreTokenBmd.copy(exploreLetter);
+        game.cache.addBitmapData('exploreTokenBmd', exploreTokenBmd);
+
+        var searchTokenBmd = game.make.bitmapData(96, 96);
+        searchTokenBmd.copy('circleToken');
+        searchTokenBmd.copy(searchLetter);
+        game.cache.addBitmapData('searchTokenBmd', searchTokenBmd);
+
+        //=================================================
         game.add.tileSprite(0, 0, 2560, 2560, 'background');
         game.world.setBounds(0, 0, 2560, 2560);
         game.physics.startSystem(Phaser.Physics.P2JS);
@@ -102,18 +125,7 @@ var GameState = {
 
 //=========================================================
 function ExploreToken(game, x, y) {
-    Phaser.Sprite.call(this, game, x, y, 'circleToken');
-
-    var textStyle = { font: "74px Arial Black", fill: "#ff0000", align: "center" };
-    var text = game.make.text(0, 0, 'E', textStyle)
-    text.stroke = "#aa0000";
-    text.strokeThickness = 5;
-    text.setShadow(2, 2, "#333333", 2, true, false);
-
-    text.x = 48 - Math.floor(text.width / 2);
-    text.y = 48 - Math.floor(text.height / 2);
-     
-    this.addChild(text);
+    Phaser.Sprite.call(this, game, x, y, game.cache.getBitmapData('exploreTokenBmd'));
 
     this.inputEnabled = true;
     this.events.onInputDown.add(this.tokenClicked, this);
@@ -132,18 +144,7 @@ ExploreToken.prototype.tokenClicked = function (token) {
 
 //=========================================================
 function SearchToken(game, x, y) {
-    Phaser.Sprite.call(this, game, x, y, 'circleToken');
-
-    var textStyle = { font: "74px Arial Black", fill: "#ffff00", align: "center" };
-    var text = game.make.text(0, 0, '?', textStyle)
-    text.stroke = "#aaaa00";
-    text.strokeThickness = 5;
-    text.setShadow(2, 2, "#333333", 2, true, false);
-
-    text.x = 48 - Math.floor(text.width / 2);
-    text.y = 48 - Math.floor(text.height / 2);
-
-    this.addChild(text);
+    Phaser.Sprite.call(this, game, x, y, game.cache.getBitmapData('searchTokenBmd'));
 
     this.inputEnabled = true;
     this.events.onInputDown.add(this.tokenClicked, this);
@@ -250,19 +251,8 @@ function ImageMessage(game, text) {
     this.addChild(revealText);
 
     // Example
-    var imageBadge = game.make.image(leftMargin, Math.floor((this.totalHeight - imageHeight) / 2), 'circleToken');
-    this.addChild(imageBadge);
-
-    var imageBadgeTextStyle = { font: "74px Arial Black", fill: "#ffff00", align: "center" };
-    var imageBadgeText = game.make.text(0, 0, '?', imageBadgeTextStyle)
-    imageBadgeText.stroke = "#aaaa00";
-    imageBadgeText.strokeThickness = 5;
-    imageBadgeText.setShadow(2, 2, "#333333", 2, true, false);
-
-    imageBadgeText.x = imageBadge.x + 48 - Math.floor(imageBadgeText.width / 2);
-    imageBadgeText.y = imageBadge.y + 48 - Math.floor(imageBadgeText.height / 2);
-
-    this.addChild(imageBadgeText);
+    var imageBadgeSprite = game.make.sprite(leftMargin, Math.floor((this.totalHeight - imageHeight) / 2), game.cache.getBitmapData('searchTokenBmd'))
+    this.addChild(imageBadgeSprite);
 }
 
 ImageMessage.prototype = Object.create(Phaser.Sprite.prototype);
