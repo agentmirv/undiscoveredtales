@@ -58,11 +58,19 @@ var GameState = {
         //game.camera.focusOn(player)
 
         //=================================================
-        var revealDialogGroup = game.stage.addChild(new RevealDialogGroup(game, "A disembodied voice speaks from the dim chamber, 'So, you have found me.'"));
         //var imageDialogGroup = game.stage.addChild(new ImageDialogGroup(game, "A heavy wooden box lies on the bureau. The lid of the box is held shut by a thick metal latch."));
+
+        //revealDialogGroup = game.stage.addChild(new RevealDialogGroup(game, "A disembodied voice speaks from the dim chamber, 'So, you have found me.'"));
+        //console.dir(revealDialogGroup._revealMessage)
+
+        game.customCallback = function () {
+            var revealDialogGroup = game.stage.addChild(new RevealDialogGroup(game, "A disembodied voice speaks from the dim chamber, 'So, you have found me.'"));
+            game.customCallback = null;
+        }
 
         //=================================================
         game.cutSceneCamera = true;
+        game.stageViewRect = new Phaser.Rectangle(0, 0, game.camera.view.width, game.camera.view.height)
         cameraHalfWidth = game.camera.width / 2;
         cameraHalfHeight = game.camera.height / 2;
     },
@@ -76,9 +84,13 @@ var GameState = {
             if (Phaser.Rectangle.contains(targetRectLarge, cameraPosX, cameraPosY)) {
                 game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.2, 0.2);
                 var targetRectSmall = new Phaser.Rectangle(player.body.x - 10, player.body.y - 10, 20, 20)
+
                 if (Phaser.Rectangle.contains(targetRectSmall, cameraPosX, cameraPosY)) {
                     game.camera.focusOn(player)
                     game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.5, 0.5);
+                    if (game.customCallback != null) {
+                        game.customCallback()
+                    }
                     // Do this in Dialogs
                     //game.cutSceneCamera = false;
                 }
@@ -128,8 +140,6 @@ var GameState = {
         ////game.debug.pixel(game.camera.x, game.camera.y, '#ffffff', 1)
         ////game.debug.text(game.camera.x, 32, 230)
         ////game.debug.text(game.camera.y, 32, 250)
-
-        //game.debug.geom(this.revealDialogGroup._revealMessage.getBounds())
     }
 }
 
@@ -326,7 +336,7 @@ function RevealDialogGroup (game, messageText) {
     Phaser.Group.call(this, game);
 
     this._revealMessage = new RevealMessage(game, messageText);
-    this._revealMessage.alignIn(game.camera.view, Phaser.CENTER)
+    this._revealMessage.alignIn(game.stageViewRect, Phaser.CENTER)
     this.addChild(this._revealMessage);
 
     this._revealContinue = new RevealContinue(game, "Continue");
@@ -355,45 +365,6 @@ RevealDialogGroup.prototype.continueClicked = function (group) {
     this._revealContinueButton.destroy();
     group.destroy();
 }
-
-//=========================================================
-function OutlineBox (game, width, height) {
-    Phaser.Group.call(this, game, 0, 0);
-
-    var localX = 0;
-    var localY = 0;
-    var edgeSize = 1;
-
-    // Create all of our corners and edges
-    var borders = [
-        // background
-        game.make.tileSprite(localX + edgeSize, localY + edgeSize, width - (edgeSize * 2), height - (edgeSize * 2), 'pixelBlack'),
-        // top left
-        game.make.image(localX, localY, 'pixelWhite'),
-        // top right
-        game.make.image(localX + width - edgeSize, localY, 'pixelWhite'),
-        // bottom right
-        game.make.image(localX + width - edgeSize, localY + height - edgeSize, 'pixelWhite'),
-        // bottom left
-        game.make.image(localX, localY + height - edgeSize, 'pixelWhite'),
-        // top
-        game.make.tileSprite(localX + edgeSize, localY, width - (edgeSize * 2), edgeSize, 'pixelWhite'),
-        // bottom
-        game.make.tileSprite(localX + edgeSize, localY + height - edgeSize, width - (edgeSize * 2), edgeSize, 'pixelWhite'),
-        // left
-        game.make.tileSprite(localX, localY + edgeSize, edgeSize, height - (edgeSize * 2), 'pixelWhite'),
-        // right
-        game.make.tileSprite(localX + width - edgeSize, localY + edgeSize, edgeSize, height - (edgeSize * 2), 'pixelWhite'),
-    ];
-
-    // Add all of the above to this sprite
-    for (var b = 0, len = borders.length; b < len; b++) {
-        this.addChild(borders[b]);
-    }
-}
-
-OutlineBox.prototype = Object.create(Phaser.Group.prototype);
-OutlineBox.prototype.constructor = OutlineBox;
 
 //=========================================================
 function RevealMessage (game, text) {
@@ -446,6 +417,45 @@ function RevealContinue (game, text) {
 
 RevealContinue.prototype = Object.create(Phaser.Group.prototype);
 RevealContinue.prototype.constructor = RevealContinue;
+
+//=========================================================
+function OutlineBox(game, width, height) {
+    Phaser.Group.call(this, game, 0, 0);
+
+    var localX = 0;
+    var localY = 0;
+    var edgeSize = 1;
+
+    // Create all of our corners and edges
+    var borders = [
+        // background
+        game.make.tileSprite(localX + edgeSize, localY + edgeSize, width - (edgeSize * 2), height - (edgeSize * 2), 'pixelBlack'),
+        // top left
+        game.make.image(localX, localY, 'pixelWhite'),
+        // top right
+        game.make.image(localX + width - edgeSize, localY, 'pixelWhite'),
+        // bottom right
+        game.make.image(localX + width - edgeSize, localY + height - edgeSize, 'pixelWhite'),
+        // bottom left
+        game.make.image(localX, localY + height - edgeSize, 'pixelWhite'),
+        // top
+        game.make.tileSprite(localX + edgeSize, localY, width - (edgeSize * 2), edgeSize, 'pixelWhite'),
+        // bottom
+        game.make.tileSprite(localX + edgeSize, localY + height - edgeSize, width - (edgeSize * 2), edgeSize, 'pixelWhite'),
+        // left
+        game.make.tileSprite(localX, localY + edgeSize, edgeSize, height - (edgeSize * 2), 'pixelWhite'),
+        // right
+        game.make.tileSprite(localX + width - edgeSize, localY + edgeSize, edgeSize, height - (edgeSize * 2), 'pixelWhite'),
+    ];
+
+    // Add all of the above to this sprite
+    for (var b = 0, len = borders.length; b < len; b++) {
+        this.addChild(borders[b]);
+    }
+}
+
+OutlineBox.prototype = Object.create(Phaser.Group.prototype);
+OutlineBox.prototype.constructor = OutlineBox;
 
 //=========================================================
 game.state.add('GameState', GameState)
