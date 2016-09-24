@@ -138,7 +138,7 @@ ExploreToken.prototype.constructor = ExploreToken;
 ExploreToken.prototype.tokenClicked = function (token) {
     game.cutSceneCamera = true;
     game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
-    player.body.x = token.centerX
+    player.body.x = token.centerX + 300 - 16 - 48 //half message width - left margin - half image width
     player.body.y = token.centerY
 }
 
@@ -157,8 +157,8 @@ SearchToken.prototype.constructor = SearchToken;
 SearchToken.prototype.tokenClicked = function (token) {
     game.cutSceneCamera = true;
     game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
-    player.body.x = token.centerX
-    player.body.y = token.centerY
+    player.body.x = token.centerX + 300 - 16 - 48 //half message width - left margin - half image width
+    player.body.y = token.centerY 
 }
 
 //=========================================================
