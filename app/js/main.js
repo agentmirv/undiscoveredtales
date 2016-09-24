@@ -59,10 +59,7 @@ var GameState = {
 
         //=================================================
         //var imageDialogGroup = game.stage.addChild(new ImageDialogGroup(game, "A heavy wooden box lies on the bureau. The lid of the box is held shut by a thick metal latch."));
-
-        //revealDialogGroup = game.stage.addChild(new RevealDialogGroup(game, "A disembodied voice speaks from the dim chamber, 'So, you have found me.'"));
-        //console.dir(revealDialogGroup._revealMessage)
-
+        //var revealDialogGroup = game.stage.addChild(new RevealDialogGroup(game, "A disembodied voice speaks from the dim chamber, 'So, you have found me.'"));
         game.customCallback = function () {
             var revealDialogGroup = game.stage.addChild(new RevealDialogGroup(game, "A disembodied voice speaks from the dim chamber, 'So, you have found me.'"));
             game.customCallback = null;
@@ -71,14 +68,12 @@ var GameState = {
         //=================================================
         game.cutSceneCamera = true;
         game.stageViewRect = new Phaser.Rectangle(0, 0, game.camera.view.width, game.camera.view.height)
-        cameraHalfWidth = game.camera.width / 2;
-        cameraHalfHeight = game.camera.height / 2;
     },
 
     update: function () {
         if (game.cutSceneCamera == true) {
-            var cameraPosX = game.camera.x + cameraHalfWidth;
-            var cameraPosY = game.camera.y + cameraHalfHeight;
+            var cameraPosX = game.camera.x + game.stageViewRect.halfWidth;
+            var cameraPosY = game.camera.y + game.stageViewRect.halfHeight;
             var targetRectLarge = new Phaser.Rectangle(player.body.x - 60, player.body.y - 60, 120, 120)
 
             if (Phaser.Rectangle.contains(targetRectLarge, cameraPosX, cameraPosY)) {
@@ -88,11 +83,10 @@ var GameState = {
                 if (Phaser.Rectangle.contains(targetRectSmall, cameraPosX, cameraPosY)) {
                     game.camera.focusOn(player)
                     game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.5, 0.5);
+
                     if (game.customCallback != null) {
                         game.customCallback()
                     }
-                    // Do this in Dialogs
-                    //game.cutSceneCamera = false;
                 }
             }
         } else {
@@ -179,6 +173,12 @@ SearchToken.prototype.tokenClicked = function (token) {
     player.body.y = token.centerY
     game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
     game.cutSceneCamera = true;
+
+    //Example
+    game.customCallback = function () {
+        var imageDialogGroup = game.stage.addChild(new ImageDialogGroup(game, "A heavy wooden box lies on the bureau. The lid of the box is held shut by a thick metal latch."));
+        game.customCallback = null;
+    }
 }
 
 //=========================================================
@@ -218,7 +218,7 @@ function ImageDialogGroup(game, messageText) {
     Phaser.Group.call(this, game);
 
     this._imageMessage = new ImageMessage(game, messageText);
-    this._imageMessage.alignIn(game.camera.view, Phaser.CENTER)
+    this._imageMessage.alignIn(game.stageViewRect, Phaser.CENTER)
     this.addChild(this._imageMessage);
 
     this._imageCancel = new ImageMessageButton(game, "Cancel", 280);
@@ -250,6 +250,7 @@ ImageDialogGroup.prototype = Object.create(Phaser.Group.prototype);
 ImageDialogGroup.prototype.constructor = ImageDialogGroup;
 
 ImageDialogGroup.prototype.cancelClicked = function (group) {
+    game.cutSceneCamera = false;
     group.removeChild(this._imageMessage);
     group.removeChild(this._imageCancel);
     group.removeChild(this._imageAction);
