@@ -203,16 +203,29 @@ function ImageDialogGroup(game, messageText) {
     this._imageMessage.alignIn(game.camera.view, Phaser.CENTER)
     this.addChild(this._imageMessage);
 
-    //this._revealContinue = new RevealContinue(game, "Continue");
-    //this._revealContinue.x = Math.floor(this.game.width / 2) - Math.floor(this._revealContinue.totalWidth / 2);
-    //this._revealContinue.y = this._revealMessage.y + this._revealMessage.totalHeight + 10;
+    this._imageCancel = new ImageMessageButton(game, "Cancel", 280);
+    this._imageCancel.alignTo(this._imageMessage, Phaser.BOTTOM_LEFT, -10, 10)
+    this.addChild(this._imageCancel);
 
-    //this._revealContinue.inputEnabled = true;
-    //this._revealContinue.events.onInputDown.add(this.continueClicked, this);
-    //this._revealContinue.input.useHandCursor = true;
+    this._imageAction = new ImageMessageButton(game, "@ Search", 280);
+    this._imageAction.alignTo(this._imageMessage, Phaser.BOTTOM_RIGHT, -10, 10)
+    this.addChild(this._imageAction);
 
-    //this.addChild(this._imageMessage);
-    //this.addChild(this._revealContinue);
+    this._imageCancelButton = game.make.sprite(this._imageCancel.x, this._imageCancel.y, 'pixelTransparent');
+    this._imageCancelButton.width = this._imageCancel.width;
+    this._imageCancelButton.height = this._imageCancel.height;
+    this._imageCancelButton.inputEnabled = true;
+    //this._imageCancelButton.events.onInputDown.add(this.continueClicked, this);
+    this._imageCancelButton.input.useHandCursor = true;
+    this.addChild(this._imageCancelButton);
+
+    this._imageActionButton = game.make.sprite(this._imageAction.x, this._imageAction.y, 'pixelTransparent');
+    this._imageActionButton.width = this._imageAction.width;
+    this._imageActionButton.height = this._imageAction.height;
+    this._imageActionButton.inputEnabled = true;
+    //this._imageActionButton.events.onInputDown.add(this.continueClicked, this);
+    this._imageActionButton.input.useHandCursor = true;
+    this.addChild(this._imageActionButton);
 }
 
 ImageDialogGroup.prototype = Object.create(Phaser.Group.prototype);
@@ -261,6 +274,32 @@ ImageMessage.prototype = Object.create(Phaser.Group.prototype);
 ImageMessage.prototype.constructor = ImageMessage;
 
 //=========================================================
+function ImageMessageButton(game, text, width) {
+    Phaser.Group.call(this, game, 0, 0);
+
+    var totalWidth = width;
+    var leftMargin = 10;
+    var rightMargin = 10;
+    var topMargin = 4;
+    var bottomMargin = 0;
+
+    var textWidth = totalWidth - leftMargin - rightMargin;
+    var textStyle = { font: "20px Times New Romans", fill: "#ffffff", align: "center", wordWrap: true, wordWrapWidth: textWidth };
+    var revealText = game.make.text(0, 0, text, textStyle);
+    revealText.x = Math.floor((totalWidth - revealText.width) / 2)
+    revealText.y = topMargin;
+
+    var totalHeight = revealText.height + topMargin + bottomMargin;
+    var outlineBox = new OutlineBox(game, totalWidth, totalHeight);
+
+    this.addChild(outlineBox);
+    this.addChild(revealText);
+}
+
+ImageMessageButton.prototype = Object.create(Phaser.Group.prototype);
+ImageMessageButton.prototype.constructor = ImageMessageButton;
+
+//=========================================================
 function RevealDialogGroup (game, messageText) {
     Phaser.Group.call(this, game);
 
@@ -278,7 +317,6 @@ function RevealDialogGroup (game, messageText) {
     this._revealContinueButton.inputEnabled = true;
     this._revealContinueButton.events.onInputDown.add(this.continueClicked, this);
     this._revealContinueButton.input.useHandCursor = true;
-
     this.addChild(this._revealContinueButton);
 }
 
