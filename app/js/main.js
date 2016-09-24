@@ -288,8 +288,10 @@ RevealDialogGroup.prototype.constructor = RevealDialogGroup;
 RevealDialogGroup.prototype.continueClicked = function (group) {
     group.removeChild(this._revealMessage);
     group.removeChild(this._revealContinue);
+    group.removeChild(this._revealContinueButton);
     this._revealMessage.destroy();
     this._revealContinue.destroy();
+    this._revealContinueButton.destroy();
     group.destroy();
 }
 
@@ -336,20 +338,20 @@ OutlineBox.prototype.constructor = OutlineBox;
 function RevealMessage (game, text) {
     Phaser.Group.call(this, game, 0, 0);
 
-    this.totalWidth = 600;
+    var totalWidth = 600;
     var leftMargin = 10;
     var rightMargin = 10;
     var topMargin = 20;
     var bottomMargin = 20;
 
-    var textWidth = this.totalWidth - leftMargin - rightMargin;
+    var textWidth = totalWidth - leftMargin - rightMargin;
     var textStyle = { font: "20px Times New Romans", fill: "#ffffff", align: "center", wordWrap: true, wordWrapWidth: textWidth };
     var revealText = game.make.text(0, 0, text, textStyle);
-    revealText.x = Math.floor((this.totalWidth - revealText.width) / 2)
+    revealText.x = Math.floor((totalWidth - revealText.width) / 2)
     revealText.y = topMargin;
 
-    this.totalHeight = revealText.height + topMargin + bottomMargin;
-    var outlineBox = new OutlineBox(game, this.totalWidth, this.totalHeight);
+    var totalHeight = revealText.height + topMargin + bottomMargin;
+    var outlineBox = new OutlineBox(game, totalWidth, totalHeight);
 
     this.addChild(outlineBox);
     this.addChild(revealText);
@@ -362,20 +364,20 @@ RevealMessage.prototype.constructor = RevealMessage;
 function RevealContinue (game, text) {
     Phaser.Group.call(this, game, 0, 0);
 
-    this.totalWidth = 180;
+    var totalWidth = 180;
     var leftMargin = 10;
     var rightMargin = 10;
     var topMargin = 4;
     var bottomMargin = 0;
 
-    var textWidth = this.totalWidth - leftMargin - rightMargin;
+    var textWidth = totalWidth - leftMargin - rightMargin;
     var textStyle = { font: "20px Times New Romans", fill: "#ffffff", align: "center", wordWrap: true, wordWrapWidth: textWidth };
     var revealText = game.make.text(0, 0, text, textStyle);
-    revealText.x = Math.floor((this.totalWidth - revealText.width) / 2)
+    revealText.x = Math.floor((totalWidth - revealText.width) / 2)
     revealText.y = topMargin;
 
-    this.totalHeight = revealText.height + topMargin + bottomMargin;
-    var outlineBox = new OutlineBox(game, this.totalWidth, this.totalHeight);
+    var totalHeight = revealText.height + topMargin + bottomMargin;
+    var outlineBox = new OutlineBox(game, totalWidth, totalHeight);
 
     this.addChild(outlineBox);
     this.addChild(revealText);
