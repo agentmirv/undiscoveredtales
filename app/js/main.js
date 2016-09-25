@@ -77,7 +77,7 @@ var GameState = {
         game.camera.bounds = null
 
         //=================================================
-        // Map Tile
+        // Map Tile (TODO: use reveal)
         exampleMapTile = game.world.add(new MapTileGroup(game, 30 * 32, 30 * 32));
 
         //=================================================
@@ -86,7 +86,7 @@ var GameState = {
         game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
 
         //=================================================
-        // Map Tile Dialog
+        // Map Tile Dialog (TODO: use reveal)
         game.customCallback = function () {
             var revealDialogGroup = game.stage.addChild(new RevealDialogGroup(game, "A disembodied voice speaks from the dim chamber, 'So, you have found me.'"));
             game.customCallback = null;
@@ -207,25 +207,6 @@ Token.prototype.tokenClicked = function (token) {
 }
 
 //=========================================================
-function ExploreToken(game, x, y) {
-    Phaser.Sprite.call(this, game, x, y, game.cache.getBitmapData('exploreTokenBmd'));
-
-    this.inputEnabled = true;
-    this.events.onInputDown.add(this.tokenClicked, this);
-    this.input.useHandCursor = true;
-}
-
-ExploreToken.prototype = Object.create(Phaser.Sprite.prototype);
-ExploreToken.prototype.constructor = ExploreToken;
-
-ExploreToken.prototype.tokenClicked = function (token) {
-    player.body.x = token.centerX + 300 - 16 - 48 //half message width - left margin - half image width
-    player.body.y = token.centerY
-    game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
-    game.cutSceneCamera = true;
-}
-
-//=========================================================
 function MapTileGroup (game, x, y) {
     Phaser.Group.call(this, game);
 
@@ -234,15 +215,13 @@ function MapTileGroup (game, x, y) {
     
     this.addChild(game.make.sprite(x, y, game.cache.getBitmapData('lobbyMapTileBmd')));
 
-    this.addChild(new ExploreToken(game, x + gridWidth, y - halfGridWidth));
+    this.addChild(CreateToken(game, 'lobby-door1-explore'))
     //this.addChild(new ExploreToken(game, x + gridWidth * 4, y - halfGridWidth));
-    this.addChild(new ExploreToken(game, x - halfGridWidth, y + gridWidth));
+    this.addChild(CreateToken(game, 'lobby-door2-explore'))
     //this.addChild(new ExploreToken(game, x + (gridWidth * 5) + halfGridWidth, y + gridWidth));
     //this.addChild(new ExploreToken(game, x - halfGridWidth, y + gridWidth * 4));
-    this.addChild(new ExploreToken(game, x + (gridWidth * 5) + halfGridWidth, y + gridWidth * 4));
-
-    //this.addChild(new SearchToken(game, x + gridWidth * 2.5, y + gridWidth * 1.5));
-    this.addChild(CreateToken(game, 'lobby-box'))
+    this.addChild(CreateToken(game, 'lobby-door3-explore'))
+    this.addChild(CreateToken(game, 'lobby-box-search'))
 }
 
 MapTileGroup.prototype = Object.create(Phaser.Group.prototype);

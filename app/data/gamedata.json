@@ -23,19 +23,58 @@
   ],
   "mapTokens":[
     {
-      "id":"lobby-box",
+      "id":"lobby-box-search",
       "x":1200,
       "y":1104,
       "bmdId":"searchTokenBmd",
-      "clickId":"lobby-box"
+      "clickId":"lobby-box-dialog"
+    },
+    {
+      "id":"lobby-door1-explore",
+      "x":1056,
+      "y":912,
+      "bmdId":"exploreTokenBmd",
+      "clickId":"lobby-door1-dialog"
+    },
+    {
+      "id":"lobby-door2-explore",
+      "x":912,
+      "y":1056,
+      "bmdId":"exploreTokenBmd",
+      "clickId":"lobby-door2-dialog"
+    },
+    {
+      "id":"lobby-door3-explore",
+      "x":1488,
+      "y":1344,
+      "bmdId":"exploreTokenBmd",
+      "clickId":"lobby-door3-dialog"
     }
   ],
   "dialogs":[
     {
-      "id":"lobby-box",
+      "id":"lobby-box-dialog",
       "bmdId":"searchTokenBmd",
       "text":"A heavy wooden box lies on the bureau. The lid of the box is held shut by a thick metal latch.",
       "actionText":"@ Search"
+    },
+    {
+      "id":"lobby-door1-dialog",
+      "bmdId":"exploreTokenBmd",
+      "text":"Hey, its door number one.",
+      "actionText":"@ Explore"
+    },
+    {
+      "id":"lobby-door2-dialog",
+      "bmdId":"exploreTokenBmd",
+      "text":"Hey, its door number two.",
+      "actionText":"@ Explore"
+    },
+    {
+      "id":"lobby-door3-dialog",
+      "bmdId":"exploreTokenBmd",
+      "text":"Hey, its door number three.",
+      "actionText":"@ Explore"
     }
   ]
 }
