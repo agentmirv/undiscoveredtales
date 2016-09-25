@@ -59,6 +59,10 @@ The JSON object instance can have an ID and type.
 Another problem is, a JSON object instance may need to signal (eg destroy) an object in the world.
 A list or array of these objects can be maintained, and where the JSON object IDs are the keys.
 
+Object.prototype.hasOwnProperty()
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/hasOwnProperty
+* unlike the in operator, this method does not check down the object's prototype chain.
+
 ===========================================================
 ===========================================================
 ===========================================================

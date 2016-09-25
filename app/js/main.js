@@ -175,6 +175,8 @@ function CreateDialog(game, id) {
         dialogData.bmdId,
         dialogData.buttonType,
         dialogData.actionText,
+        dialogData.actionRemove,
+        dialogData.actionDialog,
         null);
 
     game.gamedataInstances[id] = dialogInstance;
@@ -216,22 +218,24 @@ function MapTileGroup(game, x, y) {
 
     this.addChild(game.make.sprite(x, y, game.cache.getBitmapData('lobbyMapTileBmd')));
 
-    this.addChild(CreateToken(game, 'lobby-door1-explore'))
+    game.world.addChild(CreateToken(game, 'lobby-door1-explore'))
     //this.addChild(new ExploreToken(game, x + gridWidth * 4, y - halfGridWidth));
-    this.addChild(CreateToken(game, 'lobby-door2-explore'))
+    game.world.addChild(CreateToken(game, 'lobby-door2-explore'))
     //this.addChild(new ExploreToken(game, x + (gridWidth * 5) + halfGridWidth, y + gridWidth));
     //this.addChild(new ExploreToken(game, x - halfGridWidth, y + gridWidth * 4));
-    this.addChild(CreateToken(game, 'lobby-door3-explore'))
-    this.addChild(CreateToken(game, 'lobby-box-search'))
+    game.world.addChild(CreateToken(game, 'lobby-door3-explore'))
+    game.world.addChild(CreateToken(game, 'lobby-box-search'))
 }
 
 MapTileGroup.prototype = Object.create(Phaser.Group.prototype);
 MapTileGroup.prototype.constructor = MapTileGroup;
 
 //=========================================================
-function DialogGroup(game, messageText, imageBmdId, buttonType, actionButtonText, actionButtonCallback) {
+function DialogGroup(game, messageText, imageBmdId, buttonType, actionButtonText, actionRemove, actionDialog, actionButtonCallback) {
     Phaser.Group.call(this, game);
 
+    this._actionRemove = actionRemove;
+    this._actionDialog = actionDialog;
     this._actionCallback = actionButtonCallback;
 
     // Modal
@@ -296,10 +300,31 @@ DialogGroup.prototype.cancelClicked = function () {
     this.destroy(true);
 }
 
-DialogGroup.prototype.actionClicked = function (group) {
-    if (group._actionCallback != null) {
-        group._actionCallback();
+DialogGroup.prototype.actionClicked = function () {
+    if (this._actionRemove != null) {
+        for (var i = 0; i < this._actionRemove.length; i++) {
+            var id = this._actionRemove[i];
+
+            if (game.gamedataInstances.hasOwnProperty(id)) {
+                var instance = game.gamedataInstances[id]
+                game.gamedataInstances[id]= null;
+                game.world.removeChild(instance);
+                instance.destroy();
+            }
+        }
     }
+
+    if (this._actionDialog != null) {
+        game.stage.addChild(CreateDialog(game, this._actionDialog))
+    } else {
+        game.cutSceneCamera = false;
+    }
+
+    if (this._actionCallback != null) {
+        this._actionCallback();
+    }
+
+    this.destroy(true);
 }
 
 DialogGroup.prototype.continueClicked = function () {
