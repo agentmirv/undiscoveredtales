@@ -151,65 +151,6 @@ var GameState = {
 }
 
 //=========================================================
-function CreateToken(game, id) {
-    var tokenData = game.gamedata.mapTokens.find(function (item) { return item.id == id });
-    var tokenInstance = new Token(
-        game,
-        tokenData.x,
-        tokenData.y,
-        tokenData.bmdId,
-        tokenData.clickId
-        )
-    game.gamedataInstances[id] = tokenInstance;
-
-    return tokenInstance;
-}
-
-//=========================================================
-function CreateDialog(game, id) {
-    var dialogData = game.gamedata.dialogs.find(function (item) { return item.id == id });
-    
-    var dialogInstance = new DialogGroup(
-        game,
-        dialogData.text,
-        dialogData.bmdId,
-        dialogData.buttonType,
-        dialogData.actionText,
-        dialogData.actionRemove,
-        dialogData.actionDialog,
-        null);
-
-    game.gamedataInstances[id] = dialogInstance;
-
-    return dialogInstance;
-}
-
-//=========================================================
-function Token(game, x, y, bitmapDataId, clickId) {
-    Phaser.Sprite.call(this, game, x, y, game.cache.getBitmapData(bitmapDataId));
-
-    this.clickId = clickId;
-    this.inputEnabled = true;
-    this.events.onInputDown.add(this.tokenClicked, this);
-    this.input.useHandCursor = true;
-}
-
-Token.prototype = Object.create(Phaser.Sprite.prototype);
-Token.prototype.constructor = Token;
-
-Token.prototype.tokenClicked = function (token) {
-    player.body.x = token.centerX + 300 - 16 - 48 //half message width - left margin - half image width
-    player.body.y = token.centerY
-    game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
-    game.cutSceneCamera = true;
-
-    game.customCallback = function () {
-        game.stage.addChild(CreateDialog(game, token.clickId))
-        game.customCallback = null;
-    }
-}
-
-//=========================================================
 function MapTileGroup(game, x, y) {
     Phaser.Group.call(this, game);
 
@@ -231,12 +172,68 @@ MapTileGroup.prototype = Object.create(Phaser.Group.prototype);
 MapTileGroup.prototype.constructor = MapTileGroup;
 
 //=========================================================
-function DialogGroup(game, messageText, imageBmdId, buttonType, actionButtonText, actionRemove, actionDialog, actionButtonCallback) {
+function CreateToken(game, id) {
+    var tokenData = game.gamedata.mapTokens.find(function (item) { return item.id == id });
+    var tokenInstance = new TokenSprite(
+        game,
+        tokenData.x,
+        tokenData.y,
+        tokenData.bmdId,
+        tokenData.clickId);
+    game.gamedataInstances[id] = tokenInstance;
+
+    return tokenInstance;
+}
+
+//=========================================================
+function CreateDialog(game, id) {
+    var dialogData = game.gamedata.dialogs.find(function (item) { return item.id == id });
+    
+    var dialogInstance = new DialogGroup(
+        game,
+        dialogData.text,
+        dialogData.bmdId,
+        dialogData.buttonType,
+        dialogData.actionText,
+        dialogData.actionRemove,
+        dialogData.actionDialog);
+
+    game.gamedataInstances[id] = dialogInstance;
+
+    return dialogInstance;
+}
+
+//=========================================================
+function TokenSprite(game, x, y, bitmapDataId, clickId) {
+    Phaser.Sprite.call(this, game, x, y, game.cache.getBitmapData(bitmapDataId));
+
+    this.clickId = clickId;
+    this.inputEnabled = true;
+    this.events.onInputDown.add(this.tokenClicked, this);
+    this.input.useHandCursor = true;
+}
+
+TokenSprite.prototype = Object.create(Phaser.Sprite.prototype);
+TokenSprite.prototype.constructor = TokenSprite;
+
+TokenSprite.prototype.tokenClicked = function (token) {
+    player.body.x = token.centerX + 300 - 16 - 48 //half message width - left margin - half image width
+    player.body.y = token.centerY
+    game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
+    game.cutSceneCamera = true;
+
+    game.customCallback = function () {
+        game.stage.addChild(CreateDialog(game, token.clickId))
+        game.customCallback = null;
+    }
+}
+
+//=========================================================
+function DialogGroup(game, messageText, imageBmdId, buttonType, actionButtonText, actionRemove, actionDialog) {
     Phaser.Group.call(this, game);
 
     this._actionRemove = actionRemove;
     this._actionDialog = actionDialog;
-    this._actionCallback = actionButtonCallback;
 
     // Modal
     var modalBackground = game.make.sprite(game.stageViewRect.x, game.stageViewRect.y, 'pixelTransparent');
@@ -318,10 +315,6 @@ DialogGroup.prototype.actionClicked = function () {
         game.stage.addChild(CreateDialog(game, this._actionDialog))
     } else {
         game.cutSceneCamera = false;
-    }
-
-    if (this._actionCallback != null) {
-        this._actionCallback();
     }
 
     this.destroy(true);
