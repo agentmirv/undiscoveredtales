@@ -77,6 +77,7 @@ var GameState = {
         game.camera.bounds = null
 
         //=================================================
+        // Map Tile
         exampleMapTile = game.world.add(new MapTileGroup(game, 30 * 32, 30 * 32));
 
         //=================================================
@@ -85,6 +86,7 @@ var GameState = {
         game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
 
         //=================================================
+        // Map Tile Dialog
         game.customCallback = function () {
             var revealDialogGroup = game.stage.addChild(new RevealDialogGroup(game, "A disembodied voice speaks from the dim chamber, 'So, you have found me.'"));
             game.customCallback = null;
@@ -224,36 +226,6 @@ ExploreToken.prototype.tokenClicked = function (token) {
 }
 
 //=========================================================
-function SearchToken(game, x, y) {
-    Phaser.Sprite.call(this, game, x, y, game.cache.getBitmapData('searchTokenBmd'));
-
-    this.inputEnabled = true;
-    this.events.onInputDown.add(this.tokenClicked, this);
-    this.input.useHandCursor = true;
-}
-
-SearchToken.prototype = Object.create(Phaser.Sprite.prototype);
-SearchToken.prototype.constructor = SearchToken;
-
-SearchToken.prototype.tokenClicked = function (token) {
-    player.body.x = token.centerX + 300 - 16 - 48 //half message width - left margin - half image width
-    player.body.y = token.centerY
-    game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
-    game.cutSceneCamera = true;
-
-    //Example
-    game.customCallback = function () {
-        var imageDialogGroup = game.stage.addChild(new ImageDialogGroup(game,
-            "A heavy wooden box lies on the bureau. The lid of the box is held shut by a thick metal latch.",
-            "searchTokenBmd",
-            "@ Search",
-            function () { console.log("searched") })
-        );
-        game.customCallback = null;
-    }
-}
-
-//=========================================================
 function MapTileGroup (game, x, y) {
     Phaser.Group.call(this, game);
 
@@ -320,26 +292,14 @@ function ImageDialogGroup(game, messageText, imageBmdId, actionButtonText, actio
 ImageDialogGroup.prototype = Object.create(Phaser.Group.prototype);
 ImageDialogGroup.prototype.constructor = ImageDialogGroup;
 
-ImageDialogGroup.prototype.cancelClicked = function (group) {
+ImageDialogGroup.prototype.cancelClicked = function () {
     game.cutSceneCamera = false;
-    group.removeChild(this._modalBackground);
-    group.removeChild(this._imageMessage);
-    group.removeChild(this._imageCancel);
-    group.removeChild(this._imageAction);
-    group.removeChild(this._imageCancelButton);
-    group.removeChild(this._imageActionButton);
-    this._modalBackground.destroy();
-    this._imageMessage.destroy();
-    this._imageCancel.destroy();
-    this._imageAction.destroy();
-    this._imageCancelButton.destroy();
-    this._imageActionButton.destroy();
-    group.destroy();
+    this.destroy(true);
 }
 
 ImageDialogGroup.prototype.actionClicked = function (group) {
-    if (this._actionCallback != null) {
-        this._actionCallback();
+    if (group._actionCallback != null) {
+        group._actionCallback();
     }
 }
 
@@ -432,7 +392,7 @@ function RevealDialogGroup (game, messageText) {
     this._revealContinueButton.width = this._revealContinue.width;
     this._revealContinueButton.height = this._revealContinue.height;
     this._revealContinueButton.inputEnabled = true;
-    this._revealContinueButton.events.onInputDown.add(this.continueClicked, this);
+    this._revealContinueButton.events.onInputUp.add(this.continueClicked, this);
     this._revealContinueButton.input.useHandCursor = true;
     this.addChild(this._revealContinueButton);
 }
@@ -440,17 +400,9 @@ function RevealDialogGroup (game, messageText) {
 RevealDialogGroup.prototype = Object.create(Phaser.Group.prototype);
 RevealDialogGroup.prototype.constructor = RevealDialogGroup;
 
-RevealDialogGroup.prototype.continueClicked = function (group) {
+RevealDialogGroup.prototype.continueClicked = function () {
     game.cutSceneCamera = false;
-    group.removeChild(this._modalBackground);
-    group.removeChild(this._revealMessage);
-    group.removeChild(this._revealContinue);
-    group.removeChild(this._revealContinueButton);
-    this._modalBackground.destroy();
-    this._revealMessage.destroy();
-    this._revealContinue.destroy();
-    this._revealContinueButton.destroy();
-    group.destroy();
+    this.destroy(true);
 }
 
 //=========================================================

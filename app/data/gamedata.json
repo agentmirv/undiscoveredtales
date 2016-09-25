@@ -4,7 +4,7 @@
   ],
   "mapTiles": [
     {
-      "id": "Lobby",
+      "id": "lobby",
       "x": 960,
       "y": 960,
       "width": 6,
