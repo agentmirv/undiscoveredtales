@@ -7,11 +7,18 @@ var GameState = {
         game.load.image('pixelWhite', 'assets/images/FFFFFF-1.png')
         game.load.image('pixelBlack', 'assets/images/000000-1.png')
         game.load.image('pixelTransparent', 'assets/images/1x1.png')
-        game.load.spritesheet('tileWallsSheet', 'assets/images/TileWalls.png', 96, 96);
         game.load.image('circleToken', 'assets/images/CircleToken.png', 96, 96);
+
+        game.load.spritesheet('tileWallsSheet', 'assets/images/TileWalls.png', 96, 96);
+
+        game.load.json('gamedata', 'data/gamedata.json');
     },
 
     create: function () {
+        //=================================================
+        game.gamedata = game.cache.getJSON('gamedata');
+        game.gamedataInstances = {};
+
         //=================================================
         // Create bitmapData
         var exploreLetterStyle = { font: "74px Arial Black", fill: "#ff0000", align: "center", stroke: "#aa0000", strokeThickness: 5 };
@@ -76,10 +83,8 @@ var GameState = {
         player = game.add.sprite(exampleMapTile.centerX, exampleMapTile.centerY, 'pixelTransparent');
         game.physics.p2.enable(player);
         game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
-        //game.camera.focusOn(player)
 
         //=================================================
-        //var revealDialogGroup = game.stage.addChild(new RevealDialogGroup(game, "A disembodied voice speaks from the dim chamber, 'So, you have found me.'"));
         game.customCallback = function () {
             var revealDialogGroup = game.stage.addChild(new RevealDialogGroup(game, "A disembodied voice speaks from the dim chamber, 'So, you have found me.'"));
             game.customCallback = null;
@@ -140,6 +145,39 @@ var GameState = {
 
         //var targetRectSmall = new Phaser.Rectangle(player.body.x - 10, player.body.y - 10, 20, 20)
         //game.debug.geom(targetRectSmall, "#00FF00", false)
+    }
+}
+
+//=========================================================
+function CreateToken(game, id) {
+    var tokenData = game.gamedata.mapTokens.find(function (item) { return item.id == id });
+    var tokenInstance = new Token(game, tokenData.x, tokenData.y, tokenData.bmdId)
+    game.gamedataInstances[id] = tokenInstance;
+
+    return tokenInstance;
+}
+
+//=========================================================
+function Token(game, x, y, bitmapDataId) {
+    Phaser.Sprite.call(this, game, x, y, game.cache.getBitmapData(bitmapDataId));
+
+    this.inputEnabled = true;
+    this.events.onInputDown.add(this.tokenClicked, this);
+    this.input.useHandCursor = true;
+}
+
+Token.prototype = Object.create(Phaser.Sprite.prototype);
+Token.prototype.constructor = Token;
+
+Token.prototype.tokenClicked = function (token) {
+    player.body.x = token.centerX + 300 - 16 - 48 //half message width - left margin - half image width
+    player.body.y = token.centerY
+    game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
+    game.cutSceneCamera = true;
+
+    game.customCallback = function () {
+        console.log("Factory Call?")
+        game.customCallback = null;
     }
 }
 
@@ -207,7 +245,9 @@ function MapTileGroup (game, x, y) {
     //this.addChild(new ExploreToken(game, x + (gridWidth * 5) + halfGridWidth, y + gridWidth));
     //this.addChild(new ExploreToken(game, x - halfGridWidth, y + gridWidth * 4));
     this.addChild(new ExploreToken(game, x + (gridWidth * 5) + halfGridWidth, y + gridWidth * 4));
-    this.addChild(new SearchToken(game, x + gridWidth * 2.5, y + gridWidth * 1.5));
+
+    //this.addChild(new SearchToken(game, x + gridWidth * 2.5, y + gridWidth * 1.5));
+    this.addChild(CreateToken(game, 'lobby-box'))
 }
 
 MapTileGroup.prototype = Object.create(Phaser.Group.prototype);
@@ -472,7 +512,7 @@ function OutlineBox(game, width, height) {
         game.make.tileSprite(localX + width - edgeSize, localY + edgeSize, edgeSize, height - (edgeSize * 2), 'pixelWhite'),
     ];
 
-    // Add all of the above to this sprite
+    // Add all of the above to this group
     for (var b = 0, len = borders.length; b < len; b++) {
         this.addChild(borders[b]);
     }

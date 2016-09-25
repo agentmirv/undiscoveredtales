@@ -1,11 +1,15 @@
 ﻿{
-  "maptiles": [
+  "bmdTokens": [
+
+  ],
+  "mapTiles": [
     {
       "id": "Lobby",
       "x": 960,
       "y": 960,
       "width": 6,
       "height": 6,
+      "bmdId": "lobbyMapTileBmd",
       "spritesheet": "tileWallsSheet",
       "wallIndex": [
         0, 4, 1, 1, 4, 2,
@@ -15,6 +19,23 @@
         4, 4, 4, 4, 4, 4,
         6, 7, 7, 7, 7, 8
       ]
+    }
+  ],
+  "mapTokens":[
+    {
+      "id":"lobby-box",
+      "x":1200,
+      "y":1104,
+      "bmdId":"searchTokenBmd",
+      "clickId":"lobby-box"
+    }
+  ],
+  "dialogs":[
+    {
+      "id":"lobby-box",
+      "bmdId":"searchTokenBmd",
+      "text":"A heavy wooden box lies on the bureau. The lid of the box is held shut by a thick metal latch.",
+      "actionText":"@ Search"
     }
   ]
 }
