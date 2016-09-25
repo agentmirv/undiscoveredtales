@@ -30,8 +30,8 @@
       "clickId":"lobby-box-dialog"
     },
     {
-      "id":"lobby-door1-explore",
       "x":1056,
+      "id":"lobby-door1-explore",
       "y":912,
       "bmdId":"exploreTokenBmd",
       "clickId":"lobby-door1-dialog"
@@ -51,30 +51,39 @@
       "clickId":"lobby-door3-dialog"
     }
   ],
-  "dialogs":[
+  "dialogs": [
     {
-      "id":"lobby-box-dialog",
-      "bmdId":"searchTokenBmd",
-      "text":"A heavy wooden box lies on the bureau. The lid of the box is held shut by a thick metal latch.",
-      "actionText":"@ Search"
+      "id": "lobby-reveal-dialog",
+      "text": "A disembodied voice speaks from the dim chamber, 'So, you have found me.'",
+      "buttonType": "continue"
     },
     {
-      "id":"lobby-door1-dialog",
-      "bmdId":"exploreTokenBmd",
-      "text":"Hey, its door number one.",
-      "actionText":"@ Explore"
+      "id": "lobby-box-dialog",
+      "bmdId": "searchTokenBmd",
+      "text": "A heavy wooden box lies on the bureau. The lid of the box is held shut by a thick metal latch.",
+      "buttonType": "cancel-action",
+      "actionText": "@ Search"
     },
     {
-      "id":"lobby-door2-dialog",
-      "bmdId":"exploreTokenBmd",
-      "text":"Hey, its door number two.",
-      "actionText":"@ Explore"
+      "id": "lobby-door1-dialog",
+      "bmdId": "exploreTokenBmd",
+      "text": "Hey, its door number one.",
+      "buttonType": "cancel-action",
+      "actionText": "@ Explore"
     },
     {
-      "id":"lobby-door3-dialog",
-      "bmdId":"exploreTokenBmd",
-      "text":"Hey, its door number three.",
-      "actionText":"@ Explore"
+      "id": "lobby-door2-dialog",
+      "bmdId": "exploreTokenBmd",
+      "text": "Hey, its door number two.",
+      "buttonType": "cancel-action",
+      "actionText": "@ Explore"
+    },
+    {
+      "id": "lobby-door3-dialog",
+      "bmdId": "exploreTokenBmd",
+      "text": "Hey, its door number three.",
+      "buttonType": "cancel-action",
+      "actionText": "@ Explore"
     }
   ]
 }

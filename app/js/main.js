@@ -88,7 +88,7 @@ var GameState = {
         //=================================================
         // Map Tile Dialog (TODO: use reveal)
         game.customCallback = function () {
-            var revealDialogGroup = game.stage.addChild(new RevealDialogGroup(game, "A disembodied voice speaks from the dim chamber, 'So, you have found me.'"));
+            var revealDialogGroup = game.stage.addChild(CreateDialog(game, "lobby-reveal-dialog"));
             game.customCallback = null;
         }
 
@@ -136,7 +136,7 @@ var GameState = {
         }
     },
 
-    render : function () {
+    render: function () {
         game.debug.cameraInfo(game.camera, 32, 32);
         game.debug.spriteInfo(player, 32, 130);
         //game.debug.text(exampleMapTile.centerX, 32, 230)
@@ -154,9 +154,9 @@ var GameState = {
 function CreateToken(game, id) {
     var tokenData = game.gamedata.mapTokens.find(function (item) { return item.id == id });
     var tokenInstance = new Token(
-        game, 
-        tokenData.x, 
-        tokenData.y, 
+        game,
+        tokenData.x,
+        tokenData.y,
         tokenData.bmdId,
         tokenData.clickId
         )
@@ -168,13 +168,14 @@ function CreateToken(game, id) {
 //=========================================================
 function CreateDialog(game, id) {
     var dialogData = game.gamedata.dialogs.find(function (item) { return item.id == id });
-
-    var dialogInstance = new ImageDialogGroup(
+    console.dir(dialogData)
+    var dialogInstance = new DialogGroup(
         game,
         dialogData.text,
         dialogData.bmdId,
+        dialogData.buttonType,
         dialogData.actionText,
-        function () { console.log("searched") });
+        null);
 
     game.gamedataInstances[id] = dialogInstance;
 
@@ -207,12 +208,12 @@ Token.prototype.tokenClicked = function (token) {
 }
 
 //=========================================================
-function MapTileGroup (game, x, y) {
+function MapTileGroup(game, x, y) {
     Phaser.Group.call(this, game);
 
     var gridWidth = 96;
     var halfGridWidth = 48;
-    
+
     this.addChild(game.make.sprite(x, y, game.cache.getBitmapData('lobbyMapTileBmd')));
 
     this.addChild(CreateToken(game, 'lobby-door1-explore'))
@@ -226,6 +227,129 @@ function MapTileGroup (game, x, y) {
 
 MapTileGroup.prototype = Object.create(Phaser.Group.prototype);
 MapTileGroup.prototype.constructor = MapTileGroup;
+
+//=========================================================
+function DialogGroup(game, messageText, imageBmdId, buttonType, actionButtonText, actionButtonCallback) {
+    Phaser.Group.call(this, game);
+
+    this._actionCallback = actionButtonCallback;
+
+    // Modal
+    var modalBackground = game.make.sprite(game.stageViewRect.x, game.stageViewRect.y, 'pixelTransparent');
+    modalBackground.width = game.stageViewRect.width;
+    modalBackground.height = game.stageViewRect.height;
+    modalBackground.inputEnabled = true;
+    this.addChild(modalBackground);
+
+    var dialogMessage = new DialogMessage(game, messageText, imageBmdId);
+    dialogMessage.alignIn(game.stageViewRect, Phaser.CENTER)
+    this.addChild(dialogMessage);
+
+    if (buttonType == "cancel-action") {
+        var dialogCancel = new ImageMessageButton(game, "Cancel", 280);
+        dialogCancel.alignTo(dialogMessage, Phaser.BOTTOM_LEFT, -10, 10)
+        this.addChild(dialogCancel);
+
+        var dialogAction = new ImageMessageButton(game, actionButtonText, 280);
+        dialogAction.alignTo(dialogMessage, Phaser.BOTTOM_RIGHT, -10, 10)
+        this.addChild(dialogAction);
+
+        dialogCancelButton = game.make.sprite(dialogCancel.x, dialogCancel.y, 'pixelTransparent');
+        dialogCancelButton.width = dialogCancel.width;
+        dialogCancelButton.height = dialogCancel.height;
+        dialogCancelButton.inputEnabled = true;
+        dialogCancelButton.events.onInputDown.add(this.cancelClicked, this);
+        dialogCancelButton.input.useHandCursor = true;
+        this.addChild(dialogCancelButton);
+
+        dialogActionButton = game.make.sprite(dialogAction.x, dialogAction.y, 'pixelTransparent');
+        dialogActionButton.width = dialogAction.width;
+        dialogActionButton.height = dialogAction.height;
+        dialogActionButton.inputEnabled = true;
+        dialogActionButton.events.onInputDown.add(this.actionClicked, this);
+        dialogActionButton.input.useHandCursor = true;
+        this.addChild(dialogActionButton);
+    } else if (buttonType == "continue") {
+        var dialogContinue = new RevealContinue(game, "Continue");
+        dialogContinue.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 0, 10)
+        this.addChild(dialogContinue);
+
+        var dialogContinueButton = game.make.sprite(dialogContinue.x, dialogContinue.y, 'pixelTransparent');
+        dialogContinueButton.width = dialogContinue.width;
+        dialogContinueButton.height = dialogContinue.height;
+        dialogContinueButton.inputEnabled = true;
+        dialogContinueButton.events.onInputUp.add(this.continueClicked, this);
+        dialogContinueButton.input.useHandCursor = true;
+        this.addChild(dialogContinueButton);
+    }
+}
+
+DialogGroup.prototype = Object.create(Phaser.Group.prototype);
+DialogGroup.prototype.constructor = DialogGroup;
+
+DialogGroup.prototype.cancelClicked = function () {
+    game.cutSceneCamera = false;
+    this.destroy(true);
+}
+
+DialogGroup.prototype.actionClicked = function (group) {
+    if (group._actionCallback != null) {
+        group._actionCallback();
+    }
+}
+
+DialogGroup.prototype.continueClicked = function () {
+    game.cutSceneCamera = false;
+    this.destroy(true);
+}
+
+//=========================================================
+function DialogMessage(game, text, imageBmdId) {
+    Phaser.Group.call(this, game, 0, 0);
+
+    var totalWidth = 600;
+    var leftMargin = 16;
+    var imageWidth = 96;
+    var imageHeight = 96;
+    var middleMargin = 16
+    var rightMargin = 10;
+    var topMargin = 20;
+    var bottomMargin = 20;
+
+    if (imageBmdId == null) {
+        leftMargin = 36;
+        imageWidth = 0;
+        middleMargin = 0;
+    }
+
+    var textWidth = totalWidth - leftMargin - imageWidth - middleMargin - rightMargin;
+    var textStyle = { font: "20px Times New Romans", fill: "#ffffff", align: "left", wordWrap: true, wordWrapWidth: textWidth };
+    var messageText = game.make.text(0, 0, text, textStyle);
+
+    messageText.x = leftMargin + imageWidth + middleMargin
+
+    var textHeight = messageText.height
+    if (textHeight >= imageHeight) {
+        messageText.y = topMargin;
+    } else {
+        messageText.y = topMargin + Math.floor((imageHeight - textHeight) / 2)
+        textHeight = imageHeight
+    }
+
+    var totalHeight = textHeight + topMargin + bottomMargin;
+    var outlineBox = new OutlineBox(game, totalWidth, totalHeight);
+
+    this.addChild(outlineBox);
+    this.addChild(messageText);
+
+    if (imageBmdId != null) {
+        var imageBadgeSprite = game.make.sprite(leftMargin, Math.floor((totalHeight - imageHeight) / 2), game.cache.getBitmapData(imageBmdId))
+        this.addChild(imageBadgeSprite);
+    }
+}
+
+DialogMessage.prototype = Object.create(Phaser.Group.prototype);
+DialogMessage.prototype.constructor = DialogMessage;
 
 //=========================================================
 function ImageDialogGroup(game, messageText, imageBmdId, actionButtonText, actionButtonCallback) {
@@ -302,8 +426,7 @@ function ImageMessage(game, text, imageBmdId) {
     revealText.x = leftMargin + imageWidth + middleMargin
 
     var textHeight = revealText.height
-    if (textHeight >= imageHeight)
-    {
+    if (textHeight >= imageHeight) {
         revealText.y = topMargin;
     } else {
         revealText.y = topMargin + Math.floor((imageHeight - textHeight) / 2)
@@ -350,7 +473,7 @@ ImageMessageButton.prototype = Object.create(Phaser.Group.prototype);
 ImageMessageButton.prototype.constructor = ImageMessageButton;
 
 //=========================================================
-function RevealDialogGroup (game, messageText) {
+function RevealDialogGroup(game, messageText) {
     Phaser.Group.call(this, game);
 
     this._modalBackground = game.make.sprite(game.stageViewRect.x, game.stageViewRect.y, 'pixelTransparent');
@@ -366,7 +489,7 @@ function RevealDialogGroup (game, messageText) {
     this._revealContinue = new RevealContinue(game, "Continue");
     this._revealContinue.alignTo(this._revealMessage, Phaser.BOTTOM_CENTER, 0, 10)
     this.addChild(this._revealContinue);
-    
+
     this._revealContinueButton = game.make.sprite(this._revealContinue.x, this._revealContinue.y, 'pixelTransparent');
     this._revealContinueButton.width = this._revealContinue.width;
     this._revealContinueButton.height = this._revealContinue.height;
@@ -385,7 +508,7 @@ RevealDialogGroup.prototype.continueClicked = function () {
 }
 
 //=========================================================
-function RevealMessage (game, text) {
+function RevealMessage(game, text) {
     Phaser.Group.call(this, game, 0, 0);
 
     var totalWidth = 600;
@@ -411,7 +534,7 @@ RevealMessage.prototype = Object.create(Phaser.Group.prototype);
 RevealMessage.prototype.constructor = RevealMessage;
 
 //=========================================================
-function RevealContinue (game, text) {
+function RevealContinue(game, text) {
     Phaser.Group.call(this, game, 0, 0);
 
     var totalWidth = 180;
