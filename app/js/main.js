@@ -43,13 +43,6 @@ var GameState = {
 
         //=================================================
         var exampleMapTile = game.world.add(new MapTileGroup(game, 30 * 32, 30 * 32));
-        //game.world.add(new ExploreToken(game, 33 * 32, 29 * 32));
-        //game.world.add(new ExploreToken(game, 42 * 32, 29 * 32));
-        game.world.add(new ExploreToken(game, 29 * 32, 33 * 32));
-        //game.world.add(new ExploreToken(game, 46 * 32, 33 * 32));
-        game.world.add(new ExploreToken(game, 29 * 32, 42 * 32));
-        game.world.add(new ExploreToken(game, 46 * 32, 42 * 32));
-        game.world.add(new SearchToken(game, 40 * 30, 36 * 30));
 
         //=================================================
         player = game.add.sprite(exampleMapTile.centerX, exampleMapTile.centerY, 'pixelTransparent');
@@ -190,6 +183,7 @@ function MapTileGroup (game, x, y) {
     var tileWidth = 6;
     var tileHeight = 6;
     var gridWidth = 96;
+    var halfGridWidth = 48;
     var walls = [
         0, 4, 1, 1, 4, 2,
         4, 4, 4, 4, 4, 4,
@@ -205,9 +199,17 @@ function MapTileGroup (game, x, y) {
             var localY = j * gridWidth;
             var wallIndex = i + j * 6;
             var sprite = game.make.tileSprite(x + localX, y + localY, gridWidth, gridWidth, 'tileWallsSheet', walls[wallIndex])
-            this.add(sprite);
+            this.addChild(sprite);
         }
     }
+        
+    this.addChild(new ExploreToken(game, x + gridWidth, y - halfGridWidth));
+    //this.addChild(new ExploreToken(game, x + gridWidth * 4, y - halfGridWidth));
+    this.addChild(new ExploreToken(game, x - halfGridWidth, y + gridWidth));
+    //this.addChild(new ExploreToken(game, x + (gridWidth * 5) + halfGridWidth, y + gridWidth));
+    //this.addChild(new ExploreToken(game, x - halfGridWidth, y + gridWidth * 4));
+    this.addChild(new ExploreToken(game, x + (gridWidth * 5) + halfGridWidth, y + gridWidth * 4));
+    this.addChild(new SearchToken(game, x + gridWidth * 2.5, y + gridWidth * 1.5));
 }
 
 MapTileGroup.prototype = Object.create(Phaser.Group.prototype);
