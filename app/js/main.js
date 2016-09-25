@@ -151,16 +151,39 @@ var GameState = {
 //=========================================================
 function CreateToken(game, id) {
     var tokenData = game.gamedata.mapTokens.find(function (item) { return item.id == id });
-    var tokenInstance = new Token(game, tokenData.x, tokenData.y, tokenData.bmdId)
+    var tokenInstance = new Token(
+        game, 
+        tokenData.x, 
+        tokenData.y, 
+        tokenData.bmdId,
+        tokenData.clickId
+        )
     game.gamedataInstances[id] = tokenInstance;
 
     return tokenInstance;
 }
 
 //=========================================================
-function Token(game, x, y, bitmapDataId) {
+function CreateDialog(game, id) {
+    var dialogData = game.gamedata.dialogs.find(function (item) { return item.id == id });
+
+    var dialogInstance = new ImageDialogGroup(
+        game,
+        dialogData.text,
+        dialogData.bmdId,
+        dialogData.actionText,
+        function () { console.log("searched") });
+
+    game.gamedataInstances[id] = dialogInstance;
+
+    return dialogInstance;
+}
+
+//=========================================================
+function Token(game, x, y, bitmapDataId, clickId) {
     Phaser.Sprite.call(this, game, x, y, game.cache.getBitmapData(bitmapDataId));
 
+    this.clickId = clickId;
     this.inputEnabled = true;
     this.events.onInputDown.add(this.tokenClicked, this);
     this.input.useHandCursor = true;
@@ -176,7 +199,7 @@ Token.prototype.tokenClicked = function (token) {
     game.cutSceneCamera = true;
 
     game.customCallback = function () {
-        console.log("Factory Call?")
+        game.stage.addChild(CreateDialog(game, token.clickId))
         game.customCallback = null;
     }
 }
