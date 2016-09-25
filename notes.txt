@@ -39,7 +39,26 @@ GitHub Pages
 https://jekyllrb.com/docs/github-pages/
 
 ===========================================================
+2016 September 25, Sunday 10:47 AM
 ===========================================================
+It is not a problem to create factory functions (or constructors) to create tokens and dialogs.
+
+One problem is, each instance needs different parameters to the constructor (like text and image references).
+These sets of parameters can be expressed as JSON objects.
+
+Load Json File
+http://phaser.io/examples/v2/loader/load-json-file
+
+Load Tilemap Json
+http://phaser.io/examples/v2/loader/load-tilemap-json
+
+Another problem is, there needs to be a way to tell a token to create a dialog or a dialog to create another dialog or token (like a reveal).
+Each different instance (including message and image) of token or dialog can be represented by and ID (or by both ID and type).
+The JSON object instance can have an ID and type.
+
+Another problem is, a JSON object instance may need to signal (eg destroy) an object in the world.
+A list or array of these objects can be maintained, and where the JSON object IDs are the keys.
+
 ===========================================================
 ===========================================================
 ===========================================================

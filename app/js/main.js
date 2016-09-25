@@ -12,11 +12,18 @@ var GameState = {
     },
 
     create: function () {
+        //=================================================
+        // Create bitmapData
         var exploreLetterStyle = { font: "74px Arial Black", fill: "#ff0000", align: "center", stroke: "#aa0000", strokeThickness: 5 };
         var exploreLetter = game.make.text(0, 0, 'E', exploreLetterStyle)
         exploreLetter.setShadow(2, 2, "#333333", 2, true, false);
         exploreLetter.x = 48 - Math.floor(exploreLetter.width / 2);
         exploreLetter.y = 48 - Math.floor(exploreLetter.height / 2);
+
+        var exploreTokenBmd = game.make.bitmapData(96, 96);
+        exploreTokenBmd.copy('circleToken');
+        exploreTokenBmd.copy(exploreLetter);
+        game.cache.addBitmapData('exploreTokenBmd', exploreTokenBmd);
 
         var searchLetterStyle = { font: "74px Arial Black", fill: "#ffff00", align: "center", stroke: "#aaaa00", strokeThickness: 5 };
         var searchLetter = game.make.text(0, 0, '?', searchLetterStyle)
@@ -24,15 +31,36 @@ var GameState = {
         searchLetter.x = 48 - Math.floor(searchLetter.width / 2);
         searchLetter.y = 48 - Math.floor(searchLetter.height / 2);
 
-        var exploreTokenBmd = game.make.bitmapData(96, 96);
-        exploreTokenBmd.copy('circleToken');
-        exploreTokenBmd.copy(exploreLetter);
-        game.cache.addBitmapData('exploreTokenBmd', exploreTokenBmd);
-
         var searchTokenBmd = game.make.bitmapData(96, 96);
         searchTokenBmd.copy('circleToken');
         searchTokenBmd.copy(searchLetter);
         game.cache.addBitmapData('searchTokenBmd', searchTokenBmd);
+
+        var lobbyMapTileBmd = game.make.bitmapData(576, 576);
+        // example is 6x6 grid
+        // grid square is 96px
+        var tileWidth = 6;
+        var tileHeight = 6;
+        var gridWidth = 96;
+        var walls = [
+            0, 4, 1, 1, 4, 2,
+            4, 4, 4, 4, 4, 4,
+            3, 4, 4, 4, 4, 5,
+            3, 4, 4, 4, 4, 5,
+            4, 4, 4, 4, 4, 4,
+            6, 7, 7, 7, 7, 8
+        ];
+
+        for (var j = 0; j < tileHeight; j++) {
+            for (var i = 0; i < tileWidth; i++) {
+                var localX = i * gridWidth;
+                var localY = j * gridWidth;
+                var wallIndex = i + j * 6;
+                var sprite = game.make.tileSprite(localX, localY, gridWidth, gridWidth, 'tileWallsSheet', walls[wallIndex])
+                lobbyMapTileBmd.copy(sprite);
+            }
+        }
+        game.cache.addBitmapData('lobbyMapTileBmd', lobbyMapTileBmd);
 
         //=================================================
         game.add.tileSprite(0, 0, 2560, 2560, 'background');
@@ -42,7 +70,7 @@ var GameState = {
         game.camera.bounds = null
 
         //=================================================
-        var exampleMapTile = game.world.add(new MapTileGroup(game, 30 * 32, 30 * 32));
+        exampleMapTile = game.world.add(new MapTileGroup(game, 30 * 32, 30 * 32));
 
         //=================================================
         player = game.add.sprite(exampleMapTile.centerX, exampleMapTile.centerY, 'pixelTransparent');
@@ -102,30 +130,16 @@ var GameState = {
     },
 
     render : function () {
-        //game.debug.cameraInfo(game.camera, 32, 32);
-        ////game.debug.spriteInfo(player, 32, 130);
-
-        //var cameraPosX = game.camera.x + cameraHalfWidth;
-        //var cameraPosY = game.camera.y + cameraHalfHeight;
-        ////var linearX = game.math.linear(player.x, cameraPosX, game.camera.lerp.x)
-        ////var linearY = game.math.linear(player.y, cameraPosY, game.camera.lerp.y)
-        ////var differenceX = player.x - cameraPosX;
-        ////var differenceY = player.y - cameraPosY;
-
-        ////game.debug.text(cameraPosX, 32, 230)
-        ////game.debug.text(cameraPosY, 32, 250)
+        game.debug.cameraInfo(game.camera, 32, 32);
+        game.debug.spriteInfo(player, 32, 130);
+        //game.debug.text(exampleMapTile.centerX, 32, 230)
+        //game.debug.text(exampleMapTile.centerY, 32, 250)
 
         //var targetRectLarge = new Phaser.Rectangle(player.body.x - 60, player.body.y - 60, 120, 120)
         //game.debug.geom(targetRectLarge, "#00FF00", false)
 
         //var targetRectSmall = new Phaser.Rectangle(player.body.x - 10, player.body.y - 10, 20, 20)
         //game.debug.geom(targetRectSmall, "#00FF00", false)
-
-        //var cameraRect = new Phaser.Rectangle(cameraPosX - 10, cameraPosY - 10, 20, 20)
-        //game.debug.geom(cameraRect, "#0000FF", true)
-        ////game.debug.pixel(game.camera.x, game.camera.y, '#ffffff', 1)
-        ////game.debug.text(game.camera.x, 32, 230)
-        ////game.debug.text(game.camera.y, 32, 250)
     }
 }
 
@@ -182,31 +196,11 @@ SearchToken.prototype.tokenClicked = function (token) {
 function MapTileGroup (game, x, y) {
     Phaser.Group.call(this, game);
 
-    // example is 6x6 grid
-    // grid square is 96px
-    var tileWidth = 6;
-    var tileHeight = 6;
     var gridWidth = 96;
     var halfGridWidth = 48;
-    var walls = [
-        0, 4, 1, 1, 4, 2,
-        4, 4, 4, 4, 4, 4,
-        3, 4, 4, 4, 4, 5,
-        3, 4, 4, 4, 4, 5,
-        4, 4, 4, 4, 4, 4,
-        6, 7, 7, 7, 7, 8
-    ];
+    
+    this.addChild(game.make.sprite(x, y, game.cache.getBitmapData('lobbyMapTileBmd')));
 
-    for (var j = 0; j < tileHeight; j++) {
-        for (var i = 0; i < tileWidth; i++) {
-            var localX = i * gridWidth;
-            var localY = j * gridWidth;
-            var wallIndex = i + j * 6;
-            var sprite = game.make.tileSprite(x + localX, y + localY, gridWidth, gridWidth, 'tileWallsSheet', walls[wallIndex])
-            this.addChild(sprite);
-        }
-    }
-        
     this.addChild(new ExploreToken(game, x + gridWidth, y - halfGridWidth));
     //this.addChild(new ExploreToken(game, x + gridWidth * 4, y - halfGridWidth));
     this.addChild(new ExploreToken(game, x - halfGridWidth, y + gridWidth));
