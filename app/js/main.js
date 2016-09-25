@@ -51,7 +51,6 @@ var GameState = {
         //game.camera.focusOn(player)
 
         //=================================================
-        //var imageDialogGroup = game.stage.addChild(new ImageDialogGroup(game, "A heavy wooden box lies on the bureau. The lid of the box is held shut by a thick metal latch."));
         //var revealDialogGroup = game.stage.addChild(new RevealDialogGroup(game, "A disembodied voice speaks from the dim chamber, 'So, you have found me.'"));
         game.customCallback = function () {
             var revealDialogGroup = game.stage.addChild(new RevealDialogGroup(game, "A disembodied voice speaks from the dim chamber, 'So, you have found me.'"));
@@ -169,7 +168,12 @@ SearchToken.prototype.tokenClicked = function (token) {
 
     //Example
     game.customCallback = function () {
-        var imageDialogGroup = game.stage.addChild(new ImageDialogGroup(game, "A heavy wooden box lies on the bureau. The lid of the box is held shut by a thick metal latch."));
+        var imageDialogGroup = game.stage.addChild(new ImageDialogGroup(game,
+            "A heavy wooden box lies on the bureau. The lid of the box is held shut by a thick metal latch.",
+            "searchTokenBmd",
+            "@ Search",
+            function () { console.log("searched") })
+        );
         game.customCallback = null;
     }
 }
@@ -216,8 +220,10 @@ MapTileGroup.prototype = Object.create(Phaser.Group.prototype);
 MapTileGroup.prototype.constructor = MapTileGroup;
 
 //=========================================================
-function ImageDialogGroup(game, messageText) {
+function ImageDialogGroup(game, messageText, imageBmdId, actionButtonText, actionButtonCallback) {
     Phaser.Group.call(this, game);
+
+    this._actionCallback = actionButtonCallback;
 
     this._modalBackground = game.make.sprite(game.stageViewRect.x, game.stageViewRect.y, 'pixelTransparent');
     this._modalBackground.width = game.stageViewRect.width;
@@ -225,7 +231,7 @@ function ImageDialogGroup(game, messageText) {
     this._modalBackground.inputEnabled = true;
     this.addChild(this._modalBackground);
 
-    this._imageMessage = new ImageMessage(game, messageText);
+    this._imageMessage = new ImageMessage(game, messageText, imageBmdId);
     this._imageMessage.alignIn(game.stageViewRect, Phaser.CENTER)
     this.addChild(this._imageMessage);
 
@@ -233,7 +239,7 @@ function ImageDialogGroup(game, messageText) {
     this._imageCancel.alignTo(this._imageMessage, Phaser.BOTTOM_LEFT, -10, 10)
     this.addChild(this._imageCancel);
 
-    this._imageAction = new ImageMessageButton(game, "@ Search", 280);
+    this._imageAction = new ImageMessageButton(game, actionButtonText, 280);
     this._imageAction.alignTo(this._imageMessage, Phaser.BOTTOM_RIGHT, -10, 10)
     this.addChild(this._imageAction);
 
@@ -249,7 +255,7 @@ function ImageDialogGroup(game, messageText) {
     this._imageActionButton.width = this._imageAction.width;
     this._imageActionButton.height = this._imageAction.height;
     this._imageActionButton.inputEnabled = true;
-    //this._imageActionButton.events.onInputDown.add(this.continueClicked, this);
+    this._imageActionButton.events.onInputDown.add(this.actionClicked, this);
     this._imageActionButton.input.useHandCursor = true;
     this.addChild(this._imageActionButton);
 }
@@ -274,8 +280,14 @@ ImageDialogGroup.prototype.cancelClicked = function (group) {
     group.destroy();
 }
 
+ImageDialogGroup.prototype.actionClicked = function (group) {
+    if (this._actionCallback != null) {
+        this._actionCallback();
+    }
+}
+
 //=========================================================
-function ImageMessage(game, text) {
+function ImageMessage(game, text, imageBmdId) {
     Phaser.Group.call(this, game, 0, 0);
 
     var totalWidth = 600;
@@ -308,8 +320,7 @@ function ImageMessage(game, text) {
     this.addChild(outlineBox);
     this.addChild(revealText);
 
-    // Example
-    var imageBadgeSprite = game.make.sprite(leftMargin, Math.floor((totalHeight - imageHeight) / 2), game.cache.getBitmapData('searchTokenBmd'))
+    var imageBadgeSprite = game.make.sprite(leftMargin, Math.floor((totalHeight - imageHeight) / 2), game.cache.getBitmapData(imageBmdId))
     this.addChild(imageBadgeSprite);
 }
 
