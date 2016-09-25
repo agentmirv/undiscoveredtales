@@ -137,8 +137,8 @@ var GameState = {
     },
 
     render: function () {
-        game.debug.cameraInfo(game.camera, 32, 32);
-        game.debug.spriteInfo(player, 32, 130);
+        //game.debug.cameraInfo(game.camera, 32, 32);
+        //game.debug.spriteInfo(player, 32, 130);
         //game.debug.text(exampleMapTile.centerX, 32, 230)
         //game.debug.text(exampleMapTile.centerY, 32, 250)
 
@@ -168,7 +168,7 @@ function CreateToken(game, id) {
 //=========================================================
 function CreateDialog(game, id) {
     var dialogData = game.gamedata.dialogs.find(function (item) { return item.id == id });
-    console.dir(dialogData)
+    
     var dialogInstance = new DialogGroup(
         game,
         dialogData.text,
@@ -241,16 +241,18 @@ function DialogGroup(game, messageText, imageBmdId, buttonType, actionButtonText
     modalBackground.inputEnabled = true;
     this.addChild(modalBackground);
 
+    // Message
     var dialogMessage = new DialogMessage(game, messageText, imageBmdId);
     dialogMessage.alignIn(game.stageViewRect, Phaser.CENTER)
     this.addChild(dialogMessage);
 
     if (buttonType == "cancel-action") {
-        var dialogCancel = new ImageMessageButton(game, "Cancel", 280);
+        // Buttons for [Cancel] [Action]
+        var dialogCancel = new DialogButtonThin(game, "Cancel", 280);
         dialogCancel.alignTo(dialogMessage, Phaser.BOTTOM_LEFT, -10, 10)
         this.addChild(dialogCancel);
 
-        var dialogAction = new ImageMessageButton(game, actionButtonText, 280);
+        var dialogAction = new DialogButtonThin(game, actionButtonText, 280);
         dialogAction.alignTo(dialogMessage, Phaser.BOTTOM_RIGHT, -10, 10)
         this.addChild(dialogAction);
 
@@ -269,8 +271,10 @@ function DialogGroup(game, messageText, imageBmdId, buttonType, actionButtonText
         dialogActionButton.events.onInputDown.add(this.actionClicked, this);
         dialogActionButton.input.useHandCursor = true;
         this.addChild(dialogActionButton);
+
     } else if (buttonType == "continue") {
-        var dialogContinue = new RevealContinue(game, "Continue");
+        // Buttons for [Continue]
+        var dialogContinue = new DialogButtonThin(game, "Continue", 180);
         dialogContinue.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 0, 10)
         this.addChild(dialogContinue);
 
@@ -352,102 +356,7 @@ DialogMessage.prototype = Object.create(Phaser.Group.prototype);
 DialogMessage.prototype.constructor = DialogMessage;
 
 //=========================================================
-function ImageDialogGroup(game, messageText, imageBmdId, actionButtonText, actionButtonCallback) {
-    Phaser.Group.call(this, game);
-
-    this._actionCallback = actionButtonCallback;
-
-    this._modalBackground = game.make.sprite(game.stageViewRect.x, game.stageViewRect.y, 'pixelTransparent');
-    this._modalBackground.width = game.stageViewRect.width;
-    this._modalBackground.height = game.stageViewRect.height;
-    this._modalBackground.inputEnabled = true;
-    this.addChild(this._modalBackground);
-
-    this._imageMessage = new ImageMessage(game, messageText, imageBmdId);
-    this._imageMessage.alignIn(game.stageViewRect, Phaser.CENTER)
-    this.addChild(this._imageMessage);
-
-    this._imageCancel = new ImageMessageButton(game, "Cancel", 280);
-    this._imageCancel.alignTo(this._imageMessage, Phaser.BOTTOM_LEFT, -10, 10)
-    this.addChild(this._imageCancel);
-
-    this._imageAction = new ImageMessageButton(game, actionButtonText, 280);
-    this._imageAction.alignTo(this._imageMessage, Phaser.BOTTOM_RIGHT, -10, 10)
-    this.addChild(this._imageAction);
-
-    this._imageCancelButton = game.make.sprite(this._imageCancel.x, this._imageCancel.y, 'pixelTransparent');
-    this._imageCancelButton.width = this._imageCancel.width;
-    this._imageCancelButton.height = this._imageCancel.height;
-    this._imageCancelButton.inputEnabled = true;
-    this._imageCancelButton.events.onInputDown.add(this.cancelClicked, this);
-    this._imageCancelButton.input.useHandCursor = true;
-    this.addChild(this._imageCancelButton);
-
-    this._imageActionButton = game.make.sprite(this._imageAction.x, this._imageAction.y, 'pixelTransparent');
-    this._imageActionButton.width = this._imageAction.width;
-    this._imageActionButton.height = this._imageAction.height;
-    this._imageActionButton.inputEnabled = true;
-    this._imageActionButton.events.onInputDown.add(this.actionClicked, this);
-    this._imageActionButton.input.useHandCursor = true;
-    this.addChild(this._imageActionButton);
-}
-
-ImageDialogGroup.prototype = Object.create(Phaser.Group.prototype);
-ImageDialogGroup.prototype.constructor = ImageDialogGroup;
-
-ImageDialogGroup.prototype.cancelClicked = function () {
-    game.cutSceneCamera = false;
-    this.destroy(true);
-}
-
-ImageDialogGroup.prototype.actionClicked = function (group) {
-    if (group._actionCallback != null) {
-        group._actionCallback();
-    }
-}
-
-//=========================================================
-function ImageMessage(game, text, imageBmdId) {
-    Phaser.Group.call(this, game, 0, 0);
-
-    var totalWidth = 600;
-    var leftMargin = 16;
-    var imageWidth = 96;
-    var imageHeight = 96;
-    var middleMargin = 16
-    var rightMargin = 10;
-    var topMargin = 20;
-    var bottomMargin = 20;
-
-    var textWidth = totalWidth - leftMargin - imageWidth - middleMargin - rightMargin;
-    var textStyle = { font: "20px Times New Romans", fill: "#ffffff", align: "left", wordWrap: true, wordWrapWidth: textWidth };
-    var revealText = game.make.text(0, 0, text, textStyle);
-
-    revealText.x = leftMargin + imageWidth + middleMargin
-
-    var textHeight = revealText.height
-    if (textHeight >= imageHeight) {
-        revealText.y = topMargin;
-    } else {
-        revealText.y = topMargin + Math.floor((imageHeight - textHeight) / 2)
-        textHeight = imageHeight
-    }
-
-    var totalHeight = textHeight + topMargin + bottomMargin;
-    var outlineBox = new OutlineBox(game, totalWidth, totalHeight);
-
-    this.addChild(outlineBox);
-    this.addChild(revealText);
-
-    var imageBadgeSprite = game.make.sprite(leftMargin, Math.floor((totalHeight - imageHeight) / 2), game.cache.getBitmapData(imageBmdId))
-    this.addChild(imageBadgeSprite);
-}
-
-ImageMessage.prototype = Object.create(Phaser.Group.prototype);
-ImageMessage.prototype.constructor = ImageMessage;
-
-//=========================================================
-function ImageMessageButton(game, text, width) {
+function DialogButtonThin(game, text, width) {
     Phaser.Group.call(this, game, 0, 0);
 
     var totalWidth = width;
@@ -469,95 +378,8 @@ function ImageMessageButton(game, text, width) {
     this.addChild(revealText);
 }
 
-ImageMessageButton.prototype = Object.create(Phaser.Group.prototype);
-ImageMessageButton.prototype.constructor = ImageMessageButton;
-
-//=========================================================
-function RevealDialogGroup(game, messageText) {
-    Phaser.Group.call(this, game);
-
-    this._modalBackground = game.make.sprite(game.stageViewRect.x, game.stageViewRect.y, 'pixelTransparent');
-    this._modalBackground.width = game.stageViewRect.width;
-    this._modalBackground.height = game.stageViewRect.height;
-    this._modalBackground.inputEnabled = true;
-    this.addChild(this._modalBackground);
-
-    this._revealMessage = new RevealMessage(game, messageText);
-    this._revealMessage.alignIn(game.stageViewRect, Phaser.CENTER)
-    this.addChild(this._revealMessage);
-
-    this._revealContinue = new RevealContinue(game, "Continue");
-    this._revealContinue.alignTo(this._revealMessage, Phaser.BOTTOM_CENTER, 0, 10)
-    this.addChild(this._revealContinue);
-
-    this._revealContinueButton = game.make.sprite(this._revealContinue.x, this._revealContinue.y, 'pixelTransparent');
-    this._revealContinueButton.width = this._revealContinue.width;
-    this._revealContinueButton.height = this._revealContinue.height;
-    this._revealContinueButton.inputEnabled = true;
-    this._revealContinueButton.events.onInputUp.add(this.continueClicked, this);
-    this._revealContinueButton.input.useHandCursor = true;
-    this.addChild(this._revealContinueButton);
-}
-
-RevealDialogGroup.prototype = Object.create(Phaser.Group.prototype);
-RevealDialogGroup.prototype.constructor = RevealDialogGroup;
-
-RevealDialogGroup.prototype.continueClicked = function () {
-    game.cutSceneCamera = false;
-    this.destroy(true);
-}
-
-//=========================================================
-function RevealMessage(game, text) {
-    Phaser.Group.call(this, game, 0, 0);
-
-    var totalWidth = 600;
-    var leftMargin = 10;
-    var rightMargin = 10;
-    var topMargin = 20;
-    var bottomMargin = 20;
-
-    var textWidth = totalWidth - leftMargin - rightMargin;
-    var textStyle = { font: "20px Times New Romans", fill: "#ffffff", align: "center", wordWrap: true, wordWrapWidth: textWidth };
-    var revealText = game.make.text(0, 0, text, textStyle);
-    revealText.x = Math.floor((totalWidth - revealText.width) / 2)
-    revealText.y = topMargin;
-
-    var totalHeight = revealText.height + topMargin + bottomMargin;
-    var outlineBox = new OutlineBox(game, totalWidth, totalHeight);
-
-    this.addChild(outlineBox);
-    this.addChild(revealText);
-}
-
-RevealMessage.prototype = Object.create(Phaser.Group.prototype);
-RevealMessage.prototype.constructor = RevealMessage;
-
-//=========================================================
-function RevealContinue(game, text) {
-    Phaser.Group.call(this, game, 0, 0);
-
-    var totalWidth = 180;
-    var leftMargin = 10;
-    var rightMargin = 10;
-    var topMargin = 4;
-    var bottomMargin = 0;
-
-    var textWidth = totalWidth - leftMargin - rightMargin;
-    var textStyle = { font: "20px Times New Romans", fill: "#ffffff", align: "center", wordWrap: true, wordWrapWidth: textWidth };
-    var revealText = game.make.text(0, 0, text, textStyle);
-    revealText.x = Math.floor((totalWidth - revealText.width) / 2)
-    revealText.y = topMargin;
-
-    var totalHeight = revealText.height + topMargin + bottomMargin;
-    var outlineBox = new OutlineBox(game, totalWidth, totalHeight);
-
-    this.addChild(outlineBox);
-    this.addChild(revealText);
-}
-
-RevealContinue.prototype = Object.create(Phaser.Group.prototype);
-RevealContinue.prototype.constructor = RevealContinue;
+DialogButtonThin.prototype = Object.create(Phaser.Group.prototype);
+DialogButtonThin.prototype.constructor = DialogButtonThin;
 
 //=========================================================
 function OutlineBox(game, width, height) {
