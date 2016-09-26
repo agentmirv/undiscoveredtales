@@ -16,11 +16,12 @@ var GameState = {
 
     create: function () {
         //=================================================
+        // Initialize game data
         game.gamedata = game.cache.getJSON('gamedata');
         game.gamedataInstances = {};
 
         //=================================================
-        // Create bitmapData
+        // Create bitmapData (textures I create at runtime that I can reuse)
         var exploreLetterStyle = { font: "74px Arial Black", fill: "#ff0000", align: "center", stroke: "#aa0000", strokeThickness: 5 };
         var exploreLetter = game.make.text(0, 0, 'E', exploreLetterStyle)
         exploreLetter.setShadow(2, 2, "#333333", 2, true, false);
@@ -70,17 +71,22 @@ var GameState = {
         game.cache.addBitmapData('lobbyMapTileBmd', lobbyMapTileBmd);
 
         //=================================================
-        game.add.tileSprite(0, 0, 2560, 2560, 'background');
-        game.world.setBounds(0, 0, 2560, 2560);
+        // Initialize Stuff
         game.physics.startSystem(Phaser.Physics.P2JS);
-        cursors = game.input.keyboard.createCursorKeys();
+        game.world.setBounds(0, 0, 2560, 2560);
+        game.add.tileSprite(0, 0, 2560, 2560, 'background');
         game.camera.bounds = null
+        game.cutSceneCamera = true;
+        game.stageViewRect = new Phaser.Rectangle(0, 0, game.camera.view.width, game.camera.view.height)
+        cursors = game.input.keyboard.createCursorKeys();
 
         //=================================================
         // Map Tile (TODO: use reveal)
         exampleMapTile = game.world.add(new MapTileGroup(game, 30 * 32, 30 * 32));
 
         //=================================================
+        // Move camera and player (TODO: use reveal)
+        game.camera.focusOnXY(exampleMapTile.centerX, exampleMapTile.centerY)
         player = game.add.sprite(exampleMapTile.centerX, exampleMapTile.centerY, 'pixelTransparent');
         game.physics.p2.enable(player);
         game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
@@ -88,13 +94,9 @@ var GameState = {
         //=================================================
         // Map Tile Dialog (TODO: use reveal)
         game.customCallback = function () {
-            var revealDialogGroup = game.stage.addChild(CreateDialog(game, "lobby-reveal-dialog"));
+            var revealDialogGroup = game.stage.addChild(MakeDialog(game, "lobby-reveal-dialog"));
             game.customCallback = null;
         }
-
-        //=================================================
-        game.cutSceneCamera = true;
-        game.stageViewRect = new Phaser.Rectangle(0, 0, game.camera.view.width, game.camera.view.height)
     },
 
     update: function () {
@@ -159,20 +161,20 @@ function MapTileGroup(game, x, y) {
 
     this.addChild(game.make.sprite(x, y, game.cache.getBitmapData('lobbyMapTileBmd')));
 
-    game.world.addChild(CreateToken(game, 'lobby-door1-explore'))
+    game.world.addChild(MakeToken(game, 'lobby-door1-explore'))
     //this.addChild(new ExploreToken(game, x + gridWidth * 4, y - halfGridWidth));
-    game.world.addChild(CreateToken(game, 'lobby-door2-explore'))
+    game.world.addChild(MakeToken(game, 'lobby-door2-explore'))
     //this.addChild(new ExploreToken(game, x + (gridWidth * 5) + halfGridWidth, y + gridWidth));
     //this.addChild(new ExploreToken(game, x - halfGridWidth, y + gridWidth * 4));
-    game.world.addChild(CreateToken(game, 'lobby-door3-explore'))
-    game.world.addChild(CreateToken(game, 'lobby-box-search'))
+    game.world.addChild(MakeToken(game, 'lobby-door3-explore'))
+    game.world.addChild(MakeToken(game, 'lobby-box-search'))
 }
 
 MapTileGroup.prototype = Object.create(Phaser.Group.prototype);
 MapTileGroup.prototype.constructor = MapTileGroup;
 
 //=========================================================
-function CreateToken(game, id) {
+function MakeToken(game, id) {
     var tokenData = game.gamedata.mapTokens.find(function (item) { return item.id == id });
     var tokenInstance = new TokenSprite(
         game,
@@ -186,7 +188,7 @@ function CreateToken(game, id) {
 }
 
 //=========================================================
-function CreateDialog(game, id) {
+function MakeDialog(game, id) {
     var dialogData = game.gamedata.dialogs.find(function (item) { return item.id == id });
     
     var dialogInstance = new DialogGroup(
@@ -196,7 +198,8 @@ function CreateDialog(game, id) {
         dialogData.buttonType,
         dialogData.actionText,
         dialogData.actionRemove,
-        dialogData.actionDialog);
+        dialogData.actionDialog,
+        dialogData.buttons);
 
     game.gamedataInstances[id] = dialogInstance;
 
@@ -223,15 +226,16 @@ TokenSprite.prototype.tokenClicked = function (token) {
     game.cutSceneCamera = true;
 
     game.customCallback = function () {
-        game.stage.addChild(CreateDialog(game, token.clickId))
+        game.stage.addChild(MakeDialog(game, token.clickId))
         game.customCallback = null;
     }
 }
 
 //=========================================================
-function DialogGroup(game, messageText, imageBmdId, buttonType, actionButtonText, actionRemove, actionDialog) {
+function DialogGroup(game, messageText, imageBmdId, buttonType, actionButtonText, actionRemove, actionDialog, buttonData) {
     Phaser.Group.call(this, game);
 
+    this._buttonData = buttonData;
     this._actionRemove = actionRemove;
     this._actionDialog = actionDialog;
 
@@ -253,7 +257,7 @@ function DialogGroup(game, messageText, imageBmdId, buttonType, actionButtonText
         dialogCancel.alignTo(dialogMessage, Phaser.BOTTOM_LEFT, -10, 10)
         this.addChild(dialogCancel);
 
-        var dialogAction = new DialogButtonThin(game, actionButtonText, 280);
+        var dialogAction = new DialogButtonThin(game, buttonData[0].text, 280);
         dialogAction.alignTo(dialogMessage, Phaser.BOTTOM_RIGHT, -10, 10)
         this.addChild(dialogAction);
 
@@ -271,9 +275,11 @@ function DialogGroup(game, messageText, imageBmdId, buttonType, actionButtonText
         dialogActionButton.inputEnabled = true;
         dialogActionButton.events.onInputDown.add(this.actionClicked, this);
         dialogActionButton.input.useHandCursor = true;
+        dialogActionButton.buttonIndex = 0; //dynamic property
         this.addChild(dialogActionButton);
 
     } else if (buttonType == "continue") {
+        console.dir(buttonData)
         // Buttons for [Continue]
         var dialogContinue = new DialogButtonThin(game, "Continue", 180);
         dialogContinue.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 0, 10)
@@ -285,6 +291,7 @@ function DialogGroup(game, messageText, imageBmdId, buttonType, actionButtonText
         dialogContinueButton.inputEnabled = true;
         dialogContinueButton.events.onInputUp.add(this.continueClicked, this);
         dialogContinueButton.input.useHandCursor = true;
+        dialogContinueButton.buttonIndex = 0; //dynamic property
         this.addChild(dialogContinueButton);
     }
 }
@@ -297,25 +304,58 @@ DialogGroup.prototype.cancelClicked = function () {
     this.destroy(true);
 }
 
-DialogGroup.prototype.actionClicked = function () {
-    if (this._actionRemove != null) {
-        for (var i = 0; i < this._actionRemove.length; i++) {
-            var id = this._actionRemove[i];
+DialogGroup.prototype.actionClicked = function (button, pointer) {
+    // This is scary looking
+    if (button.buttonIndex in this._buttonData) {
+        if (this._buttonData[button.buttonIndex].hasOwnProperty("actions")) {
+            var actionArray = this._buttonData[button.buttonIndex]["actions"];
+            for (var i = 0; i < actionArray.length; i++) {
+                var action = actionArray[i];
 
-            if (game.gamedataInstances.hasOwnProperty(id)) {
-                var instance = game.gamedataInstances[id]
-                game.gamedataInstances[id]= null;
-                game.world.removeChild(instance);
-                instance.destroy();
+                if (action.type == "remove") {
+                    //console.log("remove")
+                    for (var j = 0; j < action.removeIds.length; j++) {
+                        var id = action.removeIds[j];
+
+                        if (game.gamedataInstances.hasOwnProperty(id)) {
+                            var instance = game.gamedataInstances[id]
+                            if (instance != null) {
+                                game.gamedataInstances[id] = null;
+                                game.world.removeChild(instance);
+                                instance.destroy();
+                            }
+                        }
+                    }
+
+                } else if (action.type == "dialog") {
+                    //console.log("dialog")
+                    game.stage.addChild(MakeDialog(game, action.dialogId))
+
+                } else if (action.type == "reveal") {
+                    //TODO
+                }
             }
         }
     }
 
-    if (this._actionDialog != null) {
-        game.stage.addChild(CreateDialog(game, this._actionDialog))
-    } else {
-        game.cutSceneCamera = false;
-    }
+    //if (this._actionRemove != null) {
+    //    for (var i = 0; i < this._actionRemove.length; i++) {
+    //        var id = this._actionRemove[i];
+
+    //        if (game.gamedataInstances.hasOwnProperty(id)) {
+    //            var instance = game.gamedataInstances[id]
+    //            game.gamedataInstances[id]= null;
+    //            game.world.removeChild(instance);
+    //            instance.destroy();
+    //        }
+    //    }
+    //}
+
+    //if (this._actionDialog != null) {
+    //    game.stage.addChild(MakeDialog(game, this._actionDialog))
+    //} else {
+    //    game.cutSceneCamera = false;
+    //}
 
     this.destroy(true);
 }

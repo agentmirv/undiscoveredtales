@@ -63,15 +63,25 @@
       "text": "A heavy wooden box lies on the bureau. The lid can be opened by sliding an ornate latch.",
       "buttonType": "cancel-action",
       "actionText": "@ Search",
-      "actionRemove":[
+      "actionRemove" :[
         "lobby-box-search"
       ],
-      "actionDialog":"lobby-box-searched-dialog"
+      "actionDialog":"lobby-box-searched-dialog",
+      "buttons": [
+        { "text": "@ Search",
+          "actions": [ {"type": "dialog", "dialogId": "lobby-box-searched-dialog"} ]
+        }
+      ]
     },
     {
       "id": "lobby-box-searched-dialog",
       "text": "You find an old newspaper clipping. The article is a report describing the discovery of human remains in the Malahath River. Gain 1 Clue. Then discard this Search Token.",
-      "buttonType": "continue"
+      "buttonType": "continue",
+      "buttons": [
+        { "text": "Continue",
+          "actions": [ {"type": "remove", "removeIds": ["lobby-box-search"] } ]
+        }
+      ]
     },
     {
       "id": "lobby-door1-dialog",
