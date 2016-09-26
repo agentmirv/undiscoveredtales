@@ -268,7 +268,7 @@ function DialogGroup(game, messageText, imageBmdId, buttonType, buttonData) {
         dialogActionButton.width = dialogAction.width;
         dialogActionButton.height = dialogAction.height;
         dialogActionButton.inputEnabled = true;
-        dialogActionButton.events.onInputDown.add(this.actionClicked, this);
+        dialogActionButton.events.onInputDown.add(this.buttonClicked, this);
         dialogActionButton.input.useHandCursor = true;
         dialogActionButton.buttonIndex = 0; //dynamic property
         this.addChild(dialogActionButton);
@@ -283,7 +283,7 @@ function DialogGroup(game, messageText, imageBmdId, buttonType, buttonData) {
         dialogContinueButton.width = dialogContinue.width;
         dialogContinueButton.height = dialogContinue.height;
         dialogContinueButton.inputEnabled = true;
-        dialogContinueButton.events.onInputUp.add(this.actionClicked, this);
+        dialogContinueButton.events.onInputUp.add(this.buttonClicked, this);
         dialogContinueButton.input.useHandCursor = true;
         dialogContinueButton.buttonIndex = 0; //dynamic property
         this.addChild(dialogContinueButton);
@@ -298,18 +298,24 @@ DialogGroup.prototype.cancelClicked = function () {
     this.destroy(true);
 }
 
-DialogGroup.prototype.actionClicked = function (button, pointer) {
+DialogGroup.prototype.buttonClicked = function (button, pointer) {
     // This is scary looking
+    // Look for buttonIndex
     if (button.buttonIndex in this._buttonData) {
+        // Look for actions array
         if (this._buttonData[button.buttonIndex].hasOwnProperty("actions")) {
+            // Loop on actions array
             var actionArray = this._buttonData[button.buttonIndex]["actions"];
             for (var i = 0; i < actionArray.length; i++) {
+                // Process each action
                 var action = actionArray[i];
                 if (action.type == "remove") {
+                    // Loop on removeIds array
                     for (var j = 0; j < action.removeIds.length; j++) {
                         var id = action.removeIds[j];
 
                         if (game.gamedataInstances.hasOwnProperty(id)) {
+                            // Remove Id
                             var instance = game.gamedataInstances[id]
                             if (instance != null) {
                                 game.gamedataInstances[id] = null;
@@ -320,39 +326,16 @@ DialogGroup.prototype.actionClicked = function (button, pointer) {
                     }
 
                 } else if (action.type == "dialog") {
+                    // Make a new Dialog
                     game.stage.addChild(MakeDialog(game, action.dialogId))
 
                 } else if (action.type == "reveal") {
-                    //TODO
+                    //Possibly go to next reveal dialog?
                 }
             }
         }
     }
 
-    //if (this._actionRemove != null) {
-    //    for (var i = 0; i < this._actionRemove.length; i++) {
-    //        var id = this._actionRemove[i];
-
-    //        if (game.gamedataInstances.hasOwnProperty(id)) {
-    //            var instance = game.gamedataInstances[id]
-    //            game.gamedataInstances[id]= null;
-    //            game.world.removeChild(instance);
-    //            instance.destroy();
-    //        }
-    //    }
-    //}
-
-    //if (this._actionDialog != null) {
-    //    game.stage.addChild(MakeDialog(game, this._actionDialog))
-    //} else {
-    //    game.cutSceneCamera = false;
-    //}
-
-    this.destroy(true);
-}
-
-DialogGroup.prototype.continueClicked = function () {
-    game.cutSceneCamera = false;
     this.destroy(true);
 }
 

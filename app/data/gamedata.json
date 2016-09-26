@@ -57,8 +57,7 @@
       "text": "A disembodied voice speaks from the dim chamber, 'So, you have found me.'",
       "buttonType": "continue",
       "buttons": [
-        { "text": "Continue",
-          "actions": [ ]
+        { "text": "Continue"
         }
       ]
     },
@@ -67,11 +66,9 @@
       "bmdId": "searchTokenBmd",
       "text": "A heavy wooden box lies on the bureau. The lid can be opened by sliding an ornate latch.",
       "buttonType": "cancel-action",
-      "actionText": "@ Search",
       "actionRemove" :[
         "lobby-box-search"
       ],
-      "actionDialog":"lobby-box-searched-dialog",
       "buttons": [
         { "text": "@ Search",
           "actions": [ {"type": "dialog", "dialogId": "lobby-box-searched-dialog"} ]
@@ -93,21 +90,30 @@
       "bmdId": "exploreTokenBmd",
       "text": "Hey, its door number one.",
       "buttonType": "cancel-action",
-      "actionText": "@ Explore"
+      "buttons": [
+        { "text": "@ Explore"
+        }
+      ]
     },
     {
       "id": "lobby-door2-dialog",
       "bmdId": "exploreTokenBmd",
       "text": "Hey, its door number two.",
       "buttonType": "cancel-action",
-      "actionText": "@ Explore"
+      "buttons": [
+        { "text": "@ Explore"
+        }
+      ]
     },
     {
       "id": "lobby-door3-dialog",
       "bmdId": "exploreTokenBmd",
       "text": "Hey, its door number three.",
       "buttonType": "cancel-action",
-      "actionText": "@ Explore"
+      "buttons": [
+        { "text": "@ Explore"
+        }
+      ]
     }
   ]
 }
