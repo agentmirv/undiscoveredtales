@@ -55,7 +55,12 @@
     {
       "id": "lobby-reveal-dialog",
       "text": "A disembodied voice speaks from the dim chamber, 'So, you have found me.'",
-      "buttonType": "continue"
+      "buttonType": "continue",
+      "buttons": [
+        { "text": "Continue",
+          "actions": [ ]
+        }
+      ]
     },
     {
       "id": "lobby-box-dialog",

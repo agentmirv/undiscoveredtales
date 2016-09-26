@@ -196,9 +196,6 @@ function MakeDialog(game, id) {
         dialogData.text,
         dialogData.bmdId,
         dialogData.buttonType,
-        dialogData.actionText,
-        dialogData.actionRemove,
-        dialogData.actionDialog,
         dialogData.buttons);
 
     game.gamedataInstances[id] = dialogInstance;
@@ -232,12 +229,10 @@ TokenSprite.prototype.tokenClicked = function (token) {
 }
 
 //=========================================================
-function DialogGroup(game, messageText, imageBmdId, buttonType, actionButtonText, actionRemove, actionDialog, buttonData) {
+function DialogGroup(game, messageText, imageBmdId, buttonType, buttonData) {
     Phaser.Group.call(this, game);
 
     this._buttonData = buttonData;
-    this._actionRemove = actionRemove;
-    this._actionDialog = actionDialog;
 
     // Modal
     var modalBackground = game.make.sprite(game.stageViewRect.x, game.stageViewRect.y, 'pixelTransparent');
@@ -279,7 +274,6 @@ function DialogGroup(game, messageText, imageBmdId, buttonType, actionButtonText
         this.addChild(dialogActionButton);
 
     } else if (buttonType == "continue") {
-        console.dir(buttonData)
         // Buttons for [Continue]
         var dialogContinue = new DialogButtonThin(game, "Continue", 180);
         dialogContinue.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 0, 10)
@@ -309,11 +303,10 @@ DialogGroup.prototype.actionClicked = function (button, pointer) {
     if (button.buttonIndex in this._buttonData) {
         if (this._buttonData[button.buttonIndex].hasOwnProperty("actions")) {
             var actionArray = this._buttonData[button.buttonIndex]["actions"];
+            console.dir(actionArray)
             for (var i = 0; i < actionArray.length; i++) {
                 var action = actionArray[i];
-
                 if (action.type == "remove") {
-                    //console.log("remove")
                     for (var j = 0; j < action.removeIds.length; j++) {
                         var id = action.removeIds[j];
 
@@ -328,7 +321,6 @@ DialogGroup.prototype.actionClicked = function (button, pointer) {
                     }
 
                 } else if (action.type == "dialog") {
-                    //console.log("dialog")
                     game.stage.addChild(MakeDialog(game, action.dialogId))
 
                 } else if (action.type == "reveal") {
