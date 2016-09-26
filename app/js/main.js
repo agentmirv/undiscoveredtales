@@ -260,7 +260,7 @@ function DialogGroup(game, messageText, imageBmdId, buttonType, buttonData) {
         dialogCancelButton.width = dialogCancel.width;
         dialogCancelButton.height = dialogCancel.height;
         dialogCancelButton.inputEnabled = true;
-        dialogCancelButton.events.onInputDown.add(this.cancelClicked, this);
+        dialogCancelButton.events.onInputUp.add(this.cancelClicked, this);
         dialogCancelButton.input.useHandCursor = true;
         this.addChild(dialogCancelButton);
 
@@ -268,14 +268,14 @@ function DialogGroup(game, messageText, imageBmdId, buttonType, buttonData) {
         dialogActionButton.width = dialogAction.width;
         dialogActionButton.height = dialogAction.height;
         dialogActionButton.inputEnabled = true;
-        dialogActionButton.events.onInputDown.add(this.buttonClicked, this);
+        dialogActionButton.events.onInputUp.add(this.buttonClicked, this);
         dialogActionButton.input.useHandCursor = true;
         dialogActionButton.buttonIndex = 0; //dynamic property
         this.addChild(dialogActionButton);
 
     } else if (buttonType == "continue") {
-        // Buttons for [Continue]
-        var dialogContinue = new DialogButtonThin(game, "Continue", 180);
+        // Button for [Continue]
+        var dialogContinue = new DialogButtonThin(game, buttonData[0].text, 180);
         dialogContinue.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 0, 10)
         this.addChild(dialogContinue);
 
@@ -300,6 +300,7 @@ DialogGroup.prototype.cancelClicked = function () {
 
 DialogGroup.prototype.buttonClicked = function (button, pointer) {
     // This is scary looking
+    var restoreControl = true;
     // Look for buttonIndex
     if (button.buttonIndex in this._buttonData) {
         // Look for actions array
@@ -328,12 +329,17 @@ DialogGroup.prototype.buttonClicked = function (button, pointer) {
                 } else if (action.type == "dialog") {
                     // Make a new Dialog
                     game.stage.addChild(MakeDialog(game, action.dialogId))
+                    restoreControl = false;
 
                 } else if (action.type == "reveal") {
                     //Possibly go to next reveal dialog?
                 }
             }
         }
+    }
+
+    if (restoreControl) {
+        game.cutSceneCamera = false;
     }
 
     this.destroy(true);
