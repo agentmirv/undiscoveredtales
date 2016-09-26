@@ -283,7 +283,7 @@ function DialogGroup(game, messageText, imageBmdId, buttonType, buttonData) {
         dialogContinueButton.width = dialogContinue.width;
         dialogContinueButton.height = dialogContinue.height;
         dialogContinueButton.inputEnabled = true;
-        dialogContinueButton.events.onInputUp.add(this.continueClicked, this);
+        dialogContinueButton.events.onInputUp.add(this.actionClicked, this);
         dialogContinueButton.input.useHandCursor = true;
         dialogContinueButton.buttonIndex = 0; //dynamic property
         this.addChild(dialogContinueButton);
@@ -303,7 +303,6 @@ DialogGroup.prototype.actionClicked = function (button, pointer) {
     if (button.buttonIndex in this._buttonData) {
         if (this._buttonData[button.buttonIndex].hasOwnProperty("actions")) {
             var actionArray = this._buttonData[button.buttonIndex]["actions"];
-            console.dir(actionArray)
             for (var i = 0; i < actionArray.length; i++) {
                 var action = actionArray[i];
                 if (action.type == "remove") {
