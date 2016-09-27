@@ -86,6 +86,8 @@ var GameState = {
         game.physics.p2.enable(player);
         game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
 
+        //=================================================
+        // First Reveal
         MakeReveal(game, 'reveal-lobby')
     },
 
@@ -142,10 +144,12 @@ var GameState = {
     }
 }
 
+//=========================================================
 function MakeReveal(game, id) {
     var revealData = game.gamedata.reveals.find(function (item) { return item.id == id });
     var localGroup = game.add.group();
 
+    // Add Map Tiles
     for(var i = 0; i < revealData.mapTiles.length; i++)
     {
         localGroup.addChild(MakeMapTile(game, revealData.mapTiles[i]));
@@ -164,6 +168,7 @@ function MakeReveal(game, id) {
     }
 }
 
+//=========================================================
 function MakeMapTile(game, id) {
     var mapTileData = game.gamedata.mapTiles.find(function (item) { return item.id == id });
 
