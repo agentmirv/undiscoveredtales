@@ -76,20 +76,20 @@ var GameState = {
         game.world.setBounds(0, 0, 2560, 2560);
         game.add.tileSprite(0, 0, 2560, 2560, 'background');
         game.camera.bounds = null
-        game.cutSceneCamera = true;
         game.stageViewRect = new Phaser.Rectangle(0, 0, game.camera.view.width, game.camera.view.height)
         cursors = game.input.keyboard.createCursorKeys();
 
-        //=================================================
-        // Map Tile (TODO: use reveal)
-        exampleMapTile = game.world.add(new MapTileGroup(game, 30 * 32, 30 * 32));
-
-        //=================================================
-        // Move camera and player (TODO: use reveal)
-        game.camera.focusOnXY(exampleMapTile.centerX, exampleMapTile.centerY)
-        player = game.add.sprite(exampleMapTile.centerX, exampleMapTile.centerY, 'pixelTransparent');
+        var startX = 1248
+        var startY = 1248
+        game.camera.focusOnXY(startX, startY)
+        player = game.add.sprite(startX, startY, 'pixelTransparent');
         game.physics.p2.enable(player);
         game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
+
+        //=================================================
+        // Map Tile (TODO: use reveal)
+        exampleMapTile = game.world.add(new MapTileGroup(game, 30 * 32, 30 * 32, 'lobbyMapTileBmd'));
+        game.cutSceneCamera = true;
 
         //=================================================
         // Map Tile Dialog (TODO: use reveal)
@@ -152,14 +152,31 @@ var GameState = {
     }
 }
 
+function MakeReveal(game, id) {
+    var revealData = game.gamedata.reveals.find(function (item) { return item.id == id });
+    
+    for(var i = 0; i < revealData.mapTiles.length; i++)
+    {
+        MakeMapTile(game, revealData.mapTiles[i]);
+    }
+
+    // Move Player
+}
+
+function MakeMapTile(game, id) {
+    var mapTilelData = game.gamedata.mapTiles.find(function (item) { return item.id == id });
+    var mapTile = new MapTileGroup(game, mapTileData.x, mapTileData.y);
+    return mapTile;
+}
+
 //=========================================================
-function MapTileGroup(game, x, y) {
+function MapTileGroup(game, x, y, bitmapDataId) {
     Phaser.Group.call(this, game);
 
     var gridWidth = 96;
     var halfGridWidth = 48;
 
-    this.addChild(game.make.sprite(x, y, game.cache.getBitmapData('lobbyMapTileBmd')));
+    this.addChild(game.make.sprite(x, y, game.cache.getBitmapData(bitmapDataId)));
 
     game.world.addChild(MakeToken(game, 'lobby-door1-explore'))
     //this.addChild(new ExploreToken(game, x + gridWidth * 4, y - halfGridWidth));

@@ -1,10 +1,18 @@
 ﻿{
+  "reveals":[
+      {
+        "id": "reveal-lobby",
+        "mapTiles": [ "maptile-lobby" ],
+        "dialogs": [ "lobby-reveal-dialog" ]
+      }
+  ],
+
   "bmdTokens": [
 
   ],
   "mapTiles": [
     {
-      "id": "lobby",
+      "id": "maptile-lobby",
       "x": 960,
       "y": 960,
       "width": 6,
