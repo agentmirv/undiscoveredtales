@@ -17,7 +17,7 @@ var GameState = {
     create: function () {
         //=================================================
         // Initialize game data
-        game.gamedata = game.cache.getJSON('gamedata');
+        game.gamedata = game.cache.getJSON('gamedata'); 
         game.gamedataInstances = {};
 
         //=================================================
@@ -79,9 +79,8 @@ var GameState = {
         game.stageViewRect = new Phaser.Rectangle(0, 0, game.camera.view.width, game.camera.view.height)
         cursors = game.input.keyboard.createCursorKeys();
 
-        // Read start xy from the gamedata json
-        var startX = 1048
-        var startY = 1048
+        var startX = game.gamedata.playerStart.x
+        var startY = game.gamedata.playerStart.y
         game.camera.focusOnXY(startX, startY)
         player = game.add.sprite(startX, startY, 'pixelTransparent');
         game.physics.p2.enable(player);
@@ -89,6 +88,7 @@ var GameState = {
 
         //=================================================
         // First Reveal
+        game.revealDialogs = []; // reveal dialog list is global for now
         MakeRevealMap(game, 'reveal-lobby')
     },
 
@@ -165,14 +165,19 @@ function MakeRevealDialog(game, id, viewPoint) {
     game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.08, 0.08);
     game.cutSceneCamera = true;
 
+    // Dialog Info
+    var imageBmdId = null;
+    var buttonType = "reveal";
+    var buttonData = [{ "text": "Continue", "actions": [{ "type": "reveal" }] }];
+
     // set Callback to open Dialog
     game.customCallback = function () {
         var dialogInstance = new DialogGroup(
             game,
             revealDialog.text,
-            null,
-            "continue",
-            null);
+            imageBmdId,
+            buttonType,
+            buttonData);
         game.gamedataInstances[id] = dialogInstance;
         game.stage.addChild(dialogInstance);
         game.customCallback = null;
@@ -182,6 +187,7 @@ function MakeRevealDialog(game, id, viewPoint) {
 //=========================================================
 function MakeRevealMap(game, id) {
     var revealData = game.gamedata.revealMaps.find(function (item) { return item.id == id });
+    game.revealDialogs = revealData.revealDialogs;
     var localGroup = game.add.group();
 
     // Add Map Tiles
@@ -197,11 +203,13 @@ function MakeRevealMap(game, id) {
     game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.08, 0.08);
     game.cutSceneCamera = true;
 
+    // Add Tokens?
+
     game.customCallback = function () {
         // Make first Dialog
-        //var firstDialog = game.stage.addChild(MakeDialog(game, revealData.dialogs[0]));
-        //game.customCallback = null;
-        var firstDialog = MakeRevealDialog(game, revealData.revealDialogs[0], center);
+        if (game.revealDialogs.length > 0) {
+            MakeRevealDialog(game, game.revealDialogs.pop(), center);
+        }
     }
 }
 
@@ -338,9 +346,9 @@ function DialogGroup(game, messageText, imageBmdId, buttonType, buttonData) {
         dialogActionButton.buttonIndex = 0; //dynamic property
         this.addChild(dialogActionButton);
 
-    } else if (buttonType == "continue") {
+    } else if (buttonType == "continue" || buttonType == "reveal") {
         // Button for [Continue]
-        var dialogContinue = new DialogButtonThin(game, "Continue", 180);
+        var dialogContinue = new DialogButtonThin(game, buttonData[0].text, 180);
         dialogContinue.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 0, 10)
         this.addChild(dialogContinue);
 
@@ -398,6 +406,7 @@ DialogGroup.prototype.buttonClicked = function (button, pointer) {
 
                 } else if (action.type == "reveal") {
                     //Possibly go to next reveal dialog?
+                    console.log("reveal next reveal dialog")
                 }
             }
         }

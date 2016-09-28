@@ -1,4 +1,8 @@
 ﻿{
+  "playerStart": {
+    "x": 1048,
+    "y": 1048
+  },
   "revealMaps":[
       {
         "id": "reveal-lobby",
@@ -62,15 +66,6 @@
     }
   ],
   "dialogs": [
-    {
-      "id": "lobby-reveal-dialog",
-      "text": "A disembodied voice speaks from the dim chamber, 'So, you have found me.'",
-      "buttonType": "continue",
-      "buttons": [
-        { "text": "Continue"
-        }
-      ]
-    },
     {
       "id": "lobby-box-dialog",
       "bmdId": "searchTokenBmd",
