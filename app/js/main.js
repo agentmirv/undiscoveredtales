@@ -79,34 +79,38 @@ var GameState = {
         game.stageViewRect = new Phaser.Rectangle(0, 0, game.camera.view.width, game.camera.view.height)
         cursors = game.input.keyboard.createCursorKeys();
 
-        var startX = 1148
-        var startY = 1148
+        // Read start xy from the gamedata json
+        var startX = 1048
+        var startY = 1048
         game.camera.focusOnXY(startX, startY)
         player = game.add.sprite(startX, startY, 'pixelTransparent');
         game.physics.p2.enable(player);
-        game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
+        game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.08, 0.08);
 
         //=================================================
         // First Reveal
-        MakeReveal(game, 'reveal-lobby')
+        MakeRevealMap(game, 'reveal-lobby')
     },
 
     update: function () {
         if (game.cutSceneCamera == true) {
-            var cameraPosX = game.camera.x + game.stageViewRect.halfWidth;
-            var cameraPosY = game.camera.y + game.stageViewRect.halfHeight;
-            var targetRectLarge = new Phaser.Rectangle(player.body.x - 60, player.body.y - 60, 120, 120)
+            cameraPoint = new Phaser.Point(Math.floor(game.camera.x + game.stageViewRect.halfWidth), Math.floor(game.camera.y + game.stageViewRect.halfHeight));
+            playerPoint = new Phaser.Point(Math.floor(player.body.x), Math.floor(player.body.y))
 
-            if (Phaser.Rectangle.contains(targetRectLarge, cameraPosX, cameraPosY)) {
-                game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.2, 0.2);
-                var targetRectSmall = new Phaser.Rectangle(player.body.x - 10, player.body.y - 10, 20, 20)
+            if (!cameraPoint.equals(playerPoint)) {
+                var targetRectLarge = new Phaser.Rectangle(player.body.x - 60, player.body.y - 60, 120, 120)
 
-                if (Phaser.Rectangle.contains(targetRectSmall, cameraPosX, cameraPosY)) {
-                    game.camera.focusOn(player)
-                    game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.5, 0.5);
+                if (Phaser.Rectangle.contains(targetRectLarge, cameraPoint.x, cameraPoint.y)) {
+                    game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.2, 0.2);
+                    var targetRectSmall = new Phaser.Rectangle(player.body.x - 10, player.body.y - 10, 20, 20)
 
-                    if (game.customCallback != null) {
-                        game.customCallback()
+                    if (Phaser.Rectangle.contains(targetRectSmall, cameraPoint.x, cameraPoint.y)) {
+                        game.camera.focusOn(player)
+                        game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.5, 0.5);
+                        
+                        if (game.customCallback != null) {
+                            game.customCallback()
+                        }
                     }
                 }
             }
@@ -133,8 +137,10 @@ var GameState = {
     render: function () {
         //game.debug.cameraInfo(game.camera, 32, 32);
         //game.debug.spriteInfo(player, 32, 130);
-        //game.debug.text(exampleMapTile.centerX, 32, 230)
-        //game.debug.text(exampleMapTile.centerY, 32, 250)
+        game.debug.text(cameraPoint.x, 32, 230)
+        game.debug.text(cameraPoint.y, 32, 250)
+        game.debug.text(playerPoint.x, 32, 270)
+        game.debug.text(playerPoint.y, 32, 290)
 
         //var targetRectLarge = new Phaser.Rectangle(player.body.x - 60, player.body.y - 60, 120, 120)
         //game.debug.geom(targetRectLarge, "#00FF00", false)
@@ -145,26 +151,53 @@ var GameState = {
 }
 
 //=========================================================
-function MakeReveal(game, id) {
-    var revealData = game.gamedata.reveals.find(function (item) { return item.id == id });
+function MakeRevealDialog(game, id, viewPoint) {
+    var revealDialog = game.gamedata.revealDialogs.find(function (item) { return item.id == id });
+
+    // Move Player
+    player.body.x = viewPoint.x
+    player.body.y = viewPoint.y
+    game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.08, 0.08);
+    game.cutSceneCamera = true;
+    
+    // set Callback to open Dialog
+    game.customCallback = function () {
+        console.log(1)
+        var dialogInstance = new DialogGroup(
+            game,
+            revealDialog.text,
+            null,
+            "continue",
+            null);
+        game.gamedataInstances[id] = dialogInstance;
+        game.stage.addChild(dialogInstance);
+        game.customCallback = null;
+    }
+}
+
+//=========================================================
+function MakeRevealMap(game, id) {
+    var revealData = game.gamedata.revealMaps.find(function (item) { return item.id == id });
     var localGroup = game.add.group();
 
     // Add Map Tiles
-    for(var i = 0; i < revealData.mapTiles.length; i++)
-    {
+    for(var i = 0; i < revealData.mapTiles.length; i++) {
         localGroup.addChild(MakeMapTile(game, revealData.mapTiles[i]));
     }
 
+    var center = new Phaser.Point(localGroup.centerX, localGroup.centerY)
+
     // Move Player
-    player.body.x = localGroup.centerX
-    player.body.y = localGroup.centerY
-    game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
+    player.body.x = center.x
+    player.body.y = center.y
+    game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.08, 0.08);
     game.cutSceneCamera = true;
 
     game.customCallback = function () {
         // Make first Dialog
-        var firstDialog = game.stage.addChild(MakeDialog(game, revealData.dialogs[0]));
-        game.customCallback = null;
+        //var firstDialog = game.stage.addChild(MakeDialog(game, revealData.dialogs[0]));
+        //game.customCallback = null;
+        var firstDialog = MakeRevealDialog(game, revealData.revealDialogs[0], center);
     }
 }
 
@@ -182,7 +215,6 @@ function MakeMapTile(game, id) {
 
 //=========================================================
 function MapTileGroup(game, x, y, bitmapDataId) {
-    console.log(arguments)
     Phaser.Group.call(this, game);
 
     var gridWidth = 96;
@@ -248,7 +280,7 @@ TokenSprite.prototype.constructor = TokenSprite;
 TokenSprite.prototype.tokenClicked = function (token) {
     player.body.x = token.centerX + 300 - 16 - 48 //half message width - left margin - half image width
     player.body.y = token.centerY
-    game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
+    game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.08, 0.08);
     game.cutSceneCamera = true;
 
     game.customCallback = function () {

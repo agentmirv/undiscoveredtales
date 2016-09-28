@@ -1,14 +1,16 @@
 ﻿{
-  "reveals":[
+  "revealMaps":[
       {
         "id": "reveal-lobby",
         "mapTiles": [ "maptile-lobby" ],
-        "dialogs": [ "lobby-reveal-dialog" ]
+        "revealDialogs": [ "reveal-lobby-dialog-room" ]
       }
   ],
-
-  "bmdTokens": [
-
+  "revealDialogs": [
+    {
+      "id": "reveal-lobby-dialog-room",
+      "text": "A disembodied voice speaks from the dim chamber, 'So, you have found me.'"
+    }
   ],
   "mapTiles": [
     {
