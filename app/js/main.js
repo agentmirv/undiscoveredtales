@@ -107,11 +107,16 @@ var GameState = {
                     if (Phaser.Rectangle.contains(targetRectSmall, cameraPoint.x, cameraPoint.y)) {
                         game.camera.focusOn(player)
                         game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.5, 0.5);
-                        
+
                         if (game.customCallback != null) {
                             game.customCallback()
                         }
                     }
+                }
+            } else {
+                // If the camera doesn't need to move before displaying the dialog
+                if (game.customCallback != null) {
+                    game.customCallback()
                 }
             }
         } else {
@@ -137,10 +142,10 @@ var GameState = {
     render: function () {
         //game.debug.cameraInfo(game.camera, 32, 32);
         //game.debug.spriteInfo(player, 32, 130);
-        game.debug.text(cameraPoint.x, 32, 230)
-        game.debug.text(cameraPoint.y, 32, 250)
-        game.debug.text(playerPoint.x, 32, 270)
-        game.debug.text(playerPoint.y, 32, 290)
+        //game.debug.text(cameraPoint.x, 32, 230)
+        //game.debug.text(cameraPoint.y, 32, 250)
+        //game.debug.text(playerPoint.x, 32, 270)
+        //game.debug.text(playerPoint.y, 32, 290)
 
         //var targetRectLarge = new Phaser.Rectangle(player.body.x - 60, player.body.y - 60, 120, 120)
         //game.debug.geom(targetRectLarge, "#00FF00", false)
@@ -159,10 +164,9 @@ function MakeRevealDialog(game, id, viewPoint) {
     player.body.y = viewPoint.y
     game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.08, 0.08);
     game.cutSceneCamera = true;
-    
+
     // set Callback to open Dialog
     game.customCallback = function () {
-        console.log(1)
         var dialogInstance = new DialogGroup(
             game,
             revealDialog.text,
@@ -336,7 +340,7 @@ function DialogGroup(game, messageText, imageBmdId, buttonType, buttonData) {
 
     } else if (buttonType == "continue") {
         // Button for [Continue]
-        var dialogContinue = new DialogButtonThin(game, buttonData[0].text, 180);
+        var dialogContinue = new DialogButtonThin(game, "Continue", 180);
         dialogContinue.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 0, 10)
         this.addChild(dialogContinue);
 
