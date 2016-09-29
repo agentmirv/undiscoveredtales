@@ -8,6 +8,7 @@ var GameState = {
         game.load.image('pixelBlack', 'assets/images/000000-1.png')
         game.load.image('pixelTransparent', 'assets/images/1x1.png')
         game.load.image('circleToken', 'assets/images/CircleToken.png', 96, 96);
+        game.load.image('investigator', 'assets/images/run.png', 96, 96);
 
         game.load.spritesheet('tileWallsSheet', 'assets/images/TileWalls.png', 96, 96);
 
@@ -46,6 +47,7 @@ var GameState = {
 
         var investigatorStartBmd = game.make.bitmapData(96, 96);
         investigatorStartBmd.copy('circleToken');
+        investigatorStartBmd.copy('investigator', 0, 0, 64, 64, 16, 16);
         game.cache.addBitmapData('investigatorStartBmd', investigatorStartBmd);
 
         var lobbyMapTileBmd = game.make.bitmapData(576, 576);
