@@ -195,7 +195,11 @@ function MakeRevealDialog(game, id) {
     // Add Tokens
     if (revealDialog.singleToken != null) {
         var tokenInstance = MakeToken(game, revealDialog.singleToken);
-        game.world.addChild(tokenInstance)
+
+        if (tokenInstance.clickId != null) {
+            game.world.addChild(tokenInstance)
+        }
+        
         var offsetX = tokenInstance.x + 48
         var offsetY = tokenInstance.y + 180
         player.body.x = offsetX
@@ -203,10 +207,7 @@ function MakeRevealDialog(game, id) {
     } else if (revealDialog.multipleTokens != null) {
         player.body.x = game.revealMap.center.x
         player.body.y = game.revealMap.center.y
-    } else if (revealDialog.bmdId != null) {
-        player.body.x = game.revealMap.center.x
-        player.body.y = game.revealMap.center.y
-    }
+    } 
 
     // Move Player
     game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.08, 0.08);

@@ -9,6 +9,7 @@
         "mapTiles": [ "maptile-lobby" ],
         "revealDialogs": [
           "reveal-lobby-dialog-room",
+          "reveal-lobby-dialog-investigators",
           "reveal-lobby-dialog-box"
         ]
       }
@@ -16,7 +17,12 @@
   "revealDialogs": [
     {
       "id": "reveal-lobby-dialog-room",
-      "text": "Trails of dead leaves and dust have blown in through the open door."
+      "text": "You had planned on knocking and waiting for an invitation to enter. Instead you are greeted with the front door swinging on its hinges."
+    },
+    {
+      "id": "reveal-lobby-dialog-investigators",
+      "text": "Trails of dead leaves and dust have blown in through the open door. Place your investigators here.",
+      "singleToken" : "lobby-investigators-start"
     },
     {
       "id": "reveal-lobby-dialog-box",
@@ -44,6 +50,12 @@
     }
   ],
   "mapTokens":[
+    {
+      "id":"lobby-investigators-start",
+      "x":1200,
+      "y":1344,
+      "bmdId":"circleToken"
+    },
     {
       "id":"lobby-box-search",
       "x":1200,
