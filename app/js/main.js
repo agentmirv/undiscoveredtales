@@ -44,6 +44,10 @@ var GameState = {
         searchTokenBmd.copy(searchLetter);
         game.cache.addBitmapData('searchTokenBmd', searchTokenBmd);
 
+        var searchTokenBmd = game.make.bitmapData(96, 96);
+        searchTokenBmd.copy('circleToken');
+        game.cache.addBitmapData('investigatorStart', searchTokenBmd);
+
         var lobbyMapTileBmd = game.make.bitmapData(576, 576);
         // example is 6x6 grid
         // grid square is 96px
@@ -195,16 +199,21 @@ function MakeRevealDialog(game, id) {
     // Add Tokens
     if (revealDialog.singleToken != null) {
         var tokenInstance = MakeToken(game, revealDialog.singleToken);
-
         if (tokenInstance.clickId != null) {
             game.world.addChild(tokenInstance)
         }
-        
-        var offsetX = tokenInstance.x + 48
-        var offsetY = tokenInstance.y + 180
-        player.body.x = offsetX
-        player.body.y = offsetY
+
+        player.body.x = tokenInstance.x + 48
+        player.body.y = tokenInstance.y + 180
+
     } else if (revealDialog.multipleTokens != null) {
+        for (var i = 0; i < revealDialog.multipleTokens.length; i++) {
+            var tokenInstance = MakeToken(game, revealDialog.multipleTokens[i]);
+            if (tokenInstance.clickId != null) {
+                game.world.addChild(tokenInstance)
+            }
+        }
+
         player.body.x = game.revealMap.center.x
         player.body.y = game.revealMap.center.y
     } 
@@ -253,14 +262,6 @@ function MapTileGroup(game, x, y, bitmapDataId) {
     var halfGridWidth = 48;
 
     this.addChild(game.make.sprite(x, y, game.cache.getBitmapData(bitmapDataId)));
-
-    game.world.addChild(MakeToken(game, 'lobby-door1-explore'))
-    //this.addChild(new ExploreToken(game, x + gridWidth * 4, y - halfGridWidth));
-    game.world.addChild(MakeToken(game, 'lobby-door2-explore'))
-    //this.addChild(new ExploreToken(game, x + (gridWidth * 5) + halfGridWidth, y + gridWidth));
-    //this.addChild(new ExploreToken(game, x - halfGridWidth, y + gridWidth * 4));
-    game.world.addChild(MakeToken(game, 'lobby-door3-explore'))
-    //game.world.addChild(MakeToken(game, 'lobby-box-search'))
 }
 
 MapTileGroup.prototype = Object.create(Phaser.Group.prototype);

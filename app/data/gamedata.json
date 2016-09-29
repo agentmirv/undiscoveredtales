@@ -10,7 +10,8 @@
         "revealDialogs": [
           "reveal-lobby-dialog-room",
           "reveal-lobby-dialog-investigators",
-          "reveal-lobby-dialog-box"
+          "reveal-lobby-dialog-box",
+          "reveal-lobby-dialog-doors"
         ]
       }
   ],
@@ -28,6 +29,11 @@
       "id": "reveal-lobby-dialog-box",
       "text": "You see a large wooden box on the table in the center of the room. ",
       "singleToken" : "lobby-box-search"
+    },
+    {
+      "id": "reveal-lobby-dialog-doors",
+      "text": "There are three doors in this room. Place the tokens as indicated.",
+      "multipleTokens" : [ "lobby-door1-explore", "lobby-door2-explore", "lobby-door3-explore" ]
     }
   ],
   "mapTiles": [
@@ -54,7 +60,7 @@
       "id":"lobby-investigators-start",
       "x":1200,
       "y":1344,
-      "bmdId":"circleToken"
+      "bmdId":"investigatorStart"
     },
     {
       "id":"lobby-box-search",
