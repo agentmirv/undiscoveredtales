@@ -44,9 +44,9 @@ var GameState = {
         searchTokenBmd.copy(searchLetter);
         game.cache.addBitmapData('searchTokenBmd', searchTokenBmd);
 
-        var searchTokenBmd = game.make.bitmapData(96, 96);
-        searchTokenBmd.copy('circleToken');
-        game.cache.addBitmapData('investigatorStart', searchTokenBmd);
+        var investigatorStartBmd = game.make.bitmapData(96, 96);
+        investigatorStartBmd.copy('circleToken');
+        game.cache.addBitmapData('investigatorStartBmd', investigatorStartBmd);
 
         var lobbyMapTileBmd = game.make.bitmapData(576, 576);
         // example is 6x6 grid
@@ -196,6 +196,11 @@ function MakeRevealMap(game, id) {
 function MakeRevealDialog(game, id) {
     var revealDialog = game.gamedata.revealDialogs.find(function (item) { return item.id == id });
 
+    // Dialog Info
+    var imageBmdId = null;
+    var buttonType = "reveal";
+    var buttonData = [{ "text": "Continue", "actions": [{ "type": "reveal" }] }];
+
     // Add Tokens
     if (revealDialog.singleToken != null) {
         var tokenInstance = MakeToken(game, revealDialog.singleToken);
@@ -203,8 +208,9 @@ function MakeRevealDialog(game, id) {
             game.world.addChild(tokenInstance)
         }
 
+        imageBmdId = tokenInstance.bitmapDataId;
         player.body.x = tokenInstance.x + 48
-        player.body.y = tokenInstance.y + 180
+        player.body.y = tokenInstance.y + 165  // HACK, clean this up
 
     } else if (revealDialog.multipleTokens != null) {
         for (var i = 0; i < revealDialog.multipleTokens.length; i++) {
@@ -221,11 +227,6 @@ function MakeRevealDialog(game, id) {
     // Move Player
     game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.08, 0.08);
     game.cutSceneCamera = true;
-
-    // Dialog Info
-    var imageBmdId = null;
-    var buttonType = "reveal";
-    var buttonData = [{ "text": "Continue", "actions": [{ "type": "reveal" }] }];
 
     // set Callback to open Dialog
     game.customCallback = function () {
@@ -301,6 +302,7 @@ function MakeDialog(game, id) {
 function TokenSprite(game, x, y, bitmapDataId, clickId) {
     Phaser.Sprite.call(this, game, x, y, game.cache.getBitmapData(bitmapDataId));
 
+    this.bitmapDataId = bitmapDataId;
     this.clickId = clickId;
     this.inputEnabled = true;
     this.events.onInputDown.add(this.tokenClicked, this);
@@ -335,10 +337,24 @@ function DialogGroup(game, messageText, imageBmdId, buttonType, buttonData) {
     modalBackground.inputEnabled = true;
     this.addChild(modalBackground);
 
+    // HACK, clean this up
+    var imageRevealBmd = null;
+    if (buttonType == "reveal" && imageBmdId != null) {
+        imageRevealBmd = game.cache.getBitmapData(imageBmdId);
+        imageBmdId = null;
+    }
+
     // Message
     var dialogMessage = new DialogMessage(game, messageText, imageBmdId);
     dialogMessage.alignIn(game.stageViewRect, Phaser.CENTER)
     this.addChild(dialogMessage);
+
+    // HACK, clean this up
+    if (imageRevealBmd != null) {
+        var imageReveal = game.make.sprite(game.stageViewRect.x, game.stageViewRect.y - 120, imageRevealBmd);
+        imageReveal.alignTo(dialogMessage, Phaser.TOP_CENTER, 0, 0)
+        this.addChild(imageReveal);
+    }
 
     if (buttonType == "cancel-action") {
         // Buttons for [Cancel] [Action]

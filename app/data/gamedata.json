@@ -32,7 +32,7 @@
     },
     {
       "id": "reveal-lobby-dialog-doors",
-      "text": "There are three doors in this room. Place the tokens as indicated.",
+      "text": "Three doors lead from this room. Place the tokens as indicated.",
       "multipleTokens" : [ "lobby-door1-explore", "lobby-door2-explore", "lobby-door3-explore" ]
     }
   ],
@@ -60,7 +60,7 @@
       "id":"lobby-investigators-start",
       "x":1200,
       "y":1344,
-      "bmdId":"investigatorStart"
+      "bmdId": "investigatorStartBmd"
     },
     {
       "id":"lobby-box-search",
