@@ -88,7 +88,10 @@ var GameState = {
 
         //=================================================
         // First Reveal
-        game.revealDialogs = []; // reveal dialog list is global for now
+        //game.revealDialogs = []; // reveal dialog list is global for now
+        game.revealMap = {};
+        game.revealMap.dialogs = [];
+        game.revealMap.center = {}
         MakeRevealMap(game, 'reveal-lobby')
     },
 
@@ -142,6 +145,7 @@ var GameState = {
     render: function () {
         //game.debug.cameraInfo(game.camera, 32, 32);
         //game.debug.spriteInfo(player, 32, 130);
+        //game.debug.text(game.revealDialogs.length, 32, 230)
         //game.debug.text(cameraPoint.x, 32, 230)
         //game.debug.text(cameraPoint.y, 32, 250)
         //game.debug.text(playerPoint.x, 32, 270)
@@ -156,12 +160,55 @@ var GameState = {
 }
 
 //=========================================================
-function MakeRevealDialog(game, id, viewPoint) {
+function MakeRevealMap(game, id) {
+    var revealData = game.gamedata.revealMaps.find(function (item) { return item.id == id });
+    game.revealMap.dialogs = revealData.revealDialogs;
+
+    var localGroup = game.add.group();
+
+    // Add Map Tiles
+    for (var i = 0; i < revealData.mapTiles.length; i++) {
+        localGroup.addChild(MakeMapTile(game, revealData.mapTiles[i]));
+    }
+
+    game.revealMap.center = new Phaser.Point(localGroup.centerX, localGroup.centerY)
+     
+    // Move Player
+    player.body.x = game.revealMap.center.x
+    player.body.y = game.revealMap.center.y
+    game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.08, 0.08);
+    game.cutSceneCamera = true;
+
+    if (game.revealMap.dialogs.length > 0) {
+        var revealDialog = game.revealMap.dialogs.shift();
+        game.customCallback = function () {
+            // Make first Dialog
+            MakeRevealDialog(game, revealDialog);
+        }
+    }
+}
+
+//=========================================================
+function MakeRevealDialog(game, id) {
     var revealDialog = game.gamedata.revealDialogs.find(function (item) { return item.id == id });
 
+    // Add Tokens
+    if (revealDialog.singleToken != null) {
+        var tokenInstance = MakeToken(game, revealDialog.singleToken);
+        game.world.addChild(tokenInstance)
+        var offsetX = tokenInstance.x + 48
+        var offsetY = tokenInstance.y + 180
+        player.body.x = offsetX
+        player.body.y = offsetY
+    } else if (revealDialog.multipleTokens != null) {
+        player.body.x = game.revealMap.center.x
+        player.body.y = game.revealMap.center.y
+    } else if (revealDialog.bmdId != null) {
+        player.body.x = game.revealMap.center.x
+        player.body.y = game.revealMap.center.y
+    }
+
     // Move Player
-    player.body.x = viewPoint.x
-    player.body.y = viewPoint.y
     game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.08, 0.08);
     game.cutSceneCamera = true;
 
@@ -185,35 +232,6 @@ function MakeRevealDialog(game, id, viewPoint) {
 }
 
 //=========================================================
-function MakeRevealMap(game, id) {
-    var revealData = game.gamedata.revealMaps.find(function (item) { return item.id == id });
-    game.revealDialogs = revealData.revealDialogs;
-    var localGroup = game.add.group();
-
-    // Add Map Tiles
-    for(var i = 0; i < revealData.mapTiles.length; i++) {
-        localGroup.addChild(MakeMapTile(game, revealData.mapTiles[i]));
-    }
-
-    var center = new Phaser.Point(localGroup.centerX, localGroup.centerY)
-
-    // Move Player
-    player.body.x = center.x
-    player.body.y = center.y
-    game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.08, 0.08);
-    game.cutSceneCamera = true;
-
-    // Add Tokens?
-
-    game.customCallback = function () {
-        // Make first Dialog
-        if (game.revealDialogs.length > 0) {
-            MakeRevealDialog(game, game.revealDialogs.pop(), center);
-        }
-    }
-}
-
-//=========================================================
 function MakeMapTile(game, id) {
     var mapTileData = game.gamedata.mapTiles.find(function (item) { return item.id == id });
 
@@ -222,6 +240,7 @@ function MakeMapTile(game, id) {
         mapTileData.x,
         mapTileData.y,
         mapTileData.bmdId);
+
     return mapTile;
 }
 
@@ -240,7 +259,7 @@ function MapTileGroup(game, x, y, bitmapDataId) {
     //this.addChild(new ExploreToken(game, x + (gridWidth * 5) + halfGridWidth, y + gridWidth));
     //this.addChild(new ExploreToken(game, x - halfGridWidth, y + gridWidth * 4));
     game.world.addChild(MakeToken(game, 'lobby-door3-explore'))
-    game.world.addChild(MakeToken(game, 'lobby-box-search'))
+    //game.world.addChild(MakeToken(game, 'lobby-box-search'))
 }
 
 MapTileGroup.prototype = Object.create(Phaser.Group.prototype);
@@ -406,7 +425,13 @@ DialogGroup.prototype.buttonClicked = function (button, pointer) {
 
                 } else if (action.type == "reveal") {
                     //Possibly go to next reveal dialog?
-                    console.log("reveal next reveal dialog")
+                    if (game.revealMap.dialogs.length > 0) {
+                        var revealDialog = game.revealMap.dialogs.shift();
+                        game.customCallback = function () {
+                            MakeRevealDialog(game, revealDialog);
+                        }
+                        restoreControl = false;
+                    }
                 }
             }
         }

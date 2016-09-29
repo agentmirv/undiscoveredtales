@@ -7,13 +7,21 @@
       {
         "id": "reveal-lobby",
         "mapTiles": [ "maptile-lobby" ],
-        "revealDialogs": [ "reveal-lobby-dialog-room" ]
+        "revealDialogs": [
+          "reveal-lobby-dialog-room",
+          "reveal-lobby-dialog-box"
+        ]
       }
   ],
   "revealDialogs": [
     {
       "id": "reveal-lobby-dialog-room",
-      "text": "A disembodied voice speaks from the dim chamber, 'So, you have found me.'"
+      "text": "Trails of dead leaves and dust have blown in through the open door."
+    },
+    {
+      "id": "reveal-lobby-dialog-box",
+      "text": "You see a large wooden box on the table in the center of the room. ",
+      "singleToken" : "lobby-box-search"
     }
   ],
   "mapTiles": [
@@ -39,7 +47,7 @@
     {
       "id":"lobby-box-search",
       "x":1200,
-      "y":1104,
+      "y":1200,
       "bmdId":"searchTokenBmd",
       "clickId":"lobby-box-dialog"
     },
@@ -69,7 +77,7 @@
     {
       "id": "lobby-box-dialog",
       "bmdId": "searchTokenBmd",
-      "text": "A heavy wooden box lies on the bureau. The lid can be opened by sliding an ornate latch.",
+      "text": "A heavy wooden box lies on the table. The lid can be opened by sliding an ornate latch.",
       "buttonType": "cancel-action",
       "actionRemove" :[
         "lobby-box-search"
