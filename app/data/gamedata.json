@@ -56,6 +56,9 @@
       "height": 6,
       "bmdId": "lobbyMapTileBmd",
       "spritesheet": "tileWallsSheet",
+      "entryTokenIds": [
+        "lobby-door3-explore"
+      ],
       "walls": [
         0, 4, 1, 1, 4, 2,
         4, 4, 4, 4, 4, 4,
@@ -73,6 +76,9 @@
       "height": 3,
       "bmdId": "studyMapTileBmd",
       "spritesheet": "tileWallsSheet",
+      "entryTokenIds": [
+        "lobby-door3-explore"
+      ],
       "walls": [
         0, 1, 1, 1, 1, 2,
         4, 4, 4, 4, 4, 5,
@@ -137,7 +143,7 @@
       "buttonType": "continue",
       "buttons": [
         { "text": "Continue",
-          "actions": [ {"type": "remove", "removeIds": ["lobby-box-search"] } ]
+          "actions": [ {"type": "removeTokens", "removeIds": ["lobby-box-search"] } ]
         }
       ]
     },

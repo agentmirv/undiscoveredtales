@@ -9,7 +9,7 @@ var GameState = {
         game.load.image('pixelTransparent', 'assets/images/1x1.png')
         game.load.image('circleToken', 'assets/images/CircleToken.png', 96, 96);
         game.load.image('investigator', 'assets/images/run.png');
-        game.load.image('search', 'assets/images/magnifying-glass.png');
+        game.load.image('search', 'assets/images/uncertainty.png');
         game.load.image('explore', 'assets/images/lantern-flame.png');
         game.load.image('revealPointer', 'assets/images/RevealPointer.png');
         game.load.image('debugCircle', 'assets/images/DebugCircle.png');
@@ -24,6 +24,8 @@ var GameState = {
         // Initialize game data
         game.gamedata = game.cache.getJSON('gamedata'); 
         game.gamedataInstances = {};
+        game.gamedataInstances.mapTiles = {}
+        game.gamedataInstances.mapTokens = {}
 
         //=================================================
         // Create bitmapData (textures I create at runtime that I can reuse)
@@ -72,7 +74,6 @@ var GameState = {
             }
 
             game.cache.addBitmapData(mapTileData.bmdId, mapTileBmd);
-            console.log(mapTileData.bmdId)
         }
 
         //=================================================
@@ -255,7 +256,7 @@ function MakeMapTile(game, id) {
         mapTileData.y,
         mapTileData.bmdId);
 
-    game.gamedataInstances[id] = mapTileInstance;
+    game.gamedataInstances.mapTiles[id] = mapTileInstance;
 
     return mapTileInstance;
 }
@@ -283,7 +284,7 @@ function MakeToken(game, id) {
         tokenData.bmdId,
         tokenData.clickId);
 
-    game.gamedataInstances[id] = tokenInstance;
+    game.gamedataInstances.mapTokens[id] = tokenInstance;
 
     return tokenInstance;
 }
@@ -437,19 +438,19 @@ DialogGroup.prototype.buttonClicked = function (button, pointer) {
             for (var i = 0; i < actionArray.length; i++) {
                 // Process each action
                 var action = actionArray[i];
-                if (action.type == "remove") {
+                if (action.type == "removeTokens") {
                     // Loop on removeIds array
                     for (var j = 0; j < action.removeIds.length; j++) {
                         var id = action.removeIds[j];
 
-                        if (game.gamedataInstances.hasOwnProperty(id)) {
+                        if (game.gamedataInstances.mapTokens.hasOwnProperty(id)) {
                             // Remove Id
                             // TODO: reference a group within gamedataInstances (tokens, mapTiles)?
                             // type = "removeTokens"
                             // type = "removeMapTiles"
-                            var instance = game.gamedataInstances[id]
+                            var instance = game.gamedataInstances.mapTokens[id]
                             if (instance != null) {
-                                game.gamedataInstances[id] = null;
+                                game.gamedataInstances.mapTokens[id] = null;
                                 game.world.removeChild(instance);
                                 instance.destroy();
                             }
