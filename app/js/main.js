@@ -8,7 +8,10 @@ var GameState = {
         game.load.image('pixelBlack', 'assets/images/000000-1.png')
         game.load.image('pixelTransparent', 'assets/images/1x1.png')
         game.load.image('circleToken', 'assets/images/CircleToken.png', 96, 96);
-        game.load.image('investigator', 'assets/images/run.png', 96, 96);
+        game.load.image('investigator', 'assets/images/run.png');
+        game.load.image('search', 'assets/images/magnifying-glass.png');
+        game.load.image('explore', 'assets/images/steel-door.png');
+
         game.load.image('revealPointer', 'assets/images/RevealPointer.png');
         game.load.image('debugCircle', 'assets/images/DebugCircle.png');
 
@@ -25,31 +28,31 @@ var GameState = {
 
         //=================================================
         // Create bitmapData (textures I create at runtime that I can reuse)
-        var exploreLetterStyle = { font: "74px Arial Black", fill: "#ff0000", align: "center", stroke: "#aa0000", strokeThickness: 5 };
-        var exploreLetter = game.make.text(0, 0, 'E', exploreLetterStyle)
-        exploreLetter.setShadow(2, 2, "#333333", 2, true, false);
-        exploreLetter.x = 48 - Math.floor(exploreLetter.width / 2);
-        exploreLetter.y = 48 - Math.floor(exploreLetter.height / 2);
-
         var exploreTokenBmd = game.make.bitmapData(96, 96);
         exploreTokenBmd.copy('circleToken');
-        exploreTokenBmd.copy(exploreLetter);
+        var exploreImage = game.make.image(0, 0, 'explore');
+        exploreImage.tint = 0x770000;
+        exploreTokenBmd.copy(exploreImage, 0, 0, 64, 64, 16 + 2, 16 + 2);
+        exploreImage.tint = 0xFF0000;
+        exploreTokenBmd.copy(exploreImage, 0, 0, 64, 64, 16, 16);
         game.cache.addBitmapData('exploreTokenBmd', exploreTokenBmd);
 
-        var searchLetterStyle = { font: "74px Arial Black", fill: "#ffff00", align: "center", stroke: "#aaaa00", strokeThickness: 5 };
-        var searchLetter = game.make.text(0, 0, '?', searchLetterStyle)
-        searchLetter.setShadow(2, 2, "#333333", 2, true, false);
-        searchLetter.x = 48 - Math.floor(searchLetter.width / 2);
-        searchLetter.y = 48 - Math.floor(searchLetter.height / 2);
-
         var searchTokenBmd = game.make.bitmapData(96, 96);
+        var searchImage = game.make.image(0, 0, 'search');
         searchTokenBmd.copy('circleToken');
-        searchTokenBmd.copy(searchLetter);
+        searchImage.tint = 0xAAAA00;
+        searchTokenBmd.copy(searchImage, 0, 0, 64, 64, 16 + 2, 16 + 2);
+        searchImage.tint = 0xFFFF00;
+        searchTokenBmd.copy(searchImage, 0, 0, 64, 64, 16, 16);
         game.cache.addBitmapData('searchTokenBmd', searchTokenBmd);
 
         var investigatorStartBmd = game.make.bitmapData(96, 96);
+        var investigatorImage = game.make.image(0, 0, 'investigator');
         investigatorStartBmd.copy('circleToken');
-        investigatorStartBmd.copy('investigator', 0, 0, 64, 64, 16, 16);
+        investigatorImage.tint = 0x000000;
+        investigatorStartBmd.copy(investigatorImage, 0, 0, 64, 64, 16 + 2, 16 + 2);
+        investigatorImage.tint = 0xFFFFFF;
+        investigatorStartBmd.copy(investigatorImage, 0, 0, 64, 64, 16, 16);
         game.cache.addBitmapData('investigatorStartBmd', investigatorStartBmd);
 
         var lobbyMapTileBmd = game.make.bitmapData(576, 576);

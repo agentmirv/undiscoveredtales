@@ -59,7 +59,7 @@
     {
       "id":"lobby-investigators-start",
       "x":1200,
-      "y":1344,
+      "y":1384,
       "bmdId": "investigatorStartBmd"
     },
     {
