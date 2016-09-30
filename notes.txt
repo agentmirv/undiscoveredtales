@@ -76,8 +76,22 @@ https://www.youtube.com/watch?v=4TrOCv5Kukk
 Game-icons.net is an online repository providing heaps of cool game related graphics.
 http://game-icons.net/
 
-game-icons/icons 
+game-icons/icons
 https://github.com/game-icons/icons
+
+Run icon
+http://game-icons.net/lorc/originals/run.html
+
+Magnifying glass icon
+http://game-icons.net/lorc/originals/magnifying-glass.html
+
+Steel door icon
+http://game-icons.net/skoll/originals/steel-door.html
+
+For the reveal dialogs, it appears that the reveal item appears at the same height, pushing down the dialog.
+
+PISKEL
+http://www.piskelapp.com/
 
 ===========================================================
 ===========================================================

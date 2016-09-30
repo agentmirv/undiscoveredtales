@@ -9,6 +9,8 @@ var GameState = {
         game.load.image('pixelTransparent', 'assets/images/1x1.png')
         game.load.image('circleToken', 'assets/images/CircleToken.png', 96, 96);
         game.load.image('investigator', 'assets/images/run.png', 96, 96);
+        game.load.image('revealPointer', 'assets/images/RevealPointer.png');
+        game.load.image('debugCircle', 'assets/images/DebugCircle.png');
 
         game.load.spritesheet('tileWallsSheet', 'assets/images/TileWalls.png', 96, 96);
 
@@ -159,7 +161,6 @@ var GameState = {
 
         //var targetRectLarge = new Phaser.Rectangle(player.body.x - 60, player.body.y - 60, 120, 120)
         //game.debug.geom(targetRectLarge, "#00FF00", false)
-
         //var targetRectSmall = new Phaser.Rectangle(player.body.x - 10, player.body.y - 10, 20, 20)
         //game.debug.geom(targetRectSmall, "#00FF00", false)
     }
@@ -205,6 +206,7 @@ function MakeRevealDialog(game, id) {
 
     // Add Tokens
     if (revealDialog.singleToken != null) {
+        // Show image at the top of the Dialog
         var tokenInstance = MakeToken(game, revealDialog.singleToken);
         if (tokenInstance.clickId != null) {
             game.world.addChild(tokenInstance)
@@ -212,9 +214,10 @@ function MakeRevealDialog(game, id) {
 
         imageBmdId = tokenInstance.bitmapDataId;
         player.body.x = tokenInstance.x + 48
-        player.body.y = tokenInstance.y + 165  // HACK, clean this up
+        player.body.y = tokenInstance.y + 256
 
     } else if (revealDialog.multipleTokens != null) {
+        // Show images with the Dialog in the middle of the room
         for (var i = 0; i < revealDialog.multipleTokens.length; i++) {
             var tokenInstance = MakeToken(game, revealDialog.multipleTokens[i]);
             if (tokenInstance.clickId != null) {
@@ -339,24 +342,35 @@ function DialogGroup(game, messageText, imageBmdId, buttonType, buttonData) {
     modalBackground.inputEnabled = true;
     this.addChild(modalBackground);
 
-    // HACK, clean this up
-    var imageRevealBmd = null;
-    if (buttonType == "reveal" && imageBmdId != null) {
-        imageRevealBmd = game.cache.getBitmapData(imageBmdId);
-        imageBmdId = null;
+    var messageImageBmdId = null;
+    var revealImageBmdId = null;
+
+    if (buttonType == "reveal") {
+        revealImageBmdId = imageBmdId;
+    } else {
+        messageImageBmdId = imageBmdId;
+    }
+
+    if (buttonType == "reveal" && revealImageBmdId != null) {
+        // Reveal Image
+        var revealPointer = game.make.image(0, 0, game.cache.getBitmapData(revealImageBmdId))
+        revealPointer.alignIn(game.stageViewRect, Phaser.CENTER, 0, -256 + 48)
+        this.addChild(revealPointer);
+
+        // Reveal Pointer
+        var revealPointer = game.make.image(0, 0, 'revealPointer')
+        revealPointer.alignIn(game.stageViewRect, Phaser.CENTER, 0, -96 -48 + 4)
+        this.addChild(revealPointer);
     }
 
     // Message
-    var dialogMessage = new DialogMessage(game, messageText, imageBmdId);
-    dialogMessage.alignIn(game.stageViewRect, Phaser.CENTER)
-    this.addChild(dialogMessage);
-
-    // HACK, clean this up
-    if (imageRevealBmd != null) {
-        var imageReveal = game.make.sprite(game.stageViewRect.x, game.stageViewRect.y - 120, imageRevealBmd);
-        imageReveal.alignTo(dialogMessage, Phaser.TOP_CENTER, 0, 0)
-        this.addChild(imageReveal);
+    var dialogMessage = new DialogMessage(game, messageText, messageImageBmdId);
+    if (buttonType == "reveal" && imageBmdId != null) {
+        dialogMessage.alignTo(revealPointer, Phaser.BOTTOM_CENTER, 0, 3)
+    } else {
+        dialogMessage.alignIn(game.stageViewRect, Phaser.CENTER)
     }
+    this.addChild(dialogMessage);
 
     if (buttonType == "cancel-action") {
         // Buttons for [Cancel] [Action]
