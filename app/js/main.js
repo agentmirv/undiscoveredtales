@@ -238,7 +238,8 @@ function MakeRevealDialog(game, id) {
             imageBmdId,
             buttonType,
             buttonData);
-        game.gamedataInstances[id] = dialogInstance;
+
+        //game.gamedataInstances[id] = dialogInstance;
         game.stage.addChild(dialogInstance);
         game.customCallback = null;
     }
@@ -248,13 +249,15 @@ function MakeRevealDialog(game, id) {
 function MakeMapTile(game, id) {
     var mapTileData = game.gamedata.mapTiles.find(function (item) { return item.id == id });
 
-    var mapTile = new MapTileGroup(
+    var mapTileInstance = new MapTileGroup(
         game,
         mapTileData.x,
         mapTileData.y,
         mapTileData.bmdId);
 
-    return mapTile;
+    game.gamedataInstances[id] = mapTileInstance;
+
+    return mapTileInstance;
 }
 
 //=========================================================
@@ -279,6 +282,7 @@ function MakeToken(game, id) {
         tokenData.y,
         tokenData.bmdId,
         tokenData.clickId);
+
     game.gamedataInstances[id] = tokenInstance;
 
     return tokenInstance;
@@ -295,7 +299,7 @@ function MakeDialog(game, id) {
         dialogData.buttonType,
         dialogData.buttons);
 
-    game.gamedataInstances[id] = dialogInstance;
+    //game.gamedataInstances[id] = dialogInstance;
 
     return dialogInstance;
 }
@@ -440,6 +444,9 @@ DialogGroup.prototype.buttonClicked = function (button, pointer) {
 
                         if (game.gamedataInstances.hasOwnProperty(id)) {
                             // Remove Id
+                            // TODO: reference a group within gamedataInstances (tokens, mapTiles)?
+                            // type = "removeTokens"
+                            // type = "removeMapTiles"
                             var instance = game.gamedataInstances[id]
                             if (instance != null) {
                                 game.gamedataInstances[id] = null;
