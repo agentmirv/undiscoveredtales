@@ -13,27 +13,38 @@
           "reveal-lobby-dialog-box",
           "reveal-lobby-dialog-doors"
         ]
+      },
+      {
+        "id": "reveal-study",
+        "mapTiles": [ "maptile-study" ],
+        "revealDialogs": [
+          "reveal-study-dialog-room"
+        ]
       }
   ],
   "revealDialogs": [
     {
       "id": "reveal-lobby-dialog-room",
-      "text": "You had planned on knocking and waiting for an invitation to enter. Instead you are greeted with the front door swinging on its hinges. Place the Lobby tile as indicated."
+      "text": "You had planned on knocking and waiting for an invitation to enter. Instead you are greeted with the front door swinging on its hinges. Place the Lobby tile."
     },
     {
       "id": "reveal-lobby-dialog-investigators",
-      "text": "Trails of dead leaves and dust have blown in through the open door. Place your investigators here.",
-      "singleToken" : "lobby-investigators-start"
+      "text": "Trails of dead leaves and dust have blown in through the open door. Place your investigators.",
+      "addSingleToken" : "lobby-investigators-start"
     },
     {
       "id": "reveal-lobby-dialog-box",
-      "text": "You see a large wooden box on the table in the center of the room. Place a Search token as indicated.",
-      "singleToken" : "lobby-box-search"
+      "text": "You see a large wooden box on the table in the center of the room. Place a Search token.",
+      "addSingleToken" : "lobby-box-search"
     },
     {
       "id": "reveal-lobby-dialog-doors",
-      "text": "Three doors lead from this room. Place Explore tokens as indicated.",
-      "multipleTokens" : [ "lobby-door1-explore", "lobby-door2-explore", "lobby-door3-explore" ]
+      "text": "Three doors lead from this room. Place Explore tokens.",
+      "addMultipleTokens" : [ "lobby-door1-explore", "lobby-door2-explore", "lobby-door3-explore" ]
+    },
+    {
+      "id": "reveal-study-dialog-room",
+      "text": "The door leads to a dark study. The room is cold, drafts blow in from the disused fireplace. Place the Study tile. Remove any Explore tokens leading to it."
     }
   ],
   "mapTiles": [
@@ -52,6 +63,20 @@
         3, 4, 4, 4, 4, 5,
         4, 4, 4, 4, 4, 4,
         6, 7, 7, 7, 7, 8
+      ]
+    },
+    {
+      "id": "maptile-study",
+      "x": 1536,
+      "y": 1248,
+      "width": 6,
+      "height": 3,
+      "bmdId": "studyMapTileBmd",
+      "spritesheet": "tileWallsSheet",
+      "walls": [
+        0, 1, 1, 1, 1, 2,
+        4, 4, 4, 4, 4, 5,
+        6, 7, 7, 7, 4, 8
       ]
     }
   ],
@@ -142,7 +167,8 @@
       "text": "Hey, its door number three.",
       "buttonType": "cancel-action",
       "buttons": [
-        { "text": "@ Explore"
+        { "text": "@ Explore",
+          "actions": [ {"type": "revealMap", "revealMapId": "reveal-study" } ]
         }
       ]
     }

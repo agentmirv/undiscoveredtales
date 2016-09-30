@@ -10,7 +10,7 @@ var GameState = {
         game.load.image('circleToken', 'assets/images/CircleToken.png', 96, 96);
         game.load.image('investigator', 'assets/images/run.png');
         game.load.image('search', 'assets/images/magnifying-glass.png');
-        game.load.image('explore', 'assets/images/steel-door.png');
+        game.load.image('explore', 'assets/images/lantern-flame.png');
         game.load.image('revealPointer', 'assets/images/RevealPointer.png');
         game.load.image('debugCircle', 'assets/images/DebugCircle.png');
 
@@ -56,10 +56,10 @@ var GameState = {
 
         for (var k = 0; k < game.gamedata.mapTiles.length; k++) {
             var gridWidth = 96;
-            var mapTileData = game.gamedata.mapTiles[0]
+            var mapTileData = game.gamedata.mapTiles[k]
             var bmdWidth = mapTileData.width * 96;
             var bmdHeight = mapTileData.height * 96;
-            var mapTileBmd = game.make.bitmapData(576, 576);
+            var mapTileBmd = game.make.bitmapData(bmdWidth, bmdHeight);
 
             for (var j = 0; j < mapTileData.height; j++) {
                 for (var i = 0; i < mapTileData.width; i++) {
@@ -72,6 +72,7 @@ var GameState = {
             }
 
             game.cache.addBitmapData(mapTileData.bmdId, mapTileBmd);
+            console.log(mapTileData.bmdId)
         }
 
         //=================================================
@@ -201,9 +202,9 @@ function MakeRevealDialog(game, id) {
     var buttonData = [{ "text": "Continue", "actions": [{ "type": "reveal" }] }];
 
     // Add Tokens
-    if (revealDialog.singleToken != null) {
+    if (revealDialog.addSingleToken != null) {
         // Show image at the top of the Dialog
-        var tokenInstance = MakeToken(game, revealDialog.singleToken);
+        var tokenInstance = MakeToken(game, revealDialog.addSingleToken);
         if (tokenInstance.clickId != null) {
             game.world.addChild(tokenInstance)
         }
@@ -212,10 +213,10 @@ function MakeRevealDialog(game, id) {
         player.body.x = tokenInstance.x + 48
         player.body.y = tokenInstance.y + 256
 
-    } else if (revealDialog.multipleTokens != null) {
+    } else if (revealDialog.addMultipleTokens != null) {
         // Show images with the Dialog in the middle of the room
-        for (var i = 0; i < revealDialog.multipleTokens.length; i++) {
-            var tokenInstance = MakeToken(game, revealDialog.multipleTokens[i]);
+        for (var i = 0; i < revealDialog.addMultipleTokens.length; i++) {
+            var tokenInstance = MakeToken(game, revealDialog.addMultipleTokens[i]);
             if (tokenInstance.clickId != null) {
                 game.world.addChild(tokenInstance)
             }
@@ -306,7 +307,7 @@ function TokenSprite(game, x, y, bitmapDataId, clickId) {
     this.bitmapDataId = bitmapDataId;
     this.clickId = clickId;
     this.inputEnabled = true;
-    this.events.onInputDown.add(this.tokenClicked, this);
+    this.events.onInputUp.add(this.tokenClicked, this);
     this.input.useHandCursor = true;
 }
 
@@ -454,11 +455,19 @@ DialogGroup.prototype.buttonClicked = function (button, pointer) {
                     restoreControl = false;
 
                 } else if (action.type == "reveal") {
-                    //Possibly go to next reveal dialog?
+                    //Go to next reveal dialog
                     if (game.revealMap.dialogs.length > 0) {
                         var revealDialog = game.revealMap.dialogs.shift();
                         game.customCallback = function () {
                             MakeRevealDialog(game, revealDialog);
+                        }
+                        restoreControl = false;
+                    }
+                } else if (action.type == "revealMap") {
+                    //Reveal map tiles
+                    if (action.revealMapId != null) {
+                        game.customCallback = function () {
+                            MakeRevealMap(game, action.revealMapId);
                         }
                         restoreControl = false;
                     }
