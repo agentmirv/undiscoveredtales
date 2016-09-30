@@ -18,7 +18,7 @@
   "revealDialogs": [
     {
       "id": "reveal-lobby-dialog-room",
-      "text": "You had planned on knocking and waiting for an invitation to enter. Instead you are greeted with the front door swinging on its hinges."
+      "text": "You had planned on knocking and waiting for an invitation to enter. Instead you are greeted with the front door swinging on its hinges. Place the Lobby tile as indicated."
     },
     {
       "id": "reveal-lobby-dialog-investigators",
@@ -27,12 +27,12 @@
     },
     {
       "id": "reveal-lobby-dialog-box",
-      "text": "You see a large wooden box on the table in the center of the room. ",
+      "text": "You see a large wooden box on the table in the center of the room. Place a Search token as indicated.",
       "singleToken" : "lobby-box-search"
     },
     {
       "id": "reveal-lobby-dialog-doors",
-      "text": "Three doors lead from this room. Place the tokens as indicated.",
+      "text": "Three doors lead from this room. Place Explore tokens as indicated.",
       "multipleTokens" : [ "lobby-door1-explore", "lobby-door2-explore", "lobby-door3-explore" ]
     }
   ],
@@ -45,7 +45,7 @@
       "height": 6,
       "bmdId": "lobbyMapTileBmd",
       "spritesheet": "tileWallsSheet",
-      "wallIndex": [
+      "walls": [
         0, 4, 1, 1, 4, 2,
         4, 4, 4, 4, 4, 4,
         3, 4, 4, 4, 4, 5,

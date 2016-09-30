@@ -11,7 +11,6 @@ var GameState = {
         game.load.image('investigator', 'assets/images/run.png');
         game.load.image('search', 'assets/images/magnifying-glass.png');
         game.load.image('explore', 'assets/images/steel-door.png');
-
         game.load.image('revealPointer', 'assets/images/RevealPointer.png');
         game.load.image('debugCircle', 'assets/images/DebugCircle.png');
 
@@ -55,31 +54,25 @@ var GameState = {
         investigatorStartBmd.copy(investigatorImage, 0, 0, 64, 64, 16, 16);
         game.cache.addBitmapData('investigatorStartBmd', investigatorStartBmd);
 
-        var lobbyMapTileBmd = game.make.bitmapData(576, 576);
-        // example is 6x6 grid
-        // grid square is 96px
-        var tileWidth = 6;
-        var tileHeight = 6;
-        var gridWidth = 96;
-        var walls = [
-            0, 4, 1, 1, 4, 2,
-            4, 4, 4, 4, 4, 4,
-            3, 4, 4, 4, 4, 5,
-            3, 4, 4, 4, 4, 5,
-            4, 4, 4, 4, 4, 4,
-            6, 7, 7, 7, 7, 8
-        ];
+        for (var k = 0; k < game.gamedata.mapTiles.length; k++) {
+            var gridWidth = 96;
+            var mapTileData = game.gamedata.mapTiles[0]
+            var bmdWidth = mapTileData.width * 96;
+            var bmdHeight = mapTileData.height * 96;
+            var mapTileBmd = game.make.bitmapData(576, 576);
 
-        for (var j = 0; j < tileHeight; j++) {
-            for (var i = 0; i < tileWidth; i++) {
-                var localX = i * gridWidth;
-                var localY = j * gridWidth;
-                var wallIndex = i + j * 6;
-                var sprite = game.make.tileSprite(localX, localY, gridWidth, gridWidth, 'tileWallsSheet', walls[wallIndex])
-                lobbyMapTileBmd.copy(sprite);
+            for (var j = 0; j < mapTileData.height; j++) {
+                for (var i = 0; i < mapTileData.width; i++) {
+                    var localX = i * gridWidth;
+                    var localY = j * gridWidth;
+                    var wallIndex = i + j * 6;
+                    var sprite = game.make.tileSprite(localX, localY, gridWidth, gridWidth, mapTileData.spritesheet, mapTileData.walls[wallIndex])
+                    mapTileBmd.copy(sprite);
+                }
             }
+
+            game.cache.addBitmapData(mapTileData.bmdId, mapTileBmd);
         }
-        game.cache.addBitmapData('lobbyMapTileBmd', lobbyMapTileBmd);
 
         //=================================================
         // Initialize Stuff
