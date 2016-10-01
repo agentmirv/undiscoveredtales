@@ -215,10 +215,11 @@ function MakeRevealMap(game, id) {
             if (removeToken) {
                 var instance = game.gamedataInstances.mapTokens[tokenId]
                 if (instance != null) {
-                    // TODO: Move this into a token fadeOut method
-                    game.gamedataInstances.mapTokens[id] = null;
-                    game.world.removeChild(instance);
-                    instance.destroy();
+                    instance.fadeOut(function () {
+                        game.gamedataInstances.mapTokens[id] = null;
+                        game.world.removeChild(instance);
+                        instance.destroy();
+                    })
                 }
             }
         }
@@ -380,6 +381,18 @@ TokenSprite.prototype.tokenClicked = function (token) {
     }
 }
 
+TokenSprite.prototype.fadeOut = function (callback) {
+    var fadeOutTween = game.add.tween(this).to({ alpha: 0 }, 200, Phaser.Easing.Linear.None, true, 0, 0, false);
+
+    fadeOutTween.onComplete.addOnce(function () {
+        this.destroy(true);
+    }, this);
+
+    if (callback != null) {
+        fadeOutTween.onComplete.addOnce(callback, this);
+    }
+}
+
 //=========================================================
 function DialogGroup(game, messageText, imageBmdId, buttonType, buttonData) {
     Phaser.Group.call(this, game);
@@ -497,10 +510,11 @@ DialogGroup.prototype.buttonClicked = function (button, pointer) {
                             // Remove Id
                             var instance = game.gamedataInstances.mapTokens[id]
                             if (instance != null) {
-                                // TODO: Move this into a token fadeOut method
-                                game.gamedataInstances.mapTokens[id] = null;
-                                game.world.removeChild(instance);
-                                instance.destroy();
+                                instance.fadeOut(function () {
+                                    game.gamedataInstances.mapTokens[id] = null;
+                                    game.world.removeChild(instance);
+                                    instance.destroy();
+                                })
                             }
                         }
                     }
