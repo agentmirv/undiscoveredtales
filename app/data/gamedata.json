@@ -11,6 +11,7 @@
           "reveal-lobby-dialog-room",
           "reveal-lobby-dialog-investigators",
           "reveal-lobby-dialog-box",
+          "reveal-lobby-dialog-door-study",
           "reveal-lobby-dialog-doors"
         ]
       },
@@ -25,7 +26,7 @@
   "revealDialogs": [
     {
       "id": "reveal-lobby-dialog-room",
-      "text": "You had planned on knocking and waiting for an invitation to enter. Instead you are greeted with the front door swinging on its hinges. Place the Lobby tile and Walls.",
+      "text": "You had planned on knocking and waiting for an invitation to enter, instead you are greeted with the front door swinging on its hinges. Place the Lobby tile and Walls.",
       "addMultipleTokens" : [
         "token-wall1-lobby",
         "token-wall2-lobby",
@@ -43,12 +44,16 @@
       "addSingleToken" : "token-box-lobby"
     },
     {
+      "id": "reveal-lobby-dialog-door-study",
+      "text": "You hear a faint rustling behind this door. Place an Explore token.",
+      "addSingleToken" : [ "token-door3-lobby" ]
+    },
+    {
       "id": "reveal-lobby-dialog-doors",
-      "text": "Three doors lead from this room. Place Explore tokens.",
+      "text": "Two other doors lead from this room. Place Explore tokens.",
       "addMultipleTokens" : [
         "token-door1-lobby",
-        "token-door2-lobby",
-        "token-door3-lobby"
+        "token-door2-lobby"
       ]
     },
     {
@@ -211,7 +216,7 @@
     },
     {
       "id": "dialog-box-lobby-searched",
-      "text": "You find an old newspaper clipping. The article is a report describing the discovery of human remains in the Malahath River. Gain 1 Clue. Then discard this Search Token.",
+      "text": "You find an old newspaper clipping. The article describes the discovery of human remains in the Malahath River. The date at the top is from two weeks ago. Gain 1 Clue. Then discard this Search Token.",
       "buttonType": "continue",
       "buttons": [
         { "text": "Continue",
@@ -244,7 +249,7 @@
     {
       "id": "dialog-door3-lobby",
       "bmdId": "exploreTokenBmd",
-      "text": "This door leads to a room at the front of the house. The door handle is cold.",
+      "text": "This door leads to a room at the front of the house. The door handle is ice cold.",
       "buttonType": "cancel-action",
       "buttons": [
         { "text": "@ Explore",
