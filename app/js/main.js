@@ -33,6 +33,9 @@ var GameState = {
 
         //=================================================
         // Create bitmapData (textures I create at runtime that I can reuse)
+        // Maybe this is overkill
+
+        // Explore Token bitmapData
         var exploreTokenBmd = game.make.bitmapData(96, 96);
         exploreTokenBmd.copy('circleToken');
         var exploreImage = game.make.image(0, 0, 'explore');
@@ -42,6 +45,7 @@ var GameState = {
         exploreTokenBmd.copy(exploreImage, 0, 0, 64, 64, 16, 16);
         game.cache.addBitmapData('exploreTokenBmd', exploreTokenBmd);
 
+        // Search Token bitmapData
         var searchTokenBmd = game.make.bitmapData(96, 96);
         var searchImage = game.make.image(0, 0, 'search');
         searchTokenBmd.copy('circleToken');
@@ -51,6 +55,7 @@ var GameState = {
         searchTokenBmd.copy(searchImage, 0, 0, 64, 64, 16, 16);
         game.cache.addBitmapData('searchTokenBmd', searchTokenBmd);
 
+        // Investigator bitmapData
         var investigatorStartBmd = game.make.bitmapData(96, 96);
         var investigatorImage = game.make.image(0, 0, 'investigator');
         investigatorStartBmd.copy('circleToken');
@@ -60,6 +65,7 @@ var GameState = {
         investigatorStartBmd.copy(investigatorImage, 0, 0, 64, 64, 16, 16);
         game.cache.addBitmapData('investigatorStartBmd', investigatorStartBmd);
 
+        // Cult Sigil bitmapData
         var cultSigilBmd = game.make.bitmapData(96, 96);
         cultSigilBmd.copy('squareToken');
         var cultSigilImage = game.make.image(0, 0, 'cultSigil');
@@ -69,25 +75,30 @@ var GameState = {
         cultSigilBmd.copy(cultSigilImage, 0, 0, 64, 64, 16, 16);
         game.cache.addBitmapData('cultSigilBmd', cultSigilBmd);
 
+        // North Wall bitmapData
         var wallNorthBmd = game.make.bitmapData();
         wallNorthBmd.copy('wall');
         game.cache.addBitmapData('wallNorthBmd', wallNorthBmd);
 
+        // East Wall bitmapData
         var deg90ToRad = 90 * (Math.PI / 180);
         var wallEastBmd = game.make.bitmapData(96, 96);
         wallEastBmd.copy('wall', null, null, null, null, null, null, null, null, deg90ToRad, 0, 1);
         game.cache.addBitmapData('wallEastBmd', wallEastBmd);
 
+        // West Wall bitmapData
         var deg270ToRad = 270 * (Math.PI / 180);
         var wallWestBmd = game.make.bitmapData(96, 96);
         wallWestBmd.copy('wall', null, null, null, null, null, null, null, null, deg270ToRad, 1, 0);
         game.cache.addBitmapData('wallWestBmd', wallWestBmd);
 
+        // South Wall bitmapData
         var deg180ToRad = 180 * (Math.PI / 180);
         var wallSouthBmd = game.make.bitmapData(96, 96);
         wallSouthBmd.copy('wall', null, null, null, null, null, null, null, null, deg180ToRad, 1, 1);
         game.cache.addBitmapData('wallSouthBmd', wallSouthBmd);
 
+        // Create map tile image bitmapData
         for (var k = 0; k < game.gamedata.imageTiles.length; k++) {
             var gridWidth = 96;
             var mapTileData = game.gamedata.imageTiles[k]
