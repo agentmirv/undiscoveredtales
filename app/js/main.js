@@ -517,6 +517,7 @@ DialogGroup.prototype.buttonClicked = function (button, pointer) {
 
     if (restoreControl) {
         game.cutSceneCamera = false;
+        game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.5, 0.5);
     }
 
     this.destroy(true);
