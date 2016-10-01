@@ -25,7 +25,8 @@
   "revealDialogs": [
     {
       "id": "reveal-lobby-dialog-room",
-      "text": "You had planned on knocking and waiting for an invitation to enter. Instead you are greeted with the front door swinging on its hinges. Place the Lobby tile."
+      "text": "You had planned on knocking and waiting for an invitation to enter. Instead you are greeted with the front door swinging on its hinges. Place the Lobby tile.",
+      "addMultipleTokens" : [ "token-wall1-lobby", "token-wall2-lobby" ]
     },
     {
       "id": "reveal-lobby-dialog-investigators",
@@ -40,7 +41,7 @@
     {
       "id": "reveal-lobby-dialog-doors",
       "text": "Three doors lead from this room. Place Explore tokens.",
-      "addMultipleTokens" : [ "token-door3-lobby" ]
+      "addMultipleTokens" : [ "token-door1-lobby", "token-door2-lobby", "token-door3-lobby" ]
     },
     {
       "id": "reveal-study-dialog-room",
@@ -120,38 +121,57 @@
   ],
   "mapTokens":[
     {
+      "id":"token-wall1-lobby",
+      "x":1344,
+      "y":960,
+      "bmdId": "wallNorthBmd",
+      "addToWorld": true
+    },
+    {
+      "id":"token-wall2-lobby",
+      "x":1440,
+      "y":1056,
+      "bmdId": "wallEastBmd",
+      "addToWorld": true
+    },
+    {
       "id":"token-investigators-lobby",
       "x":1200,
       "y":1384,
-      "bmdId": "investigatorStartBmd"
+      "bmdId": "investigatorStartBmd",
+      "addToWorld": false
     },
     {
       "id":"token-box-lobby",
       "x":1200,
       "y":1200,
       "bmdId":"searchTokenBmd",
-      "clickId":"dialog-box-lobby"
+      "clickId":"dialog-box-lobby",
+      "addToWorld": true
     },
     {
       "x":1056,
       "id":"token-door1-lobby",
       "y":912,
       "bmdId":"exploreTokenBmd",
-      "clickId":"lobby-door1-dialog"
+      "clickId":"lobby-door1-dialog",
+      "addToWorld": true
     },
     {
       "id":"token-door2-lobby",
       "x":912,
       "y":1056,
       "bmdId":"exploreTokenBmd",
-      "clickId":"lobby-door2-dialog"
+      "clickId":"lobby-door2-dialog",
+      "addToWorld": true
     },
     {
       "id":"token-door3-lobby",
       "x":1488,
       "y":1344,
       "bmdId":"exploreTokenBmd",
-      "clickId":"dialog-door3-lobby"
+      "clickId":"dialog-door3-lobby",
+      "addToWorld": true
     }
   ],
   "dialogs": [

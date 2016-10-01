@@ -123,6 +123,26 @@ game.add.tween(dialogGroup).from( { alpha: 0 }, 2000, Phaser.Easing.Linear.None,
 Then set the onComplete signal to destroy the group.
 
 ===========================================================
+2016 October 01, Saturday 09:44 AM ~~~
+===========================================================
+Simpler GitHub Pages publishing
+https://github.com/blog/2228-simpler-github-pages-publishing
+
+In git, is there a simple way of introducing an unrelated branch to a repository?
+http://stackoverflow.com/questions/1384325/in-git-is-there-a-simple-way-of-introducing-an-unrelated-branch-to-a-repository
+
+Create a disconnected git branch
+https://coderwall.com/p/0n3soa/create-a-disconnected-git-branch
+
+===========================================================
+===========================================================
+===========================================================
+===========================================================
+===========================================================
+===========================================================
+===========================================================
+===========================================================
+===========================================================
 ===========================================================
 ===========================================================
 ===========================================================

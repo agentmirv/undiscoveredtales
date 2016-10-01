@@ -12,6 +12,7 @@ var GameState = {
         game.load.image('search', 'assets/images/uncertainty.png');
         game.load.image('explore', 'assets/images/lantern-flame.png');
         game.load.image('revealPointer', 'assets/images/RevealPointer.png');
+        game.load.image('wall', 'assets/images/WallTokenN.png');
         game.load.image('debugCircle', 'assets/images/DebugCircle.png');
 
         game.load.spritesheet('tileWallsSheet', 'assets/images/TileWalls.png', 96, 96);
@@ -55,6 +56,15 @@ var GameState = {
         investigatorImage.tint = 0xFFFFFF;
         investigatorStartBmd.copy(investigatorImage, 0, 0, 64, 64, 16, 16);
         game.cache.addBitmapData('investigatorStartBmd', investigatorStartBmd);
+
+        var wallNorthBmd = game.make.bitmapData();
+        wallNorthBmd.copy('wall');
+        game.cache.addBitmapData('wallNorthBmd', wallNorthBmd);
+
+        console.log(90 * (Math.PI / 180));
+        var wallEastBmd = game.make.bitmapData(96, 96);
+        wallEastBmd.copy('wall', null, null, null, null, null, null, null, null, 0, 0, 0);
+        game.cache.addBitmapData('wallEastBmd', wallEastBmd);
 
         for (var k = 0; k < game.gamedata.mapTiles.length; k++) {
             var gridWidth = 96;
@@ -261,7 +271,7 @@ function MakeRevealDialog(game, id) {
         // TODO add fadeIn()
         game.add.tween(tokenInstance).from({ alpha: 0 }, 300, Phaser.Easing.Linear.None, true, 0, 0, false);
 
-        if (tokenInstance.clickId != null) {
+        if (tokenInstance.addToWorld) {
             game.world.addChild(tokenInstance)
         }
 
@@ -275,7 +285,7 @@ function MakeRevealDialog(game, id) {
             var tokenInstance = MakeToken(game, revealDialog.addMultipleTokens[i]);
             // TODO add fadeIn()
             game.add.tween(tokenInstance).from({ alpha: 0 }, 300, Phaser.Easing.Linear.None, true, 0, 0, false);
-            if (tokenInstance.clickId != null) {
+            if (tokenInstance.addToWorld) {
                 game.world.addChild(tokenInstance)
             }
         }
@@ -332,13 +342,14 @@ MapTileGroup.prototype.constructor = MapTileGroup;
 
 //=========================================================
 function MakeToken(game, id) {
-        var tokenData = game.gamedata.mapTokens.find(function (item) { return item.id == id });
+    var tokenData = game.gamedata.mapTokens.find(function (item) { return item.id == id });
     var tokenInstance = new TokenSprite(
         game,
         tokenData.x,
         tokenData.y,
         tokenData.bmdId,
-        tokenData.clickId);
+        tokenData.clickId,
+        tokenData.addToWorld);
 
     game.gamedataInstances.mapTokens[id] = tokenInstance;
 
@@ -360,11 +371,12 @@ function MakeDialog(game, id) {
 }
 
 //=========================================================
-function TokenSprite(game, x, y, bitmapDataId, clickId) {
+function TokenSprite(game, x, y, bitmapDataId, clickId, addToWorld) {
     Phaser.Sprite.call(this, game, x, y, game.cache.getBitmapData(bitmapDataId));
 
     this.bitmapDataId = bitmapDataId;
     this.clickId = clickId;
+    this.addToWorld = addToWorld;
     this.inputEnabled = true;
     this.events.onInputUp.add(this.tokenClicked, this);
     this.input.useHandCursor = true;
