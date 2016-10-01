@@ -88,9 +88,9 @@ var GameState = {
         wallSouthBmd.copy('wall', null, null, null, null, null, null, null, null, deg180ToRad, 1, 1);
         game.cache.addBitmapData('wallSouthBmd', wallSouthBmd);
 
-        for (var k = 0; k < game.gamedata.mapTiles.length; k++) {
+        for (var k = 0; k < game.gamedata.imageTiles.length; k++) {
             var gridWidth = 96;
-            var mapTileData = game.gamedata.mapTiles[k]
+            var mapTileData = game.gamedata.imageTiles[k]
             var bmdWidth = mapTileData.width * 96;
             var bmdHeight = mapTileData.height * 96;
             var mapTileBmd = game.make.bitmapData(bmdWidth, bmdHeight);

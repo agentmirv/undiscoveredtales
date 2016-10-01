@@ -78,69 +78,34 @@
       "id": "maptile-lobby",
       "x": 960,
       "y": 960,
-      "width": 6,
-      "height": 6,
       "bmdId": "maptile-lobby-bmd",
-      "spritesheet": "tileWallsSheet",
       "entryTokenIds": [
         "token-door3-lobby"
-      ],
-      "walls": [
-        0, 4, 1, 1, 4, 2,
-        4, 4, 4, 4, 4, 4,
-        3, 4, 4, 4, 4, 5,
-        3, 4, 4, 4, 4, 5,
-        4, 4, 4, 4, 4, 4,
-        6, 7, 7, 7, 7, 8
       ]
     },
     {
       "id": "maptile-study",
       "x": 1536,
       "y": 1248,
-      "width": 6,
-      "height": 3,
       "bmdId": "maptile-study-bmd",
-      "spritesheet": "tileWallsSheet",
       "entryTokenIds": [
         "token-door3-lobby"
-      ],
-      "walls": [
-        0, 1, 1, 1, 1, 2,
-        4, 4, 4, 4, 4, 5,
-        6, 7, 7, 7, 4, 8
       ]
     },
     {
       "id": "maptile-hall-2",
       "x": 0,
       "y": 0,
-      "width": 6,
-      "height": 3,
       "bmdId": "maptile-hall-2-bmd",
-      "spritesheet": "tileWallsSheet",
-      "entryTokenIds": [ ],
-      "walls": [
-        1, 1, 1, 1, 1, 2,
-        4, 4, 4, 4, 4, 4,
-        7, 4, 7, 4, 4, 5
-      ]
+      "entryTokenIds": [ ]
     },
     {
       "id": "maptile-hall-corner-1",
       "x": 960,
       "y": 672,
-      "width": 6,
-      "height": 3,
       "bmdId": "maptile-hall-corner-1-bmd",
-      "spritesheet": "tileWallsSheet",
       "entryTokenIds": [
         "token-door2-lobby"
-      ],
-      "walls": [
-        1, 1, 4, 1, 1, 1,
-        4, 4, 4, 4, 4, 4,
-        7, 4, 7, 7, 4, 7
       ]
     }
   ],
@@ -303,6 +268,55 @@
         { "text": "Continue",
           "actions": [ {"type": "removeTokens", "tokenIds": ["token-fireplace-study"] } ]
         }
+      ]
+    }
+  ],
+  "imageTiles": [
+    {
+      "bmdId": "maptile-lobby-bmd",
+      "width": 6,
+      "height": 6,
+      "spritesheet": "tileWallsSheet",
+      "walls": [
+        0, 4, 1, 1, 4, 2,
+        4, 4, 4, 4, 4, 4,
+        3, 4, 4, 4, 4, 5,
+        3, 4, 4, 4, 4, 5,
+        4, 4, 4, 4, 4, 4,
+        6, 7, 7, 7, 7, 8
+      ]
+    },
+    {
+      "bmdId": "maptile-study-bmd",
+      "width": 6,
+      "height": 3,
+      "spritesheet": "tileWallsSheet",
+      "walls": [
+        0, 1, 1, 1, 1, 2,
+        4, 4, 4, 4, 4, 5,
+        6, 7, 7, 7, 4, 8
+      ]
+    },
+    {
+      "bmdId": "maptile-hall-2-bmd",
+      "width": 6,
+      "height": 3,
+      "spritesheet": "tileWallsSheet",
+      "walls": [
+        1, 1, 1, 1, 1, 2,
+        4, 4, 4, 4, 4, 4,
+        7, 4, 7, 4, 4, 5
+      ]
+    },
+    {
+      "bmdId": "maptile-hall-corner-1-bmd",
+      "width": 6,
+      "height": 3,
+      "spritesheet": "tileWallsSheet",
+      "walls": [
+        1, 1, 4, 1, 1, 1,
+        4, 4, 4, 4, 4, 4,
+        7, 4, 7, 7, 4, 7
       ]
     }
   ]
