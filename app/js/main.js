@@ -173,7 +173,38 @@ function MakeRevealMap(game, id) {
 
     // Add Map Tiles
     for (var i = 0; i < revealData.mapTiles.length; i++) {
-        localGroup.addChild(MakeMapTile(game, revealData.mapTiles[i]));
+        var mapTileId = revealData.mapTiles[i];
+        localGroup.addChild(MakeMapTile(game, mapTileId));
+
+        // Remove Door tokens
+        var mapTileData = game.gamedata.mapTiles.find(function (item) { return item.id == mapTileId });
+        // Look at each entryTokenId of the room
+        for (var i = 0; i < mapTileData.entryTokenIds.length; i++) {
+            var removeToken = true;
+            var tokenId = mapTileData.entryTokenIds[i];
+
+            // Find this entryTokenId in all rooms
+            for (var j = 0; j < game.gamedata.mapTiles.length; j++) {
+                var mapTileData = game.gamedata.mapTiles[j];
+                // Look for tokenId in mapTileData.entryTokenIds
+                if (mapTileData.entryTokenIds.indexOf(tokenId) >= 0) {
+                    // Check if mapTileData.id in game.gamedataInstances.mapTiles
+                    if (!(mapTileData.id in game.gamedataInstances.mapTiles)) {
+                        // If it is not in, then it is not revealed
+                        removeToken = false
+                    }
+                }
+            }
+
+            if (removeToken) {
+                var instance = game.gamedataInstances.mapTokens[tokenId]
+                if (instance != null) {
+                    game.gamedataInstances.mapTokens[id] = null;
+                    game.world.removeChild(instance);
+                    instance.destroy();
+                }
+            }
+        }
     }
 
     game.revealMap.center = new Phaser.Point(localGroup.centerX, localGroup.centerY)

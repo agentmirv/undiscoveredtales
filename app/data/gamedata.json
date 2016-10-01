@@ -40,7 +40,7 @@
     {
       "id": "reveal-lobby-dialog-doors",
       "text": "Three doors lead from this room. Place Explore tokens.",
-      "addMultipleTokens" : [ "lobby-door1-explore", "lobby-door2-explore", "lobby-door3-explore" ]
+      "addMultipleTokens" : [ "lobby-door3-explore" ]
     },
     {
       "id": "reveal-study-dialog-room",
