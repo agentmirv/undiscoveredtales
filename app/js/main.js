@@ -174,7 +174,10 @@ function MakeRevealMap(game, id) {
     // Add Map Tiles
     for (var i = 0; i < revealData.mapTiles.length; i++) {
         var mapTileId = revealData.mapTiles[i];
-        localGroup.addChild(MakeMapTile(game, mapTileId));
+        var mapTileInstance = MakeMapTile(game, mapTileId);
+        game.add.tween(mapTileInstance).from({ alpha: 0 }, 300, Phaser.Easing.Linear.None, true, 0, 0, false);
+
+        localGroup.addChild(mapTileInstance);
 
         // Remove Door tokens
         var mapTileData = game.gamedata.mapTiles.find(function (item) { return item.id == mapTileId });

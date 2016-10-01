@@ -100,7 +100,28 @@ Uncertainty icon
 http://game-icons.net/lorc/originals/uncertainty.html
 
 ===========================================================
+2016 September 30, Friday 10:01 PM ~~~
 ===========================================================
+Adding tweens to groups
+http://www.html5gamedevs.com/topic/1686-adding-tweens-to-groups/
+Group.alpha is a public property now
+
+Group Transform Tween
+http://phaser.io/examples/v2/groups/group-transform-tween
+game.add.tween(robot.scale).to( {x: 1.2, y: 1.2}, 1000, Phaser.Easing.Back.InOut, true, 0, false).yoyo(true);
+
+Fading In A Sprite
+http://phaser.io/examples/v2/tweens/fading-in-a-sprite
+sprite.alpha = 0;
+game.add.tween(sprite).to( { alpha: 1 }, 2000, Phaser.Easing.Linear.None, true, 0, 1000, true);
+
+So to fade in a dialog group would be something like:
+
+dialogGroup.alpha = 1; // by default
+game.add.tween(dialogGroup).from( { alpha: 0 }, 2000, Phaser.Easing.Linear.None, true, 0, 1000, true);
+
+Then set the onComplete signal to destroy the group.
+
 ===========================================================
 ===========================================================
 ===========================================================
