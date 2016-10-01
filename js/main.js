@@ -1,5 +1,5 @@
 // JavaScript source code
-var game = new Phaser.Game(1280, 720, Phaser.AUTO)
+var game = new Phaser.Game(1280, 720, Phaser.AUTO, 'phaser-app')
 
 var GameState = {
     preload: function () {
