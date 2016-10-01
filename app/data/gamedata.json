@@ -25,8 +25,12 @@
   "revealDialogs": [
     {
       "id": "reveal-lobby-dialog-room",
-      "text": "You had planned on knocking and waiting for an invitation to enter. Instead you are greeted with the front door swinging on its hinges. Place the Lobby tile.",
-      "addMultipleTokens" : [ "token-wall1-lobby", "token-wall2-lobby" ]
+      "text": "You had planned on knocking and waiting for an invitation to enter. Instead you are greeted with the front door swinging on its hinges. Place the Lobby tile and Walls.",
+      "addMultipleTokens" : [
+        "token-wall1-lobby",
+        "token-wall2-lobby",
+        "token-wall3-lobby"
+      ]
     },
     {
       "id": "reveal-lobby-dialog-investigators",
@@ -41,11 +45,16 @@
     {
       "id": "reveal-lobby-dialog-doors",
       "text": "Three doors lead from this room. Place Explore tokens.",
-      "addMultipleTokens" : [ "token-door1-lobby", "token-door2-lobby", "token-door3-lobby" ]
+      "addMultipleTokens" : [
+        "token-door1-lobby",
+        "token-door2-lobby",
+        "token-door3-lobby"
+      ]
     },
     {
       "id": "reveal-study-dialog-room",
-      "text": "The door leads to a dark study. Cold drafts blow in from the disused fireplace. Place the Study tile. Remove any Explore tokens leading to it."
+      "text": "The door leads to a dark study. Cold drafts blow in from the disused fireplace. Place the Study tile and Wall. Remove any Explore tokens leading to it.",
+      "addMultipleTokens" : [ "token-wall-study" ]
     }
   ],
   "mapTiles": [
@@ -135,6 +144,20 @@
       "addToWorld": true
     },
     {
+      "id":"token-wall3-lobby",
+      "x":960,
+      "y":1344,
+      "bmdId": "wallWestBmd",
+      "addToWorld": true
+    },
+    {
+      "id":"token-wall-study",
+      "x":1920,
+      "y":1440,
+      "bmdId": "wallSouthBmd",
+      "addToWorld": true
+    },
+    {
       "id":"token-investigators-lobby",
       "x":1200,
       "y":1384,
@@ -154,7 +177,7 @@
       "id":"token-door1-lobby",
       "y":912,
       "bmdId":"exploreTokenBmd",
-      "clickId":"lobby-door1-dialog",
+      "clickId":"dialog-door1-lobby",
       "addToWorld": true
     },
     {
@@ -162,7 +185,7 @@
       "x":912,
       "y":1056,
       "bmdId":"exploreTokenBmd",
-      "clickId":"lobby-door2-dialog",
+      "clickId":"dialog-door2-lobby",
       "addToWorld": true
     },
     {
@@ -202,7 +225,8 @@
       "text": "Hey, its door number one.",
       "buttonType": "cancel-action",
       "buttons": [
-        { "text": "@ Explore"
+        { "text": "@ Explore",
+          "actions": [ {"type": "removeTokens", "tokenIds": ["token-door1-lobby"] } ]
         }
       ]
     },
@@ -212,7 +236,8 @@
       "text": "Hey, its door number two.",
       "buttonType": "cancel-action",
       "buttons": [
-        { "text": "@ Explore"
+        { "text": "@ Explore",
+          "actions": [ {"type": "removeTokens", "tokenIds": ["token-door2-lobby"] } ]
         }
       ]
     },

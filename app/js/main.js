@@ -14,6 +14,7 @@ var GameState = {
         game.load.image('revealPointer', 'assets/images/RevealPointer.png');
         game.load.image('wall', 'assets/images/WallTokenN.png');
         game.load.image('debugCircle', 'assets/images/DebugCircle.png');
+        game.load.image('debugSquare', 'assets/images/DebugSquare.png');
 
         game.load.spritesheet('tileWallsSheet', 'assets/images/TileWalls.png', 96, 96);
 
@@ -61,10 +62,20 @@ var GameState = {
         wallNorthBmd.copy('wall');
         game.cache.addBitmapData('wallNorthBmd', wallNorthBmd);
 
-        console.log(90 * (Math.PI / 180));
+        var deg90ToRad = 90 * (Math.PI / 180);
         var wallEastBmd = game.make.bitmapData(96, 96);
-        wallEastBmd.copy('wall', null, null, null, null, null, null, null, null, 0, 0, 0);
+        wallEastBmd.copy('wall', null, null, null, null, null, null, null, null, deg90ToRad, 0, 1);
         game.cache.addBitmapData('wallEastBmd', wallEastBmd);
+
+        var deg270ToRad = 270 * (Math.PI / 180);
+        var wallWestBmd = game.make.bitmapData(96, 96);
+        wallWestBmd.copy('wall', null, null, null, null, null, null, null, null, deg270ToRad, 1, 0);
+        game.cache.addBitmapData('wallWestBmd', wallWestBmd);
+
+        var deg180ToRad = 180 * (Math.PI / 180);
+        var wallSouthBmd = game.make.bitmapData(96, 96);
+        wallSouthBmd.copy('wall', null, null, null, null, null, null, null, null, deg180ToRad, 1, 1);
+        game.cache.addBitmapData('wallSouthBmd', wallSouthBmd);
 
         for (var k = 0; k < game.gamedata.mapTiles.length; k++) {
             var gridWidth = 96;
@@ -159,7 +170,7 @@ var GameState = {
 
             if (game.input.activePointer.isDown) {	
                 if (game.origDragPoint) {		
-                    // move the camera by the amount the mouse has moved since last update		
+                    // move the camera by the amount the mouse has moved since last update	
                     player.body.x += game.origDragPoint.x - game.input.activePointer.position.x;		
                     player.body.y += game.origDragPoint.y - game.input.activePointer.position.y;
                 }
@@ -282,7 +293,9 @@ function MakeRevealDialog(game, id) {
     } else if (revealDialog.addMultipleTokens != null) {
         // Show images with the Dialog in the middle of the room
         for (var i = 0; i < revealDialog.addMultipleTokens.length; i++) {
-            var tokenInstance = MakeToken(game, revealDialog.addMultipleTokens[i]);
+            var tokenId = revealDialog.addMultipleTokens[i];
+            var tokenInstance = MakeToken(game, tokenId);
+
             // TODO add fadeIn()
             game.add.tween(tokenInstance).from({ alpha: 0 }, 300, Phaser.Easing.Linear.None, true, 0, 0, false);
             if (tokenInstance.addToWorld) {
@@ -359,7 +372,7 @@ function MakeToken(game, id) {
 //=========================================================
 function MakeDialog(game, id) {
     var dialogData = game.gamedata.dialogs.find(function (item) { return item.id == id });
-    
+
     var dialogInstance = new DialogGroup(
         game,
         dialogData.text,
@@ -377,9 +390,12 @@ function TokenSprite(game, x, y, bitmapDataId, clickId, addToWorld) {
     this.bitmapDataId = bitmapDataId;
     this.clickId = clickId;
     this.addToWorld = addToWorld;
-    this.inputEnabled = true;
-    this.events.onInputUp.add(this.tokenClicked, this);
-    this.input.useHandCursor = true;
+
+    if (clickId != null) {
+        this.inputEnabled = true;
+        this.events.onInputUp.add(this.tokenClicked, this);
+        this.input.useHandCursor = true;
+    }
 }
 
 TokenSprite.prototype = Object.create(Phaser.Sprite.prototype);
