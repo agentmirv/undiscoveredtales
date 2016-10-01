@@ -96,7 +96,6 @@ var GameState = {
 
         //=================================================
         // First Reveal
-        //game.revealDialogs = []; // reveal dialog list is global for now
         game.revealMap = {};
         game.revealMap.dialogs = [];
         game.revealMap.center = {}
@@ -146,6 +145,18 @@ var GameState = {
             }
             else if (cursors.right.isDown) {
                 player.body.moveRight(playerVelocity);
+            }
+
+            if (game.input.activePointer.isDown) {	
+                if (game.origDragPoint) {		
+                    // move the camera by the amount the mouse has moved since last update		
+                    player.body.x += game.origDragPoint.x - game.input.activePointer.position.x;		
+                    player.body.y += game.origDragPoint.y - game.input.activePointer.position.y;
+                }
+                // set new drag origin to current position	
+                game.origDragPoint = game.input.activePointer.position.clone();
+            } else {	
+                game.origDragPoint = null;
             }
         }
     },
@@ -204,6 +215,7 @@ function MakeRevealMap(game, id) {
             if (removeToken) {
                 var instance = game.gamedataInstances.mapTokens[tokenId]
                 if (instance != null) {
+                    // TODO: Move this into a token fadeOut method
                     game.gamedataInstances.mapTokens[id] = null;
                     game.world.removeChild(instance);
                     instance.destroy();
@@ -242,6 +254,8 @@ function MakeRevealDialog(game, id) {
     if (revealDialog.addSingleToken != null) {
         // Show image at the top of the Dialog
         var tokenInstance = MakeToken(game, revealDialog.addSingleToken);
+        game.add.tween(tokenInstance).from({ alpha: 0 }, 300, Phaser.Easing.Linear.None, true, 0, 0, false);
+
         if (tokenInstance.clickId != null) {
             game.world.addChild(tokenInstance)
         }
@@ -254,6 +268,7 @@ function MakeRevealDialog(game, id) {
         // Show images with the Dialog in the middle of the room
         for (var i = 0; i < revealDialog.addMultipleTokens.length; i++) {
             var tokenInstance = MakeToken(game, revealDialog.addMultipleTokens[i]);
+            game.add.tween(tokenInstance).from({ alpha: 0 }, 300, Phaser.Easing.Linear.None, true, 0, 0, false);
             if (tokenInstance.clickId != null) {
                 game.world.addChild(tokenInstance)
             }
@@ -482,6 +497,7 @@ DialogGroup.prototype.buttonClicked = function (button, pointer) {
                             // Remove Id
                             var instance = game.gamedataInstances.mapTokens[id]
                             if (instance != null) {
+                                // TODO: Move this into a token fadeOut method
                                 game.gamedataInstances.mapTokens[id] = null;
                                 game.world.removeChild(instance);
                                 instance.destroy();
