@@ -1,0 +1,323 @@
+﻿{
+  "playerStart": {
+    "x": 1048,
+    "y": 1048
+  },
+  "revealMaps":[
+      {
+        "id": "reveal-lobby",
+        "mapTiles": [ "maptile-lobby" ],
+        "revealDialogs": [
+          "reveal-lobby-dialog-room",
+          "reveal-lobby-dialog-investigators",
+          "reveal-lobby-dialog-box",
+          "reveal-lobby-dialog-door-study",
+          "reveal-lobby-dialog-doors"
+        ]
+      },
+      {
+        "id": "reveal-study",
+        "mapTiles": [ "maptile-study" ],
+        "revealDialogs": [
+          "reveal-study-dialog-room",
+          "reveal-study-dialog-fireplace",
+          "reveal-explored"
+        ]
+      }
+  ],
+  "revealDialogs": [
+    {
+      "id": "reveal-lobby-dialog-room",
+      "text": "You had planned on knocking and waiting for an invitation to enter, but instead you are greeted with the front door swinging on its hinges. Place the Lobby tile and Walls.",
+      "addMultipleTokens" : [
+        "token-wall1-lobby",
+        "token-wall2-lobby",
+        "token-wall3-lobby"
+      ]
+    },
+    {
+      "id": "reveal-lobby-dialog-investigators",
+      "text": "Dead leaves and dust have blown in through the open door, leaving trails of detritus extending into the room. Place your investigators.",
+      "addSingleToken" : "token-investigators-lobby"
+    },
+    {
+      "id": "reveal-lobby-dialog-box",
+      "text": "You see a large wooden box on the table in the center of the room. Place a Search token.",
+      "addSingleToken" : "token-box-lobby"
+    },
+    {
+      "id": "reveal-lobby-dialog-door-study",
+      "text": "You hear a faint rustling behind this door. Place an Explore token.",
+      "addSingleToken" : [ "token-door3-lobby" ]
+    },
+    {
+      "id": "reveal-lobby-dialog-doors",
+      "text": "Two other doors lead from this room. Place Explore tokens.",
+      "addMultipleTokens" : [
+        "token-door1-lobby",
+        "token-door2-lobby"
+      ]
+    },
+    {
+      "id": "reveal-explored",
+      "text": "You may move one space into the new area."
+    },
+    {
+      "id": "reveal-study-dialog-room",
+      "text": "The door leads to a dark study. You can see your breath in the cold air. Place the Study tile and Wall. Remove any Explore tokens leading to it.",
+      "addMultipleTokens" : [ "token-wall-study" ]
+    },
+    {
+      "id": "reveal-study-dialog-fireplace",
+      "text": "Cold drafts blow in from the disused fireplace. Place a Search token.",
+      "addSingleToken" : [ "token-fireplace-study" ]
+    }
+  ],
+  "mapTiles": [
+    {
+      "id": "maptile-lobby",
+      "x": 960,
+      "y": 960,
+      "bmdId": "maptile-lobby-bmd",
+      "entryTokenIds": [
+        "token-door3-lobby"
+      ]
+    },
+    {
+      "id": "maptile-study",
+      "x": 1536,
+      "y": 1248,
+      "bmdId": "maptile-study-bmd",
+      "entryTokenIds": [
+        "token-door3-lobby"
+      ]
+    },
+    {
+      "id": "maptile-hall-2",
+      "x": 0,
+      "y": 0,
+      "bmdId": "maptile-hall-2-bmd",
+      "entryTokenIds": [ ]
+    },
+    {
+      "id": "maptile-hall-corner-1",
+      "x": 960,
+      "y": 672,
+      "bmdId": "maptile-hall-corner-1-bmd",
+      "entryTokenIds": [
+        "token-door2-lobby"
+      ]
+    }
+  ],
+  "mapTokens":[
+    {
+      "id":"token-wall1-lobby",
+      "x":1344,
+      "y":960,
+      "bmdId": "wallNorthBmd",
+      "addToWorld": true
+    },
+    {
+      "id":"token-wall2-lobby",
+      "x":1440,
+      "y":1056,
+      "bmdId": "wallEastBmd",
+      "addToWorld": true
+    },
+    {
+      "id":"token-wall3-lobby",
+      "x":960,
+      "y":1344,
+      "bmdId": "wallWestBmd",
+      "addToWorld": true
+    },
+    {
+      "id":"token-wall-study",
+      "x":1920,
+      "y":1440,
+      "bmdId": "wallSouthBmd",
+      "addToWorld": true
+    },
+    {
+      "id":"token-investigators-lobby",
+      "x":1200,
+      "y":1384,
+      "bmdId": "investigatorStartBmd",
+      "addToWorld": false
+    },
+    {
+      "id":"token-box-lobby",
+      "x":1200,
+      "y":1200,
+      "bmdId":"searchTokenBmd",
+      "clickId":"dialog-box-lobby",
+      "addToWorld": true
+    },
+    {
+      "x":1056,
+      "id":"token-door1-lobby",
+      "y":912,
+      "bmdId":"exploreTokenBmd",
+      "clickId":"dialog-door1-lobby",
+      "addToWorld": true
+    },
+    {
+      "id":"token-door2-lobby",
+      "x":912,
+      "y":1056,
+      "bmdId":"exploreTokenBmd",
+      "clickId":"dialog-door2-lobby",
+      "addToWorld": true
+    },
+    {
+      "id":"token-door3-lobby",
+      "x":1488,
+      "y":1344,
+      "bmdId":"exploreTokenBmd",
+      "clickId":"dialog-door3-lobby",
+      "addToWorld": true
+    },
+    {
+      "id":"token-wall-study",
+      "x":1920,
+      "y":1440,
+      "bmdId": "wallSouthBmd",
+      "addToWorld": true
+    },
+    {
+      "id":"token-fireplace-study",
+      "x":1728,
+      "y":1440,
+      "bmdId":"searchTokenBmd",
+      "clickId":"dialog-fireplace-study",
+      "addToWorld": true
+    }
+  ],
+  "dialogs": [
+    {
+      "id": "dialog-box-lobby",
+      "bmdId": "searchTokenBmd",
+      "text": "A heavy wooden box lies on the table. The lid can be opened by sliding an ornate latch.",
+      "buttonType": "cancel-action",
+      "buttons": [
+        { "text": "@ Search",
+          "actions": [ {"type": "dialog", "dialogId": "dialog-box-lobby-searched"} ]
+        }
+      ]
+    },
+    {
+      "id": "dialog-box-lobby-searched",
+      "text": "You find an old newspaper clipping. The article describes the discovery of human remains in the Malahath River. The paper is two weeks old, according to the date. Gain 1 Clue. Then discard this Search token.",
+      "buttonType": "continue",
+      "buttons": [
+        { "text": "Continue",
+          "actions": [ {"type": "removeTokens", "tokenIds": ["token-box-lobby"] } ]
+        }
+      ]
+    },
+    {
+      "id": "dialog-door1-lobby",
+      "bmdId": "exploreTokenBmd",
+      "text": "Hey, its door number one.",
+      "buttonType": "cancel-action",
+      "buttons": [
+        { "text": "@ Explore",
+          "actions": [ {"type": "removeTokens", "tokenIds": ["token-door1-lobby"] } ]
+        }
+      ]
+    },
+    {
+      "id": "dialog-door2-lobby",
+      "bmdId": "exploreTokenBmd",
+      "text": "Hey, its door number two.",
+      "buttonType": "cancel-action",
+      "buttons": [
+        { "text": "@ Explore",
+          "actions": [ {"type": "removeTokens", "tokenIds": ["token-door2-lobby"] } ]
+        }
+      ]
+    },
+    {
+      "id": "dialog-door3-lobby",
+      "bmdId": "exploreTokenBmd",
+      "text": "This door leads to a room at the front of the house. The handle is ice cold.",
+      "buttonType": "cancel-action",
+      "buttons": [
+        { "text": "@ Explore",
+          "actions": [ {"type": "revealMap", "revealMapId": "reveal-study" } ]
+        }
+      ]
+    },
+    {
+      "id": "dialog-fireplace-study",
+      "bmdId": "searchTokenBmd",
+      "text": "You see something glint under the pile of ash and blackened wood.",
+      "buttonType": "cancel-action",
+      "buttons": [
+        { "text": "@ Search",
+          "actions": [ {"type": "dialog", "dialogId": "dialog-fireplace-study-searched" } ]
+        }
+      ]
+    },
+    {
+      "id": "dialog-fireplace-study-searched",
+      "bmdId": "cultSigilBmd",
+      "text": "As you sift through the ash, your hands and shirt become covered in soot. But your hard work pays off. Gain the Cult Sigil Unique Item and 1 Clue. Then discard this Search token.",
+      "buttonType": "continue",
+      "buttons": [
+        { "text": "Continue",
+          "actions": [ {"type": "removeTokens", "tokenIds": ["token-fireplace-study"] } ]
+        }
+      ]
+    }
+  ],
+  "imageTiles": [
+    {
+      "bmdId": "maptile-lobby-bmd",
+      "width": 6,
+      "height": 6,
+      "spritesheet": "tileWallsSheet",
+      "walls": [
+        0, 4, 1, 1, 4, 2,
+        4, 4, 4, 4, 4, 4,
+        3, 4, 4, 4, 4, 5,
+        3, 4, 4, 4, 4, 5,
+        4, 4, 4, 4, 4, 4,
+        6, 7, 7, 7, 7, 8
+      ]
+    },
+    {
+      "bmdId": "maptile-study-bmd",
+      "width": 6,
+      "height": 3,
+      "spritesheet": "tileWallsSheet",
+      "walls": [
+        0, 1, 1, 1, 1, 2,
+        4, 4, 4, 4, 4, 5,
+        6, 7, 7, 7, 4, 8
+      ]
+    },
+    {
+      "bmdId": "maptile-hall-2-bmd",
+      "width": 6,
+      "height": 3,
+      "spritesheet": "tileWallsSheet",
+      "walls": [
+        1, 1, 1, 1, 1, 2,
+        4, 4, 4, 4, 4, 4,
+        7, 4, 7, 4, 4, 5
+      ]
+    },
+    {
+      "bmdId": "maptile-hall-corner-1-bmd",
+      "width": 6,
+      "height": 3,
+      "spritesheet": "tileWallsSheet",
+      "walls": [
+        1, 1, 4, 1, 1, 1,
+        4, 4, 4, 4, 4, 4,
+        7, 4, 7, 7, 4, 7
+      ]
+    }
+  ]
+}
