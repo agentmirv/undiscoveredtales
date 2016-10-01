@@ -30,21 +30,21 @@
     {
       "id": "reveal-lobby-dialog-investigators",
       "text": "Trails of dead leaves and dust have blown in through the open door. Place your investigators.",
-      "addSingleToken" : "lobby-investigators-start"
+      "addSingleToken" : "token-investigators-lobby"
     },
     {
       "id": "reveal-lobby-dialog-box",
       "text": "You see a large wooden box on the table in the center of the room. Place a Search token.",
-      "addSingleToken" : "lobby-box-search"
+      "addSingleToken" : "token-box-lobby"
     },
     {
       "id": "reveal-lobby-dialog-doors",
       "text": "Three doors lead from this room. Place Explore tokens.",
-      "addMultipleTokens" : [ "lobby-door3-explore" ]
+      "addMultipleTokens" : [ "token-door3-lobby" ]
     },
     {
       "id": "reveal-study-dialog-room",
-      "text": "The door leads to a dark study. The room is cold, drafts blow in from the disused fireplace. Place the Study tile. Remove any Explore tokens leading to it."
+      "text": "The door leads to a dark study. Cold drafts blow in from the disused fireplace. Place the Study tile. Remove any Explore tokens leading to it."
     }
   ],
   "mapTiles": [
@@ -54,10 +54,10 @@
       "y": 960,
       "width": 6,
       "height": 6,
-      "bmdId": "lobbyMapTileBmd",
+      "bmdId": "maptile-lobby-bmd",
       "spritesheet": "tileWallsSheet",
       "entryTokenIds": [
-        "lobby-door3-explore"
+        "token-door3-lobby"
       ],
       "walls": [
         0, 4, 1, 1, 4, 2,
@@ -74,10 +74,10 @@
       "y": 1248,
       "width": 6,
       "height": 3,
-      "bmdId": "studyMapTileBmd",
+      "bmdId": "maptile-study-bmd",
       "spritesheet": "tileWallsSheet",
       "entryTokenIds": [
-        "lobby-door3-explore"
+        "token-door3-lobby"
       ],
       "walls": [
         0, 1, 1, 1, 1, 2,
@@ -91,7 +91,7 @@
       "y": 0,
       "width": 6,
       "height": 3,
-      "bmdId": "hall2MapTileBmd",
+      "bmdId": "maptile-hall-2-bmd",
       "spritesheet": "tileWallsSheet",
       "entryTokenIds": [ ],
       "walls": [
@@ -102,14 +102,14 @@
     },
     {
       "id": "maptile-hall-corner-1",
-      "x": 0,
-      "y": 0,
+      "x": 960,
+      "y": 672,
       "width": 6,
       "height": 3,
-      "bmdId": "hallcorner1MapTileBmd",
+      "bmdId": "maptile-hall-corner-1-bmd",
       "spritesheet": "tileWallsSheet",
       "entryTokenIds": [
-        "lobby-door2-explore"
+        "token-door2-lobby"
       ],
       "walls": [
         1, 1, 4, 1, 1, 1,
@@ -120,67 +120,64 @@
   ],
   "mapTokens":[
     {
-      "id":"lobby-investigators-start",
+      "id":"token-investigators-lobby",
       "x":1200,
       "y":1384,
       "bmdId": "investigatorStartBmd"
     },
     {
-      "id":"lobby-box-search",
+      "id":"token-box-lobby",
       "x":1200,
       "y":1200,
       "bmdId":"searchTokenBmd",
-      "clickId":"lobby-box-dialog"
+      "clickId":"dialog-box-lobby"
     },
     {
       "x":1056,
-      "id":"lobby-door1-explore",
+      "id":"token-door1-lobby",
       "y":912,
       "bmdId":"exploreTokenBmd",
       "clickId":"lobby-door1-dialog"
     },
     {
-      "id":"lobby-door2-explore",
+      "id":"token-door2-lobby",
       "x":912,
       "y":1056,
       "bmdId":"exploreTokenBmd",
       "clickId":"lobby-door2-dialog"
     },
     {
-      "id":"lobby-door3-explore",
+      "id":"token-door3-lobby",
       "x":1488,
       "y":1344,
       "bmdId":"exploreTokenBmd",
-      "clickId":"lobby-door3-dialog"
+      "clickId":"dialog-door3-lobby"
     }
   ],
   "dialogs": [
     {
-      "id": "lobby-box-dialog",
+      "id": "dialog-box-lobby",
       "bmdId": "searchTokenBmd",
       "text": "A heavy wooden box lies on the table. The lid can be opened by sliding an ornate latch.",
       "buttonType": "cancel-action",
-      "actionRemove" :[
-        "lobby-box-search"
-      ],
       "buttons": [
         { "text": "@ Search",
-          "actions": [ {"type": "dialog", "dialogId": "lobby-box-searched-dialog"} ]
+          "actions": [ {"type": "dialog", "dialogId": "dialog-box-lobby-searched"} ]
         }
       ]
     },
     {
-      "id": "lobby-box-searched-dialog",
+      "id": "dialog-box-lobby-searched",
       "text": "You find an old newspaper clipping. The article is a report describing the discovery of human remains in the Malahath River. Gain 1 Clue. Then discard this Search Token.",
       "buttonType": "continue",
       "buttons": [
         { "text": "Continue",
-          "actions": [ {"type": "removeTokens", "removeIds": ["lobby-box-search"] } ]
+          "actions": [ {"type": "removeTokens", "tokenIds": ["token-box-lobby"] } ]
         }
       ]
     },
     {
-      "id": "lobby-door1-dialog",
+      "id": "dialog-door1-lobby",
       "bmdId": "exploreTokenBmd",
       "text": "Hey, its door number one.",
       "buttonType": "cancel-action",
@@ -190,7 +187,7 @@
       ]
     },
     {
-      "id": "lobby-door2-dialog",
+      "id": "dialog-door2-lobby",
       "bmdId": "exploreTokenBmd",
       "text": "Hey, its door number two.",
       "buttonType": "cancel-action",
@@ -200,9 +197,9 @@
       ]
     },
     {
-      "id": "lobby-door3-dialog",
+      "id": "dialog-door3-lobby",
       "bmdId": "exploreTokenBmd",
-      "text": "Hey, its door number three.",
+      "text": "This door leads to a room at the front of the house. The door handle is cold.",
       "buttonType": "cancel-action",
       "buttons": [
         { "text": "@ Explore",

@@ -195,13 +195,13 @@ function MakeRevealMap(game, id) {
         // Remove Door tokens
         var mapTileData = game.gamedata.mapTiles.find(function (item) { return item.id == mapTileId });
         // Look at each entryTokenId of the room
-        for (var i = 0; i < mapTileData.entryTokenIds.length; i++) {
+        for (var j = 0; j < mapTileData.entryTokenIds.length; j++) {
             var removeToken = true;
-            var tokenId = mapTileData.entryTokenIds[i];
+            var tokenId = mapTileData.entryTokenIds[j];
 
             // Find this entryTokenId in all rooms
-            for (var j = 0; j < game.gamedata.mapTiles.length; j++) {
-                var mapTileData = game.gamedata.mapTiles[j];
+            for (var k = 0; k < game.gamedata.mapTiles.length; k++) {
+                var mapTileData = game.gamedata.mapTiles[k];
                 // Look for tokenId in mapTileData.entryTokenIds
                 if (mapTileData.entryTokenIds.indexOf(tokenId) >= 0) {
                     // Check if mapTileData.id in game.gamedataInstances.mapTiles
@@ -326,7 +326,7 @@ MapTileGroup.prototype.constructor = MapTileGroup;
 
 //=========================================================
 function MakeToken(game, id) {
-    var tokenData = game.gamedata.mapTokens.find(function (item) { return item.id == id });
+        var tokenData = game.gamedata.mapTokens.find(function (item) { return item.id == id });
     var tokenInstance = new TokenSprite(
         game,
         tokenData.x,
@@ -502,9 +502,9 @@ DialogGroup.prototype.buttonClicked = function (button, pointer) {
                 // Process each action
                 var action = actionArray[i];
                 if (action.type == "removeTokens") {
-                    // Loop on removeIds array
-                    for (var j = 0; j < action.removeIds.length; j++) {
-                        var id = action.removeIds[j];
+                    // Loop on tokenIds array
+                    for (var j = 0; j < action.tokenIds.length; j++) {
+                        var id = action.tokenIds[j];
 
                         if (game.gamedataInstances.mapTokens.hasOwnProperty(id)) {
                             // Remove Id
