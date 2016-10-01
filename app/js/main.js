@@ -7,7 +7,8 @@ var GameState = {
         game.load.image('pixelWhite', 'assets/images/FFFFFF-1.png')
         game.load.image('pixelBlack', 'assets/images/000000-1.png')
         game.load.image('pixelTransparent', 'assets/images/1x1.png')
-        game.load.image('circleToken', 'assets/images/CircleToken.png', 96, 96);
+        game.load.image('circleToken', 'assets/images/CircleToken.png');
+        game.load.image('squareToken', 'assets/images/SquareToken.png');
         game.load.image('investigator', 'assets/images/run.png');
         game.load.image('search', 'assets/images/uncertainty.png');
         game.load.image('explore', 'assets/images/lantern-flame.png');
@@ -15,6 +16,7 @@ var GameState = {
         game.load.image('wall', 'assets/images/WallTokenN.png');
         game.load.image('debugCircle', 'assets/images/DebugCircle.png');
         game.load.image('debugSquare', 'assets/images/DebugSquare.png');
+        game.load.image('cultSigil', 'assets/images/pentacle.png');
 
         game.load.spritesheet('tileWallsSheet', 'assets/images/TileWalls.png', 96, 96);
 
@@ -57,6 +59,15 @@ var GameState = {
         investigatorImage.tint = 0xFFFFFF;
         investigatorStartBmd.copy(investigatorImage, 0, 0, 64, 64, 16, 16);
         game.cache.addBitmapData('investigatorStartBmd', investigatorStartBmd);
+
+        var cultSigilBmd = game.make.bitmapData(96, 96);
+        cultSigilBmd.copy('squareToken');
+        var cultSigilImage = game.make.image(0, 0, 'cultSigil');
+        cultSigilImage.tint = 0xFFFF00;
+        cultSigilBmd.copy(cultSigilImage, 0, 0, 64, 64, 16 + 2, 16 + 2);
+        cultSigilImage.tint = 0xFF0000;
+        cultSigilBmd.copy(cultSigilImage, 0, 0, 64, 64, 16, 16);
+        game.cache.addBitmapData('cultSigilBmd', cultSigilBmd);
 
         var wallNorthBmd = game.make.bitmapData();
         wallNorthBmd.copy('wall');
@@ -305,7 +316,11 @@ function MakeRevealDialog(game, id) {
 
         player.body.x = game.revealMap.center.x
         player.body.y = game.revealMap.center.y
-    } 
+
+    } else {
+        player.body.x = game.revealMap.center.x
+        player.body.y = game.revealMap.center.y
+    }
 
     // Move Player
     game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, game.followLerp, game.followLerp);

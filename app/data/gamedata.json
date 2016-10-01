@@ -19,7 +19,9 @@
         "id": "reveal-study",
         "mapTiles": [ "maptile-study" ],
         "revealDialogs": [
-          "reveal-study-dialog-room"
+          "reveal-study-dialog-room",
+          "reveal-study-dialog-fireplace",
+          "reveal-explored"
         ]
       }
   ],
@@ -57,9 +59,18 @@
       ]
     },
     {
+      "id": "reveal-explored",
+      "text": "You may move 1 space into the explored area."
+    },
+    {
       "id": "reveal-study-dialog-room",
-      "text": "The door leads to a dark study. Cold drafts blow in from the disused fireplace. Place the Study tile and Wall. Remove any Explore tokens leading to it.",
+      "text": "The door leads to a dark study. You can see your breath in the cold air. Place the Study tile and Wall. Remove any Explore tokens leading to it.",
       "addMultipleTokens" : [ "token-wall-study" ]
+    },
+    {
+      "id": "reveal-study-dialog-fireplace",
+      "text": "Cold drafts blow in from the disused fireplace. Place a Search token.",
+      "addSingleToken" : [ "token-fireplace-study" ]
     }
   ],
   "mapTiles": [
@@ -200,6 +211,21 @@
       "bmdId":"exploreTokenBmd",
       "clickId":"dialog-door3-lobby",
       "addToWorld": true
+    },
+    {
+      "id":"token-wall-study",
+      "x":1920,
+      "y":1440,
+      "bmdId": "wallSouthBmd",
+      "addToWorld": true
+    },
+    {
+      "id":"token-fireplace-study",
+      "x":1728,
+      "y":1440,
+      "bmdId":"searchTokenBmd",
+      "clickId":"dialog-fireplace-study",
+      "addToWorld": true
     }
   ],
   "dialogs": [
@@ -216,7 +242,7 @@
     },
     {
       "id": "dialog-box-lobby-searched",
-      "text": "You find an old newspaper clipping. The article describes the discovery of human remains in the Malahath River. The date at the top is from two weeks ago. Gain 1 Clue. Then discard this Search Token.",
+      "text": "You find an old newspaper clipping. The article describes the discovery of human remains in the Malahath River. The paper is two weeks old, according to the date. Gain 1 Clue. Then discard this Search Token.",
       "buttonType": "continue",
       "buttons": [
         { "text": "Continue",
@@ -254,6 +280,28 @@
       "buttons": [
         { "text": "@ Explore",
           "actions": [ {"type": "revealMap", "revealMapId": "reveal-study" } ]
+        }
+      ]
+    },
+    {
+      "id": "dialog-fireplace-study",
+      "bmdId": "searchTokenBmd",
+      "text": "You see something glint under the pile of ash and blackened wood.",
+      "buttonType": "cancel-action",
+      "buttons": [
+        { "text": "@ Search",
+          "actions": [ {"type": "dialog", "dialogId": "dialog-fireplace-study-searched" } ]
+        }
+      ]
+    },
+    {
+      "id": "dialog-fireplace-study-searched",
+      "bmdId": "cultSigilBmd",
+      "text": "As you sift through the ash, your hands and shirt become covered in soot. But your hard work pays off. Gain the Cult Sigil Unique Item and 1 Clue. Then discard this Search Token.",
+      "buttonType": "continue",
+      "buttons": [
+        { "text": "Continue",
+          "actions": [ {"type": "removeTokens", "tokenIds": ["token-fireplace-study"] } ]
         }
       ]
     }
