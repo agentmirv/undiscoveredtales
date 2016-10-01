@@ -240,7 +240,7 @@
     {
       "id": "dialog-door3-lobby",
       "bmdId": "exploreTokenBmd",
-      "text": "This door leads to a room at the front of the house. The door handle is ice cold.",
+      "text": "This door leads to a room at the front of the house. The handle is ice cold.",
       "buttonType": "cancel-action",
       "buttons": [
         { "text": "@ Explore",
