@@ -28,7 +28,7 @@
   "revealDialogs": [
     {
       "id": "reveal-lobby-dialog-room",
-      "text": "You had planned on knocking and waiting for an invitation to enter, instead you are greeted with the front door swinging on its hinges. Place the Lobby tile and Walls.",
+      "text": "You had planned on knocking and waiting for an invitation to enter, but instead you are greeted with the front door swinging on its hinges. Place the Lobby tile and Walls.",
       "addMultipleTokens" : [
         "token-wall1-lobby",
         "token-wall2-lobby",
@@ -37,7 +37,7 @@
     },
     {
       "id": "reveal-lobby-dialog-investigators",
-      "text": "Trails of dead leaves and dust have blown in through the open door. Place your investigators.",
+      "text": "Dead leaves and dust have blown in through the open door, leaving trails of detritus extending into the room. Place your investigators.",
       "addSingleToken" : "token-investigators-lobby"
     },
     {
@@ -60,7 +60,7 @@
     },
     {
       "id": "reveal-explored",
-      "text": "You may move 1 space into the explored area."
+      "text": "You may move one space into the new area."
     },
     {
       "id": "reveal-study-dialog-room",
@@ -207,7 +207,7 @@
     },
     {
       "id": "dialog-box-lobby-searched",
-      "text": "You find an old newspaper clipping. The article describes the discovery of human remains in the Malahath River. The paper is two weeks old, according to the date. Gain 1 Clue. Then discard this Search Token.",
+      "text": "You find an old newspaper clipping. The article describes the discovery of human remains in the Malahath River. The paper is two weeks old, according to the date. Gain 1 Clue. Then discard this Search token.",
       "buttonType": "continue",
       "buttons": [
         { "text": "Continue",
@@ -262,7 +262,7 @@
     {
       "id": "dialog-fireplace-study-searched",
       "bmdId": "cultSigilBmd",
-      "text": "As you sift through the ash, your hands and shirt become covered in soot. But your hard work pays off. Gain the Cult Sigil Unique Item and 1 Clue. Then discard this Search Token.",
+      "text": "As you sift through the ash, your hands and shirt become covered in soot. But your hard work pays off. Gain the Cult Sigil Unique Item and 1 Clue. Then discard this Search token.",
       "buttonType": "continue",
       "buttons": [
         { "text": "Continue",

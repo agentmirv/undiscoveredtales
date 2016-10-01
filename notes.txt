@@ -134,6 +134,12 @@ http://stackoverflow.com/questions/1384325/in-git-is-there-a-simple-way-of-intro
 Create a disconnected git branch
 https://coderwall.com/p/0n3soa/create-a-disconnected-git-branch
 
+Dark brown (walls)
+#533118
+
+Light brown (floor)
+#aea595
+
 ===========================================================
 ===========================================================
 ===========================================================
