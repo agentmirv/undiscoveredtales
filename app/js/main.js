@@ -188,7 +188,6 @@ function MakeRevealMap(game, id) {
     for (var i = 0; i < revealData.mapTiles.length; i++) {
         var mapTileId = revealData.mapTiles[i];
         var mapTileInstance = MakeMapTile(game, mapTileId);
-        game.add.tween(mapTileInstance).from({ alpha: 0 }, 300, Phaser.Easing.Linear.None, true, 0, 0, false);
 
         localGroup.addChild(mapTileInstance);
 
@@ -225,21 +224,25 @@ function MakeRevealMap(game, id) {
         }
     }
 
-    game.revealMap.center = new Phaser.Point(localGroup.centerX, localGroup.centerY)
-     
-    // Move Player
-    player.body.x = game.revealMap.center.x
-    player.body.y = game.revealMap.center.y
-    game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, game.followLerp, game.followLerp);
-    game.cutSceneCamera = true;
+    var fadeInTween = game.add.tween(localGroup).from({ alpha: 0 }, 600, Phaser.Easing.Linear.None, true, 0, 0, false);
 
-    if (game.revealMap.dialogs.length > 0) {
-        var revealDialog = game.revealMap.dialogs.shift();
-        game.customCallback = function () {
-            // Make first Dialog
-            MakeRevealDialog(game, revealDialog);
+    fadeInTween.onComplete.addOnce(function () {
+        game.revealMap.center = new Phaser.Point(localGroup.centerX, localGroup.centerY)
+
+        // Move Player
+        player.body.x = game.revealMap.center.x
+        player.body.y = game.revealMap.center.y
+        game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, game.followLerp, game.followLerp);
+        game.cutSceneCamera = true;
+
+        if (game.revealMap.dialogs.length > 0) {
+            var revealDialog = game.revealMap.dialogs.shift();
+            game.customCallback = function () {
+                // Make first Dialog
+                MakeRevealDialog(game, revealDialog);
+            }
         }
-    }
+    }, this);
 }
 
 //=========================================================
@@ -255,6 +258,7 @@ function MakeRevealDialog(game, id) {
     if (revealDialog.addSingleToken != null) {
         // Show image at the top of the Dialog
         var tokenInstance = MakeToken(game, revealDialog.addSingleToken);
+        // TODO add fadeIn()
         game.add.tween(tokenInstance).from({ alpha: 0 }, 300, Phaser.Easing.Linear.None, true, 0, 0, false);
 
         if (tokenInstance.clickId != null) {
@@ -269,6 +273,7 @@ function MakeRevealDialog(game, id) {
         // Show images with the Dialog in the middle of the room
         for (var i = 0; i < revealDialog.addMultipleTokens.length; i++) {
             var tokenInstance = MakeToken(game, revealDialog.addMultipleTokens[i]);
+            // TODO add fadeIn()
             game.add.tween(tokenInstance).from({ alpha: 0 }, 300, Phaser.Easing.Linear.None, true, 0, 0, false);
             if (tokenInstance.clickId != null) {
                 game.world.addChild(tokenInstance)
@@ -292,6 +297,7 @@ function MakeRevealDialog(game, id) {
             buttonType,
             buttonData);
 
+        // TODO add fadeIn()
         game.add.tween(dialogInstance).from({ alpha: 0 }, 200, Phaser.Easing.Linear.None, true, 0, 0, false);
 
         game.stage.addChild(dialogInstance);
@@ -375,6 +381,7 @@ TokenSprite.prototype.tokenClicked = function (token) {
 
     game.customCallback = function () {
         var dialogInstance = MakeDialog(game, token.clickId)
+        // TODO add fadeIn()
         game.add.tween(dialogInstance).from({ alpha: 0 }, 200, Phaser.Easing.Linear.None, true, 0, 0, false);
         game.stage.addChild(dialogInstance)
         game.customCallback = null;
@@ -522,6 +529,7 @@ DialogGroup.prototype.buttonClicked = function (button, pointer) {
                     // Make a new Dialog
                     fadeOutCallback = function () {
                         var dialogInstance = MakeDialog(game, action.dialogId)
+                        // TODO add fadeIn()
                         game.add.tween(dialogInstance).from({ alpha: 0 }, 200, Phaser.Easing.Linear.None, true, 0, 0, false);
                         game.stage.addChild(dialogInstance)
                     }
