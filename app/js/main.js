@@ -274,7 +274,8 @@ function MakeRevealDialog(game, id) {
             buttonType,
             buttonData);
 
-        //game.gamedataInstances[id] = dialogInstance;
+        game.add.tween(dialogInstance).from({ alpha: 0 }, 100, Phaser.Easing.Linear.None, true, 0, 0, false);
+
         game.stage.addChild(dialogInstance);
         game.customCallback = null;
     }
@@ -298,9 +299,6 @@ function MakeMapTile(game, id) {
 //=========================================================
 function MapTileGroup(game, x, y, bitmapDataId) {
     Phaser.Group.call(this, game);
-
-    var gridWidth = 96;
-    var halfGridWidth = 48;
 
     this.addChild(game.make.sprite(x, y, game.cache.getBitmapData(bitmapDataId)));
 }
@@ -333,8 +331,6 @@ function MakeDialog(game, id) {
         dialogData.bmdId,
         dialogData.buttonType,
         dialogData.buttons);
-
-    //game.gamedataInstances[id] = dialogInstance;
 
     return dialogInstance;
 }
@@ -457,7 +453,7 @@ DialogGroup.prototype.constructor = DialogGroup;
 
 DialogGroup.prototype.cancelClicked = function () {
     game.cutSceneCamera = false;
-    this.destroy(true);
+    this.fadeOut();
 }
 
 DialogGroup.prototype.buttonClicked = function (button, pointer) {
@@ -479,9 +475,6 @@ DialogGroup.prototype.buttonClicked = function (button, pointer) {
 
                         if (game.gamedataInstances.mapTokens.hasOwnProperty(id)) {
                             // Remove Id
-                            // TODO: reference a group within gamedataInstances (tokens, mapTiles)?
-                            // type = "removeTokens"
-                            // type = "removeMapTiles"
                             var instance = game.gamedataInstances.mapTokens[id]
                             if (instance != null) {
                                 game.gamedataInstances.mapTokens[id] = null;
@@ -490,7 +483,6 @@ DialogGroup.prototype.buttonClicked = function (button, pointer) {
                             }
                         }
                     }
-
                 } else if (action.type == "dialog") {
                     // Make a new Dialog
                     game.stage.addChild(MakeDialog(game, action.dialogId))
@@ -500,17 +492,13 @@ DialogGroup.prototype.buttonClicked = function (button, pointer) {
                     //Go to next reveal dialog
                     if (game.revealMap.dialogs.length > 0) {
                         var revealDialog = game.revealMap.dialogs.shift();
-                        game.customCallback = function () {
-                            MakeRevealDialog(game, revealDialog);
-                        }
+                        MakeRevealDialog(game, revealDialog);
                         restoreControl = false;
                     }
                 } else if (action.type == "revealMap") {
                     //Reveal map tiles
                     if (action.revealMapId != null) {
-                        game.customCallback = function () {
-                            MakeRevealMap(game, action.revealMapId);
-                        }
+                        MakeRevealMap(game, action.revealMapId);
                         restoreControl = false;
                     }
                 }
@@ -523,7 +511,14 @@ DialogGroup.prototype.buttonClicked = function (button, pointer) {
         game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.5, 0.5);
     }
 
-    this.destroy(true);
+    this.fadeOut();
+}
+
+DialogGroup.prototype.fadeOut = function () {
+    var fadeOutTween = game.add.tween(this).to({ alpha: 0 }, 100, Phaser.Easing.Linear.None, true, 0, 0, false);
+    fadeOutTween.onComplete.addOnce(function () {
+        this.destroy(true);
+    }, this);
 }
 
 //=========================================================
