@@ -149,7 +149,24 @@ http://phaser.io/docs/2.6.2/Phaser.BitmapData.html#rect
 http://phaser.io/docs/2.6.2/Phaser.BitmapData.html#fill
 
 ===========================================================
+2016 October 02, Sunday 11:48 AM ~~~
 ===========================================================
+Phaser Sandbox - Single Sprite Template
+
+// Testing the generateTexture on chrome (works) and firefox (doesn't work)
+function create() {
+    var sprite = game.add.sprite(0, 0, 'phaser');
+
+    var testBmd = game.make.bitmapData(27, 40);
+    testBmd.copy('phaser');
+    testBmd.generateTexture('phaserTexture');
+
+    game.add.sprite(60, 60, 'phaserTexture')
+}
+
+Apparently Internet Explorer doesn't support Javascript find() function:
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find
+
 ===========================================================
 ===========================================================
 ===========================================================

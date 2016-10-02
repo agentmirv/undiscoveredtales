@@ -45,7 +45,7 @@ var GameState = {
         tokenBmd.copy(exploreImage, 0, 0, 64, 64, 16 + 2, 16 + 2);
         exploreImage.tint = 0xFF0000;
         tokenBmd.copy(exploreImage, 0, 0, 64, 64, 16, 16);
-        tokenBmd.generateTexture('exploreTokenBmd');
+        tokenBmd.generateTexture('explore-image');
         tokenBmd.clear();
 
         // Search Token 
@@ -55,7 +55,7 @@ var GameState = {
         tokenBmd.copy(searchImage, 0, 0, 64, 64, 16 + 2, 16 + 2);
         searchImage.tint = 0xFFFF00;
         tokenBmd.copy(searchImage, 0, 0, 64, 64, 16, 16);
-        tokenBmd.generateTexture('searchTokenBmd');
+        tokenBmd.generateTexture('search-image');
         tokenBmd.clear();
 
         // Investigator bitmapData
@@ -65,7 +65,7 @@ var GameState = {
         tokenBmd.copy(investigatorImage, 0, 0, 64, 64, 16 + 2, 16 + 2);
         investigatorImage.tint = 0xFFFFFF;
         tokenBmd.copy(investigatorImage, 0, 0, 64, 64, 16, 16);
-        tokenBmd.generateTexture('investigatorStartBmd');
+        tokenBmd.generateTexture('investigators-image');
         tokenBmd.clear();
 
         // Cult Sigil bitmapData
@@ -75,30 +75,30 @@ var GameState = {
         tokenBmd.copy(cultSigilImage, 0, 0, 64, 64, 16 + 2, 16 + 2);
         cultSigilImage.tint = 0xFF0000;
         tokenBmd.copy(cultSigilImage, 0, 0, 64, 64, 16, 16);
-        tokenBmd.generateTexture('cultSigilBmd');
+        tokenBmd.generateTexture('cultsigil-image');
         tokenBmd.clear();
 
         // North Wall bitmapData
         tokenBmd.copy('wall');
-        tokenBmd.generateTexture('wallNorthBmd');
+        tokenBmd.generateTexture('wall-north-image');
         tokenBmd.clear();
 
         // East Wall bitmapData
         var deg90ToRad = 90 * (Math.PI / 180);
         tokenBmd.copy('wall', null, null, null, null, null, null, null, null, deg90ToRad, 0, 1);
-        tokenBmd.generateTexture('wallEastBmd');
+        tokenBmd.generateTexture('wall-east-image');
         tokenBmd.clear();
 
         // West Wall bitmapData
         var deg270ToRad = 270 * (Math.PI / 180);
         tokenBmd.copy('wall', null, null, null, null, null, null, null, null, deg270ToRad, 1, 0);
-        tokenBmd.generateTexture('wallWestBmd');
+        tokenBmd.generateTexture('wall-west-image');
         tokenBmd.clear();
 
         // South Wall bitmapData
         var deg180ToRad = 180 * (Math.PI / 180);
         tokenBmd.copy('wall', null, null, null, null, null, null, null, null, deg180ToRad, 1, 1);
-        tokenBmd.generateTexture('wallSouthBmd');
+        tokenBmd.generateTexture('wall-south-image');
         tokenBmd.clear();
 
         // Create map tile image bitmapData
@@ -121,7 +121,6 @@ var GameState = {
                 }
             }
 
-            //game.cache.addBitmapData(mapTileData.imageKey, mapTileBmd);
             mapTileBmd.generateTexture(mapTileData.imageKey);
             mapTileBmd.clear();
         }

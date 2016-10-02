@@ -90,7 +90,7 @@
       "id": "maptile-lobby",
       "x": 960,
       "y": 960,
-      "imageKey": "maptile-lobby-bmd",
+      "imageKey": "maptile-lobby-image",
       "angle": 0,
       "entryTokenIds": [
         "token-door1-lobby",
@@ -102,7 +102,7 @@
       "id": "maptile-study",
       "x": 1536,
       "y": 1248,
-      "imageKey": "maptile-study-bmd",
+      "imageKey": "maptile-study-image",
       "angle": 0,
       "entryTokenIds": [
         "token-door3-lobby"
@@ -112,7 +112,7 @@
       "id": "maptile-hall-2",
       "x": 960,
       "y": 672,
-      "imageKey": "maptile-hall-2-bmd",
+      "imageKey": "maptile-hall-2-image",
       "angle": 0,
       "entryTokenIds": [
         "token-door1-lobby",
@@ -123,7 +123,7 @@
       "id": "maptile-hall-corner-1",
       "x": 672,
       "y": 672,
-      "imageKey": "maptile-hall-corner-1-bmd",
+      "imageKey": "maptile-hall-corner-1-image",
       "angle": 270,
       "entryTokenIds": [
         "token-door1-lobby",
@@ -136,42 +136,42 @@
       "id":"token-wall1-lobby",
       "x":1344,
       "y":960,
-      "imageKey": "wallNorthBmd",
+      "imageKey": "wall-north-image",
       "addToWorld": true
     },
     {
       "id":"token-wall2-lobby",
       "x":1440,
       "y":1056,
-      "imageKey": "wallEastBmd",
+      "imageKey": "wall-east-image",
       "addToWorld": true
     },
     {
       "id":"token-wall3-lobby",
       "x":960,
       "y":1344,
-      "imageKey": "wallWestBmd",
+      "imageKey": "wall-west-image",
       "addToWorld": true
     },
     {
       "id":"token-wall-study",
       "x":1920,
       "y":1440,
-      "imageKey": "wallSouthBmd",
+      "imageKey": "wall-south-image",
       "addToWorld": true
     },
     {
       "id":"token-investigators-lobby",
       "x":1200,
       "y":1384,
-      "imageKey": "investigatorStartBmd",
+      "imageKey": "investigators-image",
       "addToWorld": false
     },
     {
       "id":"token-box-lobby",
       "x":1200,
       "y":1200,
-      "imageKey":"searchTokenBmd",
+      "imageKey":"search-image",
       "clickId":"dialog-box-lobby",
       "addToWorld": true
     },
@@ -179,7 +179,7 @@
       "x":1056,
       "id":"token-door1-lobby",
       "y":912,
-      "imageKey":"exploreTokenBmd",
+      "imageKey":"explore-image",
       "clickId":"dialog-door1-lobby",
       "addToWorld": true
     },
@@ -187,7 +187,7 @@
       "id":"token-door2-lobby",
       "x":912,
       "y":1056,
-      "imageKey":"exploreTokenBmd",
+      "imageKey":"explore-image",
       "clickId":"dialog-door2-lobby",
       "addToWorld": true
     },
@@ -195,7 +195,7 @@
       "id":"token-door3-lobby",
       "x":1488,
       "y":1344,
-      "imageKey":"exploreTokenBmd",
+      "imageKey":"explore-image",
       "clickId":"dialog-door3-lobby",
       "addToWorld": true
     },
@@ -203,14 +203,14 @@
       "id":"token-wall-study",
       "x":1920,
       "y":1440,
-      "imageKey": "wallSouthBmd",
+      "imageKey": "wall-south-image",
       "addToWorld": true
     },
     {
       "id":"token-fireplace-study",
       "x":1728,
       "y":1440,
-      "imageKey":"searchTokenBmd",
+      "imageKey":"search-image",
       "clickId":"dialog-fireplace-study",
       "addToWorld": true
     }
@@ -218,7 +218,7 @@
   "dialogs": [
     {
       "id": "dialog-box-lobby",
-      "imageKey": "searchTokenBmd",
+      "imageKey": "search-image",
       "text": "A heavy wooden box lies on the table. The lid can be opened by sliding an ornate latch.",
       "buttonType": "cancel-action",
       "buttons": [
@@ -239,7 +239,7 @@
     },
     {
       "id": "dialog-door1-lobby",
-      "imageKey": "exploreTokenBmd",
+      "imageKey": "explore-image",
       "text": "This door leads deeper into the mansion.",
       "buttonType": "cancel-action",
       "buttons": [
@@ -250,7 +250,7 @@
     },
     {
       "id": "dialog-door2-lobby",
-      "imageKey": "exploreTokenBmd",
+      "imageKey": "explore-image",
       "text": "This door leads deeper into the mansion.",
       "buttonType": "cancel-action",
       "buttons": [
@@ -261,7 +261,7 @@
     },
     {
       "id": "dialog-door3-lobby",
-      "imageKey": "exploreTokenBmd",
+      "imageKey": "explore-image",
       "text": "This door leads to a room at the front of the house. The handle is ice cold.",
       "buttonType": "cancel-action",
       "buttons": [
@@ -272,7 +272,7 @@
     },
     {
       "id": "dialog-fireplace-study",
-      "imageKey": "searchTokenBmd",
+      "imageKey": "search-image",
       "text": "You see something glint under the pile of ash and blackened wood.",
       "buttonType": "cancel-action",
       "buttons": [
@@ -283,7 +283,7 @@
     },
     {
       "id": "dialog-fireplace-study-searched",
-      "imageKey": "cultSigilBmd",
+      "imageKey": "cultsigil-image",
       "text": "As you sift through the ash, your hands and shirt become covered in soot. But your hard work pays off. Gain the Cult Sigil Unique Item and 1 Clue. Then discard this Search token.",
       "buttonType": "continue",
       "buttons": [
@@ -295,7 +295,7 @@
   ],
   "imageTiles": [
     {
-      "imageKey": "maptile-lobby-bmd",
+      "imageKey": "maptile-lobby-image",
       "width": 6,
       "height": 6,
       "spritesheet": "tileWallsSheet",
@@ -310,7 +310,7 @@
       ]
     },
     {
-      "imageKey": "maptile-study-bmd",
+      "imageKey": "maptile-study-image",
       "width": 6,
       "height": 3,
       "spritesheet": "tileWallsSheet",
@@ -322,7 +322,7 @@
       ]
     },
     {
-      "imageKey": "maptile-hall-2-bmd",
+      "imageKey": "maptile-hall-2-image",
       "width": 6,
       "height": 3,
       "floorColor": "#6f644f",
@@ -334,7 +334,7 @@
       ]
     },
     {
-      "imageKey": "maptile-hall-corner-1-bmd",
+      "imageKey": "maptile-hall-corner-1-image",
       "width": 6,
       "height": 3,
       "floorColor": "#5e5441",
