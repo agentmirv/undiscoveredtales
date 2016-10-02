@@ -109,6 +109,8 @@ var GameState = {
             var bmdHeight = mapTileData.height * 96;
             var mapTileBmd = game.make.bitmapData(bmdWidth, bmdHeight);
 
+            mapTileBmd.rect(0, 0, bmdWidth, bmdHeight, mapTileData.floorColor);
+
             for (var j = 0; j < mapTileData.height; j++) {
                 for (var i = 0; i < mapTileData.width; i++) {
                     var localX = i * gridWidth;

@@ -299,6 +299,7 @@
       "width": 6,
       "height": 6,
       "spritesheet": "tileWallsSheet",
+      "floorColor": "#855454",
       "walls": [
         0, 4, 1, 1, 4, 2,
         4, 4, 4, 4, 4, 4,
@@ -313,6 +314,7 @@
       "width": 6,
       "height": 3,
       "spritesheet": "tileWallsSheet",
+      "floorColor": "#836544",
       "walls": [
         0, 1, 1, 1, 1, 2,
         4, 4, 4, 4, 4, 5,
@@ -323,6 +325,7 @@
       "imageKey": "maptile-hall-2-bmd",
       "width": 6,
       "height": 3,
+      "floorColor": "#6f644f",
       "spritesheet": "tileWallsSheet",
       "walls": [
         1, 1, 1, 1, 1, 2,
@@ -334,6 +337,7 @@
       "imageKey": "maptile-hall-corner-1-bmd",
       "width": 6,
       "height": 3,
+      "floorColor": "#5e5441",
       "spritesheet": "tileWallsSheet",
       "walls": [
         1, 1, 4, 1, 1, 1,

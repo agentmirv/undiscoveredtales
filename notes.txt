@@ -144,6 +144,10 @@ https://agentmirv.github.io/undiscoveredtales/
 
 http://phaser.io/docs/2.6.2/Phaser.BitmapData.html#generateTexture
 
+http://phaser.io/docs/2.6.2/Phaser.BitmapData.html#rect
+
+http://phaser.io/docs/2.6.2/Phaser.BitmapData.html#fill
+
 ===========================================================
 ===========================================================
 ===========================================================
