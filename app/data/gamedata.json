@@ -116,8 +116,7 @@
       "angle": 0,
       "entryTokenIds": [
         "token-door1-lobby",
-        "token-door2-lobby",
-        "token-door3-lobby"
+        "token-door2-lobby"
       ]
     },
     {
@@ -128,8 +127,7 @@
       "angle": 270,
       "entryTokenIds": [
         "token-door1-lobby",
-        "token-door2-lobby",
-        "token-door3-lobby"
+        "token-door2-lobby"
       ]
     }
   ],

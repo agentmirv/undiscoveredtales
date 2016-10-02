@@ -16,7 +16,7 @@ var GameState = {
         game.load.image('wall', 'assets/images/WallTokenN.png');
         game.load.image('debugCircle', 'assets/images/DebugCircle.png');
         game.load.image('debugSquare', 'assets/images/DebugSquare.png');
-        game.load.image('cultSigil', 'assets/images/pentacle.png');
+        game.load.image('pentacle', 'assets/images/pentacle.png');
 
         game.load.spritesheet('tileWallsSheet', 'assets/images/TileWalls.png', 96, 96);
 
@@ -69,7 +69,7 @@ var GameState = {
         tokenBmd.clear();
 
         // Cult Sigil bitmapData
-        var cultSigilImage = game.make.image(0, 0, 'cultSigil');
+        var cultSigilImage = game.make.image(0, 0, 'pentacle');
         tokenBmd.copy('squareToken');
         cultSigilImage.tint = 0xFFFF00;
         tokenBmd.copy(cultSigilImage, 0, 0, 64, 64, 16 + 2, 16 + 2);
@@ -248,14 +248,14 @@ function MakeRevealMap(game, id) {
         for (var j = 0; j < mapTileData.entryTokenIds.length; j++) {
             var removeToken = true;
             var tokenId = mapTileData.entryTokenIds[j];
-
+            
             // Find this entryTokenId in all rooms
             for (var k = 0; k < game.gamedata.mapTiles.length; k++) {
-                var mapTileData = game.gamedata.mapTiles[k];
+                var mapTileDataCheck = game.gamedata.mapTiles[k];
                 // Look for tokenId in mapTileData.entryTokenIds
-                if (mapTileData.entryTokenIds.indexOf(tokenId) >= 0) {
+                if (mapTileDataCheck.entryTokenIds.indexOf(tokenId) >= 0) {
                     // Check if mapTileData.id in game.gamedataInstances.mapTiles
-                    if (!(mapTileData.id in game.gamedataInstances.mapTiles)) {
+                    if (!(mapTileDataCheck.id in game.gamedataInstances.mapTiles)) {
                         // If it is not in, then it is not revealed
                         removeToken = false
                     }
@@ -266,7 +266,7 @@ function MakeRevealMap(game, id) {
                 var instance = game.gamedataInstances.mapTokens[tokenId]
                 if (instance != null) {
                     instance.fadeOut(function () {
-                        game.gamedataInstances.mapTokens[id] = null;
+                        game.gamedataInstances.mapTokens[tokenId] = null;
                         game.world.removeChild(instance);
                         instance.destroy();
                     })
