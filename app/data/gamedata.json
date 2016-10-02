@@ -36,7 +36,7 @@
   "revealDialogs": [
     {
       "id": "reveal-lobby-dialog-room",
-      "text": "You had planned on knocking and waiting for an invitation to enter, but instead you are greeted with the front door swinging on its hinges. Place the Lobby tile and Walls.",
+      "text": "You had planned on knocking and waiting for an invitation to enter, but instead you come upon the front door swinging on its hinges. Place the Lobby tile and Walls.",
       "addMultipleTokens" : [
         "token-wall1-lobby",
         "token-wall2-lobby",
@@ -82,7 +82,7 @@
     },
     {
       "id": "reveal-halls-dialog-room",
-      "text": "Someone told you there'd be halls up in this piece. They ain't lyin'. Remove any Explore tokens."
+      "text": "A hallway leads to several bedrooms. Remove any Explore tokens."
     }
   ],
   "mapTiles": [
@@ -240,7 +240,7 @@
     {
       "id": "dialog-door1-lobby",
       "imageKey": "exploreTokenBmd",
-      "text": "Hey, its door number one.",
+      "text": "This door leads deeper into the mansion.",
       "buttonType": "cancel-action",
       "buttons": [
         { "text": "@ Explore",
@@ -251,7 +251,7 @@
     {
       "id": "dialog-door2-lobby",
       "imageKey": "exploreTokenBmd",
-      "text": "Hey, its door number two.",
+      "text": "This door leads deeper into the mansion.",
       "buttonType": "cancel-action",
       "buttons": [
         { "text": "@ Explore",
