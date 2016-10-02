@@ -362,7 +362,8 @@ function MakeMapTile(game, id) {
         game,
         mapTileData.x,
         mapTileData.y,
-        mapTileData.bmdId);
+        mapTileData.bmdId,
+        mapTileData.angle);
 
     game.gamedataInstances.mapTiles[id] = mapTileInstance;
 
@@ -370,10 +371,22 @@ function MakeMapTile(game, id) {
 }
 
 //=========================================================
-function MapTileGroup(game, x, y, bitmapDataId) {
+function MapTileGroup(game, x, y, bitmapDataId, angle) {
     Phaser.Group.call(this, game);
 
-    this.addChild(game.make.sprite(x, y, game.cache.getBitmapData(bitmapDataId)));
+    var mapTileSprite = game.make.sprite(x, y, game.cache.getBitmapData(bitmapDataId))
+
+    if (angle == 90) {
+        mapTileSprite.anchor.setTo(0, 1)
+    } else if (angle == 180) {
+        mapTileSprite.anchor.setTo(1, 1)
+    } else if (angle == 270) {
+        mapTileSprite.anchor.setTo(1, 0)
+    }
+
+    mapTileSprite.angle = angle;
+
+    this.addChild(mapTileSprite);
 }
 
 MapTileGroup.prototype = Object.create(Phaser.Group.prototype);

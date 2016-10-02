@@ -23,6 +23,14 @@
           "reveal-study-dialog-fireplace",
           "reveal-explored"
         ]
+      },
+      {
+        "id": "reveal-halls",
+        "mapTiles": [ "maptile-hall-2", "maptile-hall-corner-1"],
+        "revealDialogs": [
+          "reveal-halls-dialog-room",
+          "reveal-explored"
+        ]
       }
   ],
   "revealDialogs": [
@@ -71,6 +79,10 @@
       "id": "reveal-study-dialog-fireplace",
       "text": "Cold drafts blow in from the disused fireplace. Place a Search token.",
       "addSingleToken" : [ "token-fireplace-study" ]
+    },
+    {
+      "id": "reveal-halls-dialog-room",
+      "text": "Someone told you there'd be halls up in this piece. They ain't lyin'. Remove any Explore tokens."
     }
   ],
   "mapTiles": [
@@ -79,7 +91,10 @@
       "x": 960,
       "y": 960,
       "bmdId": "maptile-lobby-bmd",
+      "angle": 0,
       "entryTokenIds": [
+        "token-door1-lobby",
+        "token-door2-lobby",
         "token-door3-lobby"
       ]
     },
@@ -88,24 +103,33 @@
       "x": 1536,
       "y": 1248,
       "bmdId": "maptile-study-bmd",
+      "angle": 0,
       "entryTokenIds": [
         "token-door3-lobby"
       ]
     },
     {
       "id": "maptile-hall-2",
-      "x": 0,
-      "y": 0,
+      "x": 960,
+      "y": 672,
       "bmdId": "maptile-hall-2-bmd",
-      "entryTokenIds": [ ]
+      "angle": 0,
+      "entryTokenIds": [
+        "token-door1-lobby",
+        "token-door2-lobby",
+        "token-door3-lobby"
+      ]
     },
     {
       "id": "maptile-hall-corner-1",
-      "x": 960,
+      "x": 672,
       "y": 672,
       "bmdId": "maptile-hall-corner-1-bmd",
+      "angle": 270,
       "entryTokenIds": [
-        "token-door2-lobby"
+        "token-door1-lobby",
+        "token-door2-lobby",
+        "token-door3-lobby"
       ]
     }
   ],
@@ -222,7 +246,7 @@
       "buttonType": "cancel-action",
       "buttons": [
         { "text": "@ Explore",
-          "actions": [ {"type": "removeTokens", "tokenIds": ["token-door1-lobby"] } ]
+          "actions": [ {"type": "revealMap", "revealMapId": ["reveal-halls"] } ]
         }
       ]
     },
@@ -233,7 +257,7 @@
       "buttonType": "cancel-action",
       "buttons": [
         { "text": "@ Explore",
-          "actions": [ {"type": "removeTokens", "tokenIds": ["token-door2-lobby"] } ]
+          "actions": [ {"type": "revealMap", "revealMapId": ["reveal-halls"] } ]
         }
       ]
     },
