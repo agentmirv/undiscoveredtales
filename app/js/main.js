@@ -36,70 +36,70 @@ var GameState = {
         // Maybe this is overkill
 
         // Token bitmapData
-        var tokenBmd = game.make.bitmapData(96, 96);
+        var tokenBmd = null
 
         // Explore Token
+        tokenBmd = game.make.bitmapData(96, 96);
         var exploreImage = game.make.image(0, 0, 'explore');
         tokenBmd.copy('circleToken');
         exploreImage.tint = 0x770000;
         tokenBmd.copy(exploreImage, 0, 0, 64, 64, 16 + 2, 16 + 2);
         exploreImage.tint = 0xFF0000;
         tokenBmd.copy(exploreImage, 0, 0, 64, 64, 16, 16);
-        tokenBmd.generateTexture('explore-image');
-        tokenBmd.clear();
+        game.cache.addBitmapData('explore-image', tokenBmd)
 
         // Search Token 
+        tokenBmd = game.make.bitmapData(96, 96);
         var searchImage = game.make.image(0, 0, 'search');
         tokenBmd.copy('circleToken');
         searchImage.tint = 0xAAAA00;
         tokenBmd.copy(searchImage, 0, 0, 64, 64, 16 + 2, 16 + 2);
         searchImage.tint = 0xFFFF00;
         tokenBmd.copy(searchImage, 0, 0, 64, 64, 16, 16);
-        tokenBmd.generateTexture('search-image');
-        tokenBmd.clear();
+        game.cache.addBitmapData('search-image', tokenBmd)
 
         // Investigator bitmapData
+        tokenBmd = game.make.bitmapData(96, 96);
         var investigatorImage = game.make.image(0, 0, 'investigator');
         tokenBmd.copy('circleToken');
         investigatorImage.tint = 0x000000;
         tokenBmd.copy(investigatorImage, 0, 0, 64, 64, 16 + 2, 16 + 2);
         investigatorImage.tint = 0xFFFFFF;
         tokenBmd.copy(investigatorImage, 0, 0, 64, 64, 16, 16);
-        tokenBmd.generateTexture('investigators-image');
-        tokenBmd.clear();
+        game.cache.addBitmapData('investigators-image', tokenBmd)
 
         // Cult Sigil bitmapData
+        tokenBmd = game.make.bitmapData(96, 96);
         var cultSigilImage = game.make.image(0, 0, 'pentacle');
         tokenBmd.copy('squareToken');
         cultSigilImage.tint = 0xFFFF00;
         tokenBmd.copy(cultSigilImage, 0, 0, 64, 64, 16 + 2, 16 + 2);
         cultSigilImage.tint = 0xFF0000;
         tokenBmd.copy(cultSigilImage, 0, 0, 64, 64, 16, 16);
-        tokenBmd.generateTexture('cultsigil-image');
-        tokenBmd.clear();
+        game.cache.addBitmapData('cultsigil-image', tokenBmd)
 
         // North Wall bitmapData
+        tokenBmd = game.make.bitmapData(96, 96);
         tokenBmd.copy('wall');
-        tokenBmd.generateTexture('wall-north-image');
-        tokenBmd.clear();
+        game.cache.addBitmapData('wall-north-image', tokenBmd)
 
         // East Wall bitmapData
+        tokenBmd = game.make.bitmapData(96, 96);
         var deg90ToRad = 90 * (Math.PI / 180);
         tokenBmd.copy('wall', null, null, null, null, null, null, null, null, deg90ToRad, 0, 1);
-        tokenBmd.generateTexture('wall-east-image');
-        tokenBmd.clear();
+        game.cache.addBitmapData('wall-east-image', tokenBmd)
 
         // West Wall bitmapData
+        tokenBmd = game.make.bitmapData(96, 96);
         var deg270ToRad = 270 * (Math.PI / 180);
         tokenBmd.copy('wall', null, null, null, null, null, null, null, null, deg270ToRad, 1, 0);
-        tokenBmd.generateTexture('wall-west-image');
-        tokenBmd.clear();
+        game.cache.addBitmapData('wall-west-image', tokenBmd)
 
         // South Wall bitmapData
+        tokenBmd = game.make.bitmapData(96, 96);
         var deg180ToRad = 180 * (Math.PI / 180);
         tokenBmd.copy('wall', null, null, null, null, null, null, null, null, deg180ToRad, 1, 1);
-        tokenBmd.generateTexture('wall-south-image');
-        tokenBmd.clear();
+        game.cache.addBitmapData('wall-south-image', tokenBmd)
 
         // Create map tile image bitmapData
         for (var k = 0; k < game.gamedata.imageTiles.length; k++) {
@@ -121,12 +121,8 @@ var GameState = {
                 }
             }
 
-            mapTileBmd.generateTexture(mapTileData.imageKey);
-            mapTileBmd.clear();
+            game.cache.addBitmapData(mapTileData.imageKey, mapTileBmd)
         }
-
-        tokenBmd.destroy();
-        mapTileBmd.destroy();
 
         //=================================================
         // Initialize Stuff
@@ -227,6 +223,15 @@ var GameState = {
         //var targetRectSmall = new Phaser.Rectangle(player.body.x - 10, player.body.y - 10, 20, 20)
         //game.debug.geom(targetRectSmall, "#00FF00", false)
     }
+}
+
+//=========================================================
+function Helper() {
+    // do nothing
+}
+
+Helper.getImage = function (imageKey) {
+    return game.cache.getBitmapData(imageKey)
 }
 
 //=========================================================
@@ -383,7 +388,7 @@ function MakeMapTile(game, id) {
 function MapTileGroup(game, x, y, imageKey, angle) {
     Phaser.Group.call(this, game);
 
-    var mapTileSprite = game.make.sprite(x, y, imageKey)
+    var mapTileSprite = game.make.sprite(x, y, Helper.getImage(imageKey))
 
     if (angle == 90) {
         mapTileSprite.anchor.setTo(0, 1)
@@ -433,7 +438,7 @@ function MakeDialog(game, id) {
 
 //=========================================================
 function TokenSprite(game, x, y, imageKey, clickId, addToWorld) {
-    Phaser.Sprite.call(this, game, x, y, imageKey);
+    Phaser.Sprite.call(this, game, x, y, Helper.getImage(imageKey));
 
     this.imageKey = imageKey;
     this.clickId = clickId;
@@ -500,7 +505,7 @@ function DialogGroup(game, messageText, imageKey, buttonType, buttonData) {
 
     if (buttonType == "reveal" && revealImageKey != null) {
         // Reveal Image
-        var revealPointer = game.make.image(0, 0, revealImageKey)
+        var revealPointer = game.make.image(0, 0, Helper.getImage(imageKey))
         revealPointer.alignIn(game.stageViewRect, Phaser.CENTER, 0, -256 + 48)
         this.addChild(revealPointer);
 
@@ -693,7 +698,7 @@ function DialogMessage(game, text, imageKey) {
     this.addChild(messageText);
 
     if (imageKey != null) {
-        var imageBadgeSprite = game.make.sprite(leftMargin, Math.floor((totalHeight - imageHeight) / 2), imageKey)
+        var imageBadgeSprite = game.make.sprite(leftMargin, Math.floor((totalHeight - imageHeight) / 2), Helper.getImage(imageKey))
         this.addChild(imageBadgeSprite);
     }
 }

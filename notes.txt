@@ -168,7 +168,11 @@ Apparently Internet Explorer doesn't support Javascript find() function:
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find
 
 ===========================================================
+2016 October 03, Monday 09:24 PM ~~~
 ===========================================================
+game.cache.addBitmapData('exploreTokenBmd', exploreTokenBmd)
+game.cache.getBitmapData(bitmapDataId)
+
 ===========================================================
 ===========================================================
 ===========================================================
