@@ -345,5 +345,55 @@
         7, 4, 7, 7, 4, 7
       ]
     }
+  ],
+  "imageTokens": [
+    {
+      "imageKey": "explore-image",
+      "primaryImageKey": "explore",
+      "backgroundImageKey": "circleToken",
+      "imagePrimaryColor": "0xFF0000",
+      "imageShadowColor": "0x770000"
+    },
+    {
+      "imageKey": "search-image",
+      "primaryImageKey": "search",
+      "backgroundImageKey": "circleToken",
+      "imagePrimaryColor": "0xFFFF00",
+      "imageShadowColor": "0xAAAA00"
+    },
+    {
+      "imageKey": "investigators-image",
+      "primaryImageKey": "investigator",
+      "backgroundImageKey": "circleToken",
+      "imagePrimaryColor": "0xFFFFFF",
+      "imageShadowColor": "0x000000"
+    },
+    {
+      "imageKey": "cultsigil-image",
+      "primaryImageKey": "pentacle",
+      "backgroundImageKey": "squareToken",
+      "imagePrimaryColor": "0xFF0000",
+      "imageShadowColor": "0xFFFF00"
+    },
+    {
+      "imageKey": "wall-north-image",
+      "backgroundImageKey": "wall",
+      "backgroundImageAngle": 0
+    },
+    {
+      "imageKey": "wall-east-image",
+      "backgroundImageKey": "wall",
+      "backgroundImageAngle": 90
+    },
+    {
+      "imageKey": "wall-west-image",
+      "backgroundImageKey": "wall",
+      "backgroundImageAngle": 270
+    },
+    {
+      "imageKey": "wall-south-image",
+      "backgroundImageKey": "wall",
+      "backgroundImageAngle": 180
+    }
   ]
 }

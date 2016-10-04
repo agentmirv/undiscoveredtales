@@ -32,96 +32,69 @@ var GameState = {
         game.gamedataInstances.mapTokens = {}
 
         //=================================================
-        // Create bitmapData (textures I create at runtime that I can reuse)
-        // Maybe this is overkill
+        // ImageTokens BitmapData
+        for (var i = 0; i < game.gamedata.imageTokens.length; i++) {
+            var gridWidth = 96
+            var imageTokenData = game.gamedata.imageTokens[i]
+            var tokenBmd = game.make.bitmapData(gridWidth, gridWidth)
 
-        // Token bitmapData
-        var tokenBmd = null
+            if (imageTokenData.backgroundImageKey != null) {
+                if (imageTokenData.backgroundImageAngle == null) {
+                    tokenBmd.copy(imageTokenData.backgroundImageKey)
+                } else {
+                    var degToRad = imageTokenData.backgroundImageAngle * (Math.PI / 180);
+                    if (imageTokenData.backgroundImageAngle == 90) {
+                        tokenBmd.copy(imageTokenData.backgroundImageKey, null, null, null, null, null, null, null, null, degToRad, 0, 1);
+                    } else if (imageTokenData.backgroundImageAngle == 270) {
+                        tokenBmd.copy(imageTokenData.backgroundImageKey, null, null, null, null, null, null, null, null, degToRad, 1, 0);
+                    } else if (imageTokenData.backgroundImageAngle == 180) {
+                        tokenBmd.copy(imageTokenData.backgroundImageKey, null, null, null, null, null, null, null, null, degToRad, 1, 1);
+                    } else {
+                        tokenBmd.copy(imageTokenData.backgroundImageKey);
+                    }
+                }
+            }
 
-        // Explore Token
-        tokenBmd = game.make.bitmapData(96, 96);
-        var exploreImage = game.make.image(0, 0, 'explore');
-        tokenBmd.copy('circleToken');
-        exploreImage.tint = 0x770000;
-        tokenBmd.copy(exploreImage, 0, 0, 64, 64, 16 + 2, 16 + 2);
-        exploreImage.tint = 0xFF0000;
-        tokenBmd.copy(exploreImage, 0, 0, 64, 64, 16, 16);
-        game.cache.addBitmapData('explore-image', tokenBmd)
+            if (imageTokenData.primaryImageKey != null) {
+                var primaryImage = game.make.image(0, 0, imageTokenData.primaryImageKey)
 
-        // Search Token 
-        tokenBmd = game.make.bitmapData(96, 96);
-        var searchImage = game.make.image(0, 0, 'search');
-        tokenBmd.copy('circleToken');
-        searchImage.tint = 0xAAAA00;
-        tokenBmd.copy(searchImage, 0, 0, 64, 64, 16 + 2, 16 + 2);
-        searchImage.tint = 0xFFFF00;
-        tokenBmd.copy(searchImage, 0, 0, 64, 64, 16, 16);
-        game.cache.addBitmapData('search-image', tokenBmd)
+                if (imageTokenData.imageShadowColor != null) {
+                    primaryImage.tint = imageTokenData.imageShadowColor
+                    tokenBmd.copy(primaryImage, 0, 0, 64, 64, 16 + 2, 16 + 2)
+                }
 
-        // Investigator bitmapData
-        tokenBmd = game.make.bitmapData(96, 96);
-        var investigatorImage = game.make.image(0, 0, 'investigator');
-        tokenBmd.copy('circleToken');
-        investigatorImage.tint = 0x000000;
-        tokenBmd.copy(investigatorImage, 0, 0, 64, 64, 16 + 2, 16 + 2);
-        investigatorImage.tint = 0xFFFFFF;
-        tokenBmd.copy(investigatorImage, 0, 0, 64, 64, 16, 16);
-        game.cache.addBitmapData('investigators-image', tokenBmd)
+                if (imageTokenData.imagePrimaryColor != null) {
+                    primaryImage.tint = imageTokenData.imagePrimaryColor
+                }
 
-        // Cult Sigil bitmapData
-        tokenBmd = game.make.bitmapData(96, 96);
-        var cultSigilImage = game.make.image(0, 0, 'pentacle');
-        tokenBmd.copy('squareToken');
-        cultSigilImage.tint = 0xFFFF00;
-        tokenBmd.copy(cultSigilImage, 0, 0, 64, 64, 16 + 2, 16 + 2);
-        cultSigilImage.tint = 0xFF0000;
-        tokenBmd.copy(cultSigilImage, 0, 0, 64, 64, 16, 16);
-        game.cache.addBitmapData('cultsigil-image', tokenBmd)
+                tokenBmd.copy(primaryImage, 0, 0, 64, 64, 16, 16)
+            }
 
-        // North Wall bitmapData
-        tokenBmd = game.make.bitmapData(96, 96);
-        tokenBmd.copy('wall');
-        game.cache.addBitmapData('wall-north-image', tokenBmd)
+            game.cache.addBitmapData(imageTokenData.imageKey, tokenBmd)
+        }
 
-        // East Wall bitmapData
-        tokenBmd = game.make.bitmapData(96, 96);
-        var deg90ToRad = 90 * (Math.PI / 180);
-        tokenBmd.copy('wall', null, null, null, null, null, null, null, null, deg90ToRad, 0, 1);
-        game.cache.addBitmapData('wall-east-image', tokenBmd)
-
-        // West Wall bitmapData
-        tokenBmd = game.make.bitmapData(96, 96);
-        var deg270ToRad = 270 * (Math.PI / 180);
-        tokenBmd.copy('wall', null, null, null, null, null, null, null, null, deg270ToRad, 1, 0);
-        game.cache.addBitmapData('wall-west-image', tokenBmd)
-
-        // South Wall bitmapData
-        tokenBmd = game.make.bitmapData(96, 96);
-        var deg180ToRad = 180 * (Math.PI / 180);
-        tokenBmd.copy('wall', null, null, null, null, null, null, null, null, deg180ToRad, 1, 1);
-        game.cache.addBitmapData('wall-south-image', tokenBmd)
-
-        // Create map tile image bitmapData
+        //=================================================
+        // ImageTiles bitmapData
         for (var k = 0; k < game.gamedata.imageTiles.length; k++) {
             var gridWidth = 96;
-            var mapTileData = game.gamedata.imageTiles[k]
-            var bmdWidth = mapTileData.width * 96;
-            var bmdHeight = mapTileData.height * 96;
+            var imageTileData = game.gamedata.imageTiles[k]
+            var bmdWidth = imageTileData.width * gridWidth;
+            var bmdHeight = imageTileData.height * gridWidth;
             var mapTileBmd = game.make.bitmapData(bmdWidth, bmdHeight);
 
-            mapTileBmd.rect(0, 0, bmdWidth, bmdHeight, mapTileData.floorColor);
+            mapTileBmd.rect(0, 0, bmdWidth, bmdHeight, imageTileData.floorColor);
 
-            for (var j = 0; j < mapTileData.height; j++) {
-                for (var i = 0; i < mapTileData.width; i++) {
+            for (var j = 0; j < imageTileData.height; j++) {
+                for (var i = 0; i < imageTileData.width; i++) {
                     var localX = i * gridWidth;
                     var localY = j * gridWidth;
                     var wallIndex = i + j * 6;
-                    var sprite = game.make.tileSprite(localX, localY, gridWidth, gridWidth, mapTileData.spritesheet, mapTileData.walls[wallIndex])
+                    var sprite = game.make.tileSprite(localX, localY, gridWidth, gridWidth, imageTileData.spritesheet, imageTileData.walls[wallIndex])
                     mapTileBmd.copy(sprite);
                 }
             }
 
-            game.cache.addBitmapData(mapTileData.imageKey, mapTileBmd)
+            game.cache.addBitmapData(imageTileData.imageKey, mapTileBmd)
         }
 
         //=================================================
