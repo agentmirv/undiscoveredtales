@@ -420,7 +420,6 @@ function TokenSprite(game, x, y, imageKey, clickId, addToWorld) {
     if (clickId != null) {
         this.inputEnabled = true;
         this.events.onInputUp.add(this.tokenClicked, this);
-        this.input.useHandCursor = true;
     }
 }
 
@@ -512,7 +511,6 @@ function DialogGroup(game, messageText, imageKey, buttonType, buttonData) {
         dialogCancelButton.height = dialogCancel.height;
         dialogCancelButton.inputEnabled = true;
         dialogCancelButton.events.onInputUp.add(this.cancelClicked, this);
-        dialogCancelButton.input.useHandCursor = true;
         this.addChild(dialogCancelButton);
 
         dialogActionButton = game.make.sprite(dialogAction.x, dialogAction.y, 'pixelTransparent');
@@ -520,7 +518,6 @@ function DialogGroup(game, messageText, imageKey, buttonType, buttonData) {
         dialogActionButton.height = dialogAction.height;
         dialogActionButton.inputEnabled = true;
         dialogActionButton.events.onInputUp.add(this.buttonClicked, this);
-        dialogActionButton.input.useHandCursor = true;
         dialogActionButton.buttonIndex = 0; //dynamic property
         this.addChild(dialogActionButton);
 
@@ -535,7 +532,6 @@ function DialogGroup(game, messageText, imageKey, buttonType, buttonData) {
         dialogContinueButton.height = dialogContinue.height;
         dialogContinueButton.inputEnabled = true;
         dialogContinueButton.events.onInputUp.add(this.buttonClicked, this);
-        dialogContinueButton.input.useHandCursor = true;
         dialogContinueButton.buttonIndex = 0; //dynamic property
         this.addChild(dialogContinueButton);
     }
