@@ -28,100 +28,74 @@ var GameState = {
         // Initialize game data
         game.gamedata = game.cache.getJSON('gamedata'); 
         game.gamedataInstances = {};
-        game.gamedataInstances.mapTiles = {}
-        game.gamedataInstances.mapTokens = {}
+        game.gamedataInstances.mapTiles = []
+        game.gamedataInstances.mapTokens = []
+        game.customStates = [];
 
         //=================================================
-        // Create bitmapData (textures I create at runtime that I can reuse)
-        // Maybe this is overkill
+        // ImageTokens BitmapData
+        for (var i = 0; i < game.gamedata.imageTokens.length; i++) {
+            var gridWidth = 96
+            var imageTokenData = game.gamedata.imageTokens[i]
+            var tokenBmd = game.make.bitmapData(gridWidth, gridWidth)
 
-        // Token bitmapData
-        var tokenBmd = null
+            if (imageTokenData.backgroundImageKey != null) {
+                if (imageTokenData.backgroundImageAngle == null) {
+                    tokenBmd.copy(imageTokenData.backgroundImageKey)
+                } else {
+                    var degToRad = imageTokenData.backgroundImageAngle * (Math.PI / 180);
+                    if (imageTokenData.backgroundImageAngle == 90) {
+                        tokenBmd.copy(imageTokenData.backgroundImageKey, null, null, null, null, null, null, null, null, degToRad, 0, 1);
+                    } else if (imageTokenData.backgroundImageAngle == 270) {
+                        tokenBmd.copy(imageTokenData.backgroundImageKey, null, null, null, null, null, null, null, null, degToRad, 1, 0);
+                    } else if (imageTokenData.backgroundImageAngle == 180) {
+                        tokenBmd.copy(imageTokenData.backgroundImageKey, null, null, null, null, null, null, null, null, degToRad, 1, 1);
+                    } else {
+                        tokenBmd.copy(imageTokenData.backgroundImageKey);
+                    }
+                }
+            }
 
-        // Explore Token
-        tokenBmd = game.make.bitmapData(96, 96);
-        var exploreImage = game.make.image(0, 0, 'explore');
-        tokenBmd.copy('circleToken');
-        exploreImage.tint = 0x770000;
-        tokenBmd.copy(exploreImage, 0, 0, 64, 64, 16 + 2, 16 + 2);
-        exploreImage.tint = 0xFF0000;
-        tokenBmd.copy(exploreImage, 0, 0, 64, 64, 16, 16);
-        game.cache.addBitmapData('explore-image', tokenBmd)
+            if (imageTokenData.primaryImageKey != null) {
+                var primaryImage = game.make.image(0, 0, imageTokenData.primaryImageKey)
 
-        // Search Token 
-        tokenBmd = game.make.bitmapData(96, 96);
-        var searchImage = game.make.image(0, 0, 'search');
-        tokenBmd.copy('circleToken');
-        searchImage.tint = 0xAAAA00;
-        tokenBmd.copy(searchImage, 0, 0, 64, 64, 16 + 2, 16 + 2);
-        searchImage.tint = 0xFFFF00;
-        tokenBmd.copy(searchImage, 0, 0, 64, 64, 16, 16);
-        game.cache.addBitmapData('search-image', tokenBmd)
+                if (imageTokenData.imageShadowColor != null) {
+                    primaryImage.tint = imageTokenData.imageShadowColor
+                    tokenBmd.copy(primaryImage, 0, 0, 64, 64, 16 + 2, 16 + 2)
+                }
 
-        // Investigator bitmapData
-        tokenBmd = game.make.bitmapData(96, 96);
-        var investigatorImage = game.make.image(0, 0, 'investigator');
-        tokenBmd.copy('circleToken');
-        investigatorImage.tint = 0x000000;
-        tokenBmd.copy(investigatorImage, 0, 0, 64, 64, 16 + 2, 16 + 2);
-        investigatorImage.tint = 0xFFFFFF;
-        tokenBmd.copy(investigatorImage, 0, 0, 64, 64, 16, 16);
-        game.cache.addBitmapData('investigators-image', tokenBmd)
+                if (imageTokenData.imagePrimaryColor != null) {
+                    primaryImage.tint = imageTokenData.imagePrimaryColor
+                }
 
-        // Cult Sigil bitmapData
-        tokenBmd = game.make.bitmapData(96, 96);
-        var cultSigilImage = game.make.image(0, 0, 'pentacle');
-        tokenBmd.copy('squareToken');
-        cultSigilImage.tint = 0xFFFF00;
-        tokenBmd.copy(cultSigilImage, 0, 0, 64, 64, 16 + 2, 16 + 2);
-        cultSigilImage.tint = 0xFF0000;
-        tokenBmd.copy(cultSigilImage, 0, 0, 64, 64, 16, 16);
-        game.cache.addBitmapData('cultsigil-image', tokenBmd)
+                tokenBmd.copy(primaryImage, 0, 0, 64, 64, 16, 16)
+            }
 
-        // North Wall bitmapData
-        tokenBmd = game.make.bitmapData(96, 96);
-        tokenBmd.copy('wall');
-        game.cache.addBitmapData('wall-north-image', tokenBmd)
+            game.cache.addBitmapData(imageTokenData.imageKey, tokenBmd)
+        }
 
-        // East Wall bitmapData
-        tokenBmd = game.make.bitmapData(96, 96);
-        var deg90ToRad = 90 * (Math.PI / 180);
-        tokenBmd.copy('wall', null, null, null, null, null, null, null, null, deg90ToRad, 0, 1);
-        game.cache.addBitmapData('wall-east-image', tokenBmd)
-
-        // West Wall bitmapData
-        tokenBmd = game.make.bitmapData(96, 96);
-        var deg270ToRad = 270 * (Math.PI / 180);
-        tokenBmd.copy('wall', null, null, null, null, null, null, null, null, deg270ToRad, 1, 0);
-        game.cache.addBitmapData('wall-west-image', tokenBmd)
-
-        // South Wall bitmapData
-        tokenBmd = game.make.bitmapData(96, 96);
-        var deg180ToRad = 180 * (Math.PI / 180);
-        tokenBmd.copy('wall', null, null, null, null, null, null, null, null, deg180ToRad, 1, 1);
-        game.cache.addBitmapData('wall-south-image', tokenBmd)
-
-        // Create map tile image bitmapData
+        //=================================================
+        // ImageTiles bitmapData
         for (var k = 0; k < game.gamedata.imageTiles.length; k++) {
             var gridWidth = 96;
-            var mapTileData = game.gamedata.imageTiles[k]
-            var bmdWidth = mapTileData.width * 96;
-            var bmdHeight = mapTileData.height * 96;
+            var imageTileData = game.gamedata.imageTiles[k]
+            var bmdWidth = imageTileData.width * gridWidth;
+            var bmdHeight = imageTileData.height * gridWidth;
             var mapTileBmd = game.make.bitmapData(bmdWidth, bmdHeight);
 
-            mapTileBmd.rect(0, 0, bmdWidth, bmdHeight, mapTileData.floorColor);
+            mapTileBmd.rect(0, 0, bmdWidth, bmdHeight, imageTileData.floorColor);
 
-            for (var j = 0; j < mapTileData.height; j++) {
-                for (var i = 0; i < mapTileData.width; i++) {
+            for (var j = 0; j < imageTileData.height; j++) {
+                for (var i = 0; i < imageTileData.width; i++) {
                     var localX = i * gridWidth;
                     var localY = j * gridWidth;
                     var wallIndex = i + j * 6;
-                    var sprite = game.make.tileSprite(localX, localY, gridWidth, gridWidth, mapTileData.spritesheet, mapTileData.walls[wallIndex])
+                    var sprite = game.make.tileSprite(localX, localY, gridWidth, gridWidth, imageTileData.spritesheet, imageTileData.walls[wallIndex])
                     mapTileBmd.copy(sprite);
                 }
             }
 
-            game.cache.addBitmapData(mapTileData.imageKey, mapTileBmd)
+            game.cache.addBitmapData(imageTileData.imageKey, mapTileBmd)
         }
 
         //=================================================
@@ -355,6 +329,7 @@ function MakeRevealDialog(game, id) {
     game.customCallback = function () {
         var dialogInstance = new DialogGroup(
             game,
+            revealDialog.id,
             revealDialog.text,
             imageKey,
             buttonType,
@@ -428,10 +403,12 @@ function MakeDialog(game, id) {
 
     var dialogInstance = new DialogGroup(
         game,
+        dialogData.id,
         dialogData.text,
         dialogData.imageKey,
         dialogData.buttonType,
-        dialogData.buttons);
+        dialogData.buttons,
+        dialogData.skillTarget);
 
     return dialogInstance;
 }
@@ -447,7 +424,6 @@ function TokenSprite(game, x, y, imageKey, clickId, addToWorld) {
     if (clickId != null) {
         this.inputEnabled = true;
         this.events.onInputUp.add(this.tokenClicked, this);
-        this.input.useHandCursor = true;
     }
 }
 
@@ -482,10 +458,12 @@ TokenSprite.prototype.fadeOut = function (callback) {
 }
 
 //=========================================================
-function DialogGroup(game, messageText, imageKey, buttonType, buttonData) {
+function DialogGroup(game, id, messageText, imageKey, buttonType, buttonData, skillTarget) {
     Phaser.Group.call(this, game);
 
+    this._id = id
     this._buttonData = buttonData;
+    this._skillTarget = skillTarget;
 
     // Modal
     var modalBackground = game.make.sprite(game.stageViewRect.x, game.stageViewRect.y, 'pixelTransparent');
@@ -539,7 +517,6 @@ function DialogGroup(game, messageText, imageKey, buttonType, buttonData) {
         dialogCancelButton.height = dialogCancel.height;
         dialogCancelButton.inputEnabled = true;
         dialogCancelButton.events.onInputUp.add(this.cancelClicked, this);
-        dialogCancelButton.input.useHandCursor = true;
         this.addChild(dialogCancelButton);
 
         dialogActionButton = game.make.sprite(dialogAction.x, dialogAction.y, 'pixelTransparent');
@@ -547,7 +524,6 @@ function DialogGroup(game, messageText, imageKey, buttonType, buttonData) {
         dialogActionButton.height = dialogAction.height;
         dialogActionButton.inputEnabled = true;
         dialogActionButton.events.onInputUp.add(this.buttonClicked, this);
-        dialogActionButton.input.useHandCursor = true;
         dialogActionButton.buttonIndex = 0; //dynamic property
         this.addChild(dialogActionButton);
 
@@ -562,22 +538,114 @@ function DialogGroup(game, messageText, imageKey, buttonType, buttonData) {
         dialogContinueButton.height = dialogContinue.height;
         dialogContinueButton.inputEnabled = true;
         dialogContinueButton.events.onInputUp.add(this.buttonClicked, this);
-        dialogContinueButton.input.useHandCursor = true;
         dialogContinueButton.buttonIndex = 0; //dynamic property
         this.addChild(dialogContinueButton);
+
+    } else if (buttonType == "skilltest") {
+        // Button for [-][#][+]
+        //            [Confirm]
+        this._skillTestDisplay = 0;
+    
+        if (!(this._id in game.customStates)) {
+            game.customStates.push({ "id": this._id, "successCount": 0})
+        }
+
+        var skillTestGroup = game.add.group()
+
+        // Display number
+        var displayNumber = new OutlineBox(game, 50, 50)
+        displayNumber.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 0, 10)
+        this.addChild(displayNumber);
+
+        var textStyle = { font: "30px Times New Romans", fill: "#ffffff", align: "center" };
+        this._numberText = game.make.text(0, 0, this._skillTestDisplay, textStyle);
+        this._numberText.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 1, 18)
+        this.addChild(this._numberText);
+
+        // Subtract number
+        var subtractNumber = new OutlineBox(game, 50, 50)
+        subtractNumber.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, -60, 10)
+        this.addChild(subtractNumber);
+
+        var subtractText = game.make.text(0, 0, "-", textStyle);
+        subtractText.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, -59, 16)
+        this.addChild(subtractText);
+
+        var subtractNumberButton = game.make.sprite(subtractNumber.x, subtractNumber.y, 'pixelTransparent');
+        subtractNumberButton.width = subtractNumber.width;
+        subtractNumberButton.height = subtractNumber.height;
+        subtractNumberButton.inputEnabled = true;
+        subtractNumberButton.events.onInputUp.add(this.skillSubtractClicked, this);
+        this.addChild(subtractNumberButton);
+
+        // Add number
+        var addNumber = new OutlineBox(game, 50, 50)
+        addNumber.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 60, 10)
+        this.addChild(addNumber);
+
+        var addText = game.make.text(0, 0, "+", textStyle);
+        addText.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 61, 18)
+        this.addChild(addText);
+
+        var addNumberButton = game.make.sprite(addNumber.x, addNumber.y, 'pixelTransparent');
+        addNumberButton.width = addNumber.width;
+        addNumberButton.height = addNumber.height;
+        addNumberButton.inputEnabled = true;
+        addNumberButton.events.onInputUp.add(this.skillAddClicked, this);
+        this.addChild(addNumberButton);
+
+        // Confirm
+        var dialogContinue = new DialogButtonThin(game, "Confirm", 150);
+        dialogContinue.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 0, 90)
+        this.addChild(dialogContinue);
+
+        var confirmButton = game.make.sprite(dialogContinue.x, dialogContinue.y, 'pixelTransparent');
+        confirmButton.width = dialogContinue.width;
+        confirmButton.height = dialogContinue.height;
+        confirmButton.inputEnabled = true;
+        confirmButton.events.onInputUp.add(this.skillConfirmClicked, this);
+        this.addChild(confirmButton);
+
+        this.addChild(skillTestGroup)
     }
 }
 
 DialogGroup.prototype = Object.create(Phaser.Group.prototype);
 DialogGroup.prototype.constructor = DialogGroup;
 
-DialogGroup.prototype.cancelClicked = function () {
+DialogGroup.prototype.cancelClicked = function (button, pointer) {
     game.cutSceneCamera = false;
     this.fadeOut();
 }
 
+DialogGroup.prototype.skillSubtractClicked = function (button, pointer) {
+    if (this._skillTestDisplay > 0) {
+        this._skillTestDisplay--
+        this._numberText.setText(this._skillTestDisplay)
+    }
+}
+
+DialogGroup.prototype.skillAddClicked = function (button, pointer) {
+    this._skillTestDisplay++
+    this._numberText.setText(this._skillTestDisplay)
+}
+
+DialogGroup.prototype.skillConfirmClicked = function (button, pointer) {
+    var dialogId = this._id;
+    var customState = game.customStates.find(function (item) { return item.id == dialogId });
+
+    if (customState.successCount + this._skillTestDisplay >= this._skillTarget) {
+        button.buttonIndex = 0;
+        DialogGroup.prototype.buttonClicked.call(this, button);
+    } else {
+        customState.successCount += this._skillTestDisplay
+        button.buttonIndex = 1;
+        DialogGroup.prototype.buttonClicked.call(this, button);
+    }
+}
+
 DialogGroup.prototype.buttonClicked = function (button, pointer) {
-    // This is scary looking
+    // this = DialogGroup
     var restoreControl = true;
     var fadeOutCallback = null;
     // Look for buttonIndex
@@ -718,15 +786,15 @@ function DialogButtonThin(game, text, width) {
 
     var textWidth = totalWidth - leftMargin - rightMargin;
     var textStyle = { font: "20px Times New Romans", fill: "#ffffff", align: "center", wordWrap: true, wordWrapWidth: textWidth };
-    var revealText = game.make.text(0, 0, text, textStyle);
-    revealText.x = Math.floor((totalWidth - revealText.width) / 2)
-    revealText.y = topMargin;
+    var messageText = game.make.text(0, 0, text, textStyle);
+    messageText.x = Math.floor((totalWidth - messageText.width) / 2)
+    messageText.y = topMargin;
 
-    var totalHeight = revealText.height + topMargin + bottomMargin;
+    var totalHeight = messageText.height + topMargin + bottomMargin;
     var outlineBox = new OutlineBox(game, totalWidth, totalHeight);
 
     this.addChild(outlineBox);
-    this.addChild(revealText);
+    this.addChild(messageText);
 }
 
 DialogButtonThin.prototype = Object.create(Phaser.Group.prototype);
