@@ -170,11 +170,18 @@ https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects
 ===========================================================
 2016 October 03, Monday 09:24 PM ~~~
 ===========================================================
-game.cache.addBitmapData('exploreTokenBmd', exploreTokenBmd)
+  game.cache.addBitmapData('exploreTokenBmd', exploreTokenBmd)
 game.cache.getBitmapData(bitmapDataId)
 
 ===========================================================
+2016 October 04, Tuesday 07:35 PM ~~~
 ===========================================================
+http://phaser.io/docs/2.6.2/Phaser.GameObjectCreator.html#tileSprite
+tileSprite(x, y, width, height, key, frame)
+
+Update Text
+http://phaser.io/examples/v2/text/update-text
+
 ===========================================================
 ===========================================================
 ===========================================================

@@ -458,6 +458,7 @@ function DialogGroup(game, messageText, imageKey, buttonType, buttonData) {
     Phaser.Group.call(this, game);
 
     this._buttonData = buttonData;
+    this._skillTestDisplay = 0;
 
     // Modal
     var modalBackground = game.make.sprite(game.stageViewRect.x, game.stageViewRect.y, 'pixelTransparent');
@@ -534,6 +535,62 @@ function DialogGroup(game, messageText, imageKey, buttonType, buttonData) {
         dialogContinueButton.events.onInputUp.add(this.buttonClicked, this);
         dialogContinueButton.buttonIndex = 0; //dynamic property
         this.addChild(dialogContinueButton);
+
+    } else if (buttonType == "skilltest") {
+        // Button for [-][#][+]
+        //            [Confirm]
+        var skillTestGroup = game.add.group()
+
+        // Display number
+        var displayNumber = new OutlineBox(game, 50, 50)
+        displayNumber.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 0, 10)
+        this.addChild(displayNumber);
+
+        var textStyle = { font: "30px Times New Romans", fill: "#ffffff", align: "center" };
+        this.numberText = game.make.text(0, 0, this._skillTestDisplay, textStyle);
+        this.numberText.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 1, 18)
+        this.addChild(this.numberText);
+
+        // Subtract number
+        var subtractNumber = new OutlineBox(game, 50, 50)
+        subtractNumber.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, -60, 10)
+        this.addChild(subtractNumber);
+
+        var subtractText = game.make.text(0, 0, "-", textStyle);
+        subtractText.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, -59, 16)
+        this.addChild(subtractText);
+
+        var subtractNumberButton = game.make.sprite(subtractNumber.x, subtractNumber.y, 'pixelTransparent');
+        subtractNumberButton.width = subtractNumber.width;
+        subtractNumberButton.height = subtractNumber.height;
+        subtractNumberButton.inputEnabled = true;
+        subtractNumberButton.events.onInputUp.add(this.subtractClicked, this);
+        //subtractNumberButton.buttonIndex = 0; //dynamic property
+        this.addChild(subtractNumberButton);
+
+        // Add number
+        var addNumber = new OutlineBox(game, 50, 50)
+        addNumber.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 60, 10)
+        this.addChild(addNumber);
+
+        var addText = game.make.text(0, 0, "+", textStyle);
+        addText.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 61, 18)
+        this.addChild(addText);
+
+        var addNumberButton = game.make.sprite(addNumber.x, addNumber.y, 'pixelTransparent');
+        addNumberButton.width = addNumber.width;
+        addNumberButton.height = addNumber.height;
+        addNumberButton.inputEnabled = true;
+        addNumberButton.events.onInputUp.add(this.addClicked, this);
+        //addNumberButton.buttonIndex = 0; //dynamic property
+        this.addChild(addNumberButton);
+
+        // Confirm
+        var dialogContinue = new DialogButtonThin(game, "Confirm", 150);
+        dialogContinue.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 0, 90)
+        this.addChild(dialogContinue);
+
+        this.addChild(skillTestGroup)
     }
 }
 
@@ -545,8 +602,20 @@ DialogGroup.prototype.cancelClicked = function () {
     this.fadeOut();
 }
 
+DialogGroup.prototype.subtractClicked = function () {
+    if (this._skillTestDisplay > 0) {
+        this._skillTestDisplay--
+        this.numberText.setText(this._skillTestDisplay)
+    }
+}
+
+DialogGroup.prototype.addClicked = function () {
+    this._skillTestDisplay++
+    this.numberText.setText(this._skillTestDisplay)
+}
+
 DialogGroup.prototype.buttonClicked = function (button, pointer) {
-    // This is scary looking
+    // this = DialogGroup
     var restoreControl = true;
     var fadeOutCallback = null;
     // Look for buttonIndex
@@ -687,15 +756,15 @@ function DialogButtonThin(game, text, width) {
 
     var textWidth = totalWidth - leftMargin - rightMargin;
     var textStyle = { font: "20px Times New Romans", fill: "#ffffff", align: "center", wordWrap: true, wordWrapWidth: textWidth };
-    var revealText = game.make.text(0, 0, text, textStyle);
-    revealText.x = Math.floor((totalWidth - revealText.width) / 2)
-    revealText.y = topMargin;
+    var messageText = game.make.text(0, 0, text, textStyle);
+    messageText.x = Math.floor((totalWidth - messageText.width) / 2)
+    messageText.y = topMargin;
 
-    var totalHeight = revealText.height + topMargin + bottomMargin;
+    var totalHeight = messageText.height + topMargin + bottomMargin;
     var outlineBox = new OutlineBox(game, totalWidth, totalHeight);
 
     this.addChild(outlineBox);
-    this.addChild(revealText);
+    this.addChild(messageText);
 }
 
 DialogButtonThin.prototype = Object.create(Phaser.Group.prototype);
