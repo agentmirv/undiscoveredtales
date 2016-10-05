@@ -28,8 +28,9 @@ var GameState = {
         // Initialize game data
         game.gamedata = game.cache.getJSON('gamedata'); 
         game.gamedataInstances = {};
-        game.gamedataInstances.mapTiles = {}
-        game.gamedataInstances.mapTokens = {}
+        game.gamedataInstances.mapTiles = []
+        game.gamedataInstances.mapTokens = []
+        game.customStates = [];
 
         //=================================================
         // ImageTokens BitmapData
@@ -328,6 +329,7 @@ function MakeRevealDialog(game, id) {
     game.customCallback = function () {
         var dialogInstance = new DialogGroup(
             game,
+            revealDialog.id,
             revealDialog.text,
             imageKey,
             buttonType,
@@ -401,10 +403,12 @@ function MakeDialog(game, id) {
 
     var dialogInstance = new DialogGroup(
         game,
+        dialogData.id,
         dialogData.text,
         dialogData.imageKey,
         dialogData.buttonType,
-        dialogData.buttons);
+        dialogData.buttons,
+        dialogData.skillTarget);
 
     return dialogInstance;
 }
@@ -454,11 +458,12 @@ TokenSprite.prototype.fadeOut = function (callback) {
 }
 
 //=========================================================
-function DialogGroup(game, messageText, imageKey, buttonType, buttonData) {
+function DialogGroup(game, id, messageText, imageKey, buttonType, buttonData, skillTarget) {
     Phaser.Group.call(this, game);
 
+    this._id = id
     this._buttonData = buttonData;
-    this._skillTestDisplay = 0;
+    this._skillTarget = skillTarget;
 
     // Modal
     var modalBackground = game.make.sprite(game.stageViewRect.x, game.stageViewRect.y, 'pixelTransparent');
@@ -539,6 +544,12 @@ function DialogGroup(game, messageText, imageKey, buttonType, buttonData) {
     } else if (buttonType == "skilltest") {
         // Button for [-][#][+]
         //            [Confirm]
+        this._skillTestDisplay = 0;
+    
+        if (!(this._id in game.customStates)) {
+            game.customStates.push({ "id": this._id, "successCount": 0})
+        }
+
         var skillTestGroup = game.add.group()
 
         // Display number
@@ -547,9 +558,9 @@ function DialogGroup(game, messageText, imageKey, buttonType, buttonData) {
         this.addChild(displayNumber);
 
         var textStyle = { font: "30px Times New Romans", fill: "#ffffff", align: "center" };
-        this.numberText = game.make.text(0, 0, this._skillTestDisplay, textStyle);
-        this.numberText.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 1, 18)
-        this.addChild(this.numberText);
+        this._numberText = game.make.text(0, 0, this._skillTestDisplay, textStyle);
+        this._numberText.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 1, 18)
+        this.addChild(this._numberText);
 
         // Subtract number
         var subtractNumber = new OutlineBox(game, 50, 50)
@@ -564,8 +575,7 @@ function DialogGroup(game, messageText, imageKey, buttonType, buttonData) {
         subtractNumberButton.width = subtractNumber.width;
         subtractNumberButton.height = subtractNumber.height;
         subtractNumberButton.inputEnabled = true;
-        subtractNumberButton.events.onInputUp.add(this.subtractClicked, this);
-        //subtractNumberButton.buttonIndex = 0; //dynamic property
+        subtractNumberButton.events.onInputUp.add(this.skillSubtractClicked, this);
         this.addChild(subtractNumberButton);
 
         // Add number
@@ -581,14 +591,20 @@ function DialogGroup(game, messageText, imageKey, buttonType, buttonData) {
         addNumberButton.width = addNumber.width;
         addNumberButton.height = addNumber.height;
         addNumberButton.inputEnabled = true;
-        addNumberButton.events.onInputUp.add(this.addClicked, this);
-        //addNumberButton.buttonIndex = 0; //dynamic property
+        addNumberButton.events.onInputUp.add(this.skillAddClicked, this);
         this.addChild(addNumberButton);
 
         // Confirm
         var dialogContinue = new DialogButtonThin(game, "Confirm", 150);
         dialogContinue.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 0, 90)
         this.addChild(dialogContinue);
+
+        var confirmButton = game.make.sprite(dialogContinue.x, dialogContinue.y, 'pixelTransparent');
+        confirmButton.width = dialogContinue.width;
+        confirmButton.height = dialogContinue.height;
+        confirmButton.inputEnabled = true;
+        confirmButton.events.onInputUp.add(this.skillConfirmClicked, this);
+        this.addChild(confirmButton);
 
         this.addChild(skillTestGroup)
     }
@@ -597,21 +613,35 @@ function DialogGroup(game, messageText, imageKey, buttonType, buttonData) {
 DialogGroup.prototype = Object.create(Phaser.Group.prototype);
 DialogGroup.prototype.constructor = DialogGroup;
 
-DialogGroup.prototype.cancelClicked = function () {
+DialogGroup.prototype.cancelClicked = function (button, pointer) {
     game.cutSceneCamera = false;
     this.fadeOut();
 }
 
-DialogGroup.prototype.subtractClicked = function () {
+DialogGroup.prototype.skillSubtractClicked = function (button, pointer) {
     if (this._skillTestDisplay > 0) {
         this._skillTestDisplay--
-        this.numberText.setText(this._skillTestDisplay)
+        this._numberText.setText(this._skillTestDisplay)
     }
 }
 
-DialogGroup.prototype.addClicked = function () {
+DialogGroup.prototype.skillAddClicked = function (button, pointer) {
     this._skillTestDisplay++
-    this.numberText.setText(this._skillTestDisplay)
+    this._numberText.setText(this._skillTestDisplay)
+}
+
+DialogGroup.prototype.skillConfirmClicked = function (button, pointer) {
+    var dialogId = this._id;
+    var customState = game.customStates.find(function (item) { return item.id == dialogId });
+
+    if (customState.successCount + this._skillTestDisplay >= this._skillTarget) {
+        button.buttonIndex = 0;
+        DialogGroup.prototype.buttonClicked.call(this, button);
+    } else {
+        customState.successCount += this._skillTestDisplay
+        button.buttonIndex = 1;
+        DialogGroup.prototype.buttonClicked.call(this, button);
+    }
 }
 
 DialogGroup.prototype.buttonClicked = function (button, pointer) {
