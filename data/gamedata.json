@@ -29,6 +29,7 @@
         "mapTiles": [ "maptile-hall-2", "maptile-hall-corner-1"],
         "revealDialogs": [
           "reveal-halls-dialog-room",
+          "reveal-halls-dialog-bird",
           "reveal-explored"
         ]
       }
@@ -83,6 +84,11 @@
     {
       "id": "reveal-halls-dialog-room",
       "text": "A hallway leads to several bedrooms. Remove any Explore tokens."
+    },
+    {
+      "id": "reveal-halls-dialog-bird",
+      "text": "A white cockatoo is perched atop the edge of an upended table. Its feathers are dusty and unkempt. You wonder if this is the only living thing in the house. In the quiet, the bird watches you with its black beady eyes. Place an Interact token.",
+      "addSingleToken" : [ "token-bird-hall" ]
     }
   ],
   "mapTiles": [
@@ -213,13 +219,21 @@
       "imageKey":"search-image",
       "clickId":"dialog-fireplace-study",
       "addToWorld": true
+    },
+    {
+      "id":"token-bird-hall",
+      "x":768,
+      "y":768,
+      "imageKey":"bird-image",
+      "clickId":"dialog-bird-hall",
+      "addToWorld": true
     }
   ],
   "dialogs": [
     {
       "id": "dialog-box-lobby",
       "imageKey": "search-image",
-      "text": "A heavy wooden box lies on the table. The lid can be opened by sliding an ornate latch.",
+      "text": "A heavy wooden box lies on the table. The lid can be opened by moving an ornate latch.",
       "buttonType": "cancel-action",
       "buttons": [
         { "text": "@ Search",
@@ -314,6 +328,74 @@
           "actions": [ {"type": "removeTokens", "tokenIds": ["token-fireplace-study"] } ]
         }
       ]
+    },
+    {
+      "id": "dialog-bird-hall",
+      "imageKey": "bird-image",
+      "text": "There is a toppled bowl on the floor, engraved with the name \"Maxwell\". As you approach, the bird’s crest expands, giving the appearance of a tall white crown.",
+      "buttonType": "custom",
+      "buttons": [
+        { "text": "@ \"Hello\"", "actions": [ {"type": "dialog", "dialogId": "dialog-bird-hall-hello" } ] },
+        { "text": "@ Say nothing", "actions": [ {"type": "dialog", "dialogId": "dialog-bird-hall-snub" } ] },
+        { "text": "Ignore the bird.", "actions": [  ] }
+      ]
+    },
+    {
+      "id": "dialog-bird-hall-hello",
+      "imageKey": "bird-image",
+      "text": "The bird responds in a loud, raspy voice, \"Hello Max.\" The bird tilts his head at you. After a moment, he finally prompts you. \"Best or Beast?\" The bird Max waits for you to answer.",
+      "buttonType": "custom",
+      "buttons": [
+        { "text": "@ \"Best\"", "actions": [ {"type": "dialog", "dialogId": "dialog-bird-hall-best" } ] },
+        { "text": "@ \"Beast\"", "actions": [ {"type": "dialog", "dialogId": "dialog-bird-hall-beast" } ] }
+      ]
+    },
+    {
+      "id": "dialog-bird-hall-snub",
+      "imageKey": "bird-image",
+      "text": "The bird stares at you for a moment and then it turns its back. You feel you have offended the bird in some way.",
+      "buttonType": "custom",
+      "buttons": [
+        { "text": "@ \"Pardon my manners, my name is …\"", "actions": [ {"type": "dialog", "dialogId": "dialog-bird-hall-snub-recover" } ] },
+        { "text": "Ignore the bird.", "actions": [ {"type": "dialog", "dialogId": "dialog-bird-hall-snub-ignored" } ] }
+      ]
+    },
+    {
+      "id": "dialog-bird-hall-snub-recover",
+      "imageKey": "bird-image",
+      "text": "The bird squawks interrupting you, \"... Max! Hello Max.\" The bird beats its wings loudly. After a moment, he stops and prompts you. \"Beast or Best?\" The bird Max waits for you to answer.",
+      "buttonType": "custom",
+      "buttons": [
+        { "text": "@ \"Beast\"", "actions": [ {"type": "dialog", "dialogId": "dialog-bird-hall-beast" } ] },
+        { "text": "@ \"Best\"", "actions": [ {"type": "dialog", "dialogId": "dialog-bird-hall-best" } ] }
+      ]
+    },
+    {
+      "id": "dialog-bird-hall-snub-ignored",
+      "imageKey": "bird-image",
+      "text": "The bird claws at you and takes off to the east. Drop 1 random item and suffer 1 facedown Damage (Agility Negates). Max hovers for a moment and disappears into a tiny square opening in the ceiling above the door to the east bedroom. You hear the bird squawk loudly and then go silent.",
+      "buttonType": "custom",
+      "buttons": [
+        { "text": "Continue", "actions": [ {"type": "removeTokens", "tokenIds": ["token-bird-hall"] } ] }
+      ]
+    },
+    {
+      "id": "dialog-bird-hall-beast",
+      "imageKey": "bird-image",
+      "text": "The bird flutters his wings and takes off to the east. He hovers for a moment and disappears into a tiny square opening in the ceiling above the door to the east bedroom. You hear the bird squawk loudly and then go silent.",
+      "buttonType": "custom",
+      "buttons": [
+        { "text": "Continue", "actions": [ {"type": "removeTokens", "tokenIds": ["token-bird-hall"] } ] }
+      ]
+    },
+    {
+      "id": "dialog-bird-hall-best",
+      "imageKey": "bird-image",
+      "text": "The bird flutters his wings and takes off to the west. He hovers for a moment and disappears into a tiny square opening in the ceiling above the door to the west bedroom. You hear the bird murmur, almost sounding like language, then go silent.",
+      "buttonType": "custom",
+      "buttons": [
+        { "text": "Continue", "actions": [ {"type": "removeTokens", "tokenIds": ["token-bird-hall"] } ] }
+      ]
     }
   ],
   "imageTiles": [
@@ -360,7 +442,7 @@
       "imageKey": "maptile-hall-corner-1-image",
       "width": 6,
       "height": 3,
-      "floorColor": "#ccca8a",
+      "floorColor": "#743232",
       "spritesheet": "tileWallsSheet",
       "walls": [
         1, 1, 4, 1, 1, 1,
@@ -397,6 +479,13 @@
       "backgroundImageKey": "squareToken",
       "imagePrimaryColor": "0xFF0000",
       "imageShadowColor": "0xFFFF00"
+    },
+    {
+      "imageKey": "bird-image",
+      "primaryImageKey": "bird",
+      "backgroundImageKey": "circleToken",
+      "imagePrimaryColor": "0xFFFFFF",
+      "imageShadowColor": "0xAAAA00"
     },
     {
       "imageKey": "wall-north-image",

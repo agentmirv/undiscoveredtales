@@ -17,7 +17,8 @@ var GameState = {
         game.load.image('debugCircle', 'assets/images/DebugCircle.png');
         game.load.image('debugSquare', 'assets/images/DebugSquare.png');
         game.load.image('pentacle', 'assets/images/pentacle.png');
-
+        game.load.image('bird', 'assets/images/raven.png');
+        
         game.load.spritesheet('tileWallsSheet', 'assets/images/TileWalls.png', 96, 96);
 
         game.load.json('gamedata', 'data/gamedata.json');
@@ -530,7 +531,7 @@ function DialogGroup(game, id, messageText, imageKey, buttonType, buttonData, sk
 
     } else if (buttonType == "continue" || buttonType == "reveal") {
         // Button for [Continue]
-        var dialogContinue = new DialogButtonThin(game, buttonData[0].text, 180);
+        var dialogContinue = new DialogButtonThin(game, "Continue", 180);
         dialogContinue.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 0, 10)
         this.addChild(dialogContinue);
 
@@ -608,6 +609,24 @@ function DialogGroup(game, id, messageText, imageKey, buttonType, buttonData, sk
         this.addChild(confirmButton);
 
         this.addChild(skillTestGroup)
+
+    } else if (buttonType == "custom") {
+        // Custom Buttons
+        var buttonYOffset = 10;
+        for (var i = 0; i < buttonData.length; i++) {
+            var dialogContinue = new DialogButtonMedium(game, buttonData[i].text, 500);
+            dialogContinue.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 0, buttonYOffset)
+            this.addChild(dialogContinue);
+            buttonYOffset += 53;
+
+            var dialogContinueButton = game.make.sprite(dialogContinue.x, dialogContinue.y, 'pixelTransparent');
+            dialogContinueButton.width = dialogContinue.width;
+            dialogContinueButton.height = dialogContinue.height;
+            dialogContinueButton.inputEnabled = true;
+            dialogContinueButton.events.onInputUp.add(this.buttonClicked, this);
+            dialogContinueButton.buttonIndex = i; //dynamic property
+            this.addChild(dialogContinueButton);
+        }
     }
 }
 
@@ -805,6 +824,32 @@ function DialogButtonThin(game, text, width) {
 
 DialogButtonThin.prototype = Object.create(Phaser.Group.prototype);
 DialogButtonThin.prototype.constructor = DialogButtonThin;
+
+//=========================================================
+function DialogButtonMedium(game, text, width) {
+    Phaser.Group.call(this, game, 0, 0);
+
+    var totalWidth = width;
+    var leftMargin = 10;
+    var rightMargin = 10;
+    var topMargin = 10;
+    var bottomMargin = 5;
+
+    var textWidth = totalWidth - leftMargin - rightMargin;
+    var textStyle = { font: "20px Times New Romans", fill: "#ffffff", align: "center", wordWrap: true, wordWrapWidth: textWidth };
+    var messageText = game.make.text(0, 0, text, textStyle);
+    messageText.x = Math.floor((totalWidth - messageText.width) / 2)
+    messageText.y = topMargin;
+
+    var totalHeight = messageText.height + topMargin + bottomMargin;
+    var outlineBox = new OutlineBox(game, totalWidth, totalHeight);
+
+    this.addChild(outlineBox);
+    this.addChild(messageText);
+}
+
+DialogButtonMedium.prototype = Object.create(Phaser.Group.prototype);
+DialogButtonMedium.prototype.constructor = DialogButtonMedium;
 
 //=========================================================
 function OutlineBox(game, width, height) {
