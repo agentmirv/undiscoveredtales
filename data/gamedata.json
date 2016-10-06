@@ -245,7 +245,7 @@
     {
       "id": "dialog-box-lobby-skilltest-success",
       "imageKey": "search-image",
-      "text": "You unfasten the latch with a subtle twist, revealing an old newspaper clipping inside the box. The article describes the discovery of human remains in the Malahath River. The paper is two weeks old, according to the date. Gain 1 Clue. Then discard this Search token.",
+      "text": "You unfasten the latch with a subtle twist, revealing a newspaper clipping inside the box. The article describes the discovery of human remains in the Malahath River. The paper is two weeks old, according to the date. Gain 1 Clue. Then discard this Search token.",
       "buttonType": "continue",
       "buttons": [
         { "text": "Continue",

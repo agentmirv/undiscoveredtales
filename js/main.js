@@ -336,7 +336,7 @@ function MakeRevealDialog(game, id) {
             buttonData);
 
         // TODO add fadeIn()
-        game.add.tween(dialogInstance).from({ alpha: 0 }, 200, Phaser.Easing.Linear.None, true, 0, 0, false);
+        game.add.tween(dialogInstance).from({ alpha: 0 }, 300, Phaser.Easing.Linear.None, true, 0, 0, false);
 
         game.stage.addChild(dialogInstance);
         game.customCallback = null;
@@ -439,14 +439,14 @@ TokenSprite.prototype.tokenClicked = function (token) {
     game.customCallback = function () {
         var dialogInstance = MakeDialog(game, token.clickId)
         // TODO add fadeIn()
-        game.add.tween(dialogInstance).from({ alpha: 0 }, 200, Phaser.Easing.Linear.None, true, 0, 0, false);
+        game.add.tween(dialogInstance).from({ alpha: 0 }, 300, Phaser.Easing.Linear.None, true, 0, 0, false);
         game.stage.addChild(dialogInstance)
         game.customCallback = null;
     }
 }
 
 TokenSprite.prototype.fadeOut = function (callback) {
-    var fadeOutTween = game.add.tween(this).to({ alpha: 0 }, 200, Phaser.Easing.Linear.None, true, 0, 0, false);
+    var fadeOutTween = game.add.tween(this).to({ alpha: 0 }, 300, Phaser.Easing.Linear.None, true, 0, 0, false);
 
     fadeOutTween.onComplete.addOnce(function () {
         this.destroy(true);
@@ -679,7 +679,7 @@ DialogGroup.prototype.buttonClicked = function (button, pointer) {
                     fadeOutCallback = function () {
                         var dialogInstance = MakeDialog(game, action.dialogId)
                         // TODO add fadeIn()
-                        game.add.tween(dialogInstance).from({ alpha: 0 }, 200, Phaser.Easing.Linear.None, true, 0, 0, false);
+                        game.add.tween(dialogInstance).from({ alpha: 0 }, 300, Phaser.Easing.Linear.None, true, 0, 0, false);
                         game.stage.addChild(dialogInstance)
                     }
                     restoreControl = false;
@@ -715,7 +715,7 @@ DialogGroup.prototype.buttonClicked = function (button, pointer) {
 }
 
 DialogGroup.prototype.fadeOut = function (callback) {
-    var fadeOutTween = game.add.tween(this).to({ alpha: 0 }, 200, Phaser.Easing.Linear.None, true, 0, 0, false);
+    var fadeOutTween = game.add.tween(this).to({ alpha: 0 }, 300, Phaser.Easing.Linear.None, true, 0, 0, false);
 
     fadeOutTween.onComplete.addOnce(function () {
         this.destroy(true);
@@ -731,22 +731,26 @@ function DialogMessage(game, text, imageKey) {
     Phaser.Group.call(this, game, 0, 0);
 
     var totalWidth = 600;
-    var leftMargin = 16;
+    var leftMargin = 20;
     var imageWidth = 96;
     var imageHeight = 96;
-    var middleMargin = 16
-    var rightMargin = 10;
+    var middleMargin = 20
+    var rightMargin = 26;
     var topMargin = 20;
     var bottomMargin = 20;
+    var textAlign = "left"
+    var textBoundsAlign = "left"
 
     if (imageKey == null) {
         leftMargin = 36;
         imageWidth = 0;
         middleMargin = 0;
+        textAlign = "center"
+        textBoundsAlign = "center"
     }
 
     var textWidth = totalWidth - leftMargin - imageWidth - middleMargin - rightMargin;
-    var textStyle = { font: "20px Times New Romans", fill: "#ffffff", align: "left", wordWrap: true, wordWrapWidth: textWidth };
+    var textStyle = { font: "20px Times New Romans", fill: "#ffffff", align: textAlign, wordWrap: true, wordWrapWidth: textWidth };
     var messageText = game.make.text(0, 0, text, textStyle);
 
     messageText.x = leftMargin + imageWidth + middleMargin
@@ -758,6 +762,8 @@ function DialogMessage(game, text, imageKey) {
         messageText.y = topMargin + Math.floor((imageHeight - textHeight) / 2)
         textHeight = imageHeight
     }
+    messageText.setTextBounds(null, null, textWidth, textHeight)
+    messageText.boundsAlignH = textBoundsAlign
 
     var totalHeight = textHeight + topMargin + bottomMargin;
     var outlineBox = new OutlineBox(game, totalWidth, totalHeight);
