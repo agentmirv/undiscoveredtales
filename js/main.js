@@ -102,7 +102,6 @@ var GameState = {
         // Initialize Stuff
         game.physics.startSystem(Phaser.Physics.P2JS);
         game.world.setBounds(0, 0, 2560, 2560);
-        game.add.tileSprite(0, 0, 2560, 2560, 'background');
         game.camera.bounds = null
         game.stageViewRect = new Phaser.Rectangle(0, 0, game.camera.view.width, game.camera.view.height)
         cursors = game.input.keyboard.createCursorKeys();
@@ -115,6 +114,8 @@ var GameState = {
         player = game.add.sprite(startX, startY, 'pixelTransparent');
         game.physics.p2.enable(player);
         game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, game.followLerp, game.followLerp);
+
+        game.add.tileSprite(0, 0, 2560, 2560, 'background');
 
         //=================================================
         // First Reveal
@@ -431,7 +432,7 @@ TokenSprite.prototype = Object.create(Phaser.Sprite.prototype);
 TokenSprite.prototype.constructor = TokenSprite;
 
 TokenSprite.prototype.tokenClicked = function (token) {
-    player.body.x = token.centerX + 300 - 16 - 48 //half message width - left margin - half image width
+    player.body.x = token.centerX + 300 - 20 - 48 //half message width - left margin - half image width
     player.body.y = token.centerY
     game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, game.followLerp, game.followLerp);
     game.cutSceneCamera = true;
