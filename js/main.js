@@ -739,6 +739,7 @@ function DialogMessage(game, text, imageKey) {
     var topMargin = 20;
     var bottomMargin = 20;
     var textAlign = "left"
+    var widthOffset = 0
 
     if (imageKey == null) {
         imageWidth = 0;
@@ -750,8 +751,10 @@ function DialogMessage(game, text, imageKey) {
     var textStyle = { font: "20px Times New Romans", fill: "#ffffff", align: textAlign, wordWrap: true, wordWrapWidth: textWidth };
     var messageText = game.make.text(0, 0, text, textStyle);
 
-    var widthOffset = textWidth - messageText.width;
-    messageText.x = leftMargin + imageWidth + middleMargin + Math.floor(widthOffset / 2)
+    if (imageKey == null) {
+        widthOffset = Math.floor((textWidth - messageText.width) / 2);
+    }
+    messageText.x = leftMargin + imageWidth + middleMargin + widthOffset
 
     var textHeight = messageText.height
     if (textHeight >= imageHeight) {
