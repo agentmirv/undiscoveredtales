@@ -506,11 +506,12 @@ function DialogGroup(game, id, messageText, imageKey, buttonType, buttonData, sk
 
     if (buttonType == "cancel-action") {
         // Buttons for [Cancel] [Action]
+        var data = this._buttonData[0]
         var dialogCancel = new DialogButtonThin(game, "Cancel", 280);
         dialogCancel.alignTo(dialogMessage, Phaser.BOTTOM_LEFT, -10, 10)
         this.addChild(dialogCancel);
 
-        var dialogAction = new DialogButtonThin(game, buttonData[0].text, 280);
+        var dialogAction = new DialogButtonThin(game, data.text, 280);
         dialogAction.alignTo(dialogMessage, Phaser.BOTTOM_RIGHT, -10, 10)
         this.addChild(dialogAction);
 
@@ -526,11 +527,12 @@ function DialogGroup(game, id, messageText, imageKey, buttonType, buttonData, sk
         dialogActionButton.height = dialogAction.height;
         dialogActionButton.inputEnabled = true;
         dialogActionButton.events.onInputUp.add(this.buttonClicked, this);
-        dialogActionButton.buttonIndex = 0; //dynamic property
+        dialogActionButton.data = data; //dynamic property
         this.addChild(dialogActionButton);
 
     } else if (buttonType == "continue" || buttonType == "reveal") {
         // Button for [Continue]
+        var data = this._buttonData[0]
         var dialogContinue = new DialogButtonThin(game, "Continue", 180);
         dialogContinue.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 0, 10)
         this.addChild(dialogContinue);
@@ -540,7 +542,7 @@ function DialogGroup(game, id, messageText, imageKey, buttonType, buttonData, sk
         dialogContinueButton.height = dialogContinue.height;
         dialogContinueButton.inputEnabled = true;
         dialogContinueButton.events.onInputUp.add(this.buttonClicked, this);
-        dialogContinueButton.buttonIndex = 0; //dynamic property
+        dialogContinueButton.data = data; //dynamic property
         this.addChild(dialogContinueButton);
 
     } else if (buttonType == "skilltest") {
@@ -613,7 +615,8 @@ function DialogGroup(game, id, messageText, imageKey, buttonType, buttonData, sk
     } else if (buttonType == "custom") {
         // Custom Buttons
         var buttonYOffset = 10;
-        for (var i = 0; i < buttonData.length; i++) {
+        for (var i = 0; i < this._buttonData.length; i++) {
+            var data = this._buttonData[i]
             var dialogContinue = new DialogButtonMedium(game, buttonData[i].text, 500);
             dialogContinue.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 0, buttonYOffset)
             this.addChild(dialogContinue);
@@ -624,7 +627,7 @@ function DialogGroup(game, id, messageText, imageKey, buttonType, buttonData, sk
             dialogContinueButton.height = dialogContinue.height;
             dialogContinueButton.inputEnabled = true;
             dialogContinueButton.events.onInputUp.add(this.buttonClicked, this);
-            dialogContinueButton.buttonIndex = i; //dynamic property
+            dialogContinueButton.data = data
             this.addChild(dialogContinueButton);
         }
     }
@@ -655,11 +658,11 @@ DialogGroup.prototype.skillConfirmClicked = function (button, pointer) {
     var customState = game.customStates.find(function (item) { return item.id == dialogId });
 
     if (customState.successCount + this._skillTestDisplay >= this._skillTarget) {
-        button.buttonIndex = 0;
+        button.data = this._buttonData.find(function (item) { return item.id == "success"})
         DialogGroup.prototype.buttonClicked.call(this, button);
     } else {
         customState.successCount += this._skillTestDisplay
-        button.buttonIndex = 1;
+        button.data = this._buttonData.find(function (item) { return item.id == "fail" })
         DialogGroup.prototype.buttonClicked.call(this, button);
     }
 }
@@ -668,59 +671,56 @@ DialogGroup.prototype.buttonClicked = function (button, pointer) {
     // this = DialogGroup
     var restoreControl = true;
     var fadeOutCallback = null;
-    // Look for buttonIndex
-    if (Array.isArray(this._buttonData) && button.buttonIndex in this._buttonData) {
-        // Look for actions array
-        if (this._buttonData[button.buttonIndex].hasOwnProperty("actions")) {
-            // Loop on actions array
-            var actionArray = this._buttonData[button.buttonIndex]["actions"];
-            for (var i = 0; i < actionArray.length; i++) {
-                // Process each action
-                var action = actionArray[i];
-                if (action.type == "removeTokens") {
-                    // Loop on tokenIds array
-                    for (var j = 0; j < action.tokenIds.length; j++) {
-                        var id = action.tokenIds[j];
 
-                        if (game.gamedataInstances.mapTokens.hasOwnProperty(id)) {
-                            // Remove Id
-                            var instance = game.gamedataInstances.mapTokens[id]
-                            if (instance != null) {
-                                instance.fadeOut(function () {
-                                    game.gamedataInstances.mapTokens[id] = null;
-                                    game.world.removeChild(instance);
-                                    instance.destroy();
-                                })
-                            }
+    // Look for button data and action aray
+    if (button.data != null && button.data.hasOwnProperty("actions")) {
+        // Loop on actions array
+        for (var i = 0; i < button.data.actions.length; i++) {
+            // Process each action
+            var action = button.data.actions[i];
+            if (action.type == "removeTokens") {
+                // Loop on tokenIds array
+                for (var j = 0; j < action.tokenIds.length; j++) {
+                    var id = action.tokenIds[j];
+
+                    if (game.gamedataInstances.mapTokens.hasOwnProperty(id)) {
+                        // Remove Id
+                        var instance = game.gamedataInstances.mapTokens[id]
+                        if (instance != null) {
+                            instance.fadeOut(function () {
+                                game.gamedataInstances.mapTokens[id] = null;
+                                game.world.removeChild(instance);
+                                instance.destroy();
+                            })
                         }
                     }
-                } else if (action.type == "dialog") {
-                    // Make a new Dialog
+                }
+            } else if (action.type == "dialog") {
+                // Make a new Dialog
+                fadeOutCallback = function () {
+                    var dialogInstance = MakeDialog(game, action.dialogId)
+                    // TODO add fadeIn()
+                    game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+                    game.stage.addChild(dialogInstance)
+                }
+                restoreControl = false;
+
+            } else if (action.type == "reveal") {
+                //Go to next reveal dialog
+                if (game.revealMap.dialogs.length > 0) {
                     fadeOutCallback = function () {
-                        var dialogInstance = MakeDialog(game, action.dialogId)
-                        // TODO add fadeIn()
-                        game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
-                        game.stage.addChild(dialogInstance)
+                        var revealDialog = game.revealMap.dialogs.shift();
+                        MakeRevealDialog(game, revealDialog);
                     }
                     restoreControl = false;
-
-                } else if (action.type == "reveal") {
-                    //Go to next reveal dialog
-                    if (game.revealMap.dialogs.length > 0) {
-                        fadeOutCallback = function () {
-                            var revealDialog = game.revealMap.dialogs.shift();
-                            MakeRevealDialog(game, revealDialog);
-                        }
-                        restoreControl = false;
+                }
+            } else if (action.type == "revealMap") {
+                //Reveal map tiles
+                if (action.revealMapId != null) {
+                    fadeOutCallback = function () {
+                        MakeRevealMap(game, action.revealMapId);
                     }
-                } else if (action.type == "revealMap") {
-                    //Reveal map tiles
-                    if (action.revealMapId != null) {
-                        fadeOutCallback = function () {
-                            MakeRevealMap(game, action.revealMapId);
-                        }
-                        restoreControl = false;
-                    }
+                    restoreControl = false;
                 }
             }
         }

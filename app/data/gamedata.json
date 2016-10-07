@@ -276,10 +276,10 @@
       "buttonType": "skilltest",
       "skillTarget": 2,
       "buttons": [
-        {
+        { "id": "success",
           "actions": [ {"type": "dialog", "dialogId": "dialog-box-lobby-skilltest-success"} ]
         },
-        {
+        { "id": "fail",
           "actions": [ {"type": "dialog", "dialogId": "dialog-box-lobby-skilltest-fail"} ]
         }
       ]
@@ -365,7 +365,7 @@
       "buttons": [
         { "text": "@ \"Hello\"", "actions": [ {"type": "dialog", "dialogId": "dialog-bird-hall-hello" } ] },
         { "text": "@ Say nothing", "actions": [ {"type": "dialog", "dialogId": "dialog-bird-hall-snub" } ] },
-        { "text": "Ignore the bird.", "actions": [  ] }
+        { "text": "Ignore the bird." }
       ]
     },
     {
@@ -404,7 +404,7 @@
       "text": "The bird claws at you and takes off to the east. Drop 1 random item and suffer 1 facedown Damage (Agility negates). Max hovers for a moment and disappears into a tiny square opening in the ceiling above the door to the east bedroom. You hear the bird squawk loudly and then go silent.",
       "buttonType": "continue",
       "buttons": [
-        { "text": "Continue", "actions": [ {"type": "removeTokens", "tokenIds": ["token-bird-hall"] } ] }
+        { "actions": [ {"type": "removeTokens", "tokenIds": ["token-bird-hall"] } ] }
       ]
     },
     {
@@ -413,7 +413,7 @@
       "text": "The bird flutters his wings and takes off to the east. He hovers for a moment and disappears into a tiny square opening in the ceiling above the door to the east bedroom. You hear the bird squawk loudly and then go silent.",
       "buttonType": "continue",
       "buttons": [
-        { "text": "Continue", "actions": [ {"type": "removeTokens", "tokenIds": ["token-bird-hall"] } ] }
+        { "actions": [ {"type": "removeTokens", "tokenIds": ["token-bird-hall"] } ] }
       ]
     },
     {
@@ -422,7 +422,7 @@
       "text": "The bird flutters his wings and takes off to the west. He hovers for a moment and disappears into a tiny square opening in the ceiling above the door to the west bedroom. You hear the bird murmur, almost sounding like language, then go silent.",
       "buttonType": "continue",
       "buttons": [
-        { "text": "Continue", "actions": [ {"type": "removeTokens", "tokenIds": ["token-bird-hall"] } ] }
+        { "actions": [ {"type": "removeTokens", "tokenIds": ["token-bird-hall"] } ] }
       ]
     },
     {
