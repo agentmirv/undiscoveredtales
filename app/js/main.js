@@ -669,7 +669,7 @@ DialogGroup.prototype.buttonClicked = function (button, pointer) {
     var restoreControl = true;
     var fadeOutCallback = null;
     // Look for buttonIndex
-    if (button.buttonIndex in this._buttonData) {
+    if (Array.isArray(this._buttonData) && button.buttonIndex in this._buttonData) {
         // Look for actions array
         if (this._buttonData[button.buttonIndex].hasOwnProperty("actions")) {
             // Loop on actions array

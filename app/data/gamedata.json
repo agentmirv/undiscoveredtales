@@ -300,7 +300,7 @@
       "imageKey": "search-image",
       "text": "Your hands shake as you attempt to handle the latch. The image of a man-beast stalking you from the shadows clouds your mind. Feeling confounded, you set the box back down.",
       "buttonType": "continue",
-      "buttons": [ { "text": "Continue" } ]
+      "buttons": [ ]
     },
     {
       "id": "dialog-door1-lobby",
@@ -430,14 +430,14 @@
       "imageKey": "explore-image",
       "text": "The door to the east bedroom exhbits a rising sun carved into its surface. There is no handle on this door.",
       "buttonType": "continue",
-      "buttons": [ { "actions": [ ] } ]
+      "buttons": [ ]
     },
     {
       "id": "dialog-door-west-bedroom",
       "imageKey": "explore-image",
       "text": "The door to the west bedroom exhbits a setting sun carved into its surface. There is no handle on this door.",
       "buttonType": "continue",
-      "buttons": [ {  "actions": [ ] } ]
+      "buttons": [ ]
     }
   ],
   "imageTiles": [
