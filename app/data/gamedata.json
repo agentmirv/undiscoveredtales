@@ -401,8 +401,8 @@
     {
       "id": "dialog-bird-hall-snub-ignored",
       "imageKey": "bird-image",
-      "text": "The bird claws at you and takes off to the east. Drop 1 random item and suffer 1 facedown Damage (Agility Negates). Max hovers for a moment and disappears into a tiny square opening in the ceiling above the door to the east bedroom. You hear the bird squawk loudly and then go silent.",
-      "buttonType": "custom",
+      "text": "The bird claws at you and takes off to the east. Drop 1 random item and suffer 1 facedown Damage (Agility negates). Max hovers for a moment and disappears into a tiny square opening in the ceiling above the door to the east bedroom. You hear the bird squawk loudly and then go silent.",
+      "buttonType": "continue",
       "buttons": [
         { "text": "Continue", "actions": [ {"type": "removeTokens", "tokenIds": ["token-bird-hall"] } ] }
       ]
@@ -411,7 +411,7 @@
       "id": "dialog-bird-hall-beast",
       "imageKey": "bird-image",
       "text": "The bird flutters his wings and takes off to the east. He hovers for a moment and disappears into a tiny square opening in the ceiling above the door to the east bedroom. You hear the bird squawk loudly and then go silent.",
-      "buttonType": "custom",
+      "buttonType": "continue",
       "buttons": [
         { "text": "Continue", "actions": [ {"type": "removeTokens", "tokenIds": ["token-bird-hall"] } ] }
       ]
@@ -420,7 +420,7 @@
       "id": "dialog-bird-hall-best",
       "imageKey": "bird-image",
       "text": "The bird flutters his wings and takes off to the west. He hovers for a moment and disappears into a tiny square opening in the ceiling above the door to the west bedroom. You hear the bird murmur, almost sounding like language, then go silent.",
-      "buttonType": "custom",
+      "buttonType": "continue",
       "buttons": [
         { "text": "Continue", "actions": [ {"type": "removeTokens", "tokenIds": ["token-bird-hall"] } ] }
       ]
