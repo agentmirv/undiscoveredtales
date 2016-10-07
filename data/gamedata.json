@@ -30,6 +30,8 @@
         "revealDialogs": [
           "reveal-halls-dialog-room",
           "reveal-halls-dialog-bird",
+          "reveal-halls-dialog-door-west",
+          "reveal-halls-dialog-door-east",
           "reveal-explored"
         ]
       }
@@ -89,6 +91,16 @@
       "id": "reveal-halls-dialog-bird",
       "text": "A white cockatoo is perched atop the edge of an upended table. Its feathers are dusty and unkempt. You wonder if this is the only living thing in the house. In the quiet, the bird watches you with its black beady eyes. Place an Interact token.",
       "addSingleToken" : [ "token-bird-hall" ]
+    },
+    {
+      "id": "reveal-halls-dialog-door-east",
+      "text": "This door leads to the east bedroom.",
+      "addSingleToken" : [ "token-door-east-bedroom" ]
+    },
+    {
+      "id": "reveal-halls-dialog-door-west",
+      "text": "This door leads to the west bedroom.",
+      "addSingleToken" : [ "token-door-west-bedroom" ]
     }
   ],
   "mapTiles": [
@@ -226,6 +238,22 @@
       "y":768,
       "imageKey":"bird-image",
       "clickId":"dialog-bird-hall",
+      "addToWorld": true
+    },
+    {
+      "id":"token-door-east-bedroom",
+      "x":1488,
+      "y":768,
+      "imageKey":"explore-image",
+      "clickId":"dialog-door-east-bedroom",
+      "addToWorld": true
+    },
+    {
+      "id":"token-door-west-bedroom",
+      "x":624,
+      "y":960,
+      "imageKey":"explore-image",
+      "clickId":"dialog-door-west-bedroom",
       "addToWorld": true
     }
   ],
@@ -395,6 +423,28 @@
       "buttonType": "custom",
       "buttons": [
         { "text": "Continue", "actions": [ {"type": "removeTokens", "tokenIds": ["token-bird-hall"] } ] }
+      ]
+    },
+    {
+      "id": "dialog-door-east-bedroom",
+      "imageKey": "explore-image",
+      "text": "The door to the east bedroom exhbits a rising sun carved into its surface. There is no handle on this door.",
+      "buttonType": "cancel-action",
+      "buttons": [
+        { "text": "@ Explore",
+          "actions": [ ]
+        }
+      ]
+    },
+    {
+      "id": "dialog-door-west-bedroom",
+      "imageKey": "explore-image",
+      "text": "The door to the west bedroom exhbits a setting sun carved into its surface. There is no handle on this door.",
+      "buttonType": "cancel-action",
+      "buttons": [
+        { "text": "@ Explore",
+          "actions": [ ]
+        }
       ]
     }
   ],
