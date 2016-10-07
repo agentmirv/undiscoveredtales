@@ -429,23 +429,15 @@
       "id": "dialog-door-east-bedroom",
       "imageKey": "explore-image",
       "text": "The door to the east bedroom exhbits a rising sun carved into its surface. There is no handle on this door.",
-      "buttonType": "cancel-action",
-      "buttons": [
-        { "text": "@ Explore",
-          "actions": [ ]
-        }
-      ]
+      "buttonType": "continue",
+      "buttons": [ { "actions": [ ] } ]
     },
     {
       "id": "dialog-door-west-bedroom",
       "imageKey": "explore-image",
       "text": "The door to the west bedroom exhbits a setting sun carved into its surface. There is no handle on this door.",
-      "buttonType": "cancel-action",
-      "buttons": [
-        { "text": "@ Explore",
-          "actions": [ ]
-        }
-      ]
+      "buttonType": "continue",
+      "buttons": [ {  "actions": [ ] } ]
     }
   ],
   "imageTiles": [
@@ -535,7 +527,7 @@
       "primaryImageKey": "bird",
       "backgroundImageKey": "circleToken",
       "imagePrimaryColor": "0xFFFFFF",
-      "imageShadowColor": "0xAAAA00"
+      "imageShadowColor": "0x7400ff"
     },
     {
       "imageKey": "wall-north-image",
