@@ -32,6 +32,10 @@ var GameState = {
         game.gamedataInstances.mapTiles = []
         game.gamedataInstances.mapTokens = []
         game.customStates = [];
+        // TODO consolidate the revealMap structure into game.customStates?
+        game.revealMap = {};
+        game.revealMap.dialogs = [];
+        game.revealMap.center = {}
 
         //=================================================
         // ImageTokens BitmapData
@@ -120,9 +124,6 @@ var GameState = {
 
         //=================================================
         // First Reveal
-        game.revealMap = {};
-        game.revealMap.dialogs = [];
-        game.revealMap.center = {}
         MakeRevealMap(game, 'reveal-lobby')
     },
 
@@ -504,6 +505,7 @@ function DialogGroup(game, id, messageText, imageKey, buttonType, buttonData, sk
     }
     this.addChild(dialogMessage);
 
+    // Buttons
     if (buttonType == "cancel-action") {
         // Buttons for [Cancel] [Action]
         var data = this._buttonData[0]
