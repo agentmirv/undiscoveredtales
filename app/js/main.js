@@ -229,6 +229,72 @@ Helper.getImage = function (imageKey) {
     return game.cache.getBitmapData(imageKey)
 }
 
+//TODO getFirst
+
+//=========================================================
+function MakeScene(game, id) {
+    var sceneData = game.gamedata.scenes.find(function (item) { return item.id == id });
+    var sceneInstance = null;
+
+    if (sceneData.id == "scene-player") {
+        sceneInstance = new PlayerSceneGroup(game)
+    } else if (sceneData.id == "scene-enemy") {
+        sceneInstance = new EnemySceneGroup(game)
+    }
+
+    if (sceneInstance !== null) {
+        game.stage.addChild(sceneInstance)
+    }
+}
+
+//=========================================================
+function PlayerSceneGroup(game) {
+    Phaser.Group.call(this, game);
+
+    var playerPhaseBgImage = game.make.tileSprite(0, 0, game.stageViewRect.width, game.stageViewRect.height, 'pixelWhite');
+    playerPhaseBgImage.tint = "0x044500";
+    this.addChild(playerPhaseBgImage);
+
+    var text =  "Player Phase"
+    var textStyle = { font: "85px Times New Romans", fill: "#ffffff", fontStyle: "italic" };
+    var messageText = game.make.text(0, 0, text, textStyle);
+    messageText.autoRound = true
+    messageText.alignIn(game.stageViewRect, Phaser.CENTER)
+    this.addChild(messageText);
+
+    var fadeInTween = game.add.tween(this).from({ alpha: 0 }, 500, Phaser.Easing.Linear.None, true, 300, 0, false);
+    var fadeOutTween = game.add.tween(this).to({ alpha: 0 }, 500, Phaser.Easing.Linear.None, false, 700, 0, false);
+    var slideTween = game.add.tween(messageText).from({ x: messageText.x + 150 }, 2000, Phaser.Easing.Quadratic.Out, true, 400, 0, false);
+    slideTween.chain(fadeOutTween)
+}
+
+PlayerSceneGroup.prototype = Object.create(Phaser.Group.prototype);
+PlayerSceneGroup.prototype.constructor = PlayerSceneGroup;
+
+//=========================================================
+function EnemySceneGroup(game) {
+    Phaser.Group.call(this, game);
+
+    var playerPhaseBgImage = game.make.tileSprite(0, 0, game.stageViewRect.width, game.stageViewRect.height, 'pixelWhite');
+    playerPhaseBgImage.tint = "0x450000";
+    this.addChild(playerPhaseBgImage);
+
+    var text = "Enemy Phase"
+    var textStyle = { font: "85px Times New Romans", fill: "#ffffff", fontStyle: "italic" };
+    var messageText = game.make.text(0, 0, text, textStyle);
+    messageText.autoRound = true
+    messageText.alignIn(game.stageViewRect, Phaser.CENTER)
+    this.addChild(messageText);
+
+    var fadeInTween = game.add.tween(this).from({ alpha: 0 }, 500, Phaser.Easing.Linear.None, true, 300, 0, false);
+    var fadeOutTween = game.add.tween(this).to({ alpha: 0 }, 500, Phaser.Easing.Linear.None, false, 700, 0, false);
+    var slideTween = game.add.tween(messageText).from({ x: messageText.x + 150 }, 2000, Phaser.Easing.Quadratic.Out, true, 400, 0, false);
+    slideTween.chain(fadeOutTween)
+}
+
+EnemySceneGroup.prototype = Object.create(Phaser.Group.prototype);
+EnemySceneGroup.prototype.constructor = EnemySceneGroup;
+
 //=========================================================
 function HudGroup(game) {
     Phaser.Group.call(this, game);
@@ -241,15 +307,15 @@ function HudGroup(game) {
     endPhaseButton.width = endPhaseImage.width;
     endPhaseButton.height = endPhaseImage.height;
     endPhaseButton.inputEnabled = true;
-    endPhaseButton.events.onInputUp.add(this.endPhaseInvestigatorsClicked, this);
+    endPhaseButton.events.onInputUp.add(this.endPhasePlayerClicked, this);
     this.addChild(endPhaseButton);
 }
 
 HudGroup.prototype = Object.create(Phaser.Group.prototype);
 HudGroup.prototype.constructor = HudGroup;
 
-HudGroup.prototype.endPhaseInvestigatorsClicked = function (button, token) {
-    var dialogInstance = MakeDialog(game, "dialog-hud-endphase-investigator")
+HudGroup.prototype.endPhasePlayerClicked = function (button, token) {
+    var dialogInstance = MakeDialog(game, "dialog-hud-endphase-player")
     // TODO add fadeIn()
     game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
     game.stage.addChild(dialogInstance)
@@ -769,6 +835,8 @@ DialogGroup.prototype.buttonClicked = function (button, pointer) {
                     }
                     restoreControl = false;
                 }
+            } else if (action.type == "scene") {
+                MakeScene(game, action.sceneId)
             }
         }
     }

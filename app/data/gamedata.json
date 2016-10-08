@@ -257,14 +257,22 @@
       "addToWorld": true
     }
   ],
+  "scenes": [
+    {
+      "id": "scene-player"
+    },
+    {
+      "id": "scene-enemy"
+    }
+  ],
   "dialogs": [
     {
-      "id": "dialog-hud-endphase-investigator",
+      "id": "dialog-hud-endphase-player",
       "text": "End the Investigator Phase?",
       "buttonType": "cancel-action",
       "buttons": [
         { "text": "Confirm",
-          "actions": [ ]
+          "actions": [ {"type": "scene", "sceneId": "scene-enemy"} ]
         }
       ]
     },
