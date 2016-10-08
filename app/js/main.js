@@ -272,7 +272,7 @@ function PlayerSceneGroup(game) {
     messageText.alignIn(game.stageViewRect, Phaser.CENTER)
     this.addChild(messageText);
 
-    var fadeInTween = game.add.tween(this).from({ alpha: 0 }, 500, Phaser.Easing.Linear.None, true, 300, 0, false);
+    var fadeInTween = game.add.tween(this).from({ alpha: 0 }, 500, Phaser.Easing.Linear.None, true, 400, 0, false);
     var fadeOutTween = game.add.tween(this).to({ alpha: 0 }, 500, Phaser.Easing.Linear.None, false, 700, 0, false);
     var slideTween = game.add.tween(messageText).from({ x: messageText.x + 150 }, 2000, Phaser.Easing.Quadratic.Out, true, 400, 0, false);
     slideTween.chain(fadeOutTween)
@@ -301,7 +301,7 @@ function EnemySceneGroup(game) {
     messageText.alignIn(game.stageViewRect, Phaser.CENTER)
     this.addChild(messageText);
 
-    var fadeInTween = game.add.tween(this).from({ alpha: 0 }, 500, Phaser.Easing.Linear.None, true, 300, 0, false);
+    var fadeInTween = game.add.tween(this).from({ alpha: 0 }, 500, Phaser.Easing.Linear.None, true, 400, 0, false);
     var fadeOutTween = game.add.tween(this).to({ alpha: 0 }, 500, Phaser.Easing.Linear.None, false, 700, 0, false);
     var slideTween = game.add.tween(messageText).from({ x: messageText.x + 150 }, 2000, Phaser.Easing.Quadratic.Out, true, 400, 0, false);
     slideTween.chain(fadeOutTween)
@@ -439,6 +439,10 @@ function MakeRevealDialog(game, id) {
     var imageKey = null;
     var buttonType = "reveal";
     var buttonData = [{ "text": "Continue", "actions": [{ "type": "reveal" }] }];
+
+    if (revealDialog.continueToPlayerPhase) {
+        buttonData = [{ "text": "Continue", "actions": [{ "type": "reveal" }, { "type": "scene", "sceneId": "scene-player" }] }];
+    }
 
     // Add Tokens
     if (revealDialog.addSingleToken != null) {

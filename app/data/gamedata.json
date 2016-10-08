@@ -67,7 +67,8 @@
       "addMultipleTokens" : [
         "token-door1-lobby",
         "token-door2-lobby"
-      ]
+      ],
+      "continueToPlayerPhase": true
     },
     {
       "id": "reveal-explored",
@@ -268,7 +269,7 @@
   "dialogs": [
     {
       "id": "dialog-hud-endphase-player",
-      "text": "End the Investigator Phase?",
+      "text": "End the Player Phase?",
       "buttonType": "cancel-action",
       "buttons": [
         { "text": "Confirm",
