@@ -111,12 +111,13 @@ var GameState = {
         game.stageViewRect = new Phaser.Rectangle(0, 0, game.camera.view.width, game.camera.view.height)
         cursors = game.input.keyboard.createCursorKeys();
 
-        var startX = game.gamedata.playerStart.x
-        var startY = game.gamedata.playerStart.y
+        game.presentationOffsetY = 48
         game.walkLerp = 0.5;
         game.followLerp = 0.06;
-        game.camera.focusOnXY(startX, startY)
-        player = game.add.sprite(startX, startY, 'pixelTransparent');
+        game.camera.focusOnXY(game.gamedata.playerStart.x, game.gamedata.playerStart.y)
+        // Move Player
+        // TODO cameraOffsetY
+        player = game.add.sprite(game.gamedata.playerStart.x, game.gamedata.playerStart.y, 'pixelTransparent');
         game.physics.p2.enable(player);
         game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, game.followLerp, game.followLerp);
 
@@ -264,8 +265,9 @@ function MakeRevealMap(game, id) {
         game.revealMap.center = new Phaser.Point(localGroup.centerX, localGroup.centerY)
 
         // Move Player
+        // TODO cameraOffsetY
         player.body.x = game.revealMap.center.x
-        player.body.y = game.revealMap.center.y
+        player.body.y = game.revealMap.center.y + game.presentationOffsetY
         game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, game.followLerp, game.followLerp);
         game.cutSceneCamera = true;
 
@@ -301,7 +303,7 @@ function MakeRevealDialog(game, id) {
 
         imageKey = tokenInstance.imageKey;
         player.body.x = tokenInstance.x + 48
-        player.body.y = tokenInstance.y + 256
+        player.body.y = tokenInstance.y + 208 + game.presentationOffsetY
 
     } else if (revealDialog.addMultipleTokens != null) {
         // Show images with the Dialog in the middle of the room
@@ -317,14 +319,15 @@ function MakeRevealDialog(game, id) {
         }
 
         player.body.x = game.revealMap.center.x
-        player.body.y = game.revealMap.center.y
+        player.body.y = game.revealMap.center.y + game.presentationOffsetY
 
     } else {
         player.body.x = game.revealMap.center.x
-        player.body.y = game.revealMap.center.y
+        player.body.y = game.revealMap.center.y + game.presentationOffsetY
     }
 
-    // Move Player
+    // Move Player to Map Tile
+    // TODO cameraOffsetY
     game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, game.followLerp, game.followLerp);
     game.cutSceneCamera = true;
 
@@ -434,8 +437,10 @@ TokenSprite.prototype = Object.create(Phaser.Sprite.prototype);
 TokenSprite.prototype.constructor = TokenSprite;
 
 TokenSprite.prototype.tokenClicked = function (token) {
+    // Move Player Token
     player.body.x = token.centerX + 300 - 20 - 48 //half message width - left margin - half image width
-    player.body.y = token.centerY
+    player.body.y = token.centerY + game.presentationOffsetY
+    // TODO cameraOffsetY
     game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, game.followLerp, game.followLerp);
     game.cutSceneCamera = true;
 
@@ -487,12 +492,12 @@ function DialogGroup(game, id, messageText, imageKey, buttonType, buttonData, sk
     if (buttonType == "reveal" && revealImageKey != null) {
         // Reveal Image
         var revealPointer = game.make.image(0, 0, Helper.getImage(imageKey))
-        revealPointer.alignIn(game.stageViewRect, Phaser.CENTER, 0, -256 + 48)
+        revealPointer.alignIn(game.stageViewRect, Phaser.CENTER, 0, -208 + 48 - game.presentationOffsetY)
         this.addChild(revealPointer);
 
         // Reveal Pointer
         var revealPointer = game.make.image(0, 0, 'revealPointer')
-        revealPointer.alignIn(game.stageViewRect, Phaser.CENTER, 0, -96 -48 + 4)
+        revealPointer.alignIn(game.stageViewRect, Phaser.CENTER, 0, -48 - 48 + 4 - game.presentationOffsetY)
         this.addChild(revealPointer);
     }
 
@@ -501,7 +506,7 @@ function DialogGroup(game, id, messageText, imageKey, buttonType, buttonData, sk
     if (buttonType == "reveal" && imageKey != null) {
         dialogMessage.alignTo(revealPointer, Phaser.BOTTOM_CENTER, 0, 3)
     } else {
-        dialogMessage.alignIn(game.stageViewRect, Phaser.CENTER)
+        dialogMessage.alignIn(game.stageViewRect, Phaser.CENTER, 0, - game.presentationOffsetY)
     }
     this.addChild(dialogMessage);
 
