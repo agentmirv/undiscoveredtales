@@ -33,22 +33,31 @@ var GameState = {
         game.gamedataInstances = {};
         game.gamedataInstances.mapTiles = []
         game.gamedataInstances.mapTokens = []
-        game.customStates = [];
+        game.customStates = []; // This is used in skill test dialogs
         // TODO consolidate the revealMap structure into game.customStates?
         game.revealMap = {};
         game.revealMap.dialogs = [];
         game.revealMap.center = {}
+        game.hud = {};
+        game.hud.activePhase = "player";
+        game.hudInstance = {};
 
         //=================================================
         // Hud images
         var hudBmd = game.make.bitmapData(96, 96)
-        var endPhaseBgImage = game.make.image(0, 0, "hudButton")
         var endPhaseButtonImage = game.make.image(0, 0, "arrow")
-        endPhaseBgImage.tint = "0x044500"
+        var endPhaseBgImage = game.make.image(0, 0, "hudButton")
         endPhaseButtonImage.tint = "0xFFFFFF"
+        endPhaseBgImage.tint = "0x044500"
         hudBmd.copy(endPhaseBgImage)
         hudBmd.copy(endPhaseButtonImage, 0, 0, 64, 64, 16, 16)
-        game.cache.addBitmapData("endPhase-image", hudBmd)
+        game.cache.addBitmapData("endPhase-image-player", hudBmd)
+
+        hudBmd = game.make.bitmapData(96, 96)   
+        endPhaseBgImage.tint = "0x450000"
+        hudBmd.copy(endPhaseBgImage)
+        hudBmd.copy(endPhaseButtonImage, 0, 0, 64, 64, 16, 16)
+        game.cache.addBitmapData("endPhase-image-enemy", hudBmd)
 
         //=================================================
         // ImageTokens BitmapData
@@ -143,6 +152,7 @@ var GameState = {
         // Add HUD
         var hudInstance = new HudGroup(game)
         game.stage.addChild(hudInstance)
+        game.hudInstance = hudInstance;
     },
 
     update: function () {
@@ -266,6 +276,11 @@ function PlayerSceneGroup(game) {
     var fadeOutTween = game.add.tween(this).to({ alpha: 0 }, 500, Phaser.Easing.Linear.None, false, 700, 0, false);
     var slideTween = game.add.tween(messageText).from({ x: messageText.x + 150 }, 2000, Phaser.Easing.Quadratic.Out, true, 400, 0, false);
     slideTween.chain(fadeOutTween)
+
+    fadeInTween.onComplete.addOnce(function () {
+        game.hud.activePhase = "player"
+        game.hudInstance.updatePhaseButtonImage()
+    })
 }
 
 PlayerSceneGroup.prototype = Object.create(Phaser.Group.prototype);
@@ -290,6 +305,11 @@ function EnemySceneGroup(game) {
     var fadeOutTween = game.add.tween(this).to({ alpha: 0 }, 500, Phaser.Easing.Linear.None, false, 700, 0, false);
     var slideTween = game.add.tween(messageText).from({ x: messageText.x + 150 }, 2000, Phaser.Easing.Quadratic.Out, true, 400, 0, false);
     slideTween.chain(fadeOutTween)
+
+    fadeInTween.onComplete.addOnce(function () {
+        game.hud.activePhase = "enemy"
+        game.hudInstance.updatePhaseButtonImage()
+    })
 }
 
 EnemySceneGroup.prototype = Object.create(Phaser.Group.prototype);
@@ -299,26 +319,48 @@ EnemySceneGroup.prototype.constructor = EnemySceneGroup;
 function HudGroup(game) {
     Phaser.Group.call(this, game);
 
-    var endPhaseImage = game.make.image(0, 0, Helper.getImage("endPhase-image"))
-    endPhaseImage.alignIn(game.stageViewRect, Phaser.BOTTOM_RIGHT, 0, 0)
-    this.addChild(endPhaseImage);
+    // End Phase Button
+    this._endPhasePlayerImage = game.make.image(0, 0, Helper.getImage("endPhase-image-player"))
+    this._endPhasePlayerImage.alignIn(game.stageViewRect, Phaser.BOTTOM_RIGHT, 0, 0)
+    this.addChild(this._endPhasePlayerImage);
 
-    var endPhaseButton = game.make.sprite(endPhaseImage.x, endPhaseImage.y, 'pixelTransparent');
-    endPhaseButton.width = endPhaseImage.width;
-    endPhaseButton.height = endPhaseImage.height;
+    this._endPhaseEnemyImage = game.make.image(0, 0, Helper.getImage("endPhase-image-enemy"))
+    this._endPhaseEnemyImage.alignIn(game.stageViewRect, Phaser.BOTTOM_RIGHT, 0, 0)
+    this.addChild(this._endPhaseEnemyImage);
+    this._endPhaseEnemyImage.kill()
+
+    var endPhaseButton = game.make.sprite(this._endPhasePlayerImage.x, this._endPhasePlayerImage.y, 'pixelTransparent');
+    endPhaseButton.width = this._endPhasePlayerImage.width;
+    endPhaseButton.height = this._endPhasePlayerImage.height;
     endPhaseButton.inputEnabled = true;
-    endPhaseButton.events.onInputUp.add(this.endPhasePlayerClicked, this);
+    endPhaseButton.events.onInputUp.add(this.endPhaseClicked, this);
     this.addChild(endPhaseButton);
 }
 
 HudGroup.prototype = Object.create(Phaser.Group.prototype);
 HudGroup.prototype.constructor = HudGroup;
 
-HudGroup.prototype.endPhasePlayerClicked = function (button, token) {
-    var dialogInstance = MakeDialog(game, "dialog-hud-endphase-player")
+HudGroup.prototype.endPhaseClicked = function (button, token) {
+    var dialogInstance
+    if (game.hud.activePhase == "player") {
+        dialogInstance = MakeDialog(game, "dialog-hud-endphase-player")
+    } else {
+        dialogInstance = MakeDialog(game, "dialog-hud-endphase-enemy")
+    }
+
     // TODO add fadeIn()
     game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
     game.stage.addChild(dialogInstance)
+}
+
+HudGroup.prototype.updatePhaseButtonImage = function () {
+    if (game.hud.activePhase == "player") {
+        this._endPhasePlayerImage.revive()
+        this._endPhaseEnemyImage.kill()
+    } else {
+        this._endPhasePlayerImage.kill()
+        this._endPhaseEnemyImage.revive()
+    }
 }
 
 //=========================================================

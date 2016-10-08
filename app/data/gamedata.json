@@ -277,6 +277,16 @@
       ]
     },
     {
+      "id": "dialog-hud-endphase-enemy",
+      "text": "End the Enemy Phase?",
+      "buttonType": "cancel-action",
+      "buttons": [
+        { "text": "Confirm",
+          "actions": [ {"type": "scene", "sceneId": "scene-player"} ]
+        }
+      ]
+    },
+    {
       "id": "dialog-box-lobby",
       "imageKey": "search-image",
       "text": "A heavy wooden box lies on the table. The lid can be opened by moving an ornate latch.",
