@@ -18,7 +18,9 @@ var GameState = {
         game.load.image('debugSquare', 'assets/images/DebugSquare.png');
         game.load.image('pentacle', 'assets/images/pentacle.png');
         game.load.image('bird', 'assets/images/raven.png');
-        
+        game.load.image('hudButton', 'assets/images/HudButton.png');
+        game.load.image('arrow', 'assets/images/plain-arrow.png');
+
         game.load.spritesheet('tileWallsSheet', 'assets/images/TileWalls.png', 96, 96);
 
         game.load.json('gamedata', 'data/gamedata.json');
@@ -31,7 +33,31 @@ var GameState = {
         game.gamedataInstances = {};
         game.gamedataInstances.mapTiles = []
         game.gamedataInstances.mapTokens = []
-        game.customStates = [];
+        game.customStates = []; // This is used in skill test dialogs
+        // TODO consolidate the revealMap structure into game.customStates?
+        game.revealMap = {};
+        game.revealMap.dialogs = [];
+        game.revealMap.center = {}
+        game.hud = {};
+        game.hud.activePhase = "player";
+        game.hudInstance = {};
+
+        //=================================================
+        // Hud images
+        var hudBmd = game.make.bitmapData(96, 96)
+        var endPhaseButtonImage = game.make.image(0, 0, "arrow")
+        var endPhaseBgImage = game.make.image(0, 0, "hudButton")
+        endPhaseButtonImage.tint = "0xFFFFFF"
+        endPhaseBgImage.tint = "0x044500"
+        hudBmd.copy(endPhaseBgImage)
+        hudBmd.copy(endPhaseButtonImage, 0, 0, 64, 64, 16, 16)
+        game.cache.addBitmapData("endPhase-image-player", hudBmd)
+
+        hudBmd = game.make.bitmapData(96, 96)   
+        endPhaseBgImage.tint = "0x450000"
+        hudBmd.copy(endPhaseBgImage)
+        hudBmd.copy(endPhaseButtonImage, 0, 0, 64, 64, 16, 16)
+        game.cache.addBitmapData("endPhase-image-enemy", hudBmd)
 
         //=================================================
         // ImageTokens BitmapData
@@ -107,12 +133,12 @@ var GameState = {
         game.stageViewRect = new Phaser.Rectangle(0, 0, game.camera.view.width, game.camera.view.height)
         cursors = game.input.keyboard.createCursorKeys();
 
-        var startX = game.gamedata.playerStart.x
-        var startY = game.gamedata.playerStart.y
+        game.presentationOffsetY = 48
         game.walkLerp = 0.5;
         game.followLerp = 0.06;
-        game.camera.focusOnXY(startX, startY)
-        player = game.add.sprite(startX, startY, 'pixelTransparent');
+        game.camera.focusOnXY(game.gamedata.playerStart.x, game.gamedata.playerStart.y)
+        // Move Player
+        player = game.add.sprite(game.gamedata.playerStart.x, game.gamedata.playerStart.y, 'pixelTransparent');
         game.physics.p2.enable(player);
         game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, game.followLerp, game.followLerp);
 
@@ -120,10 +146,13 @@ var GameState = {
 
         //=================================================
         // First Reveal
-        game.revealMap = {};
-        game.revealMap.dialogs = [];
-        game.revealMap.center = {}
         MakeRevealMap(game, 'reveal-lobby')
+
+        //=================================================
+        // Add HUD
+        var hudInstance = new HudGroup(game)
+        game.stage.addChild(hudInstance)
+        game.hudInstance = hudInstance;
     },
 
     update: function () {
@@ -210,6 +239,130 @@ Helper.getImage = function (imageKey) {
     return game.cache.getBitmapData(imageKey)
 }
 
+//TODO getFirst
+
+//=========================================================
+function MakeScene(game, id) {
+    var sceneData = game.gamedata.scenes.find(function (item) { return item.id == id });
+    var sceneInstance = null;
+
+    if (sceneData.id == "scene-player") {
+        sceneInstance = new PlayerSceneGroup(game)
+    } else if (sceneData.id == "scene-enemy") {
+        sceneInstance = new EnemySceneGroup(game)
+    }
+
+    if (sceneInstance !== null) {
+        game.stage.addChild(sceneInstance)
+    }
+}
+
+//=========================================================
+function PlayerSceneGroup(game) {
+    Phaser.Group.call(this, game);
+
+    var playerPhaseBgImage = game.make.tileSprite(0, 0, game.stageViewRect.width, game.stageViewRect.height, 'pixelWhite');
+    playerPhaseBgImage.tint = "0x044500";
+    this.addChild(playerPhaseBgImage);
+
+    var text =  "Player Phase"
+    var textStyle = { font: "85px Times New Romans", fill: "#ffffff", fontStyle: "italic" };
+    var messageText = game.make.text(0, 0, text, textStyle);
+    messageText.autoRound = true
+    messageText.alignIn(game.stageViewRect, Phaser.CENTER)
+    this.addChild(messageText);
+
+    var fadeInTween = game.add.tween(this).from({ alpha: 0 }, 500, Phaser.Easing.Linear.None, true, 400, 0, false);
+    var fadeOutTween = game.add.tween(this).to({ alpha: 0 }, 500, Phaser.Easing.Linear.None, false, 700, 0, false);
+    var slideTween = game.add.tween(messageText).from({ x: messageText.x + 150 }, 2000, Phaser.Easing.Quadratic.Out, true, 400, 0, false);
+    slideTween.chain(fadeOutTween)
+
+    fadeInTween.onComplete.addOnce(function () {
+        game.hud.activePhase = "player"
+        game.hudInstance.updatePhaseButtonImage()
+    })
+}
+
+PlayerSceneGroup.prototype = Object.create(Phaser.Group.prototype);
+PlayerSceneGroup.prototype.constructor = PlayerSceneGroup;
+
+//=========================================================
+function EnemySceneGroup(game) {
+    Phaser.Group.call(this, game);
+
+    var playerPhaseBgImage = game.make.tileSprite(0, 0, game.stageViewRect.width, game.stageViewRect.height, 'pixelWhite');
+    playerPhaseBgImage.tint = "0x450000";
+    this.addChild(playerPhaseBgImage);
+
+    var text = "Enemy Phase"
+    var textStyle = { font: "85px Times New Romans", fill: "#ffffff", fontStyle: "italic" };
+    var messageText = game.make.text(0, 0, text, textStyle);
+    messageText.autoRound = true
+    messageText.alignIn(game.stageViewRect, Phaser.CENTER)
+    this.addChild(messageText);
+
+    var fadeInTween = game.add.tween(this).from({ alpha: 0 }, 500, Phaser.Easing.Linear.None, true, 400, 0, false);
+    var fadeOutTween = game.add.tween(this).to({ alpha: 0 }, 500, Phaser.Easing.Linear.None, false, 700, 0, false);
+    var slideTween = game.add.tween(messageText).from({ x: messageText.x + 150 }, 2000, Phaser.Easing.Quadratic.Out, true, 400, 0, false);
+    slideTween.chain(fadeOutTween)
+
+    fadeInTween.onComplete.addOnce(function () {
+        game.hud.activePhase = "enemy"
+        game.hudInstance.updatePhaseButtonImage()
+    })
+}
+
+EnemySceneGroup.prototype = Object.create(Phaser.Group.prototype);
+EnemySceneGroup.prototype.constructor = EnemySceneGroup;
+
+//=========================================================
+function HudGroup(game) {
+    Phaser.Group.call(this, game);
+
+    // End Phase Button
+    this._endPhasePlayerImage = game.make.image(0, 0, Helper.getImage("endPhase-image-player"))
+    this._endPhasePlayerImage.alignIn(game.stageViewRect, Phaser.BOTTOM_RIGHT, 0, 0)
+    this.addChild(this._endPhasePlayerImage);
+
+    this._endPhaseEnemyImage = game.make.image(0, 0, Helper.getImage("endPhase-image-enemy"))
+    this._endPhaseEnemyImage.alignIn(game.stageViewRect, Phaser.BOTTOM_RIGHT, 0, 0)
+    this.addChild(this._endPhaseEnemyImage);
+    this._endPhaseEnemyImage.kill()
+
+    var endPhaseButton = game.make.sprite(this._endPhasePlayerImage.x, this._endPhasePlayerImage.y, 'pixelTransparent');
+    endPhaseButton.width = this._endPhasePlayerImage.width;
+    endPhaseButton.height = this._endPhasePlayerImage.height;
+    endPhaseButton.inputEnabled = true;
+    endPhaseButton.events.onInputUp.add(this.endPhaseClicked, this);
+    this.addChild(endPhaseButton);
+}
+
+HudGroup.prototype = Object.create(Phaser.Group.prototype);
+HudGroup.prototype.constructor = HudGroup;
+
+HudGroup.prototype.endPhaseClicked = function (button, token) {
+    var dialogInstance
+    if (game.hud.activePhase == "player") {
+        dialogInstance = MakeDialog(game, "dialog-hud-endphase-player")
+    } else {
+        dialogInstance = MakeDialog(game, "dialog-hud-endphase-enemy")
+    }
+
+    // TODO add fadeIn()
+    game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+    game.stage.addChild(dialogInstance)
+}
+
+HudGroup.prototype.updatePhaseButtonImage = function () {
+    if (game.hud.activePhase == "player") {
+        this._endPhasePlayerImage.revive()
+        this._endPhaseEnemyImage.kill()
+    } else {
+        this._endPhasePlayerImage.kill()
+        this._endPhaseEnemyImage.revive()
+    }
+}
+
 //=========================================================
 function MakeRevealMap(game, id) {
     var revealData = game.gamedata.revealMaps.find(function (item) { return item.id == id });
@@ -264,7 +417,7 @@ function MakeRevealMap(game, id) {
 
         // Move Player
         player.body.x = game.revealMap.center.x
-        player.body.y = game.revealMap.center.y
+        player.body.y = game.revealMap.center.y + game.presentationOffsetY
         game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, game.followLerp, game.followLerp);
         game.cutSceneCamera = true;
 
@@ -287,6 +440,10 @@ function MakeRevealDialog(game, id) {
     var buttonType = "reveal";
     var buttonData = [{ "text": "Continue", "actions": [{ "type": "reveal" }] }];
 
+    if (revealDialog.continueToPlayerPhase) {
+        buttonData = [{ "text": "Continue", "actions": [{ "type": "reveal" }, { "type": "scene", "sceneId": "scene-player" }] }];
+    }
+
     // Add Tokens
     if (revealDialog.addSingleToken != null) {
         // Show image at the top of the Dialog
@@ -300,7 +457,7 @@ function MakeRevealDialog(game, id) {
 
         imageKey = tokenInstance.imageKey;
         player.body.x = tokenInstance.x + 48
-        player.body.y = tokenInstance.y + 256
+        player.body.y = tokenInstance.y + 208 + game.presentationOffsetY
 
     } else if (revealDialog.addMultipleTokens != null) {
         // Show images with the Dialog in the middle of the room
@@ -316,14 +473,14 @@ function MakeRevealDialog(game, id) {
         }
 
         player.body.x = game.revealMap.center.x
-        player.body.y = game.revealMap.center.y
+        player.body.y = game.revealMap.center.y + game.presentationOffsetY
 
     } else {
         player.body.x = game.revealMap.center.x
-        player.body.y = game.revealMap.center.y
+        player.body.y = game.revealMap.center.y + game.presentationOffsetY
     }
 
-    // Move Player
+    // Move Player to Map Tile
     game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, game.followLerp, game.followLerp);
     game.cutSceneCamera = true;
 
@@ -433,8 +590,9 @@ TokenSprite.prototype = Object.create(Phaser.Sprite.prototype);
 TokenSprite.prototype.constructor = TokenSprite;
 
 TokenSprite.prototype.tokenClicked = function (token) {
+    // Move Player Token
     player.body.x = token.centerX + 300 - 20 - 48 //half message width - left margin - half image width
-    player.body.y = token.centerY
+    player.body.y = token.centerY + game.presentationOffsetY
     game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, game.followLerp, game.followLerp);
     game.cutSceneCamera = true;
 
@@ -486,12 +644,12 @@ function DialogGroup(game, id, messageText, imageKey, buttonType, buttonData, sk
     if (buttonType == "reveal" && revealImageKey != null) {
         // Reveal Image
         var revealPointer = game.make.image(0, 0, Helper.getImage(imageKey))
-        revealPointer.alignIn(game.stageViewRect, Phaser.CENTER, 0, -256 + 48)
+        revealPointer.alignIn(game.stageViewRect, Phaser.CENTER, 0, -208 + 48 - game.presentationOffsetY)
         this.addChild(revealPointer);
 
         // Reveal Pointer
         var revealPointer = game.make.image(0, 0, 'revealPointer')
-        revealPointer.alignIn(game.stageViewRect, Phaser.CENTER, 0, -96 -48 + 4)
+        revealPointer.alignIn(game.stageViewRect, Phaser.CENTER, 0, -48 - 48 + 4 - game.presentationOffsetY)
         this.addChild(revealPointer);
     }
 
@@ -500,37 +658,40 @@ function DialogGroup(game, id, messageText, imageKey, buttonType, buttonData, sk
     if (buttonType == "reveal" && imageKey != null) {
         dialogMessage.alignTo(revealPointer, Phaser.BOTTOM_CENTER, 0, 3)
     } else {
-        dialogMessage.alignIn(game.stageViewRect, Phaser.CENTER)
+        dialogMessage.alignIn(game.stageViewRect, Phaser.CENTER, 0, - game.presentationOffsetY)
     }
     this.addChild(dialogMessage);
 
+    // Buttons
     if (buttonType == "cancel-action") {
         // Buttons for [Cancel] [Action]
+        var data = this._buttonData[0]
         var dialogCancel = new DialogButtonThin(game, "Cancel", 280);
         dialogCancel.alignTo(dialogMessage, Phaser.BOTTOM_LEFT, -10, 10)
         this.addChild(dialogCancel);
 
-        var dialogAction = new DialogButtonThin(game, buttonData[0].text, 280);
+        var dialogAction = new DialogButtonThin(game, data.text, 280);
         dialogAction.alignTo(dialogMessage, Phaser.BOTTOM_RIGHT, -10, 10)
         this.addChild(dialogAction);
 
-        dialogCancelButton = game.make.sprite(dialogCancel.x, dialogCancel.y, 'pixelTransparent');
+        var dialogCancelButton = game.make.sprite(dialogCancel.x, dialogCancel.y, 'pixelTransparent');
         dialogCancelButton.width = dialogCancel.width;
         dialogCancelButton.height = dialogCancel.height;
         dialogCancelButton.inputEnabled = true;
         dialogCancelButton.events.onInputUp.add(this.cancelClicked, this);
         this.addChild(dialogCancelButton);
 
-        dialogActionButton = game.make.sprite(dialogAction.x, dialogAction.y, 'pixelTransparent');
+        var dialogActionButton = game.make.sprite(dialogAction.x, dialogAction.y, 'pixelTransparent');
         dialogActionButton.width = dialogAction.width;
         dialogActionButton.height = dialogAction.height;
         dialogActionButton.inputEnabled = true;
         dialogActionButton.events.onInputUp.add(this.buttonClicked, this);
-        dialogActionButton.buttonIndex = 0; //dynamic property
+        dialogActionButton.data = data; //dynamic property
         this.addChild(dialogActionButton);
 
     } else if (buttonType == "continue" || buttonType == "reveal") {
         // Button for [Continue]
+        var data = this._buttonData[0]
         var dialogContinue = new DialogButtonThin(game, "Continue", 180);
         dialogContinue.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 0, 10)
         this.addChild(dialogContinue);
@@ -540,7 +701,7 @@ function DialogGroup(game, id, messageText, imageKey, buttonType, buttonData, sk
         dialogContinueButton.height = dialogContinue.height;
         dialogContinueButton.inputEnabled = true;
         dialogContinueButton.events.onInputUp.add(this.buttonClicked, this);
-        dialogContinueButton.buttonIndex = 0; //dynamic property
+        dialogContinueButton.data = data; //dynamic property
         this.addChild(dialogContinueButton);
 
     } else if (buttonType == "skilltest") {
@@ -613,7 +774,8 @@ function DialogGroup(game, id, messageText, imageKey, buttonType, buttonData, sk
     } else if (buttonType == "custom") {
         // Custom Buttons
         var buttonYOffset = 10;
-        for (var i = 0; i < buttonData.length; i++) {
+        for (var i = 0; i < this._buttonData.length; i++) {
+            var data = this._buttonData[i]
             var dialogContinue = new DialogButtonMedium(game, buttonData[i].text, 500);
             dialogContinue.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 0, buttonYOffset)
             this.addChild(dialogContinue);
@@ -624,7 +786,7 @@ function DialogGroup(game, id, messageText, imageKey, buttonType, buttonData, sk
             dialogContinueButton.height = dialogContinue.height;
             dialogContinueButton.inputEnabled = true;
             dialogContinueButton.events.onInputUp.add(this.buttonClicked, this);
-            dialogContinueButton.buttonIndex = i; //dynamic property
+            dialogContinueButton.data = data
             this.addChild(dialogContinueButton);
         }
     }
@@ -655,11 +817,11 @@ DialogGroup.prototype.skillConfirmClicked = function (button, pointer) {
     var customState = game.customStates.find(function (item) { return item.id == dialogId });
 
     if (customState.successCount + this._skillTestDisplay >= this._skillTarget) {
-        button.buttonIndex = 0;
+        button.data = this._buttonData.find(function (item) { return item.id == "success"})
         DialogGroup.prototype.buttonClicked.call(this, button);
     } else {
         customState.successCount += this._skillTestDisplay
-        button.buttonIndex = 1;
+        button.data = this._buttonData.find(function (item) { return item.id == "fail" })
         DialogGroup.prototype.buttonClicked.call(this, button);
     }
 }
@@ -668,60 +830,59 @@ DialogGroup.prototype.buttonClicked = function (button, pointer) {
     // this = DialogGroup
     var restoreControl = true;
     var fadeOutCallback = null;
-    // Look for buttonIndex
-    if (button.buttonIndex in this._buttonData) {
-        // Look for actions array
-        if (this._buttonData[button.buttonIndex].hasOwnProperty("actions")) {
-            // Loop on actions array
-            var actionArray = this._buttonData[button.buttonIndex]["actions"];
-            for (var i = 0; i < actionArray.length; i++) {
-                // Process each action
-                var action = actionArray[i];
-                if (action.type == "removeTokens") {
-                    // Loop on tokenIds array
-                    for (var j = 0; j < action.tokenIds.length; j++) {
-                        var id = action.tokenIds[j];
 
-                        if (game.gamedataInstances.mapTokens.hasOwnProperty(id)) {
-                            // Remove Id
-                            var instance = game.gamedataInstances.mapTokens[id]
-                            if (instance != null) {
-                                instance.fadeOut(function () {
-                                    game.gamedataInstances.mapTokens[id] = null;
-                                    game.world.removeChild(instance);
-                                    instance.destroy();
-                                })
-                            }
-                        }
-                    }
-                } else if (action.type == "dialog") {
-                    // Make a new Dialog
-                    fadeOutCallback = function () {
-                        var dialogInstance = MakeDialog(game, action.dialogId)
-                        // TODO add fadeIn()
-                        game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
-                        game.stage.addChild(dialogInstance)
-                    }
-                    restoreControl = false;
+    // Look for button data and action aray
+    if (button.data != null && button.data.hasOwnProperty("actions")) {
+        // Loop on actions array
+        for (var i = 0; i < button.data.actions.length; i++) {
+            // Process each action
+            var action = button.data.actions[i];
+            if (action.type == "removeTokens") {
+                // Loop on tokenIds array
+                for (var j = 0; j < action.tokenIds.length; j++) {
+                    var id = action.tokenIds[j];
 
-                } else if (action.type == "reveal") {
-                    //Go to next reveal dialog
-                    if (game.revealMap.dialogs.length > 0) {
-                        fadeOutCallback = function () {
-                            var revealDialog = game.revealMap.dialogs.shift();
-                            MakeRevealDialog(game, revealDialog);
+                    if (game.gamedataInstances.mapTokens.hasOwnProperty(id)) {
+                        // Remove Id
+                        var instance = game.gamedataInstances.mapTokens[id]
+                        if (instance != null) {
+                            instance.fadeOut(function () {
+                                game.gamedataInstances.mapTokens[id] = null;
+                                game.world.removeChild(instance);
+                                instance.destroy();
+                            })
                         }
-                        restoreControl = false;
-                    }
-                } else if (action.type == "revealMap") {
-                    //Reveal map tiles
-                    if (action.revealMapId != null) {
-                        fadeOutCallback = function () {
-                            MakeRevealMap(game, action.revealMapId);
-                        }
-                        restoreControl = false;
                     }
                 }
+            } else if (action.type == "dialog") {
+                // Make a new Dialog
+                fadeOutCallback = function () {
+                    var dialogInstance = MakeDialog(game, action.dialogId)
+                    // TODO add fadeIn()
+                    game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+                    game.stage.addChild(dialogInstance)
+                }
+                restoreControl = false;
+
+            } else if (action.type == "reveal") {
+                //Go to next reveal dialog
+                if (game.revealMap.dialogs.length > 0) {
+                    fadeOutCallback = function () {
+                        var revealDialog = game.revealMap.dialogs.shift();
+                        MakeRevealDialog(game, revealDialog);
+                    }
+                    restoreControl = false;
+                }
+            } else if (action.type == "revealMap") {
+                //Reveal map tiles
+                if (action.revealMapId != null) {
+                    fadeOutCallback = function () {
+                        MakeRevealMap(game, action.revealMapId);
+                    }
+                    restoreControl = false;
+                }
+            } else if (action.type == "scene") {
+                MakeScene(game, action.sceneId)
             }
         }
     }

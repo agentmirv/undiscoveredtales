@@ -26,7 +26,7 @@
       },
       {
         "id": "reveal-halls",
-        "mapTiles": [ "maptile-hall-2", "maptile-hall-corner-1"],
+        "mapTiles": [ "maptile-hall-corner-1", "maptile-hall-end" ],
         "revealDialogs": [
           "reveal-halls-dialog-room",
           "reveal-halls-dialog-bird",
@@ -67,7 +67,8 @@
       "addMultipleTokens" : [
         "token-door1-lobby",
         "token-door2-lobby"
-      ]
+      ],
+      "continueToPlayerPhase": true
     },
     {
       "id": "reveal-explored",
@@ -85,7 +86,11 @@
     },
     {
       "id": "reveal-halls-dialog-room",
-      "text": "A hallway leads to several bedrooms. Remove any Explore tokens."
+      "text": "A hallway leads to several bedrooms. Place the Hall Corner 1 tile, the Hall End tile, and Walls. Remove any Explore tokens.",
+      "addMultipleTokens" : [
+        "token-wall1-hall",
+        "token-wall2-hall"
+      ]
     },
     {
       "id": "reveal-halls-dialog-bird",
@@ -127,10 +132,10 @@
       ]
     },
     {
-      "id": "maptile-hall-2",
+      "id": "maptile-hall-end",
       "x": 960,
       "y": 672,
-      "imageKey": "maptile-hall-2-image",
+      "imageKey": "maptile-hall-end-image",
       "angle": 0,
       "entryTokenIds": [
         "token-door1-lobby",
@@ -255,9 +260,51 @@
       "imageKey":"explore-image",
       "clickId":"dialog-door-west-bedroom",
       "addToWorld": true
+    },
+    {
+      "id":"token-wall1-hall",
+      "x":768,
+      "y":672,
+      "imageKey": "wall-north-image",
+      "addToWorld": true
+    },
+    {
+      "id":"token-wall2-hall",
+      "x":1344,
+      "y":672,
+      "imageKey": "wall-north-image",
+      "addToWorld": true
+    }
+  ],
+  "scenes": [
+    {
+      "id": "scene-player"
+    },
+    {
+      "id": "scene-enemy"
     }
   ],
   "dialogs": [
+    {
+      "id": "dialog-hud-endphase-player",
+      "text": "End the Player Phase?",
+      "buttonType": "cancel-action",
+      "buttons": [
+        { "text": "Confirm",
+          "actions": [ {"type": "scene", "sceneId": "scene-enemy"} ]
+        }
+      ]
+    },
+    {
+      "id": "dialog-hud-endphase-enemy",
+      "text": "End the Enemy Phase?",
+      "buttonType": "cancel-action",
+      "buttons": [
+        { "text": "Confirm",
+          "actions": [ {"type": "scene", "sceneId": "scene-player"} ]
+        }
+      ]
+    },
     {
       "id": "dialog-box-lobby",
       "imageKey": "search-image",
@@ -276,10 +323,10 @@
       "buttonType": "skilltest",
       "skillTarget": 2,
       "buttons": [
-        {
+        { "id": "success",
           "actions": [ {"type": "dialog", "dialogId": "dialog-box-lobby-skilltest-success"} ]
         },
-        {
+        { "id": "fail",
           "actions": [ {"type": "dialog", "dialogId": "dialog-box-lobby-skilltest-fail"} ]
         }
       ]
@@ -300,7 +347,7 @@
       "imageKey": "search-image",
       "text": "Your hands shake as you attempt to handle the latch. The image of a man-beast stalking you from the shadows clouds your mind. Feeling confounded, you set the box back down.",
       "buttonType": "continue",
-      "buttons": [ { "text": "Continue" } ]
+      "buttons": [ ]
     },
     {
       "id": "dialog-door1-lobby",
@@ -365,7 +412,7 @@
       "buttons": [
         { "text": "@ \"Hello\"", "actions": [ {"type": "dialog", "dialogId": "dialog-bird-hall-hello" } ] },
         { "text": "@ Say nothing", "actions": [ {"type": "dialog", "dialogId": "dialog-bird-hall-snub" } ] },
-        { "text": "Ignore the bird.", "actions": [  ] }
+        { "text": "Ignore the bird." }
       ]
     },
     {
@@ -404,7 +451,7 @@
       "text": "The bird claws at you and takes off to the east. Drop 1 random item and suffer 1 facedown Damage (Agility negates). Max hovers for a moment and disappears into a tiny square opening in the ceiling above the door to the east bedroom. You hear the bird squawk loudly and then go silent.",
       "buttonType": "continue",
       "buttons": [
-        { "text": "Continue", "actions": [ {"type": "removeTokens", "tokenIds": ["token-bird-hall"] } ] }
+        { "actions": [ {"type": "removeTokens", "tokenIds": ["token-bird-hall"] } ] }
       ]
     },
     {
@@ -413,7 +460,7 @@
       "text": "The bird flutters his wings and takes off to the east. He hovers for a moment and disappears into a tiny square opening in the ceiling above the door to the east bedroom. You hear the bird squawk loudly and then go silent.",
       "buttonType": "continue",
       "buttons": [
-        { "text": "Continue", "actions": [ {"type": "removeTokens", "tokenIds": ["token-bird-hall"] } ] }
+        { "actions": [ {"type": "removeTokens", "tokenIds": ["token-bird-hall"] } ] }
       ]
     },
     {
@@ -422,7 +469,7 @@
       "text": "The bird flutters his wings and takes off to the west. He hovers for a moment and disappears into a tiny square opening in the ceiling above the door to the west bedroom. You hear the bird murmur, almost sounding like language, then go silent.",
       "buttonType": "continue",
       "buttons": [
-        { "text": "Continue", "actions": [ {"type": "removeTokens", "tokenIds": ["token-bird-hall"] } ] }
+        { "actions": [ {"type": "removeTokens", "tokenIds": ["token-bird-hall"] } ] }
       ]
     },
     {
@@ -430,14 +477,14 @@
       "imageKey": "explore-image",
       "text": "The door to the east bedroom exhbits a rising sun carved into its surface. There is no handle on this door.",
       "buttonType": "continue",
-      "buttons": [ { "actions": [ ] } ]
+      "buttons": [ ]
     },
     {
       "id": "dialog-door-west-bedroom",
       "imageKey": "explore-image",
       "text": "The door to the west bedroom exhbits a setting sun carved into its surface. There is no handle on this door.",
       "buttonType": "continue",
-      "buttons": [ {  "actions": [ ] } ]
+      "buttons": [ ]
     }
   ],
   "imageTiles": [
@@ -469,15 +516,15 @@
       ]
     },
     {
-      "imageKey": "maptile-hall-2-image",
+      "imageKey": "maptile-hall-end-image",
       "width": 6,
       "height": 3,
       "floorColor": "#7c8fac",
       "spritesheet": "tileWallsSheet",
       "walls": [
-        1, 1, 1, 1, 1, 2,
+        1, 1, 1, 1, 4, 2,
         4, 4, 4, 4, 4, 4,
-        7, 4, 7, 4, 4, 5
+        7, 4, 7, 7, 7, 8
       ]
     },
     {
@@ -487,9 +534,9 @@
       "floorColor": "#743232",
       "spritesheet": "tileWallsSheet",
       "walls": [
-        1, 1, 4, 1, 1, 1,
+        1, 1, 4, 1, 1, 2,
         4, 4, 4, 4, 4, 4,
-        7, 4, 7, 7, 4, 7
+        7, 4, 7, 4, 4, 5
       ]
     }
   ],
