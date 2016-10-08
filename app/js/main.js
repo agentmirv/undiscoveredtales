@@ -319,7 +319,15 @@ EnemySceneGroup.prototype.constructor = EnemySceneGroup;
 function HudGroup(game) {
     Phaser.Group.call(this, game);
 
-    // End Phase Button
+    // Enemy Phase Background
+    this._enemyPhaseBGImage = game.make.tileSprite(0, 0, game.stageViewRect.width, game.stageViewRect.height, 'pixelWhite');
+    this._enemyPhaseBGImage.tint = "0x000000";
+    this._enemyPhaseBGImage.alpha = 0.7
+    this._enemyPhaseBGImage.inputEnabled = true;
+    this.addChild(this._enemyPhaseBGImage);
+    this._enemyPhaseBGImage.kill()
+
+    // End Phase Button 
     this._endPhasePlayerImage = game.make.image(0, 0, Helper.getImage("endPhase-image-player"))
     this._endPhasePlayerImage.alignIn(game.stageViewRect, Phaser.BOTTOM_RIGHT, 0, 0)
     this.addChild(this._endPhasePlayerImage);
@@ -357,9 +365,11 @@ HudGroup.prototype.updatePhaseButtonImage = function () {
     if (game.hud.activePhase == "player") {
         this._endPhasePlayerImage.revive()
         this._endPhaseEnemyImage.kill()
+        this._enemyPhaseBGImage.kill()
     } else {
         this._endPhasePlayerImage.kill()
         this._endPhaseEnemyImage.revive()
+        this._enemyPhaseBGImage.revive()
     }
 }
 
