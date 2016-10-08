@@ -26,7 +26,7 @@
       },
       {
         "id": "reveal-halls",
-        "mapTiles": [ "maptile-hall-2", "maptile-hall-corner-1"],
+        "mapTiles": [ "maptile-hall-corner-1", "maptile-hall-end" ],
         "revealDialogs": [
           "reveal-halls-dialog-room",
           "reveal-halls-dialog-bird",
@@ -86,7 +86,11 @@
     },
     {
       "id": "reveal-halls-dialog-room",
-      "text": "A hallway leads to several bedrooms. Remove any Explore tokens."
+      "text": "A hallway leads to several bedrooms. Place the Hall Corner 1 tile, the Hall End tile, and Walls. Remove any Explore tokens.",
+      "addMultipleTokens" : [
+        "token-wall1-hall",
+        "token-wall2-hall"
+      ]
     },
     {
       "id": "reveal-halls-dialog-bird",
@@ -128,10 +132,10 @@
       ]
     },
     {
-      "id": "maptile-hall-2",
+      "id": "maptile-hall-end",
       "x": 960,
       "y": 672,
-      "imageKey": "maptile-hall-2-image",
+      "imageKey": "maptile-hall-end-image",
       "angle": 0,
       "entryTokenIds": [
         "token-door1-lobby",
@@ -255,6 +259,20 @@
       "y":960,
       "imageKey":"explore-image",
       "clickId":"dialog-door-west-bedroom",
+      "addToWorld": true
+    },
+    {
+      "id":"token-wall1-hall",
+      "x":768,
+      "y":672,
+      "imageKey": "wall-north-image",
+      "addToWorld": true
+    },
+    {
+      "id":"token-wall2-hall",
+      "x":1344,
+      "y":672,
+      "imageKey": "wall-north-image",
       "addToWorld": true
     }
   ],
@@ -498,15 +516,15 @@
       ]
     },
     {
-      "imageKey": "maptile-hall-2-image",
+      "imageKey": "maptile-hall-end-image",
       "width": 6,
       "height": 3,
       "floorColor": "#7c8fac",
       "spritesheet": "tileWallsSheet",
       "walls": [
-        1, 1, 1, 1, 1, 2,
+        1, 1, 1, 1, 4, 2,
         4, 4, 4, 4, 4, 4,
-        7, 4, 7, 4, 4, 5
+        7, 4, 7, 7, 7, 8
       ]
     },
     {
@@ -516,9 +534,9 @@
       "floorColor": "#743232",
       "spritesheet": "tileWallsSheet",
       "walls": [
-        1, 1, 4, 1, 1, 1,
+        1, 1, 4, 1, 1, 2,
         4, 4, 4, 4, 4, 4,
-        7, 4, 7, 7, 4, 7
+        7, 4, 7, 4, 4, 5
       ]
     }
   ],
