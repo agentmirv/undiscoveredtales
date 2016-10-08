@@ -18,7 +18,9 @@ var GameState = {
         game.load.image('debugSquare', 'assets/images/DebugSquare.png');
         game.load.image('pentacle', 'assets/images/pentacle.png');
         game.load.image('bird', 'assets/images/raven.png');
-        
+        game.load.image('hudButton', 'assets/images/HudButton.png');
+        game.load.image('arrow', 'assets/images/plain-arrow.png');
+
         game.load.spritesheet('tileWallsSheet', 'assets/images/TileWalls.png', 96, 96);
 
         game.load.json('gamedata', 'data/gamedata.json');
@@ -36,6 +38,17 @@ var GameState = {
         game.revealMap = {};
         game.revealMap.dialogs = [];
         game.revealMap.center = {}
+
+        //=================================================
+        // Hud images
+        var hudBmd = game.make.bitmapData(96, 96)
+        var endPhaseBgImage = game.make.image(0, 0, "hudButton")
+        var endPhaseButtonImage = game.make.image(0, 0, "arrow")
+        endPhaseBgImage.tint = "0x044500"
+        endPhaseButtonImage.tint = "0xFFFFFF"
+        hudBmd.copy(endPhaseBgImage)
+        hudBmd.copy(endPhaseButtonImage, 0, 0, 64, 64, 16, 16)
+        game.cache.addBitmapData("endPhase-image", hudBmd)
 
         //=================================================
         // ImageTokens BitmapData
@@ -116,7 +129,6 @@ var GameState = {
         game.followLerp = 0.06;
         game.camera.focusOnXY(game.gamedata.playerStart.x, game.gamedata.playerStart.y)
         // Move Player
-        // TODO cameraOffsetY
         player = game.add.sprite(game.gamedata.playerStart.x, game.gamedata.playerStart.y, 'pixelTransparent');
         game.physics.p2.enable(player);
         game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, game.followLerp, game.followLerp);
@@ -126,6 +138,11 @@ var GameState = {
         //=================================================
         // First Reveal
         MakeRevealMap(game, 'reveal-lobby')
+
+        //=================================================
+        // Add HUD
+        var hudInstance = new HudGroup(game)
+        game.stage.addChild(hudInstance)
     },
 
     update: function () {
@@ -213,6 +230,32 @@ Helper.getImage = function (imageKey) {
 }
 
 //=========================================================
+function HudGroup(game) {
+    Phaser.Group.call(this, game);
+
+    var endPhaseImage = game.make.image(0, 0, Helper.getImage("endPhase-image"))
+    endPhaseImage.alignIn(game.stageViewRect, Phaser.BOTTOM_RIGHT, 0, 0)
+    this.addChild(endPhaseImage);
+
+    var endPhaseButton = game.make.sprite(endPhaseImage.x, endPhaseImage.y, 'pixelTransparent');
+    endPhaseButton.width = endPhaseImage.width;
+    endPhaseButton.height = endPhaseImage.height;
+    endPhaseButton.inputEnabled = true;
+    endPhaseButton.events.onInputUp.add(this.endPhaseInvestigatorsClicked, this);
+    this.addChild(endPhaseButton);
+}
+
+HudGroup.prototype = Object.create(Phaser.Group.prototype);
+HudGroup.prototype.constructor = HudGroup;
+
+HudGroup.prototype.endPhaseInvestigatorsClicked = function (button, token) {
+    var dialogInstance = MakeDialog(game, "dialog-hud-endphase-investigator")
+    // TODO add fadeIn()
+    game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+    game.stage.addChild(dialogInstance)
+}
+
+//=========================================================
 function MakeRevealMap(game, id) {
     var revealData = game.gamedata.revealMaps.find(function (item) { return item.id == id });
     game.revealMap.dialogs = revealData.revealDialogs;
@@ -265,7 +308,6 @@ function MakeRevealMap(game, id) {
         game.revealMap.center = new Phaser.Point(localGroup.centerX, localGroup.centerY)
 
         // Move Player
-        // TODO cameraOffsetY
         player.body.x = game.revealMap.center.x
         player.body.y = game.revealMap.center.y + game.presentationOffsetY
         game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, game.followLerp, game.followLerp);
@@ -327,7 +369,6 @@ function MakeRevealDialog(game, id) {
     }
 
     // Move Player to Map Tile
-    // TODO cameraOffsetY
     game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, game.followLerp, game.followLerp);
     game.cutSceneCamera = true;
 
@@ -440,7 +481,6 @@ TokenSprite.prototype.tokenClicked = function (token) {
     // Move Player Token
     player.body.x = token.centerX + 300 - 20 - 48 //half message width - left margin - half image width
     player.body.y = token.centerY + game.presentationOffsetY
-    // TODO cameraOffsetY
     game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, game.followLerp, game.followLerp);
     game.cutSceneCamera = true;
 
@@ -522,14 +562,14 @@ function DialogGroup(game, id, messageText, imageKey, buttonType, buttonData, sk
         dialogAction.alignTo(dialogMessage, Phaser.BOTTOM_RIGHT, -10, 10)
         this.addChild(dialogAction);
 
-        dialogCancelButton = game.make.sprite(dialogCancel.x, dialogCancel.y, 'pixelTransparent');
+        var dialogCancelButton = game.make.sprite(dialogCancel.x, dialogCancel.y, 'pixelTransparent');
         dialogCancelButton.width = dialogCancel.width;
         dialogCancelButton.height = dialogCancel.height;
         dialogCancelButton.inputEnabled = true;
         dialogCancelButton.events.onInputUp.add(this.cancelClicked, this);
         this.addChild(dialogCancelButton);
 
-        dialogActionButton = game.make.sprite(dialogAction.x, dialogAction.y, 'pixelTransparent');
+        var dialogActionButton = game.make.sprite(dialogAction.x, dialogAction.y, 'pixelTransparent');
         dialogActionButton.width = dialogAction.width;
         dialogActionButton.height = dialogAction.height;
         dialogActionButton.inputEnabled = true;
