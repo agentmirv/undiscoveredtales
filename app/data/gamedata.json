@@ -286,6 +286,15 @@
   ],
   "dialogs": [
     {
+      "id": "dialog-hud-fire-event",
+      "text": "The fire spreads out of control. Place Fire in a space adjacent to a space containing Fire.",
+      "buttonType": "fire-event",
+      "buttons": [
+        { "id": "extinguished", "text": "Fire Extinguished" },
+        { "id": "spreads", "text": "Fire Spreads" }
+      ]
+    },
+    {
       "id": "dialog-hud-endphase-player",
       "text": "End the Player Phase?",
       "buttonType": "cancel-action",

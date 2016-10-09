@@ -40,6 +40,7 @@ var GameState = {
         game.revealMap.center = {}
         game.hud = {};
         game.hud.activePhase = "player";
+        game.hud.fireSet = false;
         game.hudInstance = {};
 
         //=================================================
@@ -277,14 +278,21 @@ function PlayerSceneGroup(game) {
     var slideTween = game.add.tween(messageText).from({ x: messageText.x + 150 }, 2000, Phaser.Easing.Quadratic.Out, true, 400, 0, false);
     slideTween.chain(fadeOutTween)
 
-    fadeInTween.onComplete.addOnce(function () {
-        game.hud.activePhase = "player"
-        game.hudInstance.updatePhaseButtonImage()
-    })
+    fadeInTween.onComplete.addOnce(this.updatePhase, this)
+    fadeOutTween.onComplete.addOnce(this.destroyScene, this)
 }
 
 PlayerSceneGroup.prototype = Object.create(Phaser.Group.prototype);
 PlayerSceneGroup.prototype.constructor = PlayerSceneGroup;
+
+PlayerSceneGroup.prototype.updatePhase = function () {
+    game.hud.activePhase = "player"
+    game.hudInstance.updatePhaseButtonImage()
+}
+
+PlayerSceneGroup.prototype.destroyScene = function () {
+    this.destroy(true)
+}
 
 //=========================================================
 function EnemySceneGroup(game) {
@@ -306,14 +314,22 @@ function EnemySceneGroup(game) {
     var slideTween = game.add.tween(messageText).from({ x: messageText.x + 150 }, 2000, Phaser.Easing.Quadratic.Out, true, 400, 0, false);
     slideTween.chain(fadeOutTween)
 
-    fadeInTween.onComplete.addOnce(function () {
-        game.hud.activePhase = "enemy"
-        game.hudInstance.updatePhaseButtonImage()
-    })
+    fadeInTween.onComplete.addOnce(this.updatePhase, this)
+    fadeOutTween.onComplete.addOnce(this.destroyScene, this)
 }
 
 EnemySceneGroup.prototype = Object.create(Phaser.Group.prototype);
 EnemySceneGroup.prototype.constructor = EnemySceneGroup;
+
+EnemySceneGroup.prototype.updatePhase = function () {
+    game.hud.activePhase = "enemy"
+    game.hudInstance.updatePhaseButtonImage()
+}
+
+EnemySceneGroup.prototype.destroyScene = function () {
+    this.destroy(true)
+}
+
 
 //=========================================================
 function HudGroup(game) {
@@ -365,11 +381,19 @@ HudGroup.prototype.updatePhaseButtonImage = function () {
     if (game.hud.activePhase == "player") {
         this._endPhasePlayerImage.revive()
         this._endPhaseEnemyImage.kill()
-        this._enemyPhaseBGImage.kill()
+        //this._enemyPhaseBGImage.kill()
     } else {
         this._endPhasePlayerImage.kill()
         this._endPhaseEnemyImage.revive()
-        this._enemyPhaseBGImage.revive()
+        //this._enemyPhaseBGImage.revive()
+    }
+}
+
+HudGroup.prototype.fireEvent = function () {
+    if (game.hud.fireSet) {
+        MakeDialog
+    } else {
+        // do random event
     }
 }
 
