@@ -290,8 +290,8 @@
       "text": "The fire spreads out of control. Place Fire in a space adjacent to a space containing Fire.",
       "buttonType": "fire-event",
       "buttons": [
-        { "id": "extinguished", "text": "Fire Extinguished" },
-        { "id": "spreads", "text": "Fire Spreads" }
+        { "id": "extinguished", "text": "Fire Extinguished", "actions": [ { "type": "fireExtinguished"} ] },
+        { "id": "spreads", "text": "Fire Spreads", "actions": [ { "type": "fireSpreads"} ] }
       ]
     },
     {

@@ -315,6 +315,7 @@ function EnemySceneGroup(game) {
     slideTween.chain(fadeOutTween)
 
     fadeInTween.onComplete.addOnce(this.updatePhase, this)
+    fadeOutTween.onComplete.addOnce(this.beginEnemySteps, this)
     fadeOutTween.onComplete.addOnce(this.destroyScene, this)
 }
 
@@ -326,10 +327,13 @@ EnemySceneGroup.prototype.updatePhase = function () {
     game.hudInstance.updatePhaseButtonImage()
 }
 
+EnemySceneGroup.prototype.beginEnemySteps = function () {
+    game.hudInstance.fireEvent()
+}
+
 EnemySceneGroup.prototype.destroyScene = function () {
     this.destroy(true)
 }
-
 
 //=========================================================
 function HudGroup(game) {
@@ -391,10 +395,30 @@ HudGroup.prototype.updatePhaseButtonImage = function () {
 
 HudGroup.prototype.fireEvent = function () {
     if (game.hud.fireSet) {
-        MakeDialog
+        var dialogInstance = MakeDialog(game, "dialog-hud-fire-event")
+        // TODO add fadeIn()
+        game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+        game.stage.addChild(dialogInstance)
     } else {
         // do random event
+        game.hudInstance.randomEvent()
     }
+}
+
+HudGroup.prototype.fireExtinguished = function () {
+    game.hud.fireSet = false
+    // do random event
+    game.hudInstance.randomEvent()
+}
+
+HudGroup.prototype.fireSpreads = function () {
+    game.hud.fireSet = true
+    // do random event
+    game.hudInstance.randomEvent()
+}
+
+HudGroup.prototype.randomEvent = function () {
+    console.log("random event")
 }
 
 //=========================================================
@@ -829,7 +853,34 @@ function DialogGroup(game, id, messageText, imageKey, buttonType, buttonData, sk
             dialogContinueButton.events.onInputUp.add(this.buttonClicked, this);
             dialogContinueButton.data = data
             this.addChild(dialogContinueButton);
-        }
+        } 
+    } if (buttonType == "fire-event") {
+        // Buttons for [Fire Extinguished] [Fire Spreads]
+        var dataExtinguished = this._buttonData.find(function (item) { return item.id == "extinguished" })
+        var dialogExtinguished = new DialogButtonThin(game, dataExtinguished.text, 280);
+        dialogExtinguished.alignTo(dialogMessage, Phaser.BOTTOM_LEFT, -10, 10)
+        this.addChild(dialogExtinguished);
+
+        var dataSpreads = this._buttonData.find(function (item) { return item.id == "spreads" })
+        var dialogSpreads = new DialogButtonThin(game, dataSpreads.text, 280);
+        dialogSpreads.alignTo(dialogMessage, Phaser.BOTTOM_RIGHT, -10, 10)
+        this.addChild(dialogSpreads);
+
+        var dialogExtinguishedButton = game.make.sprite(dialogExtinguished.x, dialogExtinguished.y, 'pixelTransparent');
+        dialogExtinguishedButton.width = dialogExtinguished.width;
+        dialogExtinguishedButton.height = dialogExtinguished.height;
+        dialogExtinguishedButton.inputEnabled = true;
+        dialogExtinguishedButton.events.onInputUp.add(this.buttonClicked, this);
+        dialogExtinguishedButton.data = dataExtinguished
+        this.addChild(dialogExtinguishedButton);
+
+        var dialogSpreadsButton = game.make.sprite(dialogSpreads.x, dialogSpreads.y, 'pixelTransparent');
+        dialogSpreadsButton.width = dialogSpreads.width;
+        dialogSpreadsButton.height = dialogSpreads.height;
+        dialogSpreadsButton.inputEnabled = true;
+        dialogSpreadsButton.events.onInputUp.add(this.buttonClicked, this);
+        dialogSpreadsButton.data = dataSpreads
+        this.addChild(dialogSpreadsButton);
     }
 }
 
@@ -924,6 +975,16 @@ DialogGroup.prototype.buttonClicked = function (button, pointer) {
                 }
             } else if (action.type == "scene") {
                 MakeScene(game, action.sceneId)
+            } else if (action.type == "fireExtinguished") {
+                fadeOutCallback = function () {
+                    game.hudInstance.fireExtinguished()
+                }
+                restoreControl = false;
+            } else if (action.type == "fireSpreads") {
+                fadeOutCallback = function () {
+                    game.hudInstance.fireSpreads()
+                }
+                restoreControl = false;
             }
         }
     }
