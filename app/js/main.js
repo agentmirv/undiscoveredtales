@@ -395,10 +395,28 @@ HudGroup.prototype.updatePhaseButtonImage = function () {
 
 HudGroup.prototype.fireEvent = function () {
     if (game.hud.fireSet) {
-        var dialogInstance = MakeDialog(game, "dialog-hud-fire-event")
+        var dialogData = game.gamedata.dialogs.find(function (item) { return item.id == "dialog-hud-fire-event" });
+
+        // Dialog Info
+        var imageKey = null;
+        var buttonType = "fire-event";
+        var buttonData = [
+          { "id": "extinguished", "text": "Fire Extinguished", "actions": [ { "type": "fireExtinguished"} ] },
+          { "id": "spreads", "text": "Fire Spreads", "actions": [ { "type": "fireSpreads"} ] }
+        ]
+
+        var dialogInstance = new DialogGroup(
+            game,
+            dialogData.id,
+            dialogData.text,
+            imageKey,
+            buttonType,
+            buttonData);
+
         // TODO add fadeIn()
         game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
         game.stage.addChild(dialogInstance)
+
     } else {
         // do random event
         game.hudInstance.randomEvent()
