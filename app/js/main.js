@@ -182,7 +182,7 @@ var GameState = {
                     game.customCallback()
                 }
             }
-        } else {
+        } else if(game.hud.activePhase == "player") {
             var playerVelocity = 400;
             player.body.setZeroVelocity();
 
