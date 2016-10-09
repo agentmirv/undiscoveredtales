@@ -515,15 +515,22 @@ function MakeRevealDialog(game, id) {
 //=========================================================
 function MakeMapTile(game, id) {
     var mapTileData = game.gamedata.mapTiles.find(function (item) { return item.id == id });
+    var mapTileInstance = null
 
-    var mapTileInstance = new MapTileGroup(
-        game,
-        mapTileData.x,
-        mapTileData.y,
-        mapTileData.imageKey,
-        mapTileData.angle);
+    if ((id in game.gamedataInstances.mapTiles) && game.gamedataInstances.mapTiles[i] != null) {
+        // This handles the case where a room needs revealed that is inside a tile
+        // that is already revealed. The camera still needs to center on the existing tile.
+        mapTileInstance = game.gamedataInstances.mapTiles[i]
+    } else {
+        mapTileInstance = new MapTileGroup(
+            game,
+            mapTileData.x,
+            mapTileData.y,
+            mapTileData.imageKey,
+            mapTileData.angle);
 
-    game.gamedataInstances.mapTiles[id] = mapTileInstance;
+        game.gamedataInstances.mapTiles[id] = mapTileInstance;
+    }
 
     return mapTileInstance;
 }

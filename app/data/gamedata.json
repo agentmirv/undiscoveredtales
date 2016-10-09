@@ -475,14 +475,14 @@
     {
       "id": "dialog-door-east-bedroom",
       "imageKey": "explore-image",
-      "text": "The door to the east bedroom exhbits a rising sun carved into its surface. There is no handle on this door.",
+      "text": "A rising sun is carved into the door to the east bedroom. There is no handle on this door.",
       "buttonType": "continue",
       "buttons": [ ]
     },
     {
       "id": "dialog-door-west-bedroom",
       "imageKey": "explore-image",
-      "text": "The door to the west bedroom exhbits a setting sun carved into its surface. There is no handle on this door.",
+      "text": "A setting sun is carved into the door of the west bedroom. There is no handle on this door.",
       "buttonType": "continue",
       "buttons": [ ]
     }
