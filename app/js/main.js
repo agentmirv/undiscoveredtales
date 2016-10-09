@@ -368,7 +368,7 @@ function HudGroup(game) {
 HudGroup.prototype = Object.create(Phaser.Group.prototype);
 HudGroup.prototype.constructor = HudGroup;
 
-HudGroup.prototype.endPhaseClicked = function (button, token) {
+HudGroup.prototype.endPhaseClicked = function (button, pointer) {
     var dialogInstance
     if (game.hud.activePhase == "player") {
         dialogInstance = MakeDialog(game, "dialog-hud-endphase-player")
@@ -401,8 +401,8 @@ HudGroup.prototype.fireEvent = function () {
         var imageKey = null;
         var buttonType = "fire-event";
         var buttonData = [
-          { "id": "extinguished", "text": "Fire Extinguished", "actions": [ { "type": "fireExtinguished"} ] },
-          { "id": "spreads", "text": "Fire Spreads", "actions": [ { "type": "fireSpreads"} ] }
+          { "id": "extinguished", "actions": [ { "type": "fireExtinguished"} ] },
+          { "id": "spreads", "actions": [ { "type": "fireSpreads"} ] }
         ]
 
         var dialogInstance = new DialogGroup(
@@ -436,7 +436,40 @@ HudGroup.prototype.fireSpreads = function () {
 }
 
 HudGroup.prototype.randomEvent = function () {
-    console.log("random event")
+    var id = "random-event-no-effect"; // TODO get randomId
+    var randomEventData = game.gamedata.randomEvents.find(function (item) { return item.id == id });
+    var imageKey = null;
+    var buttonType = null;
+    var buttonData = null;
+
+    if (randomEventData.hasOwnProperty("buttonType") && randomEventData.buttonType != "random-event-conditional") {
+        buttonType = randomEventData.buttonType
+    } else {
+        buttonType = "continue";
+        buttonData = [{ "actions": [{ "type": "randomEventDone" }] }]
+    }
+
+    var dialogInstance = new DialogGroup(
+        game,
+        randomEventData.id,
+        randomEventData.text,
+        imageKey,
+        buttonType,
+        buttonData);
+
+    // TODO add fadeIn()
+    game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+    game.stage.addChild(dialogInstance)
+}
+
+HudGroup.prototype.randomEventDone = function () {
+    var monsterCount = 0 //TODO monsters
+    
+    if(monsterCount > 0 ) {
+        // Monsters Attack
+    } else {
+        MakeScene(game, "scene-player")
+    }
 }
 
 //=========================================================
@@ -672,7 +705,7 @@ function TokenSprite(game, x, y, imageKey, clickId, addToWorld) {
 TokenSprite.prototype = Object.create(Phaser.Sprite.prototype);
 TokenSprite.prototype.constructor = TokenSprite;
 
-TokenSprite.prototype.tokenClicked = function (token) {
+TokenSprite.prototype.tokenClicked = function (token, pointer) {
     // Move Player Token
     player.body.x = token.centerX + 300 - 20 - 48 //half message width - left margin - half image width
     player.body.y = token.centerY + game.presentationOffsetY
@@ -875,12 +908,12 @@ function DialogGroup(game, id, messageText, imageKey, buttonType, buttonData, sk
     } if (buttonType == "fire-event") {
         // Buttons for [Fire Extinguished] [Fire Spreads]
         var dataExtinguished = this._buttonData.find(function (item) { return item.id == "extinguished" })
-        var dialogExtinguished = new DialogButtonThin(game, dataExtinguished.text, 280);
+        var dialogExtinguished = new DialogButtonThin(game, "Fire Extinguished", 280);
         dialogExtinguished.alignTo(dialogMessage, Phaser.BOTTOM_LEFT, -10, 10)
         this.addChild(dialogExtinguished);
 
         var dataSpreads = this._buttonData.find(function (item) { return item.id == "spreads" })
-        var dialogSpreads = new DialogButtonThin(game, dataSpreads.text, 280);
+        var dialogSpreads = new DialogButtonThin(game, "Fire Spreads", 280);
         dialogSpreads.alignTo(dialogMessage, Phaser.BOTTOM_RIGHT, -10, 10)
         this.addChild(dialogSpreads);
 
@@ -899,6 +932,33 @@ function DialogGroup(game, id, messageText, imageKey, buttonType, buttonData, sk
         dialogSpreadsButton.events.onInputUp.add(this.buttonClicked, this);
         dialogSpreadsButton.data = dataSpreads
         this.addChild(dialogSpreadsButton);
+
+    } if (buttonType == "random-event-conditional") {
+        // Buttons for [No Effect] [Resolve Effect]
+        var data = this._buttonData[0]
+        var dialogNoEffect = new DialogButtonThin(game, "No Effect", 280);
+        dialogNoEffect.alignTo(dialogMessage, Phaser.BOTTOM_LEFT, -10, 10)
+        this.addChild(dialogNoEffect);
+
+        var dialogResolveEffect = new DialogButtonThin(game, "Resolve Effect", 280);
+        dialogResolveEffect.alignTo(dialogMessage, Phaser.BOTTOM_RIGHT, -10, 10)
+        this.addChild(dialogResolveEffect);
+
+        var dialogNoEffectButton = game.make.sprite(dialogNoEffect.x, dialogNoEffect.y, 'pixelTransparent');
+        dialogNoEffectButton.width = dialogNoEffect.width;
+        dialogNoEffectButton.height = dialogNoEffect.height;
+        dialogNoEffectButton.inputEnabled = true;
+        dialogNoEffectButton.events.onInputUp.add(this.buttonClicked, this);
+        dialogNoEffectButton.data = data
+        this.addChild(dialogNoEffectButton);
+
+        var dialogResolveEffectButton = game.make.sprite(dialogResolveEffect.x, dialogResolveEffect.y, 'pixelTransparent');
+        dialogResolveEffectButton.width = dialogSpreads.width;
+        dialogResolveEffectButton.height = dialogResolveEffect.height;
+        dialogResolveEffectButton.inputEnabled = true;
+        dialogResolveEffectButton.events.onInputUp.add(this.buttonClicked, this);
+        dialogResolveEffectButton.data = data
+        this.addChild(dialogResolveEffectButton);
     }
 }
 
@@ -1001,6 +1061,11 @@ DialogGroup.prototype.buttonClicked = function (button, pointer) {
             } else if (action.type == "fireSpreads") {
                 fadeOutCallback = function () {
                     game.hudInstance.fireSpreads()
+                }
+                restoreControl = false;
+            } else if (action.type == "randomEventDone") {
+                fadeOutCallback = function () {
+                    game.hudInstance.randomEventDone()
                 }
                 restoreControl = false;
             }

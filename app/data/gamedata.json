@@ -284,12 +284,24 @@
       "id": "scene-enemy"
     }
   ],
-  "dialogs": [
+  "randomEvents": [
     {
-      "id": "dialog-hud-random-event-lobby-test",
-      "text": "The fire spreads out of control. Place Fire in a space adjacent to a space containing Fire.",
-      "buttonType": "random-event"
+      "id": "random-event-lobby-pictures",
+      "text": "Now you realize what was bothering you about this room. This event affects each investigator in the Lobby.",
+      "mapTile": "maptile-lobby",
+      "buttonType": "random-event-conditional",
+      "buttons": [ { "actions": [ {"type": "dialog", "dialogId": "random-event-lobby-pictures-resolve"} ] } ]
     },
+    {
+      "id": "random-event-lobby-pictures-resolve",
+      "text": "The pictures! Each investigator can be seen in the background of one of the pictures. You suffer 1 facedown Horror."
+    },
+    {
+      "id": "random-event-no-effect",
+      "text": "A gust of wind rattles the windows for a moment. No immediate effect."
+    }
+  ],
+  "dialogs": [
     {
       "id": "dialog-hud-fire-event",
       "text": "The fire spreads out of control. Place Fire in a space adjacent to a space containing Fire."
