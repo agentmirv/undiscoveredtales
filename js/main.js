@@ -32,7 +32,7 @@ var GameState = {
         game.gamedata = game.cache.getJSON('gamedata'); 
         game.gamedataInstances = {};
         game.gamedataInstances.mapTiles = []
-        game.gamedataInstances.mapTokens = []
+        game.gamedataInstances.mapTokens = [] // TODO fix this so it is like game.gamedataInstances.mapTiles
         game.customStates = []; // This is used in skill test dialogs
         // TODO consolidate the revealMap structure into game.customStates?
         game.revealMap = {};
@@ -40,6 +40,8 @@ var GameState = {
         game.revealMap.center = {}
         game.hud = {};
         game.hud.activePhase = "player";
+        game.hud.fireSet = false;
+        game.hud.randomEventDeck = []
         game.hudInstance = {};
 
         //=================================================
@@ -239,7 +241,8 @@ Helper.getImage = function (imageKey) {
     return game.cache.getBitmapData(imageKey)
 }
 
-//TODO getFirst
+//TODO Polyfill for array.find?
+//TODO Polyfill for array.filter?
 
 //=========================================================
 function MakeScene(game, id) {
@@ -277,14 +280,21 @@ function PlayerSceneGroup(game) {
     var slideTween = game.add.tween(messageText).from({ x: messageText.x + 150 }, 2000, Phaser.Easing.Quadratic.Out, true, 400, 0, false);
     slideTween.chain(fadeOutTween)
 
-    fadeInTween.onComplete.addOnce(function () {
-        game.hud.activePhase = "player"
-        game.hudInstance.updatePhaseButtonImage()
-    })
+    fadeInTween.onComplete.addOnce(this.updatePhase, this)
+    fadeOutTween.onComplete.addOnce(this.destroyScene, this)
 }
 
 PlayerSceneGroup.prototype = Object.create(Phaser.Group.prototype);
 PlayerSceneGroup.prototype.constructor = PlayerSceneGroup;
+
+PlayerSceneGroup.prototype.updatePhase = function () {
+    game.hud.activePhase = "player"
+    game.hudInstance.updatePhaseButtonImage()
+}
+
+PlayerSceneGroup.prototype.destroyScene = function () {
+    this.destroy(true)
+}
 
 //=========================================================
 function EnemySceneGroup(game) {
@@ -306,14 +316,26 @@ function EnemySceneGroup(game) {
     var slideTween = game.add.tween(messageText).from({ x: messageText.x + 150 }, 2000, Phaser.Easing.Quadratic.Out, true, 400, 0, false);
     slideTween.chain(fadeOutTween)
 
-    fadeInTween.onComplete.addOnce(function () {
-        game.hud.activePhase = "enemy"
-        game.hudInstance.updatePhaseButtonImage()
-    })
+    fadeInTween.onComplete.addOnce(this.updatePhase, this)
+    fadeOutTween.onComplete.addOnce(this.beginEnemySteps, this)
+    fadeOutTween.onComplete.addOnce(this.destroyScene, this)
 }
 
 EnemySceneGroup.prototype = Object.create(Phaser.Group.prototype);
 EnemySceneGroup.prototype.constructor = EnemySceneGroup;
+
+EnemySceneGroup.prototype.updatePhase = function () {
+    game.hud.activePhase = "enemy"
+    game.hudInstance.updatePhaseButtonImage()
+}
+
+EnemySceneGroup.prototype.beginEnemySteps = function () {
+    game.hudInstance.fireEvent()
+}
+
+EnemySceneGroup.prototype.destroyScene = function () {
+    this.destroy(true)
+}
 
 //=========================================================
 function HudGroup(game) {
@@ -348,11 +370,13 @@ function HudGroup(game) {
 HudGroup.prototype = Object.create(Phaser.Group.prototype);
 HudGroup.prototype.constructor = HudGroup;
 
-HudGroup.prototype.endPhaseClicked = function (button, token) {
+HudGroup.prototype.endPhaseClicked = function (button, pointer) {
     var dialogInstance
     if (game.hud.activePhase == "player") {
         dialogInstance = MakeDialog(game, "dialog-hud-endphase-player")
     } else {
+        // TODO only allow if no dialog (no modal)
+        return 
         dialogInstance = MakeDialog(game, "dialog-hud-endphase-enemy")
     }
 
@@ -365,12 +389,123 @@ HudGroup.prototype.updatePhaseButtonImage = function () {
     if (game.hud.activePhase == "player") {
         this._endPhasePlayerImage.revive()
         this._endPhaseEnemyImage.kill()
-        this._enemyPhaseBGImage.kill()
+        //this._enemyPhaseBGImage.kill()
     } else {
         this._endPhasePlayerImage.kill()
         this._endPhaseEnemyImage.revive()
-        this._enemyPhaseBGImage.revive()
+        //this._enemyPhaseBGImage.revive()
     }
+}
+
+HudGroup.prototype.fireEvent = function () {
+    if (game.hud.fireSet) {
+        var dialogData = game.gamedata.dialogs.find(function (item) { return item.id == "dialog-hud-fire-event" });
+
+        // Dialog Info
+        var imageKey = null;
+        var buttonType = "fire-event";
+        var buttonData = [
+          { "id": "extinguished", "actions": [ { "type": "fireExtinguished"} ] },
+          { "id": "spreads", "actions": [ { "type": "fireSpreads"} ] }
+        ]
+
+        var dialogInstance = new DialogGroup(
+            game,
+            dialogData.id,
+            dialogData.text,
+            imageKey,
+            buttonType,
+            buttonData);
+
+        // TODO add fadeIn()
+        game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+        game.stage.addChild(dialogInstance)
+
+    } else {
+        // do random event
+        game.hudInstance.randomEvent()
+    }
+}
+
+HudGroup.prototype.fireExtinguished = function () {
+    game.hud.fireSet = false
+    // do random event
+    game.hudInstance.randomEvent()
+}
+
+HudGroup.prototype.fireSpreads = function () {
+    game.hud.fireSet = true
+    // do random event
+    game.hudInstance.randomEvent()
+}
+
+HudGroup.prototype.randomEvent = function () {
+    if (game.hud.randomEventDeck.length == 0) {
+        // get list of visible map tiles
+        var visibleMapTileIds = []
+        for (var i = 0; i < game.gamedataInstances.mapTiles.length; i++) {
+            visibleMapTileIds.push(game.gamedataInstances.mapTiles[i].id)
+        }
+
+        // populate random events based on pickable and mapTile requirement
+        game.hud.randomEventDeck = game.gamedata.randomEvents.filter(function (element) {
+            var mapTileMissing = false
+            if (element.hasOwnProperty("mapTile")) {
+                mapTileMissing = visibleMapTileIds.indexOf(element.mapTile) < 0
+            }
+
+            return element.pickable && !mapTileMissing
+        })
+
+        console.dir(game.hud.randomEventDeck)
+    }
+
+    var randomIndex = Math.floor(Math.random() * game.hud.randomEventDeck.length);
+    var randomEventData = game.hud.randomEventDeck.find(function (element, index) { return index == randomIndex });
+    game.hud.randomEventDeck = game.hud.randomEventDeck.splice(randomIndex, 1);
+
+    var dialogInstance = new MakeRandomEvent(game, randomEventData.id)
+
+    // TODO add fadeIn()
+    game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+    game.stage.addChild(dialogInstance)
+}
+
+HudGroup.prototype.randomEventDone = function () {
+    var monsterCount = 0 //TODO monster drawer
+    
+    if(monsterCount > 0 ) {
+        // Monsters Attack
+    } else {
+        MakeScene(game, "scene-player")
+    }
+}
+
+//=========================================================
+function MakeRandomEvent(game, id) {
+    var randomEventData = game.gamedata.randomEvents.find(function (element) { return element.id == id });
+
+    var imageKey = null;
+    var buttonType = null;
+    var buttonData = null;
+
+    if (randomEventData.hasOwnProperty("buttonType") && randomEventData.buttonType == "random-event-conditional") {
+        buttonType = randomEventData.buttonType
+        buttonData = randomEventData.buttons
+    } else {
+        buttonType = "continue";
+        buttonData = [{ "actions": [{ "type": "randomEventDone" }] }]
+    }
+
+    var dialogInstance = new DialogGroup(
+        game,
+        randomEventData.id,
+        randomEventData.text,
+        imageKey,
+        buttonType,
+        buttonData);
+
+    return dialogInstance;
 }
 
 //=========================================================
@@ -400,7 +535,7 @@ function MakeRevealMap(game, id) {
                 // Look for tokenId in mapTileData.entryTokenIds
                 if (mapTileDataCheck.entryTokenIds.indexOf(tokenId) >= 0) {
                     // Check if mapTileData.id in game.gamedataInstances.mapTiles
-                    if (!(mapTileDataCheck.id in game.gamedataInstances.mapTiles)) {
+                    if (!game.gamedataInstances.mapTiles.some(function (item) { return item.id == mapTileDataCheck.id })) {
                         // If it is not in, then it is not revealed
                         removeToken = false
                     }
@@ -515,23 +650,32 @@ function MakeRevealDialog(game, id) {
 //=========================================================
 function MakeMapTile(game, id) {
     var mapTileData = game.gamedata.mapTiles.find(function (item) { return item.id == id });
+    var mapTileInstance = null
 
-    var mapTileInstance = new MapTileGroup(
-        game,
-        mapTileData.x,
-        mapTileData.y,
-        mapTileData.imageKey,
-        mapTileData.angle);
+    if (game.gamedataInstances.mapTiles.some(function (item) { return item.id == id })) {
+        // This handles the case where a room needs revealed that is inside a tile
+        // that is already revealed. The camera still needs to center on the existing tile.
+        mapTileInstance = game.gamedataInstances.mapTiles.find(function (item) { return item.id == id })
+    } else {
+        mapTileInstance = new MapTileGroup(
+            game,
+            mapTileData.id,
+            mapTileData.x,
+            mapTileData.y,
+            mapTileData.imageKey,
+            mapTileData.angle);
 
-    game.gamedataInstances.mapTiles[id] = mapTileInstance;
+        game.gamedataInstances.mapTiles.push(mapTileInstance);
+    }
 
     return mapTileInstance;
 }
 
 //=========================================================
-function MapTileGroup(game, x, y, imageKey, angle) {
+function MapTileGroup(game, id, x, y, imageKey, angle) {
     Phaser.Group.call(this, game);
 
+    this.id = id
     var mapTileSprite = game.make.sprite(x, y, Helper.getImage(imageKey))
 
     if (angle == 90) {
@@ -599,7 +743,7 @@ function TokenSprite(game, x, y, imageKey, clickId, addToWorld) {
 TokenSprite.prototype = Object.create(Phaser.Sprite.prototype);
 TokenSprite.prototype.constructor = TokenSprite;
 
-TokenSprite.prototype.tokenClicked = function (token) {
+TokenSprite.prototype.tokenClicked = function (token, pointer) {
     // Move Player Token
     player.body.x = token.centerX + 300 - 20 - 48 //half message width - left margin - half image width
     player.body.y = token.centerY + game.presentationOffsetY
@@ -798,7 +942,62 @@ function DialogGroup(game, id, messageText, imageKey, buttonType, buttonData, sk
             dialogContinueButton.events.onInputUp.add(this.buttonClicked, this);
             dialogContinueButton.data = data
             this.addChild(dialogContinueButton);
-        }
+        } 
+    } if (buttonType == "fire-event") {
+        // Buttons for [Fire Extinguished] [Fire Spreads]
+        var dataExtinguished = this._buttonData.find(function (item) { return item.id == "extinguished" })
+        var dialogExtinguished = new DialogButtonThin(game, "Fire Extinguished", 280);
+        dialogExtinguished.alignTo(dialogMessage, Phaser.BOTTOM_LEFT, -10, 10)
+        this.addChild(dialogExtinguished);
+
+        var dataSpreads = this._buttonData.find(function (item) { return item.id == "spreads" })
+        var dialogSpreads = new DialogButtonThin(game, "Fire Spreads", 280);
+        dialogSpreads.alignTo(dialogMessage, Phaser.BOTTOM_RIGHT, -10, 10)
+        this.addChild(dialogSpreads);
+
+        var dialogExtinguishedButton = game.make.sprite(dialogExtinguished.x, dialogExtinguished.y, 'pixelTransparent');
+        dialogExtinguishedButton.width = dialogExtinguished.width;
+        dialogExtinguishedButton.height = dialogExtinguished.height;
+        dialogExtinguishedButton.inputEnabled = true;
+        dialogExtinguishedButton.events.onInputUp.add(this.buttonClicked, this);
+        dialogExtinguishedButton.data = dataExtinguished
+        this.addChild(dialogExtinguishedButton);
+
+        var dialogSpreadsButton = game.make.sprite(dialogSpreads.x, dialogSpreads.y, 'pixelTransparent');
+        dialogSpreadsButton.width = dialogSpreads.width;
+        dialogSpreadsButton.height = dialogSpreads.height;
+        dialogSpreadsButton.inputEnabled = true;
+        dialogSpreadsButton.events.onInputUp.add(this.buttonClicked, this);
+        dialogSpreadsButton.data = dataSpreads
+        this.addChild(dialogSpreadsButton);
+
+    } if (buttonType == "random-event-conditional") {
+        // Buttons for [No Effect] [Resolve Effect]
+        var dataNoEffect = this._buttonData.find(function (item) { return item.id == "no-effect" })
+        var dialogNoEffect = new DialogButtonThin(game, "No Effect", 280);
+        dialogNoEffect.alignTo(dialogMessage, Phaser.BOTTOM_LEFT, -10, 10)
+        this.addChild(dialogNoEffect);
+
+        var dataResolveEffect = this._buttonData.find(function (item) { return item.id == "resolve-effect" })
+        var dialogResolveEffect = new DialogButtonThin(game, "Resolve Effect", 280);
+        dialogResolveEffect.alignTo(dialogMessage, Phaser.BOTTOM_RIGHT, -10, 10)
+        this.addChild(dialogResolveEffect);
+
+        var dialogNoEffectButton = game.make.sprite(dialogNoEffect.x, dialogNoEffect.y, 'pixelTransparent');
+        dialogNoEffectButton.width = dialogNoEffect.width;
+        dialogNoEffectButton.height = dialogNoEffect.height;
+        dialogNoEffectButton.inputEnabled = true;
+        dialogNoEffectButton.events.onInputUp.add(this.buttonClicked, this);
+        dialogNoEffectButton.data = dataNoEffect
+        this.addChild(dialogNoEffectButton);
+
+        var dialogResolveEffectButton = game.make.sprite(dialogResolveEffect.x, dialogResolveEffect.y, 'pixelTransparent');
+        dialogResolveEffectButton.width = dialogResolveEffect.width;
+        dialogResolveEffectButton.height = dialogResolveEffect.height;
+        dialogResolveEffectButton.inputEnabled = true;
+        dialogResolveEffectButton.events.onInputUp.add(this.buttonClicked, this);
+        dialogResolveEffectButton.data = dataResolveEffect
+        this.addChild(dialogResolveEffectButton);
     }
 }
 
@@ -893,6 +1092,28 @@ DialogGroup.prototype.buttonClicked = function (button, pointer) {
                 }
             } else if (action.type == "scene") {
                 MakeScene(game, action.sceneId)
+            } else if (action.type == "fireExtinguished") {
+                fadeOutCallback = function () {
+                    game.hudInstance.fireExtinguished()
+                }
+                restoreControl = false;
+            } else if (action.type == "fireSpreads") {
+                fadeOutCallback = function () {
+                    game.hudInstance.fireSpreads()
+                }
+                restoreControl = false;
+            } else if (action.type == "randomEventDone") {
+                fadeOutCallback = function () {
+                    game.hudInstance.randomEventDone()
+                }
+                restoreControl = false;
+            } else if (action.type == "randomEvent") {
+                fadeOutCallback = function () {
+                    var dialogInstance = MakeRandomEvent(game, action.randomEventId);
+                    game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+                    game.stage.addChild(dialogInstance)
+                }
+                restoreControl = false;
             }
         }
     }

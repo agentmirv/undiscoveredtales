@@ -284,7 +284,38 @@
       "id": "scene-enemy"
     }
   ],
+  "randomEvents": [
+    {
+      "id": "random-event-lobby-pictures",
+      "text": "Now you realize what was bothering you about this room. This event affects each investigator in the Lobby.",
+      "mapTile": "maptile-lobby",
+      "buttonType": "random-event-conditional",
+      "buttons": [
+        { "id": "no-effect",
+          "actions": [ {"type": "randomEventDone" } ]
+        },
+        { "id": "resolve-effect",
+          "actions": [ {"type": "randomEvent", "randomEventId": "random-event-lobby-pictures-resolve"} ]
+        }
+      ],
+      "pickable": true
+    },
+    {
+      "id": "random-event-lobby-pictures-resolve",
+      "text": "The pictures! Each investigator can be seen in the background of one of the pictures. You suffer 1 facedown Horror.",
+      "pickable": false
+    },
+    {
+      "id": "random-event-no-effect",
+      "text": "A gust of wind rattles the windows for a moment. No immediate effect.",
+      "pickable": true
+    }
+  ],
   "dialogs": [
+    {
+      "id": "dialog-hud-fire-event",
+      "text": "The fire spreads out of control. Place Fire in a space adjacent to a space containing Fire."
+    },
     {
       "id": "dialog-hud-endphase-player",
       "text": "End the Player Phase?",
@@ -475,14 +506,14 @@
     {
       "id": "dialog-door-east-bedroom",
       "imageKey": "explore-image",
-      "text": "The door to the east bedroom exhbits a rising sun carved into its surface. There is no handle on this door.",
+      "text": "A rising sun is carved into the door to the east bedroom. There is no handle on this door.",
       "buttonType": "continue",
       "buttons": [ ]
     },
     {
       "id": "dialog-door-west-bedroom",
       "imageKey": "explore-image",
-      "text": "The door to the west bedroom exhbits a setting sun carved into its surface. There is no handle on this door.",
+      "text": "A setting sun is carved into the door of the west bedroom. There is no handle on this door.",
       "buttonType": "continue",
       "buttons": [ ]
     }
