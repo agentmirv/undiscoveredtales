@@ -375,6 +375,8 @@ HudGroup.prototype.endPhaseClicked = function (button, pointer) {
     if (game.hud.activePhase == "player") {
         dialogInstance = MakeDialog(game, "dialog-hud-endphase-player")
     } else {
+        // TODO only allow if no dialog (no modal)
+        return 
         dialogInstance = MakeDialog(game, "dialog-hud-endphase-enemy")
     }
 
