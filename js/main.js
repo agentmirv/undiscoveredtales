@@ -264,6 +264,10 @@ function MakeScene(game, id) {
 function PlayerSceneGroup(game) {
     Phaser.Group.call(this, game);
 
+    var playerPhaseBgModalImage = game.make.tileSprite(0, 0, game.stageViewRect.width, game.stageViewRect.height, 'pixelTransparent');
+    playerPhaseBgModalImage.inputEnabled = true;
+    this.addChild(playerPhaseBgModalImage);
+
     var playerPhaseBgImage = game.make.tileSprite(0, 0, game.stageViewRect.width, game.stageViewRect.height, 'pixelWhite');
     playerPhaseBgImage.tint = "0x044500";
     this.addChild(playerPhaseBgImage);
@@ -300,9 +304,13 @@ PlayerSceneGroup.prototype.destroyScene = function () {
 function EnemySceneGroup(game) {
     Phaser.Group.call(this, game);
 
-    var playerPhaseBgImage = game.make.tileSprite(0, 0, game.stageViewRect.width, game.stageViewRect.height, 'pixelWhite');
-    playerPhaseBgImage.tint = "0x450000";
-    this.addChild(playerPhaseBgImage);
+    var enemyPhaseBgModalImage = game.make.tileSprite(0, 0, game.stageViewRect.width, game.stageViewRect.height, 'pixelTransparent');
+    enemyPhaseBgModalImage.inputEnabled = true;
+    this.addChild(enemyPhaseBgModalImage);
+
+    var enemyPhaseBgImage = game.make.tileSprite(0, 0, game.stageViewRect.width, game.stageViewRect.height, 'pixelWhite');
+    enemyPhaseBgImage.tint = "0x450000";
+    this.addChild(enemyPhaseBgImage);
 
     var text = "Enemy Phase"
     var textStyle = { font: "85px Times New Romans", fill: "#ffffff", fontStyle: "italic" };
