@@ -290,15 +290,25 @@
       "text": "Now you realize what was bothering you about this room. This event affects each investigator in the Lobby.",
       "mapTile": "maptile-lobby",
       "buttonType": "random-event-conditional",
-      "buttons": [ { "actions": [ {"type": "dialog", "dialogId": "random-event-lobby-pictures-resolve"} ] } ]
+      "buttons": [
+        { "id": "no-effect",
+          "actions": [ {"type": "randomEventDone" } ]
+        },
+        { "id": "resolve-effect",
+          "actions": [ {"type": "randomEvent", "randomEventId": "random-event-lobby-pictures-resolve"} ]
+        }
+      ],
+      "pickable": true
     },
     {
       "id": "random-event-lobby-pictures-resolve",
-      "text": "The pictures! Each investigator can be seen in the background of one of the pictures. You suffer 1 facedown Horror."
+      "text": "The pictures! Each investigator can be seen in the background of one of the pictures. You suffer 1 facedown Horror.",
+      "pickable": false
     },
     {
       "id": "random-event-no-effect",
-      "text": "A gust of wind rattles the windows for a moment. No immediate effect."
+      "text": "A gust of wind rattles the windows for a moment. No immediate effect.",
+      "pickable": true
     }
   ],
   "dialogs": [

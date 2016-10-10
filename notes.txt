@@ -196,7 +196,23 @@ Phaser Easing Test - JSFiddle
 https://jsfiddle.net/BinaryMoon/a68Qp/
 
 ===========================================================
+2016 October 09, Sunday 07:31 PM ~~~
 ===========================================================
+Array.prototype.map()
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map
+The map() method creates a new array with the results of calling a provided function on every element in this array.
+
+Array.prototype.filter()
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
+The filter() method creates a new array with all elements that pass the test implemented by the provided function.
+
+Get or Remove Random Array Elements Tutorial
+https://www.developphp.com/video/JavaScript/Get-or-Remove-Random-Array-Elements-Tutorial
+
+Array.prototype.splice()
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
+The splice() method changes the content of an array by removing existing elements and/or adding new elements.
+
 ===========================================================
 ===========================================================
 ===========================================================

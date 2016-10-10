@@ -32,7 +32,7 @@ var GameState = {
         game.gamedata = game.cache.getJSON('gamedata'); 
         game.gamedataInstances = {};
         game.gamedataInstances.mapTiles = []
-        game.gamedataInstances.mapTokens = []
+        game.gamedataInstances.mapTokens = [] // TODO fix this so it is like game.gamedataInstances.mapTiles
         game.customStates = []; // This is used in skill test dialogs
         // TODO consolidate the revealMap structure into game.customStates?
         game.revealMap = {};
@@ -41,6 +41,7 @@ var GameState = {
         game.hud = {};
         game.hud.activePhase = "player";
         game.hud.fireSet = false;
+        game.hud.randomEventDeck = []
         game.hudInstance = {};
 
         //=================================================
@@ -240,7 +241,8 @@ Helper.getImage = function (imageKey) {
     return game.cache.getBitmapData(imageKey)
 }
 
-//TODO getFirst
+//TODO Polyfill for array.find?
+//TODO Polyfill for array.filter?
 
 //=========================================================
 function MakeScene(game, id) {
@@ -436,14 +438,58 @@ HudGroup.prototype.fireSpreads = function () {
 }
 
 HudGroup.prototype.randomEvent = function () {
-    var id = "random-event-no-effect"; // TODO get randomId
-    var randomEventData = game.gamedata.randomEvents.find(function (item) { return item.id == id });
+    if (game.hud.randomEventDeck.length == 0) {
+        // get list of visible map tiles
+        var visibleMapTileIds = []
+        for (var i = 0; i < game.gamedataInstances.mapTiles.length; i++) {
+            visibleMapTileIds.push(game.gamedataInstances.mapTiles[i].id)
+        }
+
+        // populate random events based on pickable and mapTile requirement
+        game.hud.randomEventDeck = game.gamedata.randomEvents.filter(function (element) {
+            var mapTileMissing = false
+            if (element.hasOwnProperty("mapTile")) {
+                mapTileMissing = visibleMapTileIds.indexOf(element.mapTile) < 0
+            }
+
+            return element.pickable && !mapTileMissing
+        })
+
+        console.dir(game.hud.randomEventDeck)
+    }
+
+    var randomIndex = Math.floor(Math.random() * game.hud.randomEventDeck.length);
+    var randomEventData = game.hud.randomEventDeck.find(function (element, index) { return index == randomIndex });
+    game.hud.randomEventDeck = game.hud.randomEventDeck.splice(randomIndex, 1);
+
+    var dialogInstance = new MakeRandomEvent(game, randomEventData.id)
+
+    // TODO add fadeIn()
+    game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+    game.stage.addChild(dialogInstance)
+}
+
+HudGroup.prototype.randomEventDone = function () {
+    var monsterCount = 0 //TODO monster drawer
+    
+    if(monsterCount > 0 ) {
+        // Monsters Attack
+    } else {
+        MakeScene(game, "scene-player")
+    }
+}
+
+//=========================================================
+function MakeRandomEvent(game, id) {
+    var randomEventData = game.gamedata.randomEvents.find(function (element) { return element.id == id });
+
     var imageKey = null;
     var buttonType = null;
     var buttonData = null;
 
-    if (randomEventData.hasOwnProperty("buttonType") && randomEventData.buttonType != "random-event-conditional") {
+    if (randomEventData.hasOwnProperty("buttonType") && randomEventData.buttonType == "random-event-conditional") {
         buttonType = randomEventData.buttonType
+        buttonData = randomEventData.buttons
     } else {
         buttonType = "continue";
         buttonData = [{ "actions": [{ "type": "randomEventDone" }] }]
@@ -457,19 +503,7 @@ HudGroup.prototype.randomEvent = function () {
         buttonType,
         buttonData);
 
-    // TODO add fadeIn()
-    game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
-    game.stage.addChild(dialogInstance)
-}
-
-HudGroup.prototype.randomEventDone = function () {
-    var monsterCount = 0 //TODO monsters
-    
-    if(monsterCount > 0 ) {
-        // Monsters Attack
-    } else {
-        MakeScene(game, "scene-player")
-    }
+    return dialogInstance;
 }
 
 //=========================================================
@@ -499,7 +533,7 @@ function MakeRevealMap(game, id) {
                 // Look for tokenId in mapTileData.entryTokenIds
                 if (mapTileDataCheck.entryTokenIds.indexOf(tokenId) >= 0) {
                     // Check if mapTileData.id in game.gamedataInstances.mapTiles
-                    if (!(mapTileDataCheck.id in game.gamedataInstances.mapTiles)) {
+                    if (!game.gamedataInstances.mapTiles.some(function (item) { return item.id == mapTileDataCheck.id })) {
                         // If it is not in, then it is not revealed
                         removeToken = false
                     }
@@ -616,28 +650,30 @@ function MakeMapTile(game, id) {
     var mapTileData = game.gamedata.mapTiles.find(function (item) { return item.id == id });
     var mapTileInstance = null
 
-    if ((id in game.gamedataInstances.mapTiles) && game.gamedataInstances.mapTiles[i] != null) {
+    if (game.gamedataInstances.mapTiles.some(function (item) { return item.id == id })) {
         // This handles the case where a room needs revealed that is inside a tile
         // that is already revealed. The camera still needs to center on the existing tile.
-        mapTileInstance = game.gamedataInstances.mapTiles[i]
+        mapTileInstance = game.gamedataInstances.mapTiles.find(function (item) { return item.id == id })
     } else {
         mapTileInstance = new MapTileGroup(
             game,
+            mapTileData.id,
             mapTileData.x,
             mapTileData.y,
             mapTileData.imageKey,
             mapTileData.angle);
 
-        game.gamedataInstances.mapTiles[id] = mapTileInstance;
+        game.gamedataInstances.mapTiles.push(mapTileInstance);
     }
 
     return mapTileInstance;
 }
 
 //=========================================================
-function MapTileGroup(game, x, y, imageKey, angle) {
+function MapTileGroup(game, id, x, y, imageKey, angle) {
     Phaser.Group.call(this, game);
 
+    this.id = id
     var mapTileSprite = game.make.sprite(x, y, Helper.getImage(imageKey))
 
     if (angle == 90) {
@@ -935,11 +971,12 @@ function DialogGroup(game, id, messageText, imageKey, buttonType, buttonData, sk
 
     } if (buttonType == "random-event-conditional") {
         // Buttons for [No Effect] [Resolve Effect]
-        var data = this._buttonData[0]
+        var dataNoEffect = this._buttonData.find(function (item) { return item.id == "no-effect" })
         var dialogNoEffect = new DialogButtonThin(game, "No Effect", 280);
         dialogNoEffect.alignTo(dialogMessage, Phaser.BOTTOM_LEFT, -10, 10)
         this.addChild(dialogNoEffect);
 
+        var dataResolveEffect = this._buttonData.find(function (item) { return item.id == "resolve-effect" })
         var dialogResolveEffect = new DialogButtonThin(game, "Resolve Effect", 280);
         dialogResolveEffect.alignTo(dialogMessage, Phaser.BOTTOM_RIGHT, -10, 10)
         this.addChild(dialogResolveEffect);
@@ -949,15 +986,15 @@ function DialogGroup(game, id, messageText, imageKey, buttonType, buttonData, sk
         dialogNoEffectButton.height = dialogNoEffect.height;
         dialogNoEffectButton.inputEnabled = true;
         dialogNoEffectButton.events.onInputUp.add(this.buttonClicked, this);
-        dialogNoEffectButton.data = data
+        dialogNoEffectButton.data = dataNoEffect
         this.addChild(dialogNoEffectButton);
 
         var dialogResolveEffectButton = game.make.sprite(dialogResolveEffect.x, dialogResolveEffect.y, 'pixelTransparent');
-        dialogResolveEffectButton.width = dialogSpreads.width;
+        dialogResolveEffectButton.width = dialogResolveEffect.width;
         dialogResolveEffectButton.height = dialogResolveEffect.height;
         dialogResolveEffectButton.inputEnabled = true;
         dialogResolveEffectButton.events.onInputUp.add(this.buttonClicked, this);
-        dialogResolveEffectButton.data = data
+        dialogResolveEffectButton.data = dataResolveEffect
         this.addChild(dialogResolveEffectButton);
     }
 }
@@ -1066,6 +1103,13 @@ DialogGroup.prototype.buttonClicked = function (button, pointer) {
             } else if (action.type == "randomEventDone") {
                 fadeOutCallback = function () {
                     game.hudInstance.randomEventDone()
+                }
+                restoreControl = false;
+            } else if (action.type == "randomEvent") {
+                fadeOutCallback = function () {
+                    var dialogInstance = MakeRandomEvent(game, action.randomEventId);
+                    game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+                    game.stage.addChild(dialogInstance)
                 }
                 restoreControl = false;
             }
