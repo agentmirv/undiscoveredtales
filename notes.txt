@@ -214,7 +214,16 @@ https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects
 The splice() method changes the content of an array by removing existing elements and/or adding new elements.
 
 ===========================================================
+2016 October 11, Tuesday 09:48 PM ~~~
 ===========================================================
+Thinking of moving the hud buttons to the top of the screen.
+
+Next time, work on the player targeted random events.
+This means I need some example player objects and a new random event that targets a player.
+Do I create a random event type, or target? This would target either a mapTile or player.
+
+Once I have players, should I create a player screen and a load screen?
+
 ===========================================================
 ===========================================================
 ===========================================================
