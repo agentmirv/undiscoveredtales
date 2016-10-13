@@ -241,6 +241,26 @@ Helper.getImage = function (imageKey) {
     return game.cache.getBitmapData(imageKey)
 }
 
+// Fisher–Yates Shuffle
+// https://bost.ocks.org/mike/shuffle/
+Helper.shuffle = function (array) {
+    var m = array.length, t, i;
+
+    // While there remain elements to shuffle…
+    while (m) {
+
+        // Pick a remaining element…
+        i = Math.floor(Math.random() * m--);
+
+        // And swap it with the current element.
+        t = array[m];
+        array[m] = array[i];
+        array[i] = t;
+    }
+
+    return array;
+}
+
 //TODO Polyfill for array.find?
 //TODO Polyfill for array.filter?
 
@@ -458,19 +478,17 @@ HudGroup.prototype.randomEvent = function () {
         // populate random events based on pickable and mapTile requirement
         game.hud.randomEventDeck = game.gamedata.randomEvents.filter(function (element) {
             var mapTileMissing = false
-            if (element.hasOwnProperty("mapTile")) {
+            if (element.hasOwnProperty("target") && element.target == "mapTile" && element.hasOwnProperty("mapTile")) {
                 mapTileMissing = visibleMapTileIds.indexOf(element.mapTile) < 0
             }
 
             return element.pickable && !mapTileMissing
         })
 
-        console.dir(game.hud.randomEventDeck)
+        game.hud.randomEventDeck = Helper.shuffle(game.hud.randomEventDeck)
     }
 
-    var randomIndex = Math.floor(Math.random() * game.hud.randomEventDeck.length);
-    var randomEventData = game.hud.randomEventDeck.find(function (element, index) { return index == randomIndex });
-    game.hud.randomEventDeck = game.hud.randomEventDeck.splice(randomIndex, 1);
+    var randomEventData = game.hud.randomEventDeck.pop()
 
     var dialogInstance = new MakeRandomEvent(game, randomEventData.id)
 
@@ -496,6 +514,7 @@ function MakeRandomEvent(game, id) {
     var imageKey = null;
     var buttonType = null;
     var buttonData = null;
+    var eventText = randomEventData.text
 
     if (randomEventData.hasOwnProperty("buttonType") && randomEventData.buttonType == "random-event-conditional") {
         buttonType = randomEventData.buttonType
@@ -505,10 +524,27 @@ function MakeRandomEvent(game, id) {
         buttonData = [{ "actions": [{ "type": "randomEventDone" }] }]
     }
 
+    if (randomEventData.hasOwnProperty("target") && randomEventData.target == "investigator") {
+        // Get random investigator
+        var mathRandom = Math.random();
+        var randomIndex = Math.floor(mathRandom * game.gamedata.investigators.length);
+        var randomInvestigatorData = game.gamedata.investigators[randomIndex]
+
+        // Replace investigator name
+        eventText = eventText.replace(/<name>/g, randomInvestigatorData.name)
+
+        // Replace investigator pronoun
+        var reInvestigatorPronoun = new RegExp("<" + randomInvestigatorData.pronoun + ":(.+?)>", "g")
+        eventText = eventText.replace(reInvestigatorPronoun, "$1")
+
+        // Remove remaining pronoun
+        eventText = eventText.replace(/<.+?:.+?>/g, "")
+    } 
+
     var dialogInstance = new DialogGroup(
         game,
         randomEventData.id,
-        randomEventData.text,
+        eventText,
         imageKey,
         buttonType,
         buttonData);

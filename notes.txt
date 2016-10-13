@@ -225,7 +225,19 @@ Do I create a random event type, or target? This would target either a mapTile o
 Once I have players, should I create a player screen and a load screen?
 
 ===========================================================
+2016 October 12, Wednesday 07:58 PM ~~~
 ===========================================================
+Regex Pal
+http://www.regexpal.com/
+
+RegExp
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp
+
+Fisher–Yates Shuffle
+https://bost.ocks.org/mike/shuffle/
+
+Need to prevent the click of the next phase button during the reveal dialog sequence.
+
 ===========================================================
 ===========================================================
 ===========================================================
