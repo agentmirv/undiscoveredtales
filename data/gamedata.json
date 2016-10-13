@@ -1,4 +1,22 @@
 ﻿{
+  "investigators": [
+    {
+      "name": "Reginald Haxby",
+      "pronoun": "m"
+    },
+    {
+      "name": "Prudence Blaze",
+      "pronoun": "f"
+    },
+    {
+      "name": "Ron Siko",
+      "pronoun": "m"
+    },
+    {
+      "name": "Mickey Krize",
+      "pronoun": "f"
+    }
+],
   "playerStart": {
     "x": 1048,
     "y": 1048
@@ -288,6 +306,7 @@
     {
       "id": "random-event-lobby-pictures",
       "text": "Now you realize what was bothering you about this room. This event affects each investigator in the Lobby.",
+      "target": "mapTile",
       "mapTile": "maptile-lobby",
       "buttonType": "random-event-conditional",
       "buttons": [
@@ -302,12 +321,18 @@
     },
     {
       "id": "random-event-lobby-pictures-resolve",
-      "text": "The pictures! Each investigator can be seen in the background of one of the pictures. You suffer 1 facedown Horror.",
+      "text": "The pictures! Each investigator can be seen in the background of one of the pictures. Each investigator suffers 1 facedown Horror.",
       "pickable": false
     },
     {
       "id": "random-event-no-effect",
       "text": "A gust of wind rattles the windows for a moment. No immediate effect.",
+      "pickable": true
+    },
+    {
+      "id": "random-event-the-pain",
+      "text": "<name> feels an iching in <f:her><m:his> hands. The itching turns to burning, feeling heat upon heat, upon heat. <name> screams as <f:her><m:his> fingernails fall out (Will; 2). If <f:she><m:he> passes, <f:she><m:he> realizes that <f:her><m:his> hands are fine. If <f:she><m:he> fails, <f:she><m:he> panics and becomes transfixed, convinced that <f:her><m:his> hands are melting; <f:she><m:he> suffers 1 Horror and becomes Restrained.",
+      "target": "investigator",
       "pickable": true
     }
   ],
