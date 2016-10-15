@@ -1,4 +1,4 @@
-﻿{
+{
   "investigators": [
     {
       "name": "Reginald Haxby",
@@ -306,6 +306,7 @@
     {
       "id": "random-event-lobby-pictures",
       "text": "Now you realize what was bothering you about this room. This event affects each investigator in the Lobby.",
+      "resolveText": "The pictures! Each investigator can be seen in the background of one of the pictures. Each investigator suffers 1 facedown Horror.",
       "target": "mapTile",
       "mapTile": "maptile-lobby",
       "buttonType": "random-event-conditional",
@@ -314,7 +315,7 @@
           "actions": [ {"type": "randomEventDone" } ]
         },
         { "id": "resolve-effect",
-          "actions": [ {"type": "randomEvent", "randomEventId": "random-event-lobby-pictures-resolve"} ]
+          "actions": [ {"type": "randomEventResolve"} ]
         }
       ],
       "pickable": true

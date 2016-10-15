@@ -553,6 +553,29 @@ function MakeRandomEvent(game, id) {
 }
 
 //=========================================================
+function MakeRandomEventResolve(game, id) {
+    var randomEventData = game.gamedata.randomEvents.find(function (element) { return element.id == id });
+
+    var imageKey = null;
+    var buttonType = null;
+    var buttonData = null;
+    var eventText = randomEventData.resolveText
+
+    buttonType = "continue";
+    buttonData = [{ "actions": [{ "type": "randomEventDone" }] }]
+
+    var dialogInstance = new DialogGroup(
+        game,
+        randomEventData.id,
+        eventText,
+        imageKey,
+        buttonType,
+        buttonData);
+
+    return dialogInstance;
+}
+
+//=========================================================
 function MakeRevealMap(game, id) {
     var revealData = game.gamedata.revealMaps.find(function (item) { return item.id == id });
     game.revealMap.dialogs = revealData.revealDialogs;
@@ -1154,6 +1177,13 @@ DialogGroup.prototype.buttonClicked = function (button, pointer) {
             } else if (action.type == "randomEvent") {
                 fadeOutCallback = function () {
                     var dialogInstance = MakeRandomEvent(game, action.randomEventId);
+                    game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+                    game.stage.addChild(dialogInstance)
+                }
+                restoreControl = false;
+            } else if (action.type == "randomEventResolve") {
+                fadeOutCallback = function () {
+                    var dialogInstance = MakeRandomEventResolve(game, action.randomEventId);
                     game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
                     game.stage.addChild(dialogInstance)
                 }
