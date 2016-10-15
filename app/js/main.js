@@ -1182,8 +1182,9 @@ DialogGroup.prototype.buttonClicked = function (button, pointer) {
                 }
                 restoreControl = false;
             } else if (action.type == "randomEventResolve") {
+            	var randomEventId = this._id
                 fadeOutCallback = function () {
-                    var dialogInstance = MakeRandomEventResolve(game, action.randomEventId);
+                    var dialogInstance = MakeRandomEventResolve(game, randomEventId);
                     game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
                     game.stage.addChild(dialogInstance)
                 }
