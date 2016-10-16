@@ -321,11 +321,6 @@
       "pickable": true
     },
     {
-      "id": "random-event-lobby-pictures-resolve",
-      "text": "The pictures! Each investigator can be seen in the background of one of the pictures. Each investigator suffers 1 facedown Horror.",
-      "pickable": false
-    },
-    {
       "id": "random-event-no-effect",
       "text": "A gust of wind rattles the windows for a moment. No immediate effect.",
       "pickable": true
