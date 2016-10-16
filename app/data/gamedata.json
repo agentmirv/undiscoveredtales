@@ -310,14 +310,13 @@
       "target": "mapTile",
       "mapTile": "maptile-lobby",
       "buttonType": "random-event-conditional",
-      "buttons": [
-        { "id": "no-effect",
-          "actions": [ {"type": "randomEventDone" } ]
-        },
-        { "id": "resolve-effect",
-          "actions": [ {"type": "randomEventResolve"} ]
-        }
-      ],
+      "pickable": true
+    },
+    {
+      "id": "random-event-self-doubt",
+      "text": "You obsess over a previous converstation with a team member. This event affects the investigator with the least influence.",
+      "resolveText": "Working with a team is not your strength; you feel slighted by your last converstation with the team (Influence; 1). If you pass, you gain some insight on yourself and become Focused. If you fail, you let your obsession cloud your insight; lose 1 Clue.",
+      "buttonType": "random-event-attribute",
       "pickable": true
     },
     {

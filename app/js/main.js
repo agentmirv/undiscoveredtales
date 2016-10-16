@@ -518,7 +518,18 @@ function MakeRandomEvent(game, id) {
 
     if (randomEventData.hasOwnProperty("buttonType") && randomEventData.buttonType == "random-event-conditional") {
         buttonType = randomEventData.buttonType
-        buttonData = randomEventData.buttons
+        //buttonData = randomEventData.buttons
+      buttonData = [
+        { "id": "no-effect",
+          "actions": [ {"type": "randomEventDone" } ]
+        },
+        { "id": "resolve-effect",
+          "actions": [ {"type": "randomEventResolve"} ]
+        }
+      ]    
+    } else if (randomEventData.hasOwnProperty("buttonType") && randomEventData.buttonType == "random-event-attribute") {
+        buttonType = "continue";
+        buttonData = [{ "actions": [{ "type": "randomEventResolve" }] }]
     } else {
         buttonType = "continue";
         buttonData = [{ "actions": [{ "type": "randomEventDone" }] }]
