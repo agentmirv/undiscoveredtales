@@ -379,11 +379,11 @@ function HudGroup(game) {
 
     // End Phase Button 
     this._endPhasePlayerImage = game.make.image(0, 0, Helper.getImage("endPhase-image-player"))
-    this._endPhasePlayerImage.alignIn(game.stageViewRect, Phaser.TOP_LEFT, 0, 0)
+    //this._endPhasePlayerImage.alignIn(game.stageViewRect, Phaser.TOP_LEFT, 0, 0)
     this.addChild(this._endPhasePlayerImage);
 
     this._endPhaseEnemyImage = game.make.image(0, 0, Helper.getImage("endPhase-image-enemy"))
-    this._endPhaseEnemyImage.alignIn(game.stageViewRect, Phaser.TOP_LEFT, 0, 0)
+    //this._endPhaseEnemyImage.alignIn(game.stageViewRect, Phaser.TOP_LEFT, 0, 0)
     this.addChild(this._endPhaseEnemyImage);
     this._endPhaseEnemyImage.kill()
 
