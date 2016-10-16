@@ -549,8 +549,8 @@ function MakeRandomEvent(game, id) {
         buttonType,
         buttonData);
 
-    game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
-    game.stage.addChild(dialogInstance)
+    //game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+    //game.stage.addChild(dialogInstance)
 
     return dialogInstance;
 }
@@ -575,8 +575,8 @@ function MakeRandomEventResolve(game, id) {
         buttonType,
         buttonData);
 
-    game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
-    game.stage.addChild(dialogInstance)
+    //game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+    //game.stage.addChild(dialogInstance)
 
     return dialogInstance;
 }
@@ -1182,19 +1182,19 @@ DialogGroup.prototype.buttonClicked = function (button, pointer) {
                 restoreControl = false;
             } else if (action.type == "randomEvent") {
                 fadeOutCallback = function () {
-                    MakeRandomEvent(game, action.randomEventId);
-                    //var dialogInstance = MakeRandomEvent(game, action.randomEventId);
-                    //game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
-                    //game.stage.addChild(dialogInstance)
+                    //MakeRandomEvent(game, action.randomEventId);
+                    var dialogInstance = MakeRandomEvent(game, action.randomEventId);
+                    game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+                    game.stage.addChild(dialogInstance)
                 }
                 restoreControl = false;
             } else if (action.type == "randomEventResolve") {
             	var randomEventId = this._id
                 fadeOutCallback = function () {
-                    MakeRandomEventResolve(game, randomEventId);
-                    //var dialogInstance = MakeRandomEventResolve(game, randomEventId);
-                    //game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
-                    //game.stage.addChild(dialogInstance)
+                    //MakeRandomEventResolve(game, randomEventId);
+                    var dialogInstance = MakeRandomEventResolve(game, randomEventId);
+                    game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+                    game.stage.addChild(dialogInstance)
                 }
                 restoreControl = false;
             }
