@@ -518,7 +518,18 @@ function MakeRandomEvent(game, id) {
 
     if (randomEventData.hasOwnProperty("buttonType") && randomEventData.buttonType == "random-event-conditional") {
         buttonType = randomEventData.buttonType
-        buttonData = randomEventData.buttons
+        //buttonData = randomEventData.buttons
+      buttonData = [
+        { "id": "no-effect",
+          "actions": [ {"type": "randomEventDone" } ]
+        },
+        { "id": "resolve-effect",
+          "actions": [ {"type": "randomEventResolve"} ]
+        }
+      ]    
+    } else if (randomEventData.hasOwnProperty("buttonType") && randomEventData.buttonType == "random-event-attribute") {
+        buttonType = "continue";
+        buttonData = [{ "actions": [{ "type": "randomEventResolve" }] }]
     } else {
         buttonType = "continue";
         buttonData = [{ "actions": [{ "type": "randomEventDone" }] }]
@@ -548,6 +559,35 @@ function MakeRandomEvent(game, id) {
         imageKey,
         buttonType,
         buttonData);
+
+    //game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+    //game.stage.addChild(dialogInstance)
+
+    return dialogInstance;
+}
+
+//=========================================================
+function MakeRandomEventResolve(game, id) {
+    var randomEventData = game.gamedata.randomEvents.find(function (element) { return element.id == id });
+
+    var imageKey = null;
+    var buttonType = null;
+    var buttonData = null;
+    var eventText = randomEventData.resolveText
+
+    buttonType = "continue";
+    buttonData = [{ "actions": [{ "type": "randomEventDone" }] }]
+
+    var dialogInstance = new DialogGroup(
+        game,
+        randomEventData.id,
+        eventText,
+        imageKey,
+        buttonType,
+        buttonData);
+
+    //game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+    //game.stage.addChild(dialogInstance)
 
     return dialogInstance;
 }
@@ -1153,7 +1193,17 @@ DialogGroup.prototype.buttonClicked = function (button, pointer) {
                 restoreControl = false;
             } else if (action.type == "randomEvent") {
                 fadeOutCallback = function () {
+                    //MakeRandomEvent(game, action.randomEventId);
                     var dialogInstance = MakeRandomEvent(game, action.randomEventId);
+                    game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+                    game.stage.addChild(dialogInstance)
+                }
+                restoreControl = false;
+            } else if (action.type == "randomEventResolve") {
+            	var randomEventId = this._id
+                fadeOutCallback = function () {
+                    //MakeRandomEventResolve(game, randomEventId);
+                    var dialogInstance = MakeRandomEventResolve(game, randomEventId);
                     game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
                     game.stage.addChild(dialogInstance)
                 }
