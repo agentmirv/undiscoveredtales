@@ -239,6 +239,87 @@ https://bost.ocks.org/mike/shuffle/
 Need to prevent the click of the next phase button during the reveal dialog sequence.
 
 ===========================================================
+2016 October 19, Wednesday 07:37 AM ~~~
+===========================================================
+Stuff I can work on without monsters:
+
+  Scenario Events
+    * Events that are triggered after a number of turns has passed.
+      * Mythos Events
+      * Reveals (ala Cycle of Eternity)
+      * Game Over (Scene)
+
+  Investigator Selection (Scene?)
+
+  Load Screen (Scene)
+
+  Game Start (Scene)
+
+===========================================================
+2016 October 19, Wednesday 06:03 PM ~~~
+===========================================================
+PlayerSceneGroup
+    Phaser.Group.call(this, game);
+
+EnemySceneGroup
+    Phaser.Group.call(this, game);
+
+HudGroup
+    Phaser.Group.call(this, game);
+
+MakeRandomEvent
+    new DialogGroup
+
+MakeRandomEventResolve
+    new DialogGroup
+
+MakeRevealMap
+    MakeMapTile
+    MakeRevealDialog
+
+MakeRevealDialog
+    MakeToken
+    new DialogGroup
+    game.add.tween(dialogInstance)
+
+MakeMapTile
+    new MapTileGroup
+
+MapTileGroup
+    Phaser.Group.call(this, game);
+    var mapTileSprite = game.make.sprite(x, y, Helper.getImage(imageKey))
+
+MakeToken
+    new TokenSprite
+
+MakeDialog
+    new DialogGroup
+
+TokenSprite
+    Phaser.Sprite.call(this, game, x, y, Helper.getImage(imageKey));
+
+DialogGroup
+    Phaser.Group.call(this, game);
+
+===========================================================
+MakeRandomEvent
+    new DialogGroup
+
+MakeRandomEventResolve
+    new DialogGroup
+
+MakeRevealDialog
+    MakeToken
+    new DialogGroup
+    game.add.tween(dialogInstance)
+
+MakeDialog
+    new DialogGroup
+
+
+===========================================================
+===========================================================
+===========================================================
 ===========================================================
 ===========================================================
 ===========================================================

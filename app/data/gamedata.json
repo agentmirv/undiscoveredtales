@@ -13,7 +13,7 @@
       "pronoun": "m"
     },
     {
-      "name": "Micki Krize",
+      "name": "Micki Kryz",
       "pronoun": "f"
     }
 ],
@@ -309,26 +309,22 @@
       "resolveText": "The pictures! Each investigator can be seen in the background of one of the pictures. Each investigator suffers 1 facedown Horror.",
       "target": "mapTile",
       "mapTile": "maptile-lobby",
-      "buttonType": "random-event-conditional",
-      "pickable": true
+      "buttonType": "random-event-conditional"
     },
     {
       "id": "random-event-self-doubt",
       "text": "You obsess over a previous converstation with a team member. This event affects the investigator with the least influence.",
       "resolveText": "Working with a team is not your strength; you feel slighted by your last converstation with the team (Influence; 1). If you pass, you gain some insight on yourself and become Focused. If you fail, you let your obsession cloud your insight; lose 1 Clue.",
-      "buttonType": "random-event-attribute",
-      "pickable": true
+      "buttonType": "random-event-attribute"
     },
     {
       "id": "random-event-no-effect",
-      "text": "A gust of wind rattles the windows for a moment. No immediate effect.",
-      "pickable": true
+      "text": "A gust of wind rattles the windows for a moment. No immediate effect."
     },
     {
       "id": "random-event-the-pain",
       "text": "<name> feels an iching in <f:her><m:his> hands. The itching turns to burning, feeling heat upon heat, upon heat. <name> screams as <f:her><m:his> fingernails fall out (Will; 2). If <f:she><m:he> passes, <f:she><m:he> realizes that <f:her><m:his> hands are fine. If <f:she><m:he> fails, <f:she><m:he> panics and becomes transfixed, convinced that <f:her><m:his> hands are melting; <f:she><m:he> suffers 1 Horror and becomes Restrained.",
-      "target": "investigator",
-      "pickable": true
+      "target": "investigator"
     }
   ],
   "dialogs": [

@@ -475,14 +475,14 @@ HudGroup.prototype.randomEvent = function () {
             visibleMapTileIds.push(game.gamedataInstances.mapTiles[i].id)
         }
 
-        // populate random events based on pickable and mapTile requirement
+        // populate random events based on mapTile requirement
         game.hud.randomEventDeck = game.gamedata.randomEvents.filter(function (element) {
             var mapTileMissing = false
             if (element.hasOwnProperty("target") && element.target == "mapTile" && element.hasOwnProperty("mapTile")) {
                 mapTileMissing = visibleMapTileIds.indexOf(element.mapTile) < 0
             }
 
-            return element.pickable && !mapTileMissing
+            return !mapTileMissing
         })
 
         game.hud.randomEventDeck = Helper.shuffle(game.hud.randomEventDeck)
