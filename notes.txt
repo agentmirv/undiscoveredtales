@@ -316,8 +316,30 @@ MakeRevealDialog
 MakeDialog
     new DialogGroup
 
-
 ===========================================================
+Random Events
+  Are there ones that are templates which have multiple random rooms?
+  Some result in finding items. This means that those items can't be found again somehow.
+
+Scenario Events
+  What if more than one event qualifies (say more than one is found that happen after turn 6)?
+  What about when a dialog is followed by a reveal map (I think this happens in cycle of eternity)?
+
+Conditions
+  Cycle of eternity - there is a scenario event where Eugene is killed if the kitchen is not explored by the 2nd turn.
+    This starts with a reveal dialog on the door token.
+    Then followed by a reveal dialog for the Hunting Horror.
+  Cycle of eternity - there are several that are a reveal dialog for a cultist.
+    Then followed by a reveal dialog for Eugene moving.
+
+A map reveal should be like other reveals?
+  * A list of mapTiles
+  * Remove doors
+  * Move player to center of mapTiles
+  * Display first Dialog
+
+A factory method would load all the reveals and process the first, which would be the map reveal (eg lobby).
+
 ===========================================================
 ===========================================================
 ===========================================================

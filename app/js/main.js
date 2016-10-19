@@ -597,7 +597,7 @@ function MakeRandomEventResolve(game, id) {
 //=========================================================
 function MakeRevealMap(game, id) {
     var revealData = game.gamedata.revealMaps.find(function (item) { return item.id == id });
-    game.revealMap.dialogs = revealData.revealDialogs;
+    game.revealMap.dialogs = revealData.revealDialogs; 
 
     var localGroup = game.add.group();
 
