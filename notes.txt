@@ -341,7 +341,14 @@ A map reveal should be like other reveals?
 A factory method would load all the reveals and process the first, which would be the map reveal (eg lobby).
 
 ===========================================================
+2016 October 20, Thursday 07:18 AM ~~~
 ===========================================================
+I want to see if I can replace the customCallback and follow with tween on location.
+The follow for click movement and key movement can stay?
+
+This seems to work:
+var moveTween = game.add.tween(player.body).to({ x: game.gamedata.playerStart.x + 100}, 600, Phaser.Easing.Linear.None, true, 0, 0, false);
+
 ===========================================================
 ===========================================================
 ===========================================================
