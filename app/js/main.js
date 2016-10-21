@@ -159,33 +159,6 @@ var GameState = {
     },
 
     update: function () {
-        //if (game.cutSceneCamera == true) {
-        //    cameraPoint = new Phaser.Point(Math.floor(game.camera.x + game.stageViewRect.halfWidth), Math.floor(game.camera.y + game.stageViewRect.halfHeight));
-        //    playerPoint = new Phaser.Point(Math.floor(player.body.x), Math.floor(player.body.y))
-
-        //    if (!cameraPoint.equals(playerPoint)) {
-        //        var targetRectLarge = new Phaser.Rectangle(player.body.x - 60, player.body.y - 60, 120, 120)
-
-        //        if (Phaser.Rectangle.contains(targetRectLarge, cameraPoint.x, cameraPoint.y)) {
-        //            game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.2, 0.2);
-        //            var targetRectSmall = new Phaser.Rectangle(player.body.x - 10, player.body.y - 10, 20, 20)
-
-        //            if (Phaser.Rectangle.contains(targetRectSmall, cameraPoint.x, cameraPoint.y)) {
-        //                game.camera.focusOn(player)
-        //                game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.5, 0.5);
-
-        //                if (game.customCallback != null) {
-        //                    game.customCallback()
-        //                }
-        //            }
-        //        }
-        //    } else {
-        //        // If the camera doesn't need to move before displaying the dialog
-        //        if (game.customCallback != null) {
-        //            game.customCallback()
-        //        }
-        //    }
-        //} else if (game.hud.activePhase == "player") {
         if (!game.cutSceneCamera && game.hud.activePhase == "player") {
             var playerVelocity = 400;
             player.body.setZeroVelocity();
@@ -648,7 +621,7 @@ function MakeRevealMap(game, id) {
     fadeInTween.onComplete.addOnce(function () {
         game.revealMap.center = new Phaser.Point(localGroup.centerX, localGroup.centerY)
 
-        var moveTween = game.add.tween(player.body).to({ x: game.revealMap.center.x, y: game.revealMap.center.y + game.presentationOffsetY }, 600, Phaser.Easing.Linear.None, true, 0, 0, false);
+        var moveTween = game.add.tween(player.body).to({ x: game.revealMap.center.x, y: game.revealMap.center.y + game.presentationOffsetY }, 1200, Phaser.Easing.Quadratic.Out, true, 0, 0, false);
 
         moveTween.onStart.addOnce(function () {
             game.cutSceneCamera = true;
@@ -660,21 +633,6 @@ function MakeRevealMap(game, id) {
                 MakeRevealDialog(game, revealDialog);
             }
         })
-
-        //// Move Player
-        //player.body.x = game.revealMap.center.x
-        //player.body.y = game.revealMap.center.y + game.presentationOffsetY
-        //game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, game.followLerp, game.followLerp);
-        //game.cutSceneCamera = true;
-
-        //if (game.revealMap.dialogs.length > 0) {
-        //    var revealDialog = game.revealMap.dialogs.shift();
-        //    game.customCallback = function () {
-        //        // Make first Dialog
-        //        MakeRevealDialog(game, revealDialog);
-        //    }
-        //}
-
     });
 }
 
@@ -706,8 +664,6 @@ function MakeRevealDialog(game, id) {
         imageKey = tokenInstance.imageKey;
         movePlayer.x = tokenInstance.x + 48
         movePlayer.y = tokenInstance.y + 208 + game.presentationOffsetY
-        //player.body.x = tokenInstance.x + 48
-        //player.body.y = tokenInstance.y + 208 + game.presentationOffsetY
 
     } else if (revealDialog.addMultipleTokens != null) {
         // Show images with the Dialog in the middle of the room
@@ -724,17 +680,13 @@ function MakeRevealDialog(game, id) {
 
         movePlayer.x = game.revealMap.center.x
         movePlayer.y = game.revealMap.center.y + game.presentationOffsetY
-        //player.body.x = game.revealMap.center.x
-        //player.body.y = game.revealMap.center.y + game.presentationOffsetY
 
     } else {
         movePlayer.x = game.revealMap.center.x
         movePlayer.y = game.revealMap.center.y + game.presentationOffsetY
-        //player.body.x = game.revealMap.center.x
-        //player.body.y = game.revealMap.center.y + game.presentationOffsetY
     }
 
-    var moveTween = game.add.tween(player.body).to({ x: movePlayer.x, y: movePlayer.y }, 600, Phaser.Easing.Linear.None, true, 0, 0, false);
+    var moveTween = game.add.tween(player.body).to({ x: movePlayer.x, y: movePlayer.y }, 1200, Phaser.Easing.Quadratic.Out, true, 0, 0, false);
 
     moveTween.onStart.addOnce(function () {
         game.cutSceneCamera = true;
@@ -753,29 +705,7 @@ function MakeRevealDialog(game, id) {
         game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
 
         game.stage.addChild(dialogInstance);
-        //game.customCallback = null;
     })
-
-    //// Move Player to Map Tile
-    //game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, game.followLerp, game.followLerp);
-    //game.cutSceneCamera = true;
-
-    //// set Callback to open Dialog
-    //game.customCallback = function () {
-    //    var dialogInstance = new DialogGroup(
-    //        game,
-    //        revealDialog.id,
-    //        revealDialog.text,
-    //        imageKey,
-    //        buttonType,
-    //        buttonData);
-
-    //    // TODO add fadeIn()
-    //    game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
-
-    //    game.stage.addChild(dialogInstance);
-    //    game.customCallback = null;
-    //}
 }
 
 //=========================================================
@@ -875,19 +805,22 @@ TokenSprite.prototype = Object.create(Phaser.Sprite.prototype);
 TokenSprite.prototype.constructor = TokenSprite;
 
 TokenSprite.prototype.tokenClicked = function (token, pointer) {
-    // Move Player Token
-    player.body.x = token.centerX + 300 - 20 - 48 //half message width - left margin - half image width
-    player.body.y = token.centerY + game.presentationOffsetY
-    game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, game.followLerp, game.followLerp);
-    game.cutSceneCamera = true;
+    var movePlayer = new Phaser.Point()
+    movePlayer.x = token.centerX + 300 - 20 - 48 //half message width - left margin - half image width
+    movePlayer.y = token.centerY + game.presentationOffsetY
 
-    game.customCallback = function () {
+    var moveTween = game.add.tween(player.body).to({ x: movePlayer.x, y: movePlayer.y }, 1200, Phaser.Easing.Quadratic.Out, true, 0, 0, false);
+
+    moveTween.onStart.addOnce(function () {
+        game.cutSceneCamera = true;
+    })
+
+    moveTween.onComplete.addOnce(function () {
         var dialogInstance = MakeDialog(game, token.clickId)
         // TODO add fadeIn()
         game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
         game.stage.addChild(dialogInstance)
-        game.customCallback = null;
-    }
+    })
 }
 
 TokenSprite.prototype.fadeOut = function (callback) {

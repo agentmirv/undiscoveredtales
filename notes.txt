@@ -170,7 +170,7 @@ https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects
 ===========================================================
 2016 October 03, Monday 09:24 PM ~~~
 ===========================================================
-  game.cache.addBitmapData('exploreTokenBmd', exploreTokenBmd)
+game.cache.addBitmapData('exploreTokenBmd', exploreTokenBmd)
 game.cache.getBitmapData(bitmapDataId)
 
 ===========================================================
