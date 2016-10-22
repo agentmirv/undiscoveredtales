@@ -595,13 +595,14 @@ function MakeRevealDialog(game, id) {
     console.log(revealDialog)
 
     if (revealDialog.mapTiles != null) {
-        var localGroup = game.add.group();
+        var calculateCenter = new Phaser.Point(0, 0)
         // Add Map Tiles
         for (var i = 0; i < revealDialog.mapTiles.length; i++) {
             var mapTileId = revealDialog.mapTiles[i];
             var mapTileInstance = MakeMapTile(game, mapTileId);
 
-            localGroup.addChild(mapTileInstance);
+            calculateCenter.x += mapTileInstance.centerX
+            calculateCenter.y += mapTileInstance.centerY
 
             if (!mapTileInstance.isRevealed) {
                 var fadeInTween = game.add.tween(mapTileInstance).from({ alpha: 0 }, 600, Phaser.Easing.Linear.None, true, 0, 0, false);
@@ -642,8 +643,11 @@ function MakeRevealDialog(game, id) {
             // End Remove Door tokens
         }
 
-        movePlayer.x = localGroup.centerX
-        movePlayer.y = localGroup.centerY + game.presentationOffsetY
+        calculateCenter.x = Math.floor(calculateCenter.x / revealDialog.mapTiles.length)
+        calculateCenter.y = Math.floor(calculateCenter.y / revealDialog.mapTiles.length)
+
+        movePlayer.x = calculateCenter.x
+        movePlayer.y = calculateCenter.y + game.presentationOffsetY
 
     } else if (revealDialog.addSingleToken != null) {
         // Show image at the top of the Dialog
@@ -707,7 +711,6 @@ function MakeMapTile(game, id) {
         // This handles the case where a room needs revealed that is inside a tile
         // that is already revealed. The camera still needs to center on the existing tile.
         mapTileInstance = game.gamedataInstances.mapTiles.find(function (item) { return item.id == id })
-        console.log('existing')
     } else {
         mapTileInstance = new MapTileGroup(
             game,
@@ -718,7 +721,6 @@ function MakeMapTile(game, id) {
             mapTileData.angle);
 
         game.gamedataInstances.mapTiles.push(mapTileInstance);
-        console.log('add')
     }
 
     return mapTileInstance;
