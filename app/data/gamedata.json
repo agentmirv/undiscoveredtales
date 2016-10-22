@@ -34,22 +34,20 @@
       },
       {
         "id": "reveal-study",
-        "mapTiles": [ "maptile-study" ],
         "revealDialogs": [
           "reveal-study-dialog-room",
           "reveal-study-dialog-fireplace",
-          "reveal-explored"
+          "reveal-study-explored"
         ]
       },
       {
         "id": "reveal-halls",
-        "mapTiles": [ "maptile-hall-corner-1", "maptile-hall-end" ],
         "revealDialogs": [
           "reveal-halls-dialog-room",
           "reveal-halls-dialog-bird",
           "reveal-halls-dialog-door-west",
           "reveal-halls-dialog-door-east",
-          "reveal-explored"
+          "reveal-halls-explored"
         ]
       }
   ],
@@ -90,12 +88,9 @@
       "continueToPlayerPhase": true
     },
     {
-      "id": "reveal-explored",
-      "text": "You may move one space into the new area."
-    },
-    {
       "id": "reveal-study-dialog-room",
       "text": "The door leads to a dark study. You can see your breath in the cold air. Place the Study tile and Wall. Remove any Explore tokens leading to it.",
+      "mapTiles": [ "maptile-study" ],
       "addMultipleTokens" : [ "token-wall-study" ]
     },
     {
@@ -104,8 +99,14 @@
       "addSingleToken" : [ "token-fireplace-study" ]
     },
     {
+      "id": "reveal-study-explored",
+      "text": "You may move one space into the new area.",
+      "mapTiles": [ "maptile-study" ]
+    },
+    {
       "id": "reveal-halls-dialog-room",
       "text": "A hallway leads to several bedrooms. Place the Hall Corner 1 tile, the Hall End tile, and Walls. Remove any Explore tokens.",
+      "mapTiles": [ "maptile-hall-corner-1", "maptile-hall-end" ],
       "addMultipleTokens" : [
         "token-wall1-hall",
         "token-wall2-hall"
@@ -125,6 +126,11 @@
       "id": "reveal-halls-dialog-door-west",
       "text": "This door leads to the west bedroom.",
       "addSingleToken" : [ "token-door-west-bedroom" ]
+    },
+    {
+      "id": "reveal-halls-explored",
+      "text": "You may move one space into the new area.",
+      "mapTiles": [ "maptile-hall-corner-1", "maptile-hall-end" ]
     }
   ],
   "mapTiles": [

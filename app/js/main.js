@@ -200,10 +200,10 @@ var GameState = {
         //game.debug.text(playerPoint.x, 32, 270)
         //game.debug.text(playerPoint.y, 32, 290)
 
-        var targetRectLarge = new Phaser.Rectangle(player.body.x - 60, player.body.y - 60, 120, 120)
-        game.debug.geom(targetRectLarge, "#00FF00", false)
-        var targetRectSmall = new Phaser.Rectangle(player.body.x - 10, player.body.y - 10, 20, 20)
-        game.debug.geom(targetRectSmall, "#00FF00", false)
+        //var targetRectLarge = new Phaser.Rectangle(player.body.x - 60, player.body.y - 60, 120, 120)
+        //game.debug.geom(targetRectLarge, "#00FF00", false)
+        //var targetRectSmall = new Phaser.Rectangle(player.body.x - 10, player.body.y - 10, 20, 20)
+        //game.debug.geom(targetRectSmall, "#00FF00", false)
     }
 }
 
@@ -592,8 +592,6 @@ function MakeRevealDialog(game, id) {
         buttonData = [{ "text": "Continue", "actions": [{ "type": "reveal" }, { "type": "scene", "sceneId": "scene-player" }] }];
     }
 
-    console.log(revealDialog)
-
     if (revealDialog.mapTiles != null) {
         var calculateCenter = new Phaser.Point(0, 0)
         // Add Map Tiles
@@ -606,7 +604,7 @@ function MakeRevealDialog(game, id) {
 
             if (!mapTileInstance.isRevealed) {
                 var fadeInTween = game.add.tween(mapTileInstance).from({ alpha: 0 }, 600, Phaser.Easing.Linear.None, true, 0, 0, false);
-                fadeInTween.onComplete.addOnce(function () { mapTileInstance.isRevealed = true })
+                mapTileInstance.isRevealed = true
             }
 
             // Begin Remove Door tokens
@@ -635,7 +633,7 @@ function MakeRevealDialog(game, id) {
                         instance.fadeOut(function () {
                             game.gamedataInstances.mapTokens[tokenId] = null;
                             game.world.removeChild(instance);
-                            instance.destroy();
+                            //instance.destroy();
                         })
                     }
                 }
