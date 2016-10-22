@@ -35,9 +35,8 @@ var GameState = {
         game.gamedataInstances.mapTokens = [] // TODO fix this so it is like game.gamedataInstances.mapTiles
         game.customStates = []; // This is used in skill test dialogs
         // TODO consolidate the revealMap structure into game.customStates?
-        game.revealMap = {};
-        game.revealMap.dialogs = [];
-        game.revealMap.center = {}
+        game.revealList = {};
+        game.revealList.dialogs = [];
         game.hud = {};
         game.hud.activePhase = "player";
         game.hud.fireSet = false;
@@ -149,7 +148,8 @@ var GameState = {
 
         //=================================================
         // First Reveal
-        MakeRevealMap(game, 'reveal-lobby')
+        MakeRevealList(game, 'reveal-lobby')
+        //MakeRevealDialog(game, 'reveal-lobby-dialog-room')
 
         //=================================================
         // Add HUD
@@ -570,78 +570,20 @@ function MakeRandomEventResolve(game, id) {
 }
 
 //=========================================================
-function MakeRevealMap(game, id) {
-    var revealData = game.gamedata.revealMaps.find(function (item) { return item.id == id });
-    game.revealMap.dialogs = revealData.revealDialogs; 
+function MakeRevealList(game, id) {
+    var revealData = game.gamedata.revealLists.find(function (item) { return item.id == id });
+    game.revealList.dialogs = revealData.revealDialogs; 
 
-    var localGroup = game.add.group();
-
-    // Add Map Tiles
-    for (var i = 0; i < revealData.mapTiles.length; i++) {
-        var mapTileId = revealData.mapTiles[i];
-        var mapTileInstance = MakeMapTile(game, mapTileId);
-
-        localGroup.addChild(mapTileInstance);
-
-        // Remove Door tokens
-        var mapTileData = game.gamedata.mapTiles.find(function (item) { return item.id == mapTileId });
-        // Look at each entryTokenId of the room
-        for (var j = 0; j < mapTileData.entryTokenIds.length; j++) {
-            var removeToken = true;
-            var tokenId = mapTileData.entryTokenIds[j];
-
-            // Find this entryTokenId in all rooms
-            for (var k = 0; k < game.gamedata.mapTiles.length; k++) {
-                var mapTileDataCheck = game.gamedata.mapTiles[k];
-                // Look for tokenId in mapTileData.entryTokenIds
-                if (mapTileDataCheck.entryTokenIds.indexOf(tokenId) >= 0) {
-                    // Check if mapTileData.id in game.gamedataInstances.mapTiles
-                    if (!game.gamedataInstances.mapTiles.some(function (item) { return item.id == mapTileDataCheck.id })) {
-                        // If it is not in, then it is not revealed
-                        removeToken = false
-                    }
-                }
-            }
-
-            if (removeToken) {
-                var instance = game.gamedataInstances.mapTokens[tokenId]
-                if (instance != null) {
-                    instance.fadeOut(function () {
-                        game.gamedataInstances.mapTokens[tokenId] = null;
-                        game.world.removeChild(instance);
-                        instance.destroy();
-                    })
-                }
-            }
-        }
+    if (game.revealList.dialogs.length > 0) {
+        var revealDialog = game.revealList.dialogs.shift();
+        MakeRevealDialog(game, revealDialog);
     }
-
-    var fadeInTween = game.add.tween(localGroup).from({ alpha: 0 }, 600, Phaser.Easing.Linear.None, true, 0, 0, false);
-
-    fadeInTween.onComplete.addOnce(function () {
-        game.revealMap.center = new Phaser.Point(localGroup.centerX, localGroup.centerY)
-
-        var moveTween = game.add.tween(player.body).to({ x: game.revealMap.center.x, y: game.revealMap.center.y + game.presentationOffsetY }, 1200, Phaser.Easing.Quadratic.Out, true, 0, 0, false);
-
-        moveTween.onStart.addOnce(function () {
-            game.cutSceneCamera = true;
-        })
-
-        moveTween.onComplete.addOnce(function () {
-            if (game.revealMap.dialogs.length > 0) {
-                var revealDialog = game.revealMap.dialogs.shift();
-                MakeRevealDialog(game, revealDialog);
-            }
-        })
-    });
 }
 
 //=========================================================
 function MakeRevealDialog(game, id) {
     var revealDialog = game.gamedata.revealDialogs.find(function (item) { return item.id == id });
     var movePlayer = new Phaser.Point()
-
-    // Dialog Info
     var imageKey = null;
     var buttonType = "reveal";
     var buttonData = [{ "text": "Continue", "actions": [{ "type": "reveal" }] }];
@@ -650,8 +592,60 @@ function MakeRevealDialog(game, id) {
         buttonData = [{ "text": "Continue", "actions": [{ "type": "reveal" }, { "type": "scene", "sceneId": "scene-player" }] }];
     }
 
-    // Add Tokens
-    if (revealDialog.addSingleToken != null) {
+    console.log(revealDialog)
+
+    if (revealDialog.mapTiles != null) {
+        var localGroup = game.add.group();
+        // Add Map Tiles
+        for (var i = 0; i < revealDialog.mapTiles.length; i++) {
+            var mapTileId = revealDialog.mapTiles[i];
+            var mapTileInstance = MakeMapTile(game, mapTileId);
+
+            localGroup.addChild(mapTileInstance);
+
+            if (!mapTileInstance.isRevealed) {
+                var fadeInTween = game.add.tween(mapTileInstance).from({ alpha: 0 }, 600, Phaser.Easing.Linear.None, true, 0, 0, false);
+                fadeInTween.onComplete.addOnce(function () { mapTileInstance.isRevealed = true })
+            }
+
+            // Begin Remove Door tokens
+            var mapTileData = game.gamedata.mapTiles.find(function (item) { return item.id == mapTileId });
+            // Look at each entryTokenId of the room
+            for (var j = 0; j < mapTileData.entryTokenIds.length; j++) {
+                var removeToken = true;
+                var tokenId = mapTileData.entryTokenIds[j];
+
+                // Find this entryTokenId in all rooms
+                for (var k = 0; k < game.gamedata.mapTiles.length; k++) {
+                    var mapTileDataCheck = game.gamedata.mapTiles[k];
+                    // Look for tokenId in mapTileData.entryTokenIds
+                    if (mapTileDataCheck.entryTokenIds.indexOf(tokenId) >= 0) {
+                        // Check if mapTileData.id in game.gamedataInstances.mapTiles
+                        if (!game.gamedataInstances.mapTiles.some(function (item) { return item.id == mapTileDataCheck.id })) {
+                            // If it is not in, then it is not revealed
+                            removeToken = false
+                        }
+                    }
+                }
+
+                if (removeToken) {
+                    var instance = game.gamedataInstances.mapTokens[tokenId]
+                    if (instance != null) {
+                        instance.fadeOut(function () {
+                            game.gamedataInstances.mapTokens[tokenId] = null;
+                            game.world.removeChild(instance);
+                            instance.destroy();
+                        })
+                    }
+                }
+            }
+            // End Remove Door tokens
+        }
+
+        movePlayer.x = localGroup.centerX
+        movePlayer.y = localGroup.centerY + game.presentationOffsetY
+
+    } else if (revealDialog.addSingleToken != null) {
         // Show image at the top of the Dialog
         var tokenInstance = MakeToken(game, revealDialog.addSingleToken);
         // TODO add fadeIn()
@@ -665,25 +659,9 @@ function MakeRevealDialog(game, id) {
         movePlayer.x = tokenInstance.x + 48
         movePlayer.y = tokenInstance.y + 208 + game.presentationOffsetY
 
-    } else if (revealDialog.addMultipleTokens != null) {
-        // Show images with the Dialog in the middle of the room
-        for (var i = 0; i < revealDialog.addMultipleTokens.length; i++) {
-            var tokenId = revealDialog.addMultipleTokens[i];
-            var tokenInstance = MakeToken(game, tokenId);
-
-            // TODO add fadeIn()
-            game.add.tween(tokenInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
-            if (tokenInstance.addToWorld) {
-                game.world.addChild(tokenInstance)
-            }
-        }
-
-        movePlayer.x = game.revealMap.center.x
-        movePlayer.y = game.revealMap.center.y + game.presentationOffsetY
-
     } else {
-        movePlayer.x = game.revealMap.center.x
-        movePlayer.y = game.revealMap.center.y + game.presentationOffsetY
+        movePlayer.x = player.body.x
+        movePlayer.y = player.body.y 
     }
 
     var moveTween = game.add.tween(player.body).to({ x: movePlayer.x, y: movePlayer.y }, 1200, Phaser.Easing.Quadratic.Out, true, 0, 0, false);
@@ -700,11 +678,23 @@ function MakeRevealDialog(game, id) {
             imageKey,
             buttonType,
             buttonData);
-
         // TODO add fadeIn()
         game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
-
         game.stage.addChild(dialogInstance);
+
+        if (revealDialog.addMultipleTokens != null) {
+            // Show images with the Dialog in the middle of the room
+            for (var i = 0; i < revealDialog.addMultipleTokens.length; i++) {
+                var tokenId = revealDialog.addMultipleTokens[i];
+                var tokenInstance = MakeToken(game, tokenId);
+
+                // TODO add fadeIn()
+                game.add.tween(tokenInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+                if (tokenInstance.addToWorld) {
+                    game.world.addChild(tokenInstance)
+                }
+            }
+        }
     })
 }
 
@@ -717,6 +707,7 @@ function MakeMapTile(game, id) {
         // This handles the case where a room needs revealed that is inside a tile
         // that is already revealed. The camera still needs to center on the existing tile.
         mapTileInstance = game.gamedataInstances.mapTiles.find(function (item) { return item.id == id })
+        console.log('existing')
     } else {
         mapTileInstance = new MapTileGroup(
             game,
@@ -727,6 +718,7 @@ function MakeMapTile(game, id) {
             mapTileData.angle);
 
         game.gamedataInstances.mapTiles.push(mapTileInstance);
+        console.log('add')
     }
 
     return mapTileInstance;
@@ -737,6 +729,7 @@ function MapTileGroup(game, id, x, y, imageKey, angle) {
     Phaser.Group.call(this, game);
 
     this.id = id
+    this.isRevealed = false
     var mapTileSprite = game.make.sprite(x, y, Helper.getImage(imageKey))
 
     if (angle == 90) {
@@ -1139,18 +1132,18 @@ DialogGroup.prototype.buttonClicked = function (button, pointer) {
 
             } else if (action.type == "reveal") {
                 //Go to next reveal dialog
-                if (game.revealMap.dialogs.length > 0) {
+                if (game.revealList.dialogs.length > 0) {
                     fadeOutCallback = function () {
-                        var revealDialog = game.revealMap.dialogs.shift();
+                        var revealDialog = game.revealList.dialogs.shift();
                         MakeRevealDialog(game, revealDialog);
                     }
                     restoreControl = false;
                 }
-            } else if (action.type == "revealMap") {
+            } else if (action.type == "revealList") {
                 //Reveal map tiles
-                if (action.revealMapId != null) {
+                if (action.revealListId != null) {
                     fadeOutCallback = function () {
-                        MakeRevealMap(game, action.revealMapId);
+                        MakeRevealList(game, action.revealListId);
                     }
                     restoreControl = false;
                 }
