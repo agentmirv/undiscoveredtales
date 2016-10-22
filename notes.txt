@@ -350,7 +350,15 @@ This seems to work:
 var moveTween = game.add.tween(player.body).to({ x: game.gamedata.playerStart.x + 100}, 600, Phaser.Easing.Linear.None, true, 0, 0, false);
 
 ===========================================================
+2016 October 22, Saturday 10:16 AM ~~~
 ===========================================================
+I have replaced the customCallback with position tweens.
+I have refactored map reveals outside of reveal lists.
+This allows for scenario events that start with a dialog and are followed by a map reveal.
+
+What about all the things that Eugene can do in Cycle of Eternity?
+There are a number of conditions that are evaluated when Eugene moves, and also is later discovered in a previously unexplored room.
+
 ===========================================================
 ===========================================================
 ===========================================================

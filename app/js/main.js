@@ -802,18 +802,28 @@ TokenSprite.prototype.tokenClicked = function (token, pointer) {
     movePlayer.x = token.centerX + 300 - 20 - 48 //half message width - left margin - half image width
     movePlayer.y = token.centerY + game.presentationOffsetY
 
-    var moveTween = game.add.tween(player.body).to({ x: movePlayer.x, y: movePlayer.y }, 1200, Phaser.Easing.Quadratic.Out, true, 0, 0, false);
-
-    moveTween.onStart.addOnce(function () {
-        game.cutSceneCamera = true;
-    })
-
-    moveTween.onComplete.addOnce(function () {
+    // Check if the positions are equal first (perhaps the last click did the tween)
+    if (movePlayer.equals(new Phaser.Point(Math.floor(player.body.x), Math.floor(player.body.y)))) {
         var dialogInstance = MakeDialog(game, token.clickId)
         // TODO add fadeIn()
         game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
         game.stage.addChild(dialogInstance)
-    })
+        console.log('equals')
+    } else {
+        console.log('not equals')
+        var moveTween = game.add.tween(player.body).to({ x: movePlayer.x, y: movePlayer.y }, 1200, Phaser.Easing.Quadratic.Out, true, 0, 0, false);
+
+        moveTween.onStart.addOnce(function () {
+            game.cutSceneCamera = true;
+        })
+
+        moveTween.onComplete.addOnce(function () {
+            var dialogInstance = MakeDialog(game, token.clickId)
+            // TODO add fadeIn()
+            game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+            game.stage.addChild(dialogInstance)
+        })
+    }
 }
 
 TokenSprite.prototype.fadeOut = function (callback) {
