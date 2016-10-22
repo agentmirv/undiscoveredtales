@@ -29,15 +29,14 @@ var GameState = {
     create: function () {
         //=================================================
         // Initialize game data
-        game.gamedata = game.cache.getJSON('gamedata'); 
+        game.gamedata = game.cache.getJSON('gamedata');
         game.gamedataInstances = {};
         game.gamedataInstances.mapTiles = []
         game.gamedataInstances.mapTokens = [] // TODO fix this so it is like game.gamedataInstances.mapTiles
         game.customStates = []; // This is used in skill test dialogs
         // TODO consolidate the revealMap structure into game.customStates?
-        game.revealMap = {};
-        game.revealMap.dialogs = [];
-        game.revealMap.center = {}
+        game.revealList = {};
+        game.revealList.dialogs = [];
         game.hud = {};
         game.hud.activePhase = "player";
         game.hud.fireSet = false;
@@ -55,7 +54,7 @@ var GameState = {
         hudBmd.copy(endPhaseButtonImage, 0, 0, 64, 64, 16, 16)
         game.cache.addBitmapData("endPhase-image-player", hudBmd)
 
-        hudBmd = game.make.bitmapData(96, 96)   
+        hudBmd = game.make.bitmapData(96, 96)
         endPhaseBgImage.tint = "0x450000"
         hudBmd.copy(endPhaseBgImage)
         hudBmd.copy(endPhaseButtonImage, 0, 0, 64, 64, 16, 16)
@@ -142,13 +141,15 @@ var GameState = {
         // Move Player
         player = game.add.sprite(game.gamedata.playerStart.x, game.gamedata.playerStart.y, 'pixelTransparent');
         game.physics.p2.enable(player);
-        game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, game.followLerp, game.followLerp);
+        //game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, game.followLerp, game.followLerp);
+        game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, game.walkLerp, game.walkLerp);
 
         game.add.tileSprite(0, 0, 2560, 2560, 'background');
 
         //=================================================
         // First Reveal
-        MakeRevealMap(game, 'reveal-lobby')
+        MakeRevealList(game, 'reveal-lobby')
+        //MakeRevealDialog(game, 'reveal-lobby-dialog-room')
 
         //=================================================
         // Add HUD
@@ -158,33 +159,7 @@ var GameState = {
     },
 
     update: function () {
-        if (game.cutSceneCamera == true) {
-            cameraPoint = new Phaser.Point(Math.floor(game.camera.x + game.stageViewRect.halfWidth), Math.floor(game.camera.y + game.stageViewRect.halfHeight));
-            playerPoint = new Phaser.Point(Math.floor(player.body.x), Math.floor(player.body.y))
-
-            if (!cameraPoint.equals(playerPoint)) {
-                var targetRectLarge = new Phaser.Rectangle(player.body.x - 60, player.body.y - 60, 120, 120)
-
-                if (Phaser.Rectangle.contains(targetRectLarge, cameraPoint.x, cameraPoint.y)) {
-                    game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.2, 0.2);
-                    var targetRectSmall = new Phaser.Rectangle(player.body.x - 10, player.body.y - 10, 20, 20)
-
-                    if (Phaser.Rectangle.contains(targetRectSmall, cameraPoint.x, cameraPoint.y)) {
-                        game.camera.focusOn(player)
-                        game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.5, 0.5);
-
-                        if (game.customCallback != null) {
-                            game.customCallback()
-                        }
-                    }
-                }
-            } else {
-                // If the camera doesn't need to move before displaying the dialog
-                if (game.customCallback != null) {
-                    game.customCallback()
-                }
-            }
-        } else if(game.hud.activePhase == "player") {
+        if (!game.cutSceneCamera && game.hud.activePhase == "player") {
             var playerVelocity = 400;
             player.body.setZeroVelocity();
 
@@ -202,15 +177,15 @@ var GameState = {
                 player.body.moveRight(playerVelocity);
             }
 
-            if (game.input.activePointer.isDown) {	
-                if (game.origDragPoint) {		
+            if (game.input.activePointer.isDown) {
+                if (game.origDragPoint) {
                     // move the camera by the amount the mouse has moved since last update	
-                    player.body.x += game.origDragPoint.x - game.input.activePointer.position.x;		
+                    player.body.x += game.origDragPoint.x - game.input.activePointer.position.x;
                     player.body.y += game.origDragPoint.y - game.input.activePointer.position.y;
                 }
                 // set new drag origin to current position	
                 game.origDragPoint = game.input.activePointer.position.clone();
-            } else {	
+            } else {
                 game.origDragPoint = null;
             }
         }
@@ -292,7 +267,7 @@ function PlayerSceneGroup(game) {
     playerPhaseBgImage.tint = "0x044500";
     this.addChild(playerPhaseBgImage);
 
-    var text =  "Player Phase"
+    var text = "Player Phase"
     var textStyle = { font: "85px Times New Romans", fill: "#ffffff", fontStyle: "italic" };
     var messageText = game.make.text(0, 0, text, textStyle);
     messageText.autoRound = true
@@ -404,7 +379,7 @@ HudGroup.prototype.endPhaseClicked = function (button, pointer) {
         dialogInstance = MakeDialog(game, "dialog-hud-endphase-player")
     } else {
         // TODO only allow if no dialog (no modal)
-        return 
+        return
         dialogInstance = MakeDialog(game, "dialog-hud-endphase-enemy")
     }
 
@@ -433,8 +408,8 @@ HudGroup.prototype.fireEvent = function () {
         var imageKey = null;
         var buttonType = "fire-event";
         var buttonData = [
-          { "id": "extinguished", "actions": [ { "type": "fireExtinguished"} ] },
-          { "id": "spreads", "actions": [ { "type": "fireSpreads"} ] }
+          { "id": "extinguished", "actions": [{ "type": "fireExtinguished" }] },
+          { "id": "spreads", "actions": [{ "type": "fireSpreads" }] }
         ]
 
         var dialogInstance = new DialogGroup(
@@ -475,14 +450,14 @@ HudGroup.prototype.randomEvent = function () {
             visibleMapTileIds.push(game.gamedataInstances.mapTiles[i].id)
         }
 
-        // populate random events based on pickable and mapTile requirement
+        // populate random events based on mapTile requirement
         game.hud.randomEventDeck = game.gamedata.randomEvents.filter(function (element) {
             var mapTileMissing = false
             if (element.hasOwnProperty("target") && element.target == "mapTile" && element.hasOwnProperty("mapTile")) {
                 mapTileMissing = visibleMapTileIds.indexOf(element.mapTile) < 0
             }
 
-            return element.pickable && !mapTileMissing
+            return !mapTileMissing
         })
 
         game.hud.randomEventDeck = Helper.shuffle(game.hud.randomEventDeck)
@@ -499,8 +474,8 @@ HudGroup.prototype.randomEvent = function () {
 
 HudGroup.prototype.randomEventDone = function () {
     var monsterCount = 0 //TODO monster drawer
-    
-    if(monsterCount > 0 ) {
+
+    if (monsterCount > 0) {
         // Monsters Attack
     } else {
         MakeScene(game, "scene-player")
@@ -519,14 +494,16 @@ function MakeRandomEvent(game, id) {
     if (randomEventData.hasOwnProperty("buttonType") && randomEventData.buttonType == "random-event-conditional") {
         buttonType = randomEventData.buttonType
         //buttonData = randomEventData.buttons
-      buttonData = [
-        { "id": "no-effect",
-          "actions": [ {"type": "randomEventDone" } ]
-        },
-        { "id": "resolve-effect",
-          "actions": [ {"type": "randomEventResolve"} ]
-        }
-      ]    
+        buttonData = [
+          {
+              "id": "no-effect",
+              "actions": [{ "type": "randomEventDone" }]
+          },
+          {
+              "id": "resolve-effect",
+              "actions": [{ "type": "randomEventResolve" }]
+          }
+        ]
     } else if (randomEventData.hasOwnProperty("buttonType") && randomEventData.buttonType == "random-event-attribute") {
         buttonType = "continue";
         buttonData = [{ "actions": [{ "type": "randomEventResolve" }] }]
@@ -550,7 +527,7 @@ function MakeRandomEvent(game, id) {
 
         // Remove remaining pronoun
         eventText = eventText.replace(/<.+?:.+?>/g, "")
-    } 
+    }
 
     var dialogInstance = new DialogGroup(
         game,
@@ -593,78 +570,20 @@ function MakeRandomEventResolve(game, id) {
 }
 
 //=========================================================
-function MakeRevealMap(game, id) {
-    var revealData = game.gamedata.revealMaps.find(function (item) { return item.id == id });
-    game.revealMap.dialogs = revealData.revealDialogs;
+function MakeRevealList(game, id) {
+    var revealData = game.gamedata.revealLists.find(function (item) { return item.id == id });
+    game.revealList.dialogs = revealData.revealDialogs; 
 
-    var localGroup = game.add.group();
-
-    // Add Map Tiles
-    for (var i = 0; i < revealData.mapTiles.length; i++) {
-        var mapTileId = revealData.mapTiles[i];
-        var mapTileInstance = MakeMapTile(game, mapTileId);
-
-        localGroup.addChild(mapTileInstance);
-
-        // Remove Door tokens
-        var mapTileData = game.gamedata.mapTiles.find(function (item) { return item.id == mapTileId });
-        // Look at each entryTokenId of the room
-        for (var j = 0; j < mapTileData.entryTokenIds.length; j++) {
-            var removeToken = true;
-            var tokenId = mapTileData.entryTokenIds[j];
-            
-            // Find this entryTokenId in all rooms
-            for (var k = 0; k < game.gamedata.mapTiles.length; k++) {
-                var mapTileDataCheck = game.gamedata.mapTiles[k];
-                // Look for tokenId in mapTileData.entryTokenIds
-                if (mapTileDataCheck.entryTokenIds.indexOf(tokenId) >= 0) {
-                    // Check if mapTileData.id in game.gamedataInstances.mapTiles
-                    if (!game.gamedataInstances.mapTiles.some(function (item) { return item.id == mapTileDataCheck.id })) {
-                        // If it is not in, then it is not revealed
-                        removeToken = false
-                    }
-                }
-            }
-
-            if (removeToken) {
-                var instance = game.gamedataInstances.mapTokens[tokenId]
-                if (instance != null) {
-                    instance.fadeOut(function () {
-                        game.gamedataInstances.mapTokens[tokenId] = null;
-                        game.world.removeChild(instance);
-                        instance.destroy();
-                    })
-                }
-            }
-        }
+    if (game.revealList.dialogs.length > 0) {
+        var revealDialog = game.revealList.dialogs.shift();
+        MakeRevealDialog(game, revealDialog);
     }
-
-    var fadeInTween = game.add.tween(localGroup).from({ alpha: 0 }, 600, Phaser.Easing.Linear.None, true, 0, 0, false);
-
-    fadeInTween.onComplete.addOnce(function () {
-        game.revealMap.center = new Phaser.Point(localGroup.centerX, localGroup.centerY)
-
-        // Move Player
-        player.body.x = game.revealMap.center.x
-        player.body.y = game.revealMap.center.y + game.presentationOffsetY
-        game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, game.followLerp, game.followLerp);
-        game.cutSceneCamera = true;
-
-        if (game.revealMap.dialogs.length > 0) {
-            var revealDialog = game.revealMap.dialogs.shift();
-            game.customCallback = function () {
-                // Make first Dialog
-                MakeRevealDialog(game, revealDialog);
-            }
-        }
-    }, this);
 }
 
 //=========================================================
 function MakeRevealDialog(game, id) {
     var revealDialog = game.gamedata.revealDialogs.find(function (item) { return item.id == id });
-
-    // Dialog Info
+    var movePlayer = new Phaser.Point()
     var imageKey = null;
     var buttonType = "reveal";
     var buttonData = [{ "text": "Continue", "actions": [{ "type": "reveal" }] }];
@@ -673,8 +592,62 @@ function MakeRevealDialog(game, id) {
         buttonData = [{ "text": "Continue", "actions": [{ "type": "reveal" }, { "type": "scene", "sceneId": "scene-player" }] }];
     }
 
-    // Add Tokens
-    if (revealDialog.addSingleToken != null) {
+    if (revealDialog.mapTiles != null) {
+        var calculateCenter = new Phaser.Point(0, 0)
+        // Add Map Tiles
+        for (var i = 0; i < revealDialog.mapTiles.length; i++) {
+            var mapTileId = revealDialog.mapTiles[i];
+            var mapTileInstance = MakeMapTile(game, mapTileId);
+
+            calculateCenter.x += mapTileInstance.centerX
+            calculateCenter.y += mapTileInstance.centerY
+
+            if (!mapTileInstance.isRevealed) {
+                var fadeInTween = game.add.tween(mapTileInstance).from({ alpha: 0 }, 600, Phaser.Easing.Linear.None, true, 0, 0, false);
+                mapTileInstance.isRevealed = true
+            }
+
+            // Begin Remove Door tokens
+            var mapTileData = game.gamedata.mapTiles.find(function (item) { return item.id == mapTileId });
+            // Look at each entryTokenId of the room
+            for (var j = 0; j < mapTileData.entryTokenIds.length; j++) {
+                var removeToken = true;
+                var tokenId = mapTileData.entryTokenIds[j];
+
+                // Find this entryTokenId in all rooms
+                for (var k = 0; k < game.gamedata.mapTiles.length; k++) {
+                    var mapTileDataCheck = game.gamedata.mapTiles[k];
+                    // Look for tokenId in mapTileData.entryTokenIds
+                    if (mapTileDataCheck.entryTokenIds.indexOf(tokenId) >= 0) {
+                        // Check if mapTileData.id in game.gamedataInstances.mapTiles
+                        if (!game.gamedataInstances.mapTiles.some(function (item) { return item.id == mapTileDataCheck.id })) {
+                            // If it is not in, then it is not revealed
+                            removeToken = false
+                        }
+                    }
+                }
+
+                if (removeToken) {
+                    var instance = game.gamedataInstances.mapTokens[tokenId]
+                    if (instance != null) {
+                        instance.fadeOut(function () {
+                            game.gamedataInstances.mapTokens[tokenId] = null;
+                            game.world.removeChild(instance);
+                            //instance.destroy();
+                        })
+                    }
+                }
+            }
+            // End Remove Door tokens
+        }
+
+        calculateCenter.x = Math.floor(calculateCenter.x / revealDialog.mapTiles.length)
+        calculateCenter.y = Math.floor(calculateCenter.y / revealDialog.mapTiles.length)
+
+        movePlayer.x = calculateCenter.x
+        movePlayer.y = calculateCenter.y + game.presentationOffsetY
+
+    } else if (revealDialog.addSingleToken != null) {
         // Show image at the top of the Dialog
         var tokenInstance = MakeToken(game, revealDialog.addSingleToken);
         // TODO add fadeIn()
@@ -685,36 +658,21 @@ function MakeRevealDialog(game, id) {
         }
 
         imageKey = tokenInstance.imageKey;
-        player.body.x = tokenInstance.x + 48
-        player.body.y = tokenInstance.y + 208 + game.presentationOffsetY
-
-    } else if (revealDialog.addMultipleTokens != null) {
-        // Show images with the Dialog in the middle of the room
-        for (var i = 0; i < revealDialog.addMultipleTokens.length; i++) {
-            var tokenId = revealDialog.addMultipleTokens[i];
-            var tokenInstance = MakeToken(game, tokenId);
-
-            // TODO add fadeIn()
-            game.add.tween(tokenInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
-            if (tokenInstance.addToWorld) {
-                game.world.addChild(tokenInstance)
-            }
-        }
-
-        player.body.x = game.revealMap.center.x
-        player.body.y = game.revealMap.center.y + game.presentationOffsetY
+        movePlayer.x = tokenInstance.x + 48
+        movePlayer.y = tokenInstance.y + 208 + game.presentationOffsetY
 
     } else {
-        player.body.x = game.revealMap.center.x
-        player.body.y = game.revealMap.center.y + game.presentationOffsetY
+        movePlayer.x = player.body.x
+        movePlayer.y = player.body.y 
     }
 
-    // Move Player to Map Tile
-    game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, game.followLerp, game.followLerp);
-    game.cutSceneCamera = true;
+    var moveTween = game.add.tween(player.body).to({ x: movePlayer.x, y: movePlayer.y }, 1200, Phaser.Easing.Quadratic.Out, true, 0, 0, false);
 
-    // set Callback to open Dialog
-    game.customCallback = function () {
+    moveTween.onStart.addOnce(function () {
+        game.cutSceneCamera = true;
+    })
+
+    moveTween.onComplete.addOnce(function () {
         var dialogInstance = new DialogGroup(
             game,
             revealDialog.id,
@@ -722,13 +680,24 @@ function MakeRevealDialog(game, id) {
             imageKey,
             buttonType,
             buttonData);
-
         // TODO add fadeIn()
         game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
-
         game.stage.addChild(dialogInstance);
-        game.customCallback = null;
-    }
+
+        if (revealDialog.addMultipleTokens != null) {
+            // Show images with the Dialog in the middle of the room
+            for (var i = 0; i < revealDialog.addMultipleTokens.length; i++) {
+                var tokenId = revealDialog.addMultipleTokens[i];
+                var tokenInstance = MakeToken(game, tokenId);
+
+                // TODO add fadeIn()
+                game.add.tween(tokenInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+                if (tokenInstance.addToWorld) {
+                    game.world.addChild(tokenInstance)
+                }
+            }
+        }
+    })
 }
 
 //=========================================================
@@ -760,6 +729,7 @@ function MapTileGroup(game, id, x, y, imageKey, angle) {
     Phaser.Group.call(this, game);
 
     this.id = id
+    this.isRevealed = false
     var mapTileSprite = game.make.sprite(x, y, Helper.getImage(imageKey))
 
     if (angle == 90) {
@@ -828,18 +798,31 @@ TokenSprite.prototype = Object.create(Phaser.Sprite.prototype);
 TokenSprite.prototype.constructor = TokenSprite;
 
 TokenSprite.prototype.tokenClicked = function (token, pointer) {
-    // Move Player Token
-    player.body.x = token.centerX + 300 - 20 - 48 //half message width - left margin - half image width
-    player.body.y = token.centerY + game.presentationOffsetY
-    game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, game.followLerp, game.followLerp);
-    game.cutSceneCamera = true;
+    var movePlayer = new Phaser.Point()
+    movePlayer.x = token.centerX + 300 - 20 - 48 //half message width - left margin - half image width
+    movePlayer.y = token.centerY + game.presentationOffsetY
 
-    game.customCallback = function () {
+    // Check if the positions are equal first (perhaps the last click did the tween)
+    if (movePlayer.equals(new Phaser.Point(Math.floor(player.body.x), Math.floor(player.body.y)))) {
         var dialogInstance = MakeDialog(game, token.clickId)
         // TODO add fadeIn()
         game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
         game.stage.addChild(dialogInstance)
-        game.customCallback = null;
+        console.log('equals')
+    } else {
+        console.log('not equals')
+        var moveTween = game.add.tween(player.body).to({ x: movePlayer.x, y: movePlayer.y }, 1200, Phaser.Easing.Quadratic.Out, true, 0, 0, false);
+
+        moveTween.onStart.addOnce(function () {
+            game.cutSceneCamera = true;
+        })
+
+        moveTween.onComplete.addOnce(function () {
+            var dialogInstance = MakeDialog(game, token.clickId)
+            // TODO add fadeIn()
+            game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+            game.stage.addChild(dialogInstance)
+        })
     }
 }
 
@@ -896,7 +879,7 @@ function DialogGroup(game, id, messageText, imageKey, buttonType, buttonData, sk
     if (buttonType == "reveal" && imageKey != null) {
         dialogMessage.alignTo(revealPointer, Phaser.BOTTOM_CENTER, 0, 3)
     } else {
-        dialogMessage.alignIn(game.stageViewRect, Phaser.CENTER, 0, - game.presentationOffsetY)
+        dialogMessage.alignIn(game.stageViewRect, Phaser.CENTER, 0, -game.presentationOffsetY)
     }
     this.addChild(dialogMessage);
 
@@ -946,9 +929,9 @@ function DialogGroup(game, id, messageText, imageKey, buttonType, buttonData, sk
         // Button for [-][#][+]
         //            [Confirm]
         this._skillTestDisplay = 0;
-    
+
         if (!(this._id in game.customStates)) {
-            game.customStates.push({ "id": this._id, "successCount": 0})
+            game.customStates.push({ "id": this._id, "successCount": 0 })
         }
 
         var skillTestGroup = game.add.group()
@@ -1026,7 +1009,7 @@ function DialogGroup(game, id, messageText, imageKey, buttonType, buttonData, sk
             dialogContinueButton.events.onInputUp.add(this.buttonClicked, this);
             dialogContinueButton.data = data
             this.addChild(dialogContinueButton);
-        } 
+        }
     } if (buttonType == "fire-event") {
         // Buttons for [Fire Extinguished] [Fire Spreads]
         var dataExtinguished = this._buttonData.find(function (item) { return item.id == "extinguished" })
@@ -1110,7 +1093,7 @@ DialogGroup.prototype.skillConfirmClicked = function (button, pointer) {
     var customState = game.customStates.find(function (item) { return item.id == dialogId });
 
     if (customState.successCount + this._skillTestDisplay >= this._skillTarget) {
-        button.data = this._buttonData.find(function (item) { return item.id == "success"})
+        button.data = this._buttonData.find(function (item) { return item.id == "success" })
         DialogGroup.prototype.buttonClicked.call(this, button);
     } else {
         customState.successCount += this._skillTestDisplay
@@ -1159,18 +1142,18 @@ DialogGroup.prototype.buttonClicked = function (button, pointer) {
 
             } else if (action.type == "reveal") {
                 //Go to next reveal dialog
-                if (game.revealMap.dialogs.length > 0) {
+                if (game.revealList.dialogs.length > 0) {
                     fadeOutCallback = function () {
-                        var revealDialog = game.revealMap.dialogs.shift();
+                        var revealDialog = game.revealList.dialogs.shift();
                         MakeRevealDialog(game, revealDialog);
                     }
                     restoreControl = false;
                 }
-            } else if (action.type == "revealMap") {
+            } else if (action.type == "revealList") {
                 //Reveal map tiles
-                if (action.revealMapId != null) {
+                if (action.revealListId != null) {
                     fadeOutCallback = function () {
-                        MakeRevealMap(game, action.revealMapId);
+                        MakeRevealList(game, action.revealListId);
                     }
                     restoreControl = false;
                 }
@@ -1200,7 +1183,7 @@ DialogGroup.prototype.buttonClicked = function (button, pointer) {
                 }
                 restoreControl = false;
             } else if (action.type == "randomEventResolve") {
-            	var randomEventId = this._id
+                var randomEventId = this._id
                 fadeOutCallback = function () {
                     //MakeRandomEventResolve(game, randomEventId);
                     var dialogInstance = MakeRandomEventResolve(game, randomEventId);

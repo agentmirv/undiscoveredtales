@@ -13,7 +13,7 @@
       "pronoun": "m"
     },
     {
-      "name": "Micki Krize",
+      "name": "Micki Kryz",
       "pronoun": "f"
     }
 ],
@@ -21,10 +21,9 @@
     "x": 1048,
     "y": 1048
   },
-  "revealMaps":[
+  "revealLists":[
       {
         "id": "reveal-lobby",
-        "mapTiles": [ "maptile-lobby" ],
         "revealDialogs": [
           "reveal-lobby-dialog-room",
           "reveal-lobby-dialog-investigators",
@@ -35,22 +34,20 @@
       },
       {
         "id": "reveal-study",
-        "mapTiles": [ "maptile-study" ],
         "revealDialogs": [
           "reveal-study-dialog-room",
           "reveal-study-dialog-fireplace",
-          "reveal-explored"
+          "reveal-study-explored"
         ]
       },
       {
         "id": "reveal-halls",
-        "mapTiles": [ "maptile-hall-corner-1", "maptile-hall-end" ],
         "revealDialogs": [
           "reveal-halls-dialog-room",
           "reveal-halls-dialog-bird",
           "reveal-halls-dialog-door-west",
           "reveal-halls-dialog-door-east",
-          "reveal-explored"
+          "reveal-halls-explored"
         ]
       }
   ],
@@ -58,6 +55,7 @@
     {
       "id": "reveal-lobby-dialog-room",
       "text": "You had planned on knocking and waiting for an invitation to enter, but instead you come upon the front door swinging on its hinges. Place the Lobby tile and Walls.",
+      "mapTiles": [ "maptile-lobby" ],
       "addMultipleTokens" : [
         "token-wall1-lobby",
         "token-wall2-lobby",
@@ -82,6 +80,7 @@
     {
       "id": "reveal-lobby-dialog-doors",
       "text": "Two other doors lead from this room. Place Explore tokens.",
+      "mapTiles": [ "maptile-lobby" ],
       "addMultipleTokens" : [
         "token-door1-lobby",
         "token-door2-lobby"
@@ -89,12 +88,9 @@
       "continueToPlayerPhase": true
     },
     {
-      "id": "reveal-explored",
-      "text": "You may move one space into the new area."
-    },
-    {
       "id": "reveal-study-dialog-room",
       "text": "The door leads to a dark study. You can see your breath in the cold air. Place the Study tile and Wall. Remove any Explore tokens leading to it.",
+      "mapTiles": [ "maptile-study" ],
       "addMultipleTokens" : [ "token-wall-study" ]
     },
     {
@@ -103,8 +99,14 @@
       "addSingleToken" : [ "token-fireplace-study" ]
     },
     {
+      "id": "reveal-study-explored",
+      "text": "You may move one space into the new area.",
+      "mapTiles": [ "maptile-study" ]
+    },
+    {
       "id": "reveal-halls-dialog-room",
       "text": "A hallway leads to several bedrooms. Place the Hall Corner 1 tile, the Hall End tile, and Walls. Remove any Explore tokens.",
+      "mapTiles": [ "maptile-hall-corner-1", "maptile-hall-end" ],
       "addMultipleTokens" : [
         "token-wall1-hall",
         "token-wall2-hall"
@@ -124,6 +126,11 @@
       "id": "reveal-halls-dialog-door-west",
       "text": "This door leads to the west bedroom.",
       "addSingleToken" : [ "token-door-west-bedroom" ]
+    },
+    {
+      "id": "reveal-halls-explored",
+      "text": "You may move one space into the new area.",
+      "mapTiles": [ "maptile-hall-corner-1", "maptile-hall-end" ]
     }
   ],
   "mapTiles": [
@@ -302,6 +309,11 @@
       "id": "scene-enemy"
     }
   ],
+  "scenarioEvents":[
+    {
+      "id": ""
+    }
+  ],
   "randomEvents": [
     {
       "id": "random-event-lobby-pictures",
@@ -309,26 +321,31 @@
       "resolveText": "The pictures! Each investigator can be seen in the background of one of the pictures. Each investigator suffers 1 facedown Horror.",
       "target": "mapTile",
       "mapTile": "maptile-lobby",
-      "buttonType": "random-event-conditional",
-      "pickable": true
+      "buttonType": "random-event-conditional"
     },
     {
       "id": "random-event-self-doubt",
-      "text": "You obsess over a previous converstation with a team member. This event affects the investigator with the least influence.",
+      "text": "You obsess over a previous converstation with a team member. This event affects the investigator with the least Influence.",
       "resolveText": "Working with a team is not your strength; you feel slighted by your last converstation with the team (Influence; 1). If you pass, you gain some insight on yourself and become Focused. If you fail, you let your obsession cloud your insight; lose 1 Clue.",
-      "buttonType": "random-event-attribute",
-      "pickable": true
+      "buttonType": "random-event-attribute"
     },
     {
-      "id": "random-event-no-effect",
-      "text": "A gust of wind rattles the windows for a moment. No immediate effect.",
-      "pickable": true
+      "id": "random-event-no-effect-1",
+      "text": "A gust of wind rattles the windows for a moment. No immediate effect."
+    },
+    {
+      "id": "random-event-no-effect-2",
+      "text": "Loud knocks sound from a room beyond. Loose beams shift as the house settles. No immediate effect."
     },
     {
       "id": "random-event-the-pain",
       "text": "<name> feels an iching in <f:her><m:his> hands. The itching turns to burning, feeling heat upon heat, upon heat. <name> screams as <f:her><m:his> fingernails fall out (Will; 2). If <f:she><m:he> passes, <f:she><m:he> realizes that <f:her><m:his> hands are fine. If <f:she><m:he> fails, <f:she><m:he> panics and becomes transfixed, convinced that <f:her><m:his> hands are melting; <f:she><m:he> suffers 1 Horror and becomes Restrained.",
-      "target": "investigator",
-      "pickable": true
+      "target": "investigator"
+    },
+    {
+      "id": "random-event-hungry",
+      "text": "<name> had skipped dinner and now feels light headed. <name> becomes Dazed.",
+      "target": "investigator"
     }
   ],
   "dialogs": [
@@ -407,7 +424,7 @@
       "buttonType": "cancel-action",
       "buttons": [
         { "text": "@ Explore",
-          "actions": [ {"type": "revealMap", "revealMapId": ["reveal-halls"] } ]
+          "actions": [ {"type": "revealList", "revealListId": ["reveal-halls"] } ]
         }
       ]
     },
@@ -418,7 +435,7 @@
       "buttonType": "cancel-action",
       "buttons": [
         { "text": "@ Explore",
-          "actions": [ {"type": "revealMap", "revealMapId": ["reveal-halls"] } ]
+          "actions": [ {"type": "revealList", "revealListId": ["reveal-halls"] } ]
         }
       ]
     },
@@ -429,7 +446,7 @@
       "buttonType": "cancel-action",
       "buttons": [
         { "text": "@ Explore",
-          "actions": [ {"type": "revealMap", "revealMapId": "reveal-study" } ]
+          "actions": [ {"type": "revealList", "revealListId": "reveal-study" } ]
         }
       ]
     },
