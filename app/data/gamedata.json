@@ -324,6 +324,14 @@
       "buttonType": "random-event-conditional"
     },
     {
+      "id": "random-event-study-cold",
+      "text": "The unnatural cold turns to a biting, freezing blast. This event affects each investigator in the Study.",
+      "resolveText": "A blast of sub-zero air begins to freeze your exposed flesh. Each investigator suffers 1 facedown Damage.",
+      "target": "mapTile",
+      "mapTile": "maptile-study",
+      "buttonType": "random-event-conditional"
+    },
+    {
       "id": "random-event-self-doubt",
       "text": "You obsess over a previous converstation with a team member. This event affects the investigator with the least Influence.",
       "resolveText": "Working with a team is not your strength; you feel slighted by your last converstation with the team (Influence; 1). If you pass, you gain some insight on yourself and become Focused. If you fail, you let your obsession cloud your insight; lose 1 Clue.",
