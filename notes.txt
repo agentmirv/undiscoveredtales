@@ -391,11 +391,20 @@ What would this look like?
 
   "addToWorld": true
 },
+...
+            } else if (action.type == "setGlobal") {
+                var globalVar = game.globalVars.find(function (item) { return item.id == action.globalId });
+                globalVar.value = action.value
+            }
+...
 
 And so, you would need to declare this global somewhere, with an initial value.
 
 "globals": [
-  "box-state": "initial"
+    { 
+        "id: "box-state",
+        "value: "initial"
+    }
 ]
 
 I guess this isn't too bad.
