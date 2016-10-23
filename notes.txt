@@ -360,7 +360,53 @@ What about all the things that Eugene can do in Cycle of Eternity?
 There are a number of conditions that are evaluated when Eugene moves, and also is later discovered in a previously unexplored room.
 
 ===========================================================
+2016 October 23, Sunday 06:13 PM ~~~
 ===========================================================
+So, let's say you want a token to open a particular dialog, based on a condition.
+Let's also say this condition is based on the value of a 'global' variable (not one stored in a dialog, like the skill check).
+This means the token must evaluate the condition on the global.
+This also means that another thing, like a dialog, must set the value of the global.
+
+What would this look like?
+
+{
+  "id":"token-box-lobby",
+  "x":1200,
+  "y":1200,
+  "imageKey":"search-image",
+  "clickId":"dialog-box-lobby",
+
+  "clickConditional": [
+    {
+      "variable": "box-state",
+      "value": "initial",
+      "dialogId": "dialog-box-lobby"
+    },
+    {
+      "variable": "box-state",
+      "value": "tried",
+      "dialogId": "dialog-box-lobby-tried"
+    }
+  ]
+
+  "addToWorld": true
+},
+
+And so, you would need to declare this global somewhere, with an initial value.
+
+"globals": [
+  "box-state": "initial"
+]
+
+I guess this isn't too bad.
+
+This could handle Eugene's different dialog states.
+He would still be represented by different tokens, depending on where in the house he is.
+But within those tokens, these conditions could be used.
+
+Do I want to go down the road of condition data structures yet?
+Not yet.
+
 ===========================================================
 ===========================================================
 ===========================================================
