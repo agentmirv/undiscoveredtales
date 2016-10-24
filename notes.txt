@@ -378,16 +378,16 @@ What would this look like?
 
   "clickConditional": [
     {
-      "variable": "box-state",
+      "variable": "box-lobby",
       "value": "initial",
       "dialogId": "dialog-box-lobby"
     },
     {
-      "variable": "box-state",
+      "variable": "box-lobby",
       "value": "tried",
       "dialogId": "dialog-box-lobby-tried"
     }
-  ]
+  ],
 
   "addToWorld": true
 },
@@ -402,7 +402,7 @@ And so, you would need to declare this global somewhere, with an initial value.
 
 "globals": [
     { 
-        "id: "box-state",
+        "id: "box-lobby",
         "value: "initial"
     }
 ]
@@ -415,6 +415,8 @@ But within those tokens, these conditions could be used.
 
 Do I want to go down the road of condition data structures yet?
 Not yet.
+
+This will be needed for scenario events with more involved conditions.
 
 ===========================================================
 ===========================================================
