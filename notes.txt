@@ -445,6 +445,27 @@ There are some scenario events that could have a global flag as a condition.
 * Reading of the arcane script gives a spell on the current turn, a Deep One is revealed on the next turn.
 * If you have read the diary and then smashed the urn, the ghost is revealed (still not sure of the exact conditions on this one).
 
+On question on Eugene,
+When Eugene moves into an unexplored tile (the Study), what happens to him?
+We discover him later; when the Study is revealed, he is also revealed.
+Is the Eugene reveal-dialog appended to the Study's reveal list?
+Is the Eugene reveal-dialog already present on the Study's reveal least, but revealed based on a global condition?
+
+===========================================================
+===========================================================
+===========================================================
+===========================================================
+===========================================================
+===========================================================
+===========================================================
+===========================================================
+===========================================================
+===========================================================
+===========================================================
+===========================================================
+===========================================================
+===========================================================
+===========================================================
 ===========================================================
 ===========================================================
 ===========================================================
