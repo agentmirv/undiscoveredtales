@@ -16,11 +16,17 @@
       "name": "Micki Kryz",
       "pronoun": "f"
     }
-],
+  ],
   "playerStart": {
     "x": 1048,
     "y": 1048
   },
+  "globalVars": [
+      {
+        "id": "box-lobby",
+        "value": "initial"
+      }
+  ],
   "revealLists":[
       {
         "id": "reveal-lobby",
@@ -221,6 +227,18 @@
       "y":1200,
       "imageKey":"search-image",
       "clickId":"dialog-box-lobby",
+      "clickConditions": [
+        {
+          "globalId": "box-lobby",
+          "value": "initial",
+          "dialogId": "dialog-box-lobby"
+        },
+        {
+          "globalId": "box-lobby",
+          "value": "tried",
+          "dialogId": "dialog-box-lobby-tried"
+        }
+      ],
       "addToWorld": true
     },
     {
@@ -393,6 +411,17 @@
       ]
     },
     {
+      "id": "dialog-box-lobby-tried",
+      "imageKey": "search-image",
+      "text": "You want to search the damned box, but you feel the cursed latch mocking you.",
+      "buttonType": "cancel-action",
+      "buttons": [
+        { "text": "@ Search",
+          "actions": [ {"type": "dialog", "dialogId": "dialog-box-lobby-skilltest"} ]
+        }
+      ]
+    },
+    {
       "id": "dialog-box-lobby-skilltest",
       "imageKey": "search-image",
       "text": "The unholy design of the latch depicts a humanoid form with beast-like appendages. You steel yourself for designs of an immoral calculus. (Test Will) ",
@@ -403,7 +432,10 @@
           "actions": [ {"type": "dialog", "dialogId": "dialog-box-lobby-skilltest-success"} ]
         },
         { "id": "fail",
-          "actions": [ {"type": "dialog", "dialogId": "dialog-box-lobby-skilltest-fail"} ]
+          "actions": [ 
+            {"type": "setGlobal", "globalId": "box-lobby", "value": "tried" },
+            {"type": "dialog", "dialogId": "dialog-box-lobby-skilltest-fail"} 
+            ]
         }
       ]
     },
