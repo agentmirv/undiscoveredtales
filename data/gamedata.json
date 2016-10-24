@@ -16,11 +16,17 @@
       "name": "Micki Kryz",
       "pronoun": "f"
     }
-],
+  ],
   "playerStart": {
     "x": 1048,
     "y": 1048
   },
+  "globalVars": [
+      {
+        "id": "box-lobby",
+        "value": "initial"
+      }
+  ],
   "revealLists":[
       {
         "id": "reveal-lobby",
@@ -221,6 +227,18 @@
       "y":1200,
       "imageKey":"search-image",
       "clickId":"dialog-box-lobby",
+      "clickConditions": [
+        {
+          "globalId": "box-lobby",
+          "value": "initial",
+          "dialogId": "dialog-box-lobby"
+        },
+        {
+          "globalId": "box-lobby",
+          "value": "tried",
+          "dialogId": "dialog-box-lobby-tried"
+        }
+      ],
       "addToWorld": true
     },
     {
@@ -324,6 +342,14 @@
       "buttonType": "random-event-conditional"
     },
     {
+      "id": "random-event-study-cold",
+      "text": "The unnatural cold turns to a biting, freezing blast. This event affects each investigator in the Study.",
+      "resolveText": "A blast of sub-zero air begins to freeze your exposed flesh. Each investigator suffers 1 facedown Damage.",
+      "target": "mapTile",
+      "mapTile": "maptile-study",
+      "buttonType": "random-event-conditional"
+    },
+    {
       "id": "random-event-self-doubt",
       "text": "You obsess over a previous converstation with a team member. This event affects the investigator with the least Influence.",
       "resolveText": "Working with a team is not your strength; you feel slighted by your last converstation with the team (Influence; 1). If you pass, you gain some insight on yourself and become Focused. If you fail, you let your obsession cloud your insight; lose 1 Clue.",
@@ -385,6 +411,17 @@
       ]
     },
     {
+      "id": "dialog-box-lobby-tried",
+      "imageKey": "search-image",
+      "text": "You want to search the damned box, but you feel the cursed latch mocking you.",
+      "buttonType": "cancel-action",
+      "buttons": [
+        { "text": "@ Search",
+          "actions": [ {"type": "dialog", "dialogId": "dialog-box-lobby-skilltest"} ]
+        }
+      ]
+    },
+    {
       "id": "dialog-box-lobby-skilltest",
       "imageKey": "search-image",
       "text": "The unholy design of the latch depicts a humanoid form with beast-like appendages. You steel yourself for designs of an immoral calculus. (Test Will) ",
@@ -395,7 +432,10 @@
           "actions": [ {"type": "dialog", "dialogId": "dialog-box-lobby-skilltest-success"} ]
         },
         { "id": "fail",
-          "actions": [ {"type": "dialog", "dialogId": "dialog-box-lobby-skilltest-fail"} ]
+          "actions": [ 
+            {"type": "setGlobal", "globalId": "box-lobby", "value": "tried" },
+            {"type": "dialog", "dialogId": "dialog-box-lobby-skilltest-fail"} 
+            ]
         }
       ]
     },
