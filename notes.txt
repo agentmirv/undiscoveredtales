@@ -401,7 +401,7 @@ What would this look like?
 And so, you would need to declare this global somewhere, with an initial value.
 
 "globals": [
-    { 
+    {
         "id: "box-lobby",
         "value: "initial"
     }
@@ -419,7 +419,32 @@ Not yet.
 This will be needed for scenario events with more involved conditions.
 
 ===========================================================
+2016 October 24, Monday 06:40 PM ~~~
 ===========================================================
+So, scenario events...
+
+The first condition we encounter in Cycle of Eternity is a condition on the turn count.
+If the Dining Room is not revealed by the Mythos Phase of the 2nd turn, Eugene is not saved.
+
+The second condition we encounter is investigator count.
+The turn that triggers the appearance of the first cultist depends on investigator count.
+  2 Investigators:
+  * First Cultist appeared after 5 turns.
+
+  3 Investigators:
+  * First Cultist appeared after 4 turns.
+
+  4 Investigators:
+  * First Cultist appeared after 4 turns.
+
+  5 Investigators:
+  * First Cultist appeared after 3 turns.
+
+There are some scenario events that could have a global flag as a condition.
+* If the wiring puzzle is not solved in the current turn, a fire spreads on the next turn.
+* Reading of the arcane script gives a spell on the current turn, a Deep One is revealed on the next turn.
+* If you have read the diary and then smashed the urn, the ghost is revealed (still not sure of the exact conditions on this one).
+
 ===========================================================
 ===========================================================
 ===========================================================
