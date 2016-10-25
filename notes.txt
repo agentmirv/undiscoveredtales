@@ -452,7 +452,19 @@ Is the Eugene reveal-dialog appended to the Study's reveal list?
 Is the Eugene reveal-dialog already present on the Study's reveal least, but revealed based on a global condition?
 
 ===========================================================
+2016 October 25, Tuesday 06:35 PM ~~~
 ===========================================================
+The wiring puzzle scenario event opens a token dialog, the continue would set the fire flag.
+Actually, the wiring puzzle appears to have different penalty outcomes.
+The smashed urn scenario event opens a reveal token dialog.
+The cultist scenario event opens a reveal token dialog.
+
+Also, the wiring puzzle has the random (conditional) dialog after the search dialog.
+This is different than the conditional placed at the token level.
+Perhaps you could point a token or dialog button to an id that was a condition itself.
+Then that condition would resolve and do the appropriate thing?
+Maybe leave this as a refactoring goal (after implementing without that concept).
+
 ===========================================================
 ===========================================================
 ===========================================================
