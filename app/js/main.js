@@ -473,6 +473,16 @@ HudGroup.prototype.randomEvent = function () {
 }
 
 HudGroup.prototype.randomEventDone = function () {
+    HudGroup.prototype.scenarioEvent.call(this)
+}
+
+HudGroup.prototype.scenarioEvent = function () {
+    console.log('scenarioEvent')
+    HudGroup.prototype.scenarioEventDone.call(this)
+}
+
+HudGroup.prototype.scenarioEventDone = function () {
+    console.log('scenarioEventDone')
     var monsterCount = 0 //TODO monster drawer
 
     if (monsterCount > 0) {
