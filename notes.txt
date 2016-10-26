@@ -465,6 +465,10 @@ Perhaps you could point a token or dialog button to an id that was a condition i
 Then that condition would resolve and do the appropriate thing?
 Maybe leave this as a refactoring goal (after implementing without that concept).
 
+Random events will probably also be treated like random events, put into an array and shifted off.
+But, the scenario events won't be re-shuffled like the random events.
+Although, the reshuffling of random events only exists right now because I don't have a lot of random events defined.
+
 ===========================================================
 ===========================================================
 ===========================================================
