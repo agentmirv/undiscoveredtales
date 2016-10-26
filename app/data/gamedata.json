@@ -429,7 +429,10 @@
       "skillTarget": 2,
       "buttons": [
         { "id": "success",
-          "actions": [ {"type": "dialog", "dialogId": "dialog-box-lobby-skilltest-success"} ]
+          "actions": [ 
+            {"type": "setGlobal", "globalId": "box-lobby", "value": "searched" },
+            {"type": "dialog", "dialogId": "dialog-box-lobby-skilltest-success"} 
+            ]
         },
         { "id": "fail",
           "actions": [ 
