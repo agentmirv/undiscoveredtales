@@ -327,9 +327,18 @@
       "id": "scene-enemy"
     }
   ],
-  "scenarioEvents":[
+  "scenarioEvents": [
     {
-      "id": ""
+      "id": "box-lobby-beast",
+      "action": { "type": "dialog", "dialogId": "dialog-scenario-event-box-lobby" },
+      "conditions": [
+        { 
+          "type": "globalVar", 
+          "globalId": "box-lobby", 
+          "operator": "equals", 
+          "value": "searched"
+        }
+      ]
     }
   ],
   "randomEvents": [
@@ -596,6 +605,12 @@
       "text": "A setting sun is carved into the door of the west bedroom. There is no handle on this door.",
       "buttonType": "continue",
       "buttons": [ ]
+    },
+    {
+      "id": "dialog-scenario-event-box-lobby",
+      "text": "",
+      "buttonType": "continue",
+      "buttons": [ { "actions": "scenario" } ]
     }
   ],
   "imageTiles": [
