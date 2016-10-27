@@ -332,10 +332,10 @@
       "id": "box-lobby-beast",
       "action": { "type": "dialog", "dialogId": "dialog-scenario-event-box-lobby" },
       "conditions": [
-        { 
-          "type": "globalVar", 
-          "globalId": "box-lobby", 
-          "operator": "equals", 
+        {
+          "type": "globalVar",
+          "globalId": "box-lobby",
+          "operator": "equals",
           "value": "searched"
         }
       ]
@@ -438,15 +438,15 @@
       "skillTarget": 2,
       "buttons": [
         { "id": "success",
-          "actions": [ 
+          "actions": [
             {"type": "setGlobal", "globalId": "box-lobby", "value": "searched" },
-            {"type": "dialog", "dialogId": "dialog-box-lobby-skilltest-success"} 
+            {"type": "dialog", "dialogId": "dialog-box-lobby-skilltest-success"}
             ]
         },
         { "id": "fail",
-          "actions": [ 
+          "actions": [
             {"type": "setGlobal", "globalId": "box-lobby", "value": "tried" },
-            {"type": "dialog", "dialogId": "dialog-box-lobby-skilltest-fail"} 
+            {"type": "dialog", "dialogId": "dialog-box-lobby-skilltest-fail"}
             ]
         }
       ]
@@ -608,9 +608,11 @@
     },
     {
       "id": "dialog-scenario-event-box-lobby",
-      "text": "",
+      "text": "A shadow of dread darkens your mind. You feel beastly claws reach from the shadows. Each investigator suffers 2 facedown Horror (Will negates).",
       "buttonType": "continue",
-      "buttons": [ { "actions": "scenario" } ]
+      "buttons": [
+        { "actions": [ {"type": "scenarioEvent" } ] }
+      ]
     }
   ],
   "imageTiles": [
