@@ -327,9 +327,18 @@
       "id": "scene-enemy"
     }
   ],
-  "scenarioEvents":[
+  "scenarioEvents": [
     {
-      "id": ""
+      "id": "box-lobby-beast",
+      "action": { "type": "dialog", "dialogId": "dialog-scenario-event-box-lobby" },
+      "conditions": [
+        {
+          "type": "globalVar",
+          "globalId": "box-lobby",
+          "operator": "equals",
+          "value": "searched"
+        }
+      ]
     }
   ],
   "randomEvents": [
@@ -429,12 +438,15 @@
       "skillTarget": 2,
       "buttons": [
         { "id": "success",
-          "actions": [ {"type": "dialog", "dialogId": "dialog-box-lobby-skilltest-success"} ]
+          "actions": [
+            {"type": "setGlobal", "globalId": "box-lobby", "value": "searched" },
+            {"type": "dialog", "dialogId": "dialog-box-lobby-skilltest-success"}
+            ]
         },
         { "id": "fail",
-          "actions": [ 
+          "actions": [
             {"type": "setGlobal", "globalId": "box-lobby", "value": "tried" },
-            {"type": "dialog", "dialogId": "dialog-box-lobby-skilltest-fail"} 
+            {"type": "dialog", "dialogId": "dialog-box-lobby-skilltest-fail"}
             ]
         }
       ]
@@ -593,6 +605,14 @@
       "text": "A setting sun is carved into the door of the west bedroom. There is no handle on this door.",
       "buttonType": "continue",
       "buttons": [ ]
+    },
+    {
+      "id": "dialog-scenario-event-box-lobby",
+      "text": "A shadow of dread darkens your mind. You feel beastly claws reach from the shadows. Each investigator suffers 2 facedown Horror (Will negates).",
+      "buttonType": "continue",
+      "buttons": [
+        { "actions": [ {"type": "scenarioEvent" } ] }
+      ]
     }
   ],
   "imageTiles": [

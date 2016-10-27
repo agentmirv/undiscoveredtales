@@ -473,6 +473,45 @@ HudGroup.prototype.randomEvent = function () {
 }
 
 HudGroup.prototype.randomEventDone = function () {
+    HudGroup.prototype.scenarioEvent()
+}
+
+HudGroup.prototype.scenarioEvent = function () {
+    var triggeredScenarioEvent = false
+    for (var i = 0; i < game.gamedata.scenarioEvents.length; i++) {
+        var scenarioEvent = game.gamedata.scenarioEvents[i]
+        if (!scenarioEvent.hasOwnProperty("resolved")) {
+            var conditionResult = true
+            for (var j = 0; j < scenarioEvent.conditions.length && conditionResult; j++) {
+                var condition = scenarioEvent.conditions[i]
+                conditionResult = false
+                if (condition.type == "globalVar") {
+                    var globalVar = game.gamedata.globalVars.find(function (item) { return item.id == condition.globalId })
+                    if (condition.operator == "equals") {
+                        conditionResult = condition.value == globalVar.value
+                    }
+                }
+            }
+
+            if (conditionResult) {
+                scenarioEvent.resolved = true
+                triggeredScenarioEvent = true
+                if (scenarioEvent.action.type == "dialog") {
+                    var dialogInstance = MakeDialog(game, scenarioEvent.action.dialogId)
+                    // TODO add fadeIn()
+                    game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+                    game.stage.addChild(dialogInstance)
+                }
+            }
+        }
+    }
+
+    if (!triggeredScenarioEvent) {
+        HudGroup.prototype.scenarioEventDone()
+    }
+}
+
+HudGroup.prototype.scenarioEventDone = function () {
     var monsterCount = 0 //TODO monster drawer
 
     if (monsterCount > 0) {
@@ -1210,6 +1249,8 @@ DialogGroup.prototype.buttonClicked = function (button, pointer) {
             } else if (action.type == "setGlobal") {
                 var globalVar = game.gamedata.globalVars.find(function (item) { return item.id == action.globalId });
                 globalVar.value = action.value
+            } else if (action.type == "scenarioEvent") {
+                HudGroup.prototype.scenarioEvent()
             }
         }
     }
