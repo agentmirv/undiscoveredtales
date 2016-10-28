@@ -507,6 +507,7 @@ HudGroup.prototype.scenarioEvent = function () {
     }
 
     if (!triggeredScenarioEvent) {
+        // If no scenario events were triggered, move on
         HudGroup.prototype.scenarioEventDone()
     }
 }

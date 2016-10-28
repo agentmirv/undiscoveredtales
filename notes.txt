@@ -470,7 +470,13 @@ But, the scenario events won't be re-shuffled like the random events.
 Although, the reshuffling of random events only exists right now because I don't have a lot of random events defined.
 
 ===========================================================
+2016 October 27, Thursday 10:03 PM ~~~
 ===========================================================
+I could work on the turn counter, but I'm thinking I should just move on to monsters.
+There are types of monsters and instances of monsters.
+I don't want to theorize any more than that now.
+I should just start writing code and cleaning it up later.
+
 ===========================================================
 ===========================================================
 ===========================================================
