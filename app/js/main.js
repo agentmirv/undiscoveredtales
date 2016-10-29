@@ -404,6 +404,7 @@ HudGroup.prototype.endPhaseClicked = function (button, pointer) {
 
     // TODO add fadeIn()
     game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+    // Because I'm adding this immediately, the modal prevents the double-click?
     game.stage.addChild(dialogInstance)
 }
 
@@ -868,6 +869,8 @@ TokenSprite.prototype = Object.create(Phaser.Sprite.prototype);
 TokenSprite.prototype.constructor = TokenSprite;
 
 TokenSprite.prototype.tokenClicked = function (token, pointer) {
+    if (game.cutSceneCamera) return;
+
     // this == token?
     var movePlayer = new Phaser.Point()
     movePlayer.x = token.centerX + 300 - 20 - 48 //half message width - left margin - half image width
@@ -1155,6 +1158,7 @@ DialogGroup.prototype = Object.create(Phaser.Group.prototype);
 DialogGroup.prototype.constructor = DialogGroup;
 
 DialogGroup.prototype.cancelClicked = function (button, pointer) {
+    button.inputEnabled = false;
     game.cutSceneCamera = false;
     this.fadeOut();
 }
@@ -1172,6 +1176,7 @@ DialogGroup.prototype.skillAddClicked = function (button, pointer) {
 }
 
 DialogGroup.prototype.skillConfirmClicked = function (button, pointer) {
+    button.inputEnabled = false;
     var dialogId = this._id;
     var customState = game.customStates.find(function (item) { return item.id == dialogId });
 
@@ -1187,6 +1192,7 @@ DialogGroup.prototype.skillConfirmClicked = function (button, pointer) {
 
 DialogGroup.prototype.buttonClicked = function (button, pointer) {
     // this = DialogGroup
+    button.inputEnabled = false;
     var restoreControl = true;
     var fadeOutCallback = null;
 
