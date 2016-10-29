@@ -294,6 +294,8 @@ function PlayerSceneGroup(game) {
 
     fadeInTween.onComplete.addOnce(this.updatePhase, this)
     fadeOutTween.onComplete.addOnce(this.destroyScene, this)
+
+    game.cutSceneCamera = true
 }
 
 PlayerSceneGroup.prototype = Object.create(Phaser.Group.prototype);
@@ -305,6 +307,7 @@ PlayerSceneGroup.prototype.updatePhase = function () {
 }
 
 PlayerSceneGroup.prototype.destroyScene = function () {
+    game.cutSceneCamera = false
     this.destroy(true)
 }
 
@@ -335,6 +338,8 @@ function EnemySceneGroup(game) {
     fadeInTween.onComplete.addOnce(this.updatePhase, this)
     fadeOutTween.onComplete.addOnce(this.beginEnemySteps, this)
     fadeOutTween.onComplete.addOnce(this.destroyScene, this)
+
+    game.cutSceneCamera = true
 }
 
 EnemySceneGroup.prototype = Object.create(Phaser.Group.prototype);
@@ -350,6 +355,7 @@ EnemySceneGroup.prototype.beginEnemySteps = function () {
 }
 
 EnemySceneGroup.prototype.destroyScene = function () {
+    game.cutSceneCamera = true
     this.destroy(true)
 }
 
