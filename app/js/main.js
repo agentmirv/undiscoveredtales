@@ -648,6 +648,8 @@ function MakeRevealDialog(game, id) {
 
     if (revealDialog.continueToPlayerPhase) {
         buttonData = [{ "text": "Continue", "actions": [{ "type": "reveal" }, { "type": "scene", "sceneId": "scene-player" }] }];
+    } else if (revealDialog.addMonster) {
+        buttonData = [{ "text": "Continue", "actions": [{ "type": "reveal" }, { "type": "monster", "monsterId": revealDialog.addMonster }] }];
     }
 
     if (revealDialog.mapTiles != null) {
@@ -1287,6 +1289,8 @@ DialogGroup.prototype.buttonClicked = function (button, pointer) {
                 globalVar.value = action.value
             } else if (action.type == "scenarioEvent") {
                 HudGroup.prototype.scenarioEvent()
+            } else if (action.type == "monster") {
+                console.log(action.monsterId)
             }
         }
     }
