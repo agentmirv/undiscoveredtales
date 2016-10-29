@@ -20,6 +20,9 @@ var GameState = {
         game.load.image('bird', 'assets/images/raven.png');
         game.load.image('hudButton', 'assets/images/HudButton.png');
         game.load.image('arrow', 'assets/images/plain-arrow.png');
+        game.load.image('deepOne', 'assets/images/toad-teeth.png');
+        game.load.image('squareBackground', 'assets/images/SquareBackground.png');
+        game.load.image('monsterMask', 'assets/images/MonsterMask.png');
 
         game.load.spritesheet('tileWallsSheet', 'assets/images/TileWalls.png', 96, 96);
 
@@ -69,7 +72,11 @@ var GameState = {
 
             if (imageTokenData.backgroundImageKey != null) {
                 if (imageTokenData.backgroundImageAngle == null) {
-                    tokenBmd.copy(imageTokenData.backgroundImageKey)
+                    var backgroundImage = game.make.image(0, 0, imageTokenData.backgroundImageKey)
+                    if (imageTokenData.backgroundColor != null) {
+                        backgroundImage.tint = imageTokenData.backgroundColor
+                    }
+                    tokenBmd.copy(backgroundImage)
                 } else {
                     var degToRad = imageTokenData.backgroundImageAngle * (Math.PI / 180);
                     if (imageTokenData.backgroundImageAngle == 90) {
@@ -97,6 +104,14 @@ var GameState = {
                 }
 
                 tokenBmd.copy(primaryImage, 0, 0, 64, 64, 16, 16)
+            }
+
+            if (imageTokenData.maskImageKey != null) {
+                var maskImage = game.make.image(0, 0, imageTokenData.maskImageKey)
+                if (imageTokenData.maskColor != null) {
+                    maskImage.tint = imageTokenData.maskColor
+                }
+                tokenBmd.copy(maskImage)
             }
 
             game.cache.addBitmapData(imageTokenData.imageKey, tokenBmd)
@@ -483,7 +498,7 @@ HudGroup.prototype.scenarioEvent = function () {
         if (!scenarioEvent.hasOwnProperty("resolved")) {
             var conditionResult = true
             for (var j = 0; j < scenarioEvent.conditions.length && conditionResult; j++) {
-                var condition = scenarioEvent.conditions[i]
+                var condition = scenarioEvent.conditions[j]
                 conditionResult = false
                 if (condition.type == "globalVar") {
                     var globalVar = game.gamedata.globalVars.find(function (item) { return item.id == condition.globalId })
@@ -501,12 +516,18 @@ HudGroup.prototype.scenarioEvent = function () {
                     // TODO add fadeIn()
                     game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
                     game.stage.addChild(dialogInstance)
+                } else if (scenarioEvent.action.type == "revealList") {
+                    //Reveal map tiles
+                    if (scenarioEvent.action.revealListId != null) {
+                        MakeRevealList(game, scenarioEvent.action.revealListId);
+                    }
                 }
             }
         }
     }
 
     if (!triggeredScenarioEvent) {
+        // If no scenario events were triggered, move on
         HudGroup.prototype.scenarioEventDone()
     }
 }
@@ -667,10 +688,10 @@ function MakeRevealDialog(game, id) {
                 }
 
                 if (removeToken) {
-                    var instance = game.gamedataInstances.mapTokens[tokenId]
+                    var instance = game.gamedataInstances.mapTokens.find(function (item) { return item.id == tokenId })
                     if (instance != null) {
                         instance.fadeOut(function () {
-                            game.gamedataInstances.mapTokens[tokenId] = null;
+                            instance = null;
                             game.world.removeChild(instance);
                             //instance.destroy();
                         })
@@ -695,6 +716,14 @@ function MakeRevealDialog(game, id) {
         if (tokenInstance.addToWorld) {
             game.world.addChild(tokenInstance)
         }
+
+        imageKey = tokenInstance.imageKey;
+        movePlayer.x = tokenInstance.x + 48
+        movePlayer.y = tokenInstance.y + 208 + game.presentationOffsetY
+
+    } else if (revealDialog.showSingleToken != null) {
+        // Show image at the top of the Dialog
+        var tokenInstance = game.gamedataInstances.mapTokens.find(function (item) { return item.id == revealDialog.showSingleToken })
 
         imageKey = tokenInstance.imageKey;
         movePlayer.x = tokenInstance.x + 48
@@ -793,6 +822,7 @@ function MakeToken(game, id) {
     
     var tokenInstance = new TokenSprite(
         game,
+        tokenData.id,
         tokenData.x,
         tokenData.y,
         tokenData.imageKey,
@@ -800,7 +830,7 @@ function MakeToken(game, id) {
         tokenData.clickConditions,
         tokenData.addToWorld);
 
-    game.gamedataInstances.mapTokens[id] = tokenInstance;
+    game.gamedataInstances.mapTokens.push(tokenInstance);
 
     return tokenInstance;
 }
@@ -822,9 +852,10 @@ function MakeDialog(game, id) {
 }
 
 //=========================================================
-function TokenSprite(game, x, y, imageKey, clickId, clickConditions, addToWorld) {
+function TokenSprite(game, id, x, y, imageKey, clickId, clickConditions, addToWorld) {
     Phaser.Sprite.call(this, game, x, y, Helper.getImage(imageKey));
 
+    this.id = id
     this.imageKey = imageKey;
     this.clickId = clickId;
     this.clickConditions = clickConditions;
@@ -1173,16 +1204,14 @@ DialogGroup.prototype.buttonClicked = function (button, pointer) {
                 for (var j = 0; j < action.tokenIds.length; j++) {
                     var id = action.tokenIds[j];
 
-                    if (game.gamedataInstances.mapTokens.hasOwnProperty(id)) {
-                        // Remove Id
-                        var instance = game.gamedataInstances.mapTokens[id]
-                        if (instance != null) {
-                            instance.fadeOut(function () {
-                                game.gamedataInstances.mapTokens[id] = null;
-                                game.world.removeChild(instance);
-                                instance.destroy();
-                            })
-                        }
+                    // Remove Id
+                    var instance = game.gamedataInstances.mapTokens.find(function (item) { return item.id == id })
+                    if (instance != null) {
+                        instance.fadeOut(function () {
+                            instance = null;
+                            game.world.removeChild(instance);
+                            //instance.destroy();
+                        })
                     }
                 }
             } else if (action.type == "dialog") {
@@ -1203,6 +1232,10 @@ DialogGroup.prototype.buttonClicked = function (button, pointer) {
                         MakeRevealDialog(game, revealDialog);
                     }
                     restoreControl = false;
+
+                } else if (game.hud.activePhase == "enemy") {
+                    // TODO not sure if there is a cleaner way of doing this
+                    HudGroup.prototype.scenarioEvent()
                 }
             } else if (action.type == "revealList") {
                 //Reveal map tiles
