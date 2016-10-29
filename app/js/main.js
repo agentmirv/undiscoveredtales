@@ -35,9 +35,9 @@ var GameState = {
         game.gamedata = game.cache.getJSON('gamedata');
         game.gamedataInstances = {};
         game.gamedataInstances.mapTiles = []
-        game.gamedataInstances.mapTokens = [] // TODO fix this so it is like game.gamedataInstances.mapTiles
+        game.gamedataInstances.mapTokens = [] 
+        game.gamedataInstances.monsters = []
         game.customStates = []; // This is used in skill test dialogs
-        // TODO consolidate the revealMap structure into game.customStates?
         game.revealList = {};
         game.revealList.dialogs = [];
         game.hud = {};
@@ -229,15 +229,15 @@ Helper.getImage = function (imageKey) {
     return game.cache.getBitmapData(imageKey)
 }
 
-// Fisher�Yates Shuffle
+// Fisher-Yates Shuffle
 // https://bost.ocks.org/mike/shuffle/
 Helper.shuffle = function (array) {
     var m = array.length, t, i;
 
-    // While there remain elements to shuffle�
+    // While there remain elements to shuffle
     while (m) {
 
-        // Pick a remaining element�
+        // Pick a remaining element
         i = Math.floor(Math.random() * m--);
 
         // And swap it with the current element.
@@ -251,6 +251,29 @@ Helper.shuffle = function (array) {
 
 //TODO Polyfill for array.find?
 //TODO Polyfill for array.filter?
+
+//=========================================================
+function MakeMonster(game, id) {
+    var monsterData = game.gamedata.monsters.find(function (item) { return item.id == id });
+
+    var monsterInstance = new Monster()
+    monsterInstance.id = monsterData.id
+    monsterInstance.hitPoints = parseInt(monsterData.baseHitPoints) + game.gamedata.investigators.length
+    monsterInstance.damage = 0
+    monsterInstance.type = monsterData.type
+    monsterInstance.imageKey = monsterData.imageKey
+    monsterInstance.color = ""
+
+    game.gamedataInstances.monsters.push(monsterInstance);
+}
+
+function Monster() {
+    ///
+}
+
+Monster.prototype.someMethod = function () {
+    ///
+}
 
 //=========================================================
 function MakeScene(game, id) {
@@ -398,7 +421,6 @@ HudGroup.prototype.endPhaseClicked = function (button, pointer) {
         dialogInstance = MakeDialog(game, "dialog-hud-endphase-player")
     } else {
         // TODO only allow if no dialog (no modal)
-        return
         dialogInstance = MakeDialog(game, "dialog-hud-endphase-enemy")
     }
 
@@ -412,11 +434,10 @@ HudGroup.prototype.updatePhaseButtonImage = function () {
     if (game.hud.activePhase == "player") {
         this._endPhasePlayerImage.revive()
         this._endPhaseEnemyImage.kill()
-        //this._enemyPhaseBGImage.kill()
+        this._enemyPhaseBGImage.kill()
     } else {
         this._endPhasePlayerImage.kill()
         this._endPhaseEnemyImage.revive()
-        //this._enemyPhaseBGImage.revive()
     }
 }
 
@@ -538,10 +559,11 @@ HudGroup.prototype.scenarioEvent = function () {
 }
 
 HudGroup.prototype.scenarioEventDone = function () {
-    var monsterCount = 0 //TODO monster drawer
+    var monsterCount = game.gamedataInstances.monsters.length
 
     if (monsterCount > 0) {
         // Monsters Attack
+        game.hudInstance._enemyPhaseBGImage.revive()
     } else {
         MakeScene(game, "scene-player")
     }
@@ -647,9 +669,9 @@ function MakeRevealDialog(game, id) {
     var buttonData = [{ "text": "Continue", "actions": [{ "type": "reveal" }] }];
 
     if (revealDialog.continueToPlayerPhase) {
-        buttonData = [{ "text": "Continue", "actions": [{ "type": "reveal" }, { "type": "scene", "sceneId": "scene-player" }] }];
+        buttonData = [{ "text": "Continue", "actions": [{ "type": "scene", "sceneId": "scene-player" }, { "type": "reveal" }] }];
     } else if (revealDialog.addMonster) {
-        buttonData = [{ "text": "Continue", "actions": [{ "type": "reveal" }, { "type": "monster", "monsterId": revealDialog.addMonster }] }];
+        buttonData = [{ "text": "Continue", "actions": [{ "type": "monster", "monsterId": revealDialog.addMonster }, { "type": "reveal" }] }];
     }
 
     if (revealDialog.mapTiles != null) {
@@ -1290,7 +1312,7 @@ DialogGroup.prototype.buttonClicked = function (button, pointer) {
             } else if (action.type == "scenarioEvent") {
                 HudGroup.prototype.scenarioEvent()
             } else if (action.type == "monster") {
-                console.log(action.monsterId)
+                MakeMonster(game, action.monsterId)
             }
         }
     }

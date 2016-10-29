@@ -810,8 +810,9 @@
   "monsters":[
     {
       "id": "deep-one",
-      "baseHitPoints": "5",
-      "type": "eldrich",
+      "name": "Deep One",
+      "baseHitPoints": "4",
+      "type": "eldritch",
       "imageKey": ""
     }
   ]
