@@ -478,7 +478,11 @@ I don't want to theorize any more than that now.
 I should just start writing code and cleaning it up later.
 
 ===========================================================
+2016 October 29, Saturday 10:27 AM ~~~
 ===========================================================
+Planning on starting on the monster screens.
+I feel that I should fix some of the UI bugs, double clicking bugs, for example.
+
 ===========================================================
 ===========================================================
 ===========================================================

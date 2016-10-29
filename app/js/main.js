@@ -156,7 +156,6 @@ var GameState = {
         // Move Player
         player = game.add.sprite(game.gamedata.playerStart.x, game.gamedata.playerStart.y, 'pixelTransparent');
         game.physics.p2.enable(player);
-        //game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, game.followLerp, game.followLerp);
         game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, game.walkLerp, game.walkLerp);
 
         game.add.tileSprite(0, 0, 2560, 2560, 'background');
@@ -164,7 +163,6 @@ var GameState = {
         //=================================================
         // First Reveal
         MakeRevealList(game, 'reveal-lobby')
-        //MakeRevealDialog(game, 'reveal-lobby-dialog-room')
 
         //=================================================
         // Add HUD
@@ -553,7 +551,6 @@ function MakeRandomEvent(game, id) {
 
     if (randomEventData.hasOwnProperty("buttonType") && randomEventData.buttonType == "random-event-conditional") {
         buttonType = randomEventData.buttonType
-        //buttonData = randomEventData.buttons
         buttonData = [
           {
               "id": "no-effect",
@@ -597,9 +594,6 @@ function MakeRandomEvent(game, id) {
         buttonType,
         buttonData);
 
-    //game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
-    //game.stage.addChild(dialogInstance)
-
     return dialogInstance;
 }
 
@@ -622,9 +616,6 @@ function MakeRandomEventResolve(game, id) {
         imageKey,
         buttonType,
         buttonData);
-
-    //game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
-    //game.stage.addChild(dialogInstance)
 
     return dialogInstance;
 }
@@ -1290,7 +1281,6 @@ DialogGroup.prototype.buttonClicked = function (button, pointer) {
 
     if (restoreControl) {
         game.cutSceneCamera = false;
-        game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, game.walkLerp, game.walkLerp);
     }
 
     this.fadeOut(fadeOutCallback);
