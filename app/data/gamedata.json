@@ -25,6 +25,10 @@
       {
         "id": "box-lobby",
         "value": "initial"
+      },
+      {
+        "id": "door-east-bedroom",
+        "value": "initial"
       }
   ],
   "revealLists":[
@@ -54,6 +58,13 @@
           "reveal-halls-dialog-door-west",
           "reveal-halls-dialog-door-east",
           "reveal-halls-explored"
+        ]
+      },
+      {
+        "id": "reveal-deep-one",
+        "revealDialogs": [
+          "reveal-halls-dialog-door-east-broken",
+          "reveal-halls-deep-one-beast"
         ]
       }
   ],
@@ -137,6 +148,16 @@
       "id": "reveal-halls-explored",
       "text": "You may move one space into the new area.",
       "mapTiles": [ "maptile-hall-corner-1", "maptile-hall-end" ]
+    },
+    {
+      "id": "reveal-halls-dialog-door-east-broken",
+      "text": "This door breaks, damn!",
+      "showSingleToken" : [ "token-door-east-bedroom" ]
+    },
+    {
+      "id": "reveal-halls-deep-one-beast",
+      "text": "Hey-o, this is a deep one!",
+      "addSingleToken" : [ "token-deep-one-beast" ]
     }
   ],
   "mapTiles": [
@@ -226,7 +247,6 @@
       "x":1200,
       "y":1200,
       "imageKey":"search-image",
-      "clickId":"dialog-box-lobby",
       "clickConditions": [
         {
           "globalId": "box-lobby",
@@ -294,6 +314,18 @@
       "y":768,
       "imageKey":"explore-image",
       "clickId":"dialog-door-east-bedroom",
+      "clickConditions": [
+        {
+          "globalId": "door-east-bedroom",
+          "value": "initial",
+          "dialogId": "dialog-door-east-bedroom"
+        },
+        {
+          "globalId": "door-east-bedroom",
+          "value": "broken",
+          "dialogId": "dialog-door-east-bedroom-broken"
+        }
+      ],
       "addToWorld": true
     },
     {
@@ -317,6 +349,13 @@
       "y":672,
       "imageKey": "wall-north-image",
       "addToWorld": true
+    },
+    {
+      "id":"token-deep-one-beast",
+      "x":1344,
+      "y":768,
+      "imageKey": "deep-one-image",
+      "addToWorld": false
     }
   ],
   "scenes": [
@@ -337,6 +376,18 @@
           "globalId": "box-lobby",
           "operator": "equals",
           "value": "searched"
+        }
+      ]
+    },
+    {
+      "id": "east-bedroom-beast",
+      "action": { "type": "revealList", "revealListId": "reveal-deep-one" },
+      "conditions": [
+        {
+          "type": "globalVar",
+          "globalId": "door-east-bedroom",
+          "operator": "equals",
+          "value": "broken"
         }
       ]
     }
@@ -476,7 +527,7 @@
       "buttonType": "cancel-action",
       "buttons": [
         { "text": "@ Explore",
-          "actions": [ {"type": "revealList", "revealListId": ["reveal-halls"] } ]
+          "actions": [ {"type": "revealList", "revealListId": "reveal-halls" } ]
         }
       ]
     },
@@ -487,7 +538,7 @@
       "buttonType": "cancel-action",
       "buttons": [
         { "text": "@ Explore",
-          "actions": [ {"type": "revealList", "revealListId": ["reveal-halls"] } ]
+          "actions": [ {"type": "revealList", "revealListId": "reveal-halls" } ]
         }
       ]
     },
@@ -571,7 +622,12 @@
       "text": "The bird claws at you and takes off to the east. Drop 1 random item and suffer 1 facedown Damage (Agility negates). Max hovers for a moment and disappears into a tiny square opening in the ceiling above the door to the east bedroom. You hear the bird squawk loudly and then go silent.",
       "buttonType": "continue",
       "buttons": [
-        { "actions": [ {"type": "removeTokens", "tokenIds": ["token-bird-hall"] } ] }
+        {
+          "actions": [
+            {"type": "setGlobal", "globalId": "door-east-bedroom", "value": "broken" },
+            {"type": "removeTokens", "tokenIds": ["token-bird-hall"] }
+          ]
+        }
       ]
     },
     {
@@ -580,7 +636,12 @@
       "text": "The bird flutters his wings and takes off to the east. He hovers for a moment and disappears into a tiny square opening in the ceiling above the door to the east bedroom. You hear the bird squawk loudly and then go silent.",
       "buttonType": "continue",
       "buttons": [
-        { "actions": [ {"type": "removeTokens", "tokenIds": ["token-bird-hall"] } ] }
+        {
+          "actions": [
+            {"type": "setGlobal", "globalId": "door-east-bedroom", "value": "broken" },
+            {"type": "removeTokens", "tokenIds": ["token-bird-hall"] }
+          ]
+        }
       ]
     },
     {
@@ -596,6 +657,13 @@
       "id": "dialog-door-east-bedroom",
       "imageKey": "explore-image",
       "text": "A rising sun is carved into the door to the east bedroom. There is no handle on this door.",
+      "buttonType": "continue",
+      "buttons": [ ]
+    },
+    {
+      "id": "dialog-door-east-bedroom-broken",
+      "imageKey": "explore-image",
+      "text": "The door to the east bedroom is smashed and hanging on by a single hinge.",
       "buttonType": "continue",
       "buttons": [ ]
     },
