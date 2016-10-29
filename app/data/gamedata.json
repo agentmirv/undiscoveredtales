@@ -670,6 +670,16 @@
   ],
   "imageTokens": [
     {
+      "imageKey": "deep-one-image",
+      "primaryImageKey": "deepOne",
+      "backgroundImageKey": "squareBackground",
+      "maskImageKey": "monsterMask",
+      "imagePrimaryColor": "0xFFFFFF",
+      "imageShadowColor": "0xc300ff",
+      "backgroundColor": "0x28511c",
+      "maskColor": "0x727272"
+    },
+    {
       "imageKey": "explore-image",
       "primaryImageKey": "explore",
       "backgroundImageKey": "circleToken",

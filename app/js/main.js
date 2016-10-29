@@ -20,6 +20,9 @@ var GameState = {
         game.load.image('bird', 'assets/images/raven.png');
         game.load.image('hudButton', 'assets/images/HudButton.png');
         game.load.image('arrow', 'assets/images/plain-arrow.png');
+        game.load.image('deepOne', 'assets/images/toad-teeth.png');
+        game.load.image('squareBackground', 'assets/images/SquareBackground.png');
+        game.load.image('monsterMask', 'assets/images/MonsterMask.png');
 
         game.load.spritesheet('tileWallsSheet', 'assets/images/TileWalls.png', 96, 96);
 
@@ -69,7 +72,11 @@ var GameState = {
 
             if (imageTokenData.backgroundImageKey != null) {
                 if (imageTokenData.backgroundImageAngle == null) {
-                    tokenBmd.copy(imageTokenData.backgroundImageKey)
+                    var backgroundImage = game.make.image(0, 0, imageTokenData.backgroundImageKey)
+                    if (imageTokenData.backgroundColor != null) {
+                        backgroundImage.tint = imageTokenData.backgroundColor
+                    }
+                    tokenBmd.copy(backgroundImage)
                 } else {
                     var degToRad = imageTokenData.backgroundImageAngle * (Math.PI / 180);
                     if (imageTokenData.backgroundImageAngle == 90) {
@@ -97,6 +104,14 @@ var GameState = {
                 }
 
                 tokenBmd.copy(primaryImage, 0, 0, 64, 64, 16, 16)
+            }
+
+            if (imageTokenData.maskImageKey != null) {
+                var maskImage = game.make.image(0, 0, imageTokenData.maskImageKey)
+                if (imageTokenData.maskColor != null) {
+                    maskImage.tint = imageTokenData.maskColor
+                }
+                tokenBmd.copy(maskImage)
             }
 
             game.cache.addBitmapData(imageTokenData.imageKey, tokenBmd)
