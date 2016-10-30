@@ -23,6 +23,7 @@ var GameState = {
         game.load.image('deepOne', 'assets/images/toad-teeth.png');
         game.load.image('squareBackground', 'assets/images/SquareBackground.png');
         game.load.image('monsterMask', 'assets/images/MonsterMask.png');
+        game.load.image('interlaced-tentacles', 'assets/images/interlaced-tentacles.png');
 
         game.load.spritesheet('tileWallsSheet', 'assets/images/TileWalls.png', 96, 96);
 
@@ -45,24 +46,42 @@ var GameState = {
         game.hud.fireSet = false;
         game.hud.randomEventDeck = []
         game.hud.monsterTrayOpen = false
+        game.hud.monsterTrayDetail = false
         game.hudInstance = {};
 
         //=================================================
         // Hud images
         var hudBmd = game.make.bitmapData(96, 96)
+        var endHudBgImage = game.make.image(0, 0, "hudButton")
+
+        // End Phase
         var endPhaseButtonImage = game.make.image(0, 0, "arrow")
-        var endPhaseBgImage = game.make.image(0, 0, "hudButton")
         endPhaseButtonImage.tint = "0xFFFFFF"
-        endPhaseBgImage.tint = "0x044500"
-        hudBmd.copy(endPhaseBgImage)
+        endHudBgImage.tint = "0x044500"
+        hudBmd.copy(endHudBgImage)
         hudBmd.copy(endPhaseButtonImage, 0, 0, 64, 64, 16, 16)
         game.cache.addBitmapData("endPhase-image-player", hudBmd)
 
         hudBmd = game.make.bitmapData(96, 96)
-        endPhaseBgImage.tint = "0x450000"
-        hudBmd.copy(endPhaseBgImage)
+        endHudBgImage.tint = "0x450000"
+        hudBmd.copy(endHudBgImage)
         hudBmd.copy(endPhaseButtonImage, 0, 0, 64, 64, 16, 16)
         game.cache.addBitmapData("endPhase-image-enemy", hudBmd)
+
+        // Monster
+        hudBmd = game.make.bitmapData(96, 96)
+        var monsterButtonImage = game.make.image(0, 0, "interlaced-tentacles")
+        monsterButtonImage.tint = "0xFFFFFF"
+        endHudBgImage.tint = "0x044500"
+        hudBmd.copy(endHudBgImage)
+        hudBmd.copy(monsterButtonImage, 0, 0, 64, 64, 16, 16)
+        game.cache.addBitmapData("monster-image-player", hudBmd)
+
+        hudBmd = game.make.bitmapData(96, 96)
+        endHudBgImage.tint = "0x450000"
+        hudBmd.copy(endHudBgImage)
+        hudBmd.copy(monsterButtonImage, 0, 0, 64, 64, 16, 16)
+        game.cache.addBitmapData("monster-image-enemy", hudBmd)
 
         //=================================================
         // ImageTokens BitmapData
@@ -427,20 +446,65 @@ function HudGroup(game) {
     this._monsterTray = game.make.group()
     this._monsterTray.addChild(this._monsterTrayBgImage);
     this.addChild(this._monsterTray)
+    this._monsterTray.y += 96
 
-    this._monsterTray.y += 90
+    // Monster Detail
+    this._monsterDetailBgImage = game.make.tileSprite(0, 0, 96 * 4, 96 * 5, "hudButton")
+    this._monsterDetailBgImage.alignIn(game.stageViewRect, Phaser.TOP_LEFT, 0, 0)
+    this._monsterDetailBgImage.tint = "0x044500"
+    this._monsterDetail = game.make.group()
+    this._monsterDetail.addChild(this._monsterDetailBgImage);
+    this.addChild(this._monsterDetail)
+    this._monsterDetail.x -= 96 * 4
+
+    // Monster (Green)
+    this._monsterPlayerImage = game.make.image(0, 0, Helper.getImage("monster-image-player"))
+    this._monsterPlayerImage.alignIn(game.stageViewRect, Phaser.BOTTOM_LEFT, -96, 0)
+    this.addChild(this._monsterPlayerImage);
+
+    // Monster (Red)
+    this._monsterEnemyImage = game.make.image(0, 0, Helper.getImage("monster-image-enemy"))
+    this._monsterEnemyImage.alignIn(game.stageViewRect, Phaser.BOTTOM_LEFT, -96, 0)
+    this.addChild(this._monsterEnemyImage);
+    this._monsterEnemyImage.kill()
+
+    // End Phase Button
+    var monsterButton = game.make.sprite(this._monsterPlayerImage.x, this._monsterPlayerImage.y, 'pixelTransparent');
+    monsterButton.width = this._monsterPlayerImage.width;
+    monsterButton .height = this._monsterPlayerImage.height;
+    monsterButton .inputEnabled = true;
+    monsterButton .events.onInputUp.add(this.monsterClicked, this);
+    this.addChild(monsterButton);
 }
 
 HudGroup.prototype = Object.create(Phaser.Group.prototype);
 HudGroup.prototype.constructor = HudGroup;
 
+HudGroup.prototype.monsterClicked = function (button, pointer) {
+    if (game.hud.activePhase == "player") {
+        if (game.hud.monsterTrayOpen) {
+            HudGroup.prototype.hideEnemyPhaseBG()
+            HudGroup.prototype.hideMonsterTray()
+            HudGroup.prototype.hideMonsterDetail()
+        } else {
+            HudGroup.prototype.showEnemyPhaseBG()
+            HudGroup.prototype.showMonsterTray()
+        }
+    }
+}
+
 HudGroup.prototype.endPhaseClicked = function (button, pointer) {
     var dialogInstance
     if (game.hud.activePhase == "player") {
         dialogInstance = MakeDialog(game, "dialog-hud-endphase-player")
+        HudGroup.prototype.hideEnemyPhaseBG()
+        HudGroup.prototype.hideMonsterTray()
+        HudGroup.prototype.hideMonsterDetail()
     } else {
-        // TODO only allow if no dialog (no modal)
         dialogInstance = MakeDialog(game, "dialog-hud-endphase-enemy")
+        HudGroup.prototype.hideEnemyPhaseBG()
+        HudGroup.prototype.hideMonsterTray()
+        HudGroup.prototype.hideMonsterDetail()
     }
 
     // TODO add fadeIn()
@@ -453,10 +517,13 @@ HudGroup.prototype.updatePhaseButtonImage = function () {
     if (game.hud.activePhase == "player") {
         this._endPhasePlayerImage.revive()
         this._endPhaseEnemyImage.kill()
-        HudGroup.prototype.hideEnemyPhaseBG()
+        this._monsterPlayerImage.revive()
+        this._monsterEnemyImage.kill()
     } else {
         this._endPhasePlayerImage.kill()
         this._endPhaseEnemyImage.revive()
+        this._monsterPlayerImage.kill()
+        this._monsterEnemyImage.revive()
     }
 }
 
@@ -586,8 +653,11 @@ HudGroup.prototype.scenarioEventDone = function () {
         // Monsters Attack
         HudGroup.prototype.showEnemyPhaseBG()
         HudGroup.prototype.showMonsterTray()
+        HudGroup.prototype.showMonsterDetail()
     } else {
         MakeScene(game, "scene-player")
+        HudGroup.prototype.hideMonsterTray()
+        HudGroup.prototype.hideMonsterDetail()
     }
 }
 
@@ -602,14 +672,28 @@ HudGroup.prototype.hideEnemyPhaseBG = function () {
 HudGroup.prototype.showMonsterTray = function () {
     if (!game.hud.monsterTrayOpen) {
         game.hud.monsterTrayOpen = true
-        var slideTween = game.add.tween(game.hudInstance._monsterTray).to({ y: game.hudInstance._monsterTray.y - 90 }, 100, Phaser.Easing.Linear.None, true, 0, 0, false);
+        var slideTween = game.add.tween(game.hudInstance._monsterTray).to({ y: game.hudInstance._monsterTray.y - 96 }, 100, Phaser.Easing.Linear.None, true, 0, 0, false);
     }
 }
 
 HudGroup.prototype.hideMonsterTray = function () {
     if (game.hud.monsterTrayOpen) {
         game.hud.monsterTrayOpen = false
-        var slideTween = game.add.tween(game.hudInstance._monsterTray).to({ y: game.hudInstance._monsterTray.y + 90 }, 100, Phaser.Easing.Linear.None, true, 0, 0, false);
+        var slideTween = game.add.tween(game.hudInstance._monsterTray).to({ y: game.hudInstance._monsterTray.y + 96 }, 100, Phaser.Easing.Linear.None, true, 0, 0, false);
+    }
+}
+
+HudGroup.prototype.showMonsterDetail = function () {
+    if (!game.hud.monsterDetailOpen) {
+        game.hud.monsterDetailOpen = true
+        var slideTween = game.add.tween(game.hudInstance._monsterDetail).to({ x: game.hudInstance._monsterDetail.x + 96 * 4 }, 100, Phaser.Easing.Linear.None, true, 0, 0, false);
+    }
+}
+
+HudGroup.prototype.hideMonsterDetail = function () {
+    if (game.hud.monsterDetailOpen) {
+        game.hud.monsterDetailOpen = false
+        var slideTween = game.add.tween(game.hudInstance._monsterDetail).to({ x: game.hudInstance._monsterDetail.x - 96 * 4 }, 100, Phaser.Easing.Linear.None, true, 0, 0, false);
     }
 }
 
