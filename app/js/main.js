@@ -44,6 +44,7 @@ var GameState = {
         game.hud.activePhase = "player";
         game.hud.fireSet = false;
         game.hud.randomEventDeck = []
+        game.hud.monsterTrayOpen = false
         game.hudInstance = {};
 
         //=================================================
@@ -426,6 +427,8 @@ function HudGroup(game) {
     this._monsterTray = game.make.group()
     this._monsterTray.addChild(this._monsterTrayBgImage);
     this.addChild(this._monsterTray)
+
+    this._monsterTray.y += 90
 }
 
 HudGroup.prototype = Object.create(Phaser.Group.prototype);
@@ -450,7 +453,7 @@ HudGroup.prototype.updatePhaseButtonImage = function () {
     if (game.hud.activePhase == "player") {
         this._endPhasePlayerImage.revive()
         this._endPhaseEnemyImage.kill()
-        this._enemyPhaseBGImage.kill()
+        HudGroup.prototype.hideEnemyPhaseBG()
     } else {
         this._endPhasePlayerImage.kill()
         this._endPhaseEnemyImage.revive()
@@ -581,9 +584,32 @@ HudGroup.prototype.scenarioEventDone = function () {
 
     if (monsterCount > 0) {
         // Monsters Attack
-        game.hudInstance._enemyPhaseBGImage.revive()
+        HudGroup.prototype.showEnemyPhaseBG()
+        HudGroup.prototype.showMonsterTray()
     } else {
         MakeScene(game, "scene-player")
+    }
+}
+
+HudGroup.prototype.showEnemyPhaseBG = function () {
+    game.hudInstance._enemyPhaseBGImage.revive()
+}
+
+HudGroup.prototype.hideEnemyPhaseBG = function () {
+    game.hudInstance._enemyPhaseBGImage.kill()
+}
+
+HudGroup.prototype.showMonsterTray = function () {
+    if (!game.hud.monsterTrayOpen) {
+        game.hud.monsterTrayOpen = true
+        var slideTween = game.add.tween(game.hudInstance._monsterTray).to({ y: game.hudInstance._monsterTray.y - 90 }, 100, Phaser.Easing.Linear.None, true, 0, 0, false);
+    }
+}
+
+HudGroup.prototype.hideMonsterTray = function () {
+    if (game.hud.monsterTrayOpen) {
+        game.hud.monsterTrayOpen = false
+        var slideTween = game.add.tween(game.hudInstance._monsterTray).to({ y: game.hudInstance._monsterTray.y + 90 }, 100, Phaser.Easing.Linear.None, true, 0, 0, false);
     }
 }
 
