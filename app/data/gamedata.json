@@ -27,6 +27,10 @@
         "value": "initial"
       },
       {
+        "id": "max-question",
+        "value": "initial"
+      },
+      {
         "id": "door-east-bedroom",
         "value": "initial"
       }
@@ -152,7 +156,8 @@
     {
       "id": "reveal-halls-dialog-door-east-broken",
       "text": "You hear a low guttural roar. The door rattles as something smashes it violently from the other side, then the door crashes open.",
-      "showSingleToken" : [ "token-door-east-bedroom" ]
+      "showSingleToken" : [ "token-door-east-bedroom" ],
+      "actions": [{"type": "setGlobal", "globalId": "door-east-bedroom", "value": "broken" }]
     },
     {
       "id": "reveal-halls-deep-one-beast",
@@ -386,9 +391,9 @@
       "conditions": [
         {
           "type": "globalVar",
-          "globalId": "door-east-bedroom",
+          "globalId": "max-question",
           "operator": "equals",
-          "value": "broken"
+          "value": "beast"
         }
       ]
     }
@@ -625,7 +630,7 @@
       "buttons": [
         {
           "actions": [
-            {"type": "setGlobal", "globalId": "door-east-bedroom", "value": "broken" },
+            {"type": "setGlobal", "globalId": "max-question", "value": "beast" },
             {"type": "removeTokens", "tokenIds": ["token-bird-hall"] }
           ]
         }
@@ -639,7 +644,7 @@
       "buttons": [
         {
           "actions": [
-            {"type": "setGlobal", "globalId": "door-east-bedroom", "value": "broken" },
+            {"type": "setGlobal", "globalId": "max-question", "value": "beast" },
             {"type": "removeTokens", "tokenIds": ["token-bird-hall"] }
           ]
         }
