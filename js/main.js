@@ -35,9 +35,9 @@ var GameState = {
         game.gamedata = game.cache.getJSON('gamedata');
         game.gamedataInstances = {};
         game.gamedataInstances.mapTiles = []
-        game.gamedataInstances.mapTokens = [] // TODO fix this so it is like game.gamedataInstances.mapTiles
+        game.gamedataInstances.mapTokens = [] 
+        game.gamedataInstances.monsters = []
         game.customStates = []; // This is used in skill test dialogs
-        // TODO consolidate the revealMap structure into game.customStates?
         game.revealList = {};
         game.revealList.dialogs = [];
         game.hud = {};
@@ -156,7 +156,6 @@ var GameState = {
         // Move Player
         player = game.add.sprite(game.gamedata.playerStart.x, game.gamedata.playerStart.y, 'pixelTransparent');
         game.physics.p2.enable(player);
-        //game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, game.followLerp, game.followLerp);
         game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, game.walkLerp, game.walkLerp);
 
         game.add.tileSprite(0, 0, 2560, 2560, 'background');
@@ -164,7 +163,6 @@ var GameState = {
         //=================================================
         // First Reveal
         MakeRevealList(game, 'reveal-lobby')
-        //MakeRevealDialog(game, 'reveal-lobby-dialog-room')
 
         //=================================================
         // Add HUD
@@ -231,15 +229,15 @@ Helper.getImage = function (imageKey) {
     return game.cache.getBitmapData(imageKey)
 }
 
-// Fisher�Yates Shuffle
+// Fisher-Yates Shuffle
 // https://bost.ocks.org/mike/shuffle/
 Helper.shuffle = function (array) {
     var m = array.length, t, i;
 
-    // While there remain elements to shuffle�
+    // While there remain elements to shuffle
     while (m) {
 
-        // Pick a remaining element�
+        // Pick a remaining element
         i = Math.floor(Math.random() * m--);
 
         // And swap it with the current element.
@@ -253,6 +251,35 @@ Helper.shuffle = function (array) {
 
 //TODO Polyfill for array.find?
 //TODO Polyfill for array.filter?
+
+//=========================================================
+function MakeMonster(game, id) {
+    var monsterData = game.gamedata.monsters.find(function (item) { return item.id == id });
+
+    var monsterInstance = new Monster()
+    monsterInstance.id = monsterData.id
+    monsterInstance.hitPoints = parseInt(monsterData.baseHitPoints) + game.gamedata.investigators.length
+    monsterInstance.damage = 0
+    monsterInstance.type = monsterData.type
+    monsterInstance.imageKey = monsterData.imageKey
+    monsterInstance.color = ""
+
+    var xOffset = game.gamedataInstances.monsters.length * 96
+    monsterInstance.traySprite = game.make.sprite(0, 0, Helper.getImage(monsterInstance.imageKey))
+    monsterInstance.traySprite.alignIn(game.hudInstance._monsterTrayBgImage, Phaser.BOTTOM_LEFT, xOffset, 0)
+    monsterInstance.inputEnabled = true
+    game.hudInstance._monsterTray.addChild(monsterInstance.traySprite)
+
+    game.gamedataInstances.monsters.push(monsterInstance);
+}
+
+function Monster() {
+    ///
+}
+
+Monster.prototype.someMethod = function () {
+    ///
+}
 
 //=========================================================
 function MakeScene(game, id) {
@@ -296,6 +323,8 @@ function PlayerSceneGroup(game) {
 
     fadeInTween.onComplete.addOnce(this.updatePhase, this)
     fadeOutTween.onComplete.addOnce(this.destroyScene, this)
+
+    game.cutSceneCamera = true
 }
 
 PlayerSceneGroup.prototype = Object.create(Phaser.Group.prototype);
@@ -307,6 +336,7 @@ PlayerSceneGroup.prototype.updatePhase = function () {
 }
 
 PlayerSceneGroup.prototype.destroyScene = function () {
+    game.cutSceneCamera = false
     this.destroy(true)
 }
 
@@ -337,6 +367,8 @@ function EnemySceneGroup(game) {
     fadeInTween.onComplete.addOnce(this.updatePhase, this)
     fadeOutTween.onComplete.addOnce(this.beginEnemySteps, this)
     fadeOutTween.onComplete.addOnce(this.destroyScene, this)
+
+    game.cutSceneCamera = true
 }
 
 EnemySceneGroup.prototype = Object.create(Phaser.Group.prototype);
@@ -352,6 +384,7 @@ EnemySceneGroup.prototype.beginEnemySteps = function () {
 }
 
 EnemySceneGroup.prototype.destroyScene = function () {
+    game.cutSceneCamera = true
     this.destroy(true)
 }
 
@@ -367,22 +400,32 @@ function HudGroup(game) {
     this.addChild(this._enemyPhaseBGImage);
     this._enemyPhaseBGImage.kill()
 
-    // End Phase Button 
+    // End Phase (Green)
     this._endPhasePlayerImage = game.make.image(0, 0, Helper.getImage("endPhase-image-player"))
     this._endPhasePlayerImage.alignIn(game.stageViewRect, Phaser.BOTTOM_RIGHT, 0, 0)
     this.addChild(this._endPhasePlayerImage);
 
+    // End Phase (Red)
     this._endPhaseEnemyImage = game.make.image(0, 0, Helper.getImage("endPhase-image-enemy"))
     this._endPhaseEnemyImage.alignIn(game.stageViewRect, Phaser.BOTTOM_RIGHT, 0, 0)
     this.addChild(this._endPhaseEnemyImage);
     this._endPhaseEnemyImage.kill()
 
+    // End Phase Button
     var endPhaseButton = game.make.sprite(this._endPhasePlayerImage.x, this._endPhasePlayerImage.y, 'pixelTransparent');
     endPhaseButton.width = this._endPhasePlayerImage.width;
     endPhaseButton.height = this._endPhasePlayerImage.height;
     endPhaseButton.inputEnabled = true;
     endPhaseButton.events.onInputUp.add(this.endPhaseClicked, this);
     this.addChild(endPhaseButton);
+
+    // Monster Tray
+    this._monsterTrayBgImage = game.make.tileSprite(0, 0, 96 * 6, 96, "hudButton")
+    this._monsterTrayBgImage.alignIn(game.stageViewRect, Phaser.BOTTOM_CENTER, 0, 0)
+    this._monsterTrayBgImage.tint = "0x044500"
+    this._monsterTray = game.make.group()
+    this._monsterTray.addChild(this._monsterTrayBgImage);
+    this.addChild(this._monsterTray)
 }
 
 HudGroup.prototype = Object.create(Phaser.Group.prototype);
@@ -394,12 +437,12 @@ HudGroup.prototype.endPhaseClicked = function (button, pointer) {
         dialogInstance = MakeDialog(game, "dialog-hud-endphase-player")
     } else {
         // TODO only allow if no dialog (no modal)
-        return
         dialogInstance = MakeDialog(game, "dialog-hud-endphase-enemy")
     }
 
     // TODO add fadeIn()
     game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+    // Because I'm adding this immediately, the modal prevents the double-click?
     game.stage.addChild(dialogInstance)
 }
 
@@ -407,11 +450,10 @@ HudGroup.prototype.updatePhaseButtonImage = function () {
     if (game.hud.activePhase == "player") {
         this._endPhasePlayerImage.revive()
         this._endPhaseEnemyImage.kill()
-        //this._enemyPhaseBGImage.kill()
+        this._enemyPhaseBGImage.kill()
     } else {
         this._endPhasePlayerImage.kill()
         this._endPhaseEnemyImage.revive()
-        //this._enemyPhaseBGImage.revive()
     }
 }
 
@@ -533,10 +575,11 @@ HudGroup.prototype.scenarioEvent = function () {
 }
 
 HudGroup.prototype.scenarioEventDone = function () {
-    var monsterCount = 0 //TODO monster drawer
+    var monsterCount = game.gamedataInstances.monsters.length
 
     if (monsterCount > 0) {
         // Monsters Attack
+        game.hudInstance._enemyPhaseBGImage.revive()
     } else {
         MakeScene(game, "scene-player")
     }
@@ -553,7 +596,6 @@ function MakeRandomEvent(game, id) {
 
     if (randomEventData.hasOwnProperty("buttonType") && randomEventData.buttonType == "random-event-conditional") {
         buttonType = randomEventData.buttonType
-        //buttonData = randomEventData.buttons
         buttonData = [
           {
               "id": "no-effect",
@@ -597,9 +639,6 @@ function MakeRandomEvent(game, id) {
         buttonType,
         buttonData);
 
-    //game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
-    //game.stage.addChild(dialogInstance)
-
     return dialogInstance;
 }
 
@@ -622,9 +661,6 @@ function MakeRandomEventResolve(game, id) {
         imageKey,
         buttonType,
         buttonData);
-
-    //game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
-    //game.stage.addChild(dialogInstance)
 
     return dialogInstance;
 }
@@ -649,7 +685,9 @@ function MakeRevealDialog(game, id) {
     var buttonData = [{ "text": "Continue", "actions": [{ "type": "reveal" }] }];
 
     if (revealDialog.continueToPlayerPhase) {
-        buttonData = [{ "text": "Continue", "actions": [{ "type": "reveal" }, { "type": "scene", "sceneId": "scene-player" }] }];
+        buttonData = [{ "text": "Continue", "actions": [{ "type": "scene", "sceneId": "scene-player" }, { "type": "reveal" }] }];
+    } else if (revealDialog.addMonster) {
+        buttonData = [{ "text": "Continue", "actions": [{ "type": "monster", "monsterId": revealDialog.addMonster }, { "type": "reveal" }] }];
     }
 
     if (revealDialog.mapTiles != null) {
@@ -871,6 +909,8 @@ TokenSprite.prototype = Object.create(Phaser.Sprite.prototype);
 TokenSprite.prototype.constructor = TokenSprite;
 
 TokenSprite.prototype.tokenClicked = function (token, pointer) {
+    if (game.cutSceneCamera) return;
+
     // this == token?
     var movePlayer = new Phaser.Point()
     movePlayer.x = token.centerX + 300 - 20 - 48 //half message width - left margin - half image width
@@ -1158,6 +1198,7 @@ DialogGroup.prototype = Object.create(Phaser.Group.prototype);
 DialogGroup.prototype.constructor = DialogGroup;
 
 DialogGroup.prototype.cancelClicked = function (button, pointer) {
+    button.inputEnabled = false;
     game.cutSceneCamera = false;
     this.fadeOut();
 }
@@ -1175,6 +1216,7 @@ DialogGroup.prototype.skillAddClicked = function (button, pointer) {
 }
 
 DialogGroup.prototype.skillConfirmClicked = function (button, pointer) {
+    button.inputEnabled = false;
     var dialogId = this._id;
     var customState = game.customStates.find(function (item) { return item.id == dialogId });
 
@@ -1190,6 +1232,7 @@ DialogGroup.prototype.skillConfirmClicked = function (button, pointer) {
 
 DialogGroup.prototype.buttonClicked = function (button, pointer) {
     // this = DialogGroup
+    button.inputEnabled = false;
     var restoreControl = true;
     var fadeOutCallback = null;
 
@@ -1284,13 +1327,14 @@ DialogGroup.prototype.buttonClicked = function (button, pointer) {
                 globalVar.value = action.value
             } else if (action.type == "scenarioEvent") {
                 HudGroup.prototype.scenarioEvent()
+            } else if (action.type == "monster") {
+                MakeMonster(game, action.monsterId)
             }
         }
     }
 
     if (restoreControl) {
         game.cutSceneCamera = false;
-        game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, game.walkLerp, game.walkLerp);
     }
 
     this.fadeOut(fadeOutCallback);

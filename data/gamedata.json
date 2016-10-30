@@ -157,7 +157,8 @@
     {
       "id": "reveal-halls-deep-one-beast",
       "text": "A hideous beast shambles through the broken door. It sniffs the air and begins to hunt. Spawn a Deep One in the Hall End.",
-      "addSingleToken" : [ "token-deep-one-beast" ]
+      "addSingleToken" : [ "token-deep-one-beast" ],
+      "addMonster": "deep-one"
     }
   ],
   "mapTiles": [
@@ -804,6 +805,15 @@
       "imageKey": "wall-south-image",
       "backgroundImageKey": "wall",
       "backgroundImageAngle": 180
+    }
+  ],
+  "monsters":[
+    {
+      "id": "deep-one",
+      "name": "Deep One",
+      "baseHitPoints": "4",
+      "type": "eldritch",
+      "imageKey": "deep-one-image"
     }
   ]
 }
