@@ -564,6 +564,8 @@ HudGroup.prototype.scenarioEvent = function () {
                         MakeRevealList(game, scenarioEvent.action.revealListId);
                     }
                 }
+                
+                break;
             }
         }
     }
