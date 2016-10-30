@@ -686,10 +686,8 @@ function MakeRevealDialog(game, id) {
     var buttonType = "reveal";
     var buttonData = [{ "text": "Continue", "actions": [{ "type": "reveal" }] }];
 
-    if (revealDialog.continueToPlayerPhase) {
-        buttonData = [{ "text": "Continue", "actions": [{ "type": "scene", "sceneId": "scene-player" }, { "type": "reveal" }] }];
-    } else if (revealDialog.addMonster) {
-        buttonData = [{ "text": "Continue", "actions": [{ "type": "monster", "monsterId": revealDialog.addMonster }, { "type": "reveal" }] }];
+    if (Array.isArray(revealDialog.actions)) {
+        buttonData[0].actions = revealDialog.actions.concat(buttonData[0].actions)
     }
 
     if (revealDialog.mapTiles != null) {
