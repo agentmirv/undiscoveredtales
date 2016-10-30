@@ -813,7 +813,7 @@
       "name": "Deep One",
       "baseHitPoints": "4",
       "type": "eldritch",
-      "imageKey": ""
+      "imageKey": "deep-one-image"
     }
   ]
 }

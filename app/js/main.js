@@ -264,6 +264,12 @@ function MakeMonster(game, id) {
     monsterInstance.imageKey = monsterData.imageKey
     monsterInstance.color = ""
 
+    var xOffset = game.gamedataInstances.monsters.length * 96
+    monsterInstance.traySprite = game.make.sprite(0, 0, Helper.getImage(monsterInstance.imageKey))
+    monsterInstance.traySprite.alignIn(game.hudInstance._monsterTrayBgImage, Phaser.BOTTOM_LEFT, xOffset, 0)
+    monsterInstance.inputEnabled = true
+    game.hudInstance._monsterTray.addChild(monsterInstance.traySprite)
+
     game.gamedataInstances.monsters.push(monsterInstance);
 }
 
@@ -394,22 +400,32 @@ function HudGroup(game) {
     this.addChild(this._enemyPhaseBGImage);
     this._enemyPhaseBGImage.kill()
 
-    // End Phase Button 
+    // End Phase (Green)
     this._endPhasePlayerImage = game.make.image(0, 0, Helper.getImage("endPhase-image-player"))
     this._endPhasePlayerImage.alignIn(game.stageViewRect, Phaser.BOTTOM_RIGHT, 0, 0)
     this.addChild(this._endPhasePlayerImage);
 
+    // End Phase (Red)
     this._endPhaseEnemyImage = game.make.image(0, 0, Helper.getImage("endPhase-image-enemy"))
     this._endPhaseEnemyImage.alignIn(game.stageViewRect, Phaser.BOTTOM_RIGHT, 0, 0)
     this.addChild(this._endPhaseEnemyImage);
     this._endPhaseEnemyImage.kill()
 
+    // End Phase Button
     var endPhaseButton = game.make.sprite(this._endPhasePlayerImage.x, this._endPhasePlayerImage.y, 'pixelTransparent');
     endPhaseButton.width = this._endPhasePlayerImage.width;
     endPhaseButton.height = this._endPhasePlayerImage.height;
     endPhaseButton.inputEnabled = true;
     endPhaseButton.events.onInputUp.add(this.endPhaseClicked, this);
     this.addChild(endPhaseButton);
+
+    // Monster Tray
+    this._monsterTrayBgImage = game.make.tileSprite(0, 0, 96 * 6, 96, "hudButton")
+    this._monsterTrayBgImage.alignIn(game.stageViewRect, Phaser.BOTTOM_CENTER, 0, 0)
+    this._monsterTrayBgImage.tint = "0x044500"
+    this._monsterTray = game.make.group()
+    this._monsterTray.addChild(this._monsterTrayBgImage);
+    this.addChild(this._monsterTray)
 }
 
 HudGroup.prototype = Object.create(Phaser.Group.prototype);
