@@ -452,11 +452,7 @@ function HudGroup(game) {
     this._monsterTray.y += 96
 
     // Monster Detail
-    this._monsterDetailBgImage = game.make.tileSprite(0, 0, 96 * 4, 96 * 5, "hudButton")
-    this._monsterDetailBgImage.alignIn(game.stageViewRect, Phaser.TOP_LEFT, 0, 0)
-    this._monsterDetailBgImage.tint = "0x044500"
-    this._monsterDetail = game.make.group()
-    this._monsterDetail.addChild(this._monsterDetailBgImage);
+    this._monsterDetail = this.makeMonsterDetailGroup(game)
     this.addChild(this._monsterDetail)
     this._monsterDetail.x -= 96 * 4
 
@@ -482,6 +478,15 @@ function HudGroup(game) {
 
 HudGroup.prototype = Object.create(Phaser.Group.prototype);
 HudGroup.prototype.constructor = HudGroup;
+
+HudGroup.prototype.makeMonsterDetailGroup = function (game) {
+    var monsterDetailGroup = game.make.group()
+    var monsterDetailBgImage = game.make.tileSprite(0, 0, 96 * 3, 96 * 4, "hudButton")
+    monsterDetailBgImage.alignIn(game.stageViewRect, Phaser.TOP_LEFT, 0, 0)
+    monsterDetailBgImage.tint = "0x044500"
+    monsterDetailGroup.addChild(monsterDetailBgImage);
+    return monsterDetailGroup
+}
 
 HudGroup.prototype.showMonsterTrayClicked = function (button, pointer) {
     if (game.hud.activePhase == "player") {
