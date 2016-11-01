@@ -300,8 +300,14 @@ function Monster() {
 }
 
 Monster.prototype.monsterClicked = function () {
-    HudGroup.prototype.showEnemyPhaseBG()
-    HudGroup.prototype.showMonsterDetail()
+    if (game.hud.activePhase == "player") {
+        HudGroup.prototype.showEnemyPhaseBG()
+        if (game.hud.monsterDetailOpen) {
+            HudGroup.prototype.hideMonsterDetail()
+        } else {
+            HudGroup.prototype.showMonsterDetail()
+        }
+    }
 }
 
 //=========================================================
