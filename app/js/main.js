@@ -486,11 +486,81 @@ HudGroup.prototype = Object.create(Phaser.Group.prototype);
 HudGroup.prototype.constructor = HudGroup;
 
 HudGroup.prototype.makeMonsterDetailGroup = function (game) {
+    var hbButtonOffsetY = 20
+    this._monsterCurrentHP = 0;
+
     var monsterDetailGroup = game.make.group()
     var monsterDetailBgImage = game.make.tileSprite(0, 0, 96 * 3, 96 * 4, "hudButton")
     monsterDetailBgImage.alignIn(game.stageViewRect, Phaser.TOP_LEFT, 0, 0)
     monsterDetailBgImage.tint = "0x044500"
     monsterDetailGroup.addChild(monsterDetailBgImage);
+
+    // Display number
+    var displayNumber = new OutlineBox(game, 50, 50)
+    displayNumber.alignIn(monsterDetailBgImage, Phaser.CENTER, 0, 10 + hbButtonOffsetY)
+    monsterDetailGroup.addChild(displayNumber);
+
+    var textStyle = { font: "30px Times New Romans", fill: "#ffffff", align: "center" };
+    this._numberText = game.make.text(0, 0, this._monsterCurrentHP, textStyle);
+    this._numberText.alignIn(monsterDetailBgImage, Phaser.CENTER, 1, 14 + hbButtonOffsetY)
+    monsterDetailGroup.addChild(this._numberText);
+
+    // Subtract number
+    var subtractNumber = new OutlineBox(game, 50, 50)
+    subtractNumber.alignIn(monsterDetailBgImage, Phaser.CENTER, -60, 10 + hbButtonOffsetY)
+    monsterDetailGroup.addChild(subtractNumber);
+
+    var subtractText = game.make.text(0, 0, "-", textStyle);
+    subtractText.alignIn(monsterDetailBgImage, Phaser.CENTER, -59, 12 + hbButtonOffsetY)
+    monsterDetailGroup.addChild(subtractText);
+
+    var subtractNumberButton = game.make.sprite(subtractNumber.x, subtractNumber.y, 'pixelTransparent');
+    subtractNumberButton.width = subtractNumber.width;
+    subtractNumberButton.height = subtractNumber.height;
+    subtractNumberButton.inputEnabled = true;
+    //subtractNumberButton.events.onInputUp.add(this.skillSubtractClicked, this);
+    monsterDetailGroup.addChild(subtractNumberButton);
+
+    // Add number
+    var addNumber = new OutlineBox(game, 50, 50)
+    addNumber.alignIn(monsterDetailBgImage, Phaser.CENTER, 60, 10 + hbButtonOffsetY)
+    monsterDetailGroup.addChild(addNumber);
+
+    var addText = game.make.text(0, 0, "+", textStyle);
+    addText.alignIn(monsterDetailBgImage, Phaser.CENTER, 61, 14 + hbButtonOffsetY)
+    monsterDetailGroup.addChild(addText);
+
+    var addNumberButton = game.make.sprite(addNumber.x, addNumber.y, 'pixelTransparent');
+    addNumberButton.width = addNumber.width;
+    addNumberButton.height = addNumber.height;
+    addNumberButton.inputEnabled = true;
+    //addNumberButton.events.onInputUp.add(this.skillAddClicked, this);
+    monsterDetailGroup.addChild(addNumberButton);
+
+    // Attack
+    var dialogAttack = new DialogButtonThin(game, "Attack", 200);
+    dialogAttack.alignIn(monsterDetailBgImage, Phaser.CENTER, 0, 90)
+    monsterDetailGroup.addChild(dialogAttack);
+
+    var attackButton = game.make.sprite(dialogAttack.x, dialogAttack.y, 'pixelTransparent');
+    attackButton.width = dialogAttack.width;
+    attackButton.height = dialogAttack.height;
+    attackButton.inputEnabled = true;
+    //attackButton.events.onInputUp.add(this.skillConfirmClicked, this);
+    monsterDetailGroup.addChild(attackButton);
+
+    // Evade
+    var dialogEvade = new DialogButtonThin(game, "Evade", 200);
+    dialogEvade.alignIn(monsterDetailBgImage, Phaser.CENTER, 0, 140)
+    monsterDetailGroup.addChild(dialogEvade);
+
+    var evadeButton = game.make.sprite(dialogEvade.x, dialogEvade.y, 'pixelTransparent');
+    evadeButton.width = dialogEvade.width;
+    evadeButton.height = dialogEvade.height;
+    evadeButton.inputEnabled = true;
+    //evadeButton.events.onInputUp.add(this.skillConfirmClicked, this);
+    monsterDetailGroup.addChild(evadeButton);
+
     return monsterDetailGroup
 }
 
