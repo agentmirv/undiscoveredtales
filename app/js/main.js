@@ -45,6 +45,7 @@ var GameState = {
         game.hud.activePhase = "player";
         game.hud.fireSet = false;
         game.hud.randomEventDeck = []
+        game.hud.showEnemyPhaseBG = false
         game.hud.monsterTrayOpen = false
         game.hud.monsterTrayDetail = false
         game.hudInstance = {};
@@ -662,11 +663,23 @@ HudGroup.prototype.scenarioEventDone = function () {
 }
 
 HudGroup.prototype.showEnemyPhaseBG = function () {
-    game.hudInstance._enemyPhaseBGImage.revive()
+    if (!game.hud.showEnemyPhaseBG) {
+        game.hud.showEnemyPhaseBG = true
+        game.hudInstance._enemyPhaseBGImage.alpha = 0.7
+        game.hudInstance._enemyPhaseBGImage.revive()
+        var fadeTween = game.add.tween(game.hudInstance._enemyPhaseBGImage).from({ alpha: 0 }, 100, Phaser.Easing.Linear.None, true, 0, 0, false);
+    }
 }
 
 HudGroup.prototype.hideEnemyPhaseBG = function () {
-    game.hudInstance._enemyPhaseBGImage.kill()
+    if (game.hud.showEnemyPhaseBG) {
+        game.hud.showEnemyPhaseBG = false
+        var fadeTween = game.add.tween(game.hudInstance._enemyPhaseBGImage).to({ alpha: 0 }, 100, Phaser.Easing.Linear.None, true, 0, 0, false);
+        fadeTween.onComplete.addOnce(function () {
+            game.hudInstance._enemyPhaseBGImage.alpha = 0
+            game.hudInstance._enemyPhaseBGImage.kill()
+        })
+    }
 }
 
 HudGroup.prototype.showMonsterTray = function () {
