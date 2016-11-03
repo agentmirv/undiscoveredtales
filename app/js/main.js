@@ -48,6 +48,7 @@ var GameState = {
         game.hud.showEnemyPhaseBG = false
         game.hud.monsterTrayOpen = false
         game.hud.monsterTrayDetail = false
+        game.hud.currentMonsterInstance = null
         game.hudInstance = {};
 
         //=================================================
@@ -289,7 +290,7 @@ function MakeMonster(game, id) {
     monsterInstance.traySprite = game.make.sprite(0, 0, Helper.getImage(monsterInstance.imageKey))
     monsterInstance.traySprite.alignIn(game.hudInstance._monsterTrayBgImage, Phaser.BOTTOM_LEFT, xOffset, 0)
     monsterInstance.traySprite.inputEnabled = true
-    monsterInstance.traySprite.events.onInputUp.add(Monster.prototype.monsterClicked, this);
+    monsterInstance.traySprite.events.onInputUp.add(Monster.prototype.monsterClicked, monsterInstance);
     game.hudInstance._monsterTray.addChild(monsterInstance.traySprite)
 
     game.gamedataInstances.monsters.push(monsterInstance);
@@ -301,6 +302,7 @@ function Monster() {
 
 Monster.prototype.monsterClicked = function () {
     if (game.hud.activePhase == "player") {
+        game.hudInstance.setMonsterDetail(this)
         HudGroup.prototype.showEnemyPhaseBG()
         if (game.hud.monsterDetailOpen) {
             HudGroup.prototype.hideMonsterDetail()
@@ -485,9 +487,15 @@ function HudGroup(game) {
 HudGroup.prototype = Object.create(Phaser.Group.prototype);
 HudGroup.prototype.constructor = HudGroup;
 
+HudGroup.prototype.setMonsterDetail = function (monsterInstance) {
+    game.hud.currentMonsterInstance = monsterInstance
+    this._monsterHitPointsText.setText(game.hud.currentMonsterInstance.hitPoints)
+    this._monsterDamageText.setText(game.hud.currentMonsterInstance.damage)
+}
+
 HudGroup.prototype.makeMonsterDetailGroup = function (game) {
     var hbButtonOffsetY = 20
-    this._monsterCurrentHP = 0;
+    var textStyle = { font: "30px Times New Romans", fill: "#ffffff", align: "center" };
 
     var monsterDetailGroup = game.make.group()
     var monsterDetailBgImage = game.make.tileSprite(0, 0, 96 * 3, 96 * 4, "hudButton")
@@ -495,15 +503,23 @@ HudGroup.prototype.makeMonsterDetailGroup = function (game) {
     monsterDetailBgImage.tint = "0x044500"
     monsterDetailGroup.addChild(monsterDetailBgImage);
 
-    // Display number
-    var displayNumber = new OutlineBox(game, 50, 50)
-    displayNumber.alignIn(monsterDetailBgImage, Phaser.CENTER, 0, 10 + hbButtonOffsetY)
-    monsterDetailGroup.addChild(displayNumber);
+    // Hit Points
+    var hitPointsBox = new OutlineBox(game, 50, 50)
+    hitPointsBox.alignIn(monsterDetailBgImage, Phaser.TOP_LEFT, -10, -10)
+    monsterDetailGroup.addChild(hitPointsBox);
 
-    var textStyle = { font: "30px Times New Romans", fill: "#ffffff", align: "center" };
-    this._numberText = game.make.text(0, 0, this._monsterCurrentHP, textStyle);
-    this._numberText.alignIn(monsterDetailBgImage, Phaser.CENTER, 1, 14 + hbButtonOffsetY)
-    monsterDetailGroup.addChild(this._numberText);
+    this._monsterHitPointsText = game.make.text(0, 0, "0", textStyle);
+    this._monsterHitPointsText.alignIn(hitPointsBox, Phaser.CENTER, 0, 3)
+    monsterDetailGroup.addChild(this._monsterHitPointsText);
+
+    // Damage
+    var damageBox = new OutlineBox(game, 50, 50)
+    damageBox.alignIn(monsterDetailBgImage, Phaser.CENTER, 0, 10 + hbButtonOffsetY)
+    monsterDetailGroup.addChild(damageBox);
+
+    this._monsterDamageText = game.make.text(0, 0, "0", textStyle);
+    this._monsterDamageText.alignIn(monsterDetailBgImage, Phaser.CENTER, 1, 14 + hbButtonOffsetY)
+    monsterDetailGroup.addChild(this._monsterDamageText);
 
     // Subtract number
     var subtractNumber = new OutlineBox(game, 50, 50)
@@ -518,7 +534,7 @@ HudGroup.prototype.makeMonsterDetailGroup = function (game) {
     subtractNumberButton.width = subtractNumber.width;
     subtractNumberButton.height = subtractNumber.height;
     subtractNumberButton.inputEnabled = true;
-    //subtractNumberButton.events.onInputUp.add(this.skillSubtractClicked, this);
+    subtractNumberButton.events.onInputUp.add(this.monsterSubtractClicked, this);
     monsterDetailGroup.addChild(subtractNumberButton);
 
     // Add number
@@ -534,7 +550,7 @@ HudGroup.prototype.makeMonsterDetailGroup = function (game) {
     addNumberButton.width = addNumber.width;
     addNumberButton.height = addNumber.height;
     addNumberButton.inputEnabled = true;
-    //addNumberButton.events.onInputUp.add(this.skillAddClicked, this);
+    addNumberButton.events.onInputUp.add(this.monsterAddClicked, this);
     monsterDetailGroup.addChild(addNumberButton);
 
     // Attack
@@ -562,6 +578,18 @@ HudGroup.prototype.makeMonsterDetailGroup = function (game) {
     monsterDetailGroup.addChild(evadeButton);
 
     return monsterDetailGroup
+}
+
+HudGroup.prototype.monsterSubtractClicked = function (button, pointer) {
+    if (game.hud.currentMonsterInstance.damage > 0) {
+        game.hud.currentMonsterInstance.damage--
+        this._monsterDamageText.setText(game.hud.currentMonsterInstance.damage)
+    }
+}
+
+HudGroup.prototype.monsterAddClicked = function (button, pointer) {
+    game.hud.currentMonsterInstance.damage++
+    this._monsterDamageText.setText(game.hud.currentMonsterInstance.damage)
 }
 
 HudGroup.prototype.showMonsterTrayClicked = function (button, pointer) {
@@ -735,6 +763,9 @@ HudGroup.prototype.scenarioEventDone = function () {
 
     if (monsterCount > 0) {
         // Monsters Attack
+        var monsterInstance = game.gamedataInstances.monsters[0]
+        game.hudInstance.setMonsterDetail(monsterInstance)
+
         HudGroup.prototype.showEnemyPhaseBG()
         HudGroup.prototype.showMonsterTray()
         HudGroup.prototype.showMonsterDetail()
