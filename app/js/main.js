@@ -513,12 +513,12 @@ HudGroup.prototype.makeMonsterDetailGroup = function (game) {
     monsterDetailGroup.addChild(this._monsterHitPointsText);
 
     // Damage
-    var damageBox = new OutlineBox(game, 50, 50)
-    damageBox.alignIn(monsterDetailBgImage, Phaser.CENTER, 0, 10 + hbButtonOffsetY)
-    monsterDetailGroup.addChild(damageBox);
+    this._damageBox = new OutlineBox(game, 50, 50)
+    this._damageBox.alignIn(monsterDetailBgImage, Phaser.CENTER, 0, 10 + hbButtonOffsetY)
+    monsterDetailGroup.addChild(this._damageBox);
 
     this._monsterDamageText = game.make.text(0, 0, "0", textStyle);
-    this._monsterDamageText.alignIn(monsterDetailBgImage, Phaser.CENTER, 1, 14 + hbButtonOffsetY)
+    this._monsterDamageText.alignIn(this._damageBox, Phaser.CENTER, 0, 3)
     monsterDetailGroup.addChild(this._monsterDamageText);
 
     // Subtract number
@@ -584,12 +584,14 @@ HudGroup.prototype.monsterSubtractClicked = function (button, pointer) {
     if (game.hud.currentMonsterInstance.damage > 0) {
         game.hud.currentMonsterInstance.damage--
         this._monsterDamageText.setText(game.hud.currentMonsterInstance.damage)
+        this._monsterDamageText.alignIn(this._damageBox, Phaser.CENTER, 0, 3)
     }
 }
 
 HudGroup.prototype.monsterAddClicked = function (button, pointer) {
     game.hud.currentMonsterInstance.damage++
     this._monsterDamageText.setText(game.hud.currentMonsterInstance.damage)
+    this._monsterDamageText.alignIn(this._damageBox, Phaser.CENTER, 0, 3)
 }
 
 HudGroup.prototype.showMonsterTrayClicked = function (button, pointer) {
@@ -1300,13 +1302,13 @@ function DialogGroup(game, id, messageText, imageKey, buttonType, buttonData, sk
         var skillTestGroup = game.add.group()
 
         // Display number
-        var displayNumber = new OutlineBox(game, 50, 50)
-        displayNumber.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 0, 10)
-        this.addChild(displayNumber);
+        this._numberBox = new OutlineBox(game, 50, 50)
+        this._numberBox.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 0, 10)
+        this.addChild(this._numberBox);
 
         var textStyle = { font: "30px Times New Romans", fill: "#ffffff", align: "center" };
         this._numberText = game.make.text(0, 0, this._skillTestDisplay, textStyle);
-        this._numberText.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 1, 18)
+        this._numberText.alignIn(this._numberBox, Phaser.CENTER, 0, 3)
         this.addChild(this._numberText);
 
         // Subtract number
@@ -1444,12 +1446,14 @@ DialogGroup.prototype.skillSubtractClicked = function (button, pointer) {
     if (this._skillTestDisplay > 0) {
         this._skillTestDisplay--
         this._numberText.setText(this._skillTestDisplay)
+        this._numberText.alignIn(this._numberBox, Phaser.CENTER, 0, 3)
     }
 }
 
 DialogGroup.prototype.skillAddClicked = function (button, pointer) {
     this._skillTestDisplay++
     this._numberText.setText(this._skillTestDisplay)
+    this._numberText.alignIn(this._numberBox, Phaser.CENTER, 0, 3)
 }
 
 DialogGroup.prototype.skillConfirmClicked = function (button, pointer) {
