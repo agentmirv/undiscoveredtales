@@ -484,7 +484,11 @@ Planning on starting on the monster screens.
 I feel that I should fix some of the UI bugs, double clicking bugs, for example.
 
 ===========================================================
+2016 November, 4, Friday 12:11 PM ~~~
 ===========================================================
+Adding Custom Fonts in Phaser
+http://www.melkybee.com/blog/2015/04/26/adding-custom-fonts-in-phaser/
+
 ===========================================================
 ===========================================================
 ===========================================================
