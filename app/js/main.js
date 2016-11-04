@@ -277,6 +277,7 @@ Helper.shuffle = function (array) {
 //=========================================================
 function MakeMonster(game, id) {
     var monsterData = game.gamedata.monsters.find(function (item) { return item.id == id });
+    var textStyle = { font: "20px Times New Romans", fill: "#ffffff", align: "center" };
 
     var monsterInstance = new Monster()
     monsterInstance.id = monsterData.id
@@ -291,6 +292,16 @@ function MakeMonster(game, id) {
     monsterInstance.traySprite.alignIn(game.hudInstance._monsterTrayBgImage, Phaser.BOTTOM_LEFT, xOffset, 0)
     monsterInstance.traySprite.inputEnabled = true
     monsterInstance.traySprite.events.onInputUp.add(Monster.prototype.monsterClicked, monsterInstance);
+
+    monsterInstance._hitPointsBox = new OutlineBox(game, 32, 32)
+    monsterInstance.traySprite.addChild(monsterInstance._hitPointsBox)
+    monsterInstance._hitPointsBox.x += 4
+    monsterInstance._hitPointsBox.y += 60
+
+    monsterInstance._monsterDamageText = game.make.text(0, 0, "0", textStyle);
+    monsterInstance._monsterDamageText.alignIn(monsterInstance._hitPointsBox, Phaser.CENTER, 0, 3)
+    monsterInstance.traySprite.addChild(monsterInstance._monsterDamageText)
+
     game.hudInstance._monsterTray.addChild(monsterInstance.traySprite)
 
     game.gamedataInstances.monsters.push(monsterInstance);
@@ -310,6 +321,11 @@ Monster.prototype.monsterClicked = function () {
             HudGroup.prototype.showMonsterDetail()
         }
     }
+}
+
+Monster.prototype.updateDamage = function() {
+    this._monsterDamageText.setText(this.damage)
+    this._monsterDamageText.alignIn(this._hitPointsBox, Phaser.CENTER, 0, 3)
 }
 
 //=========================================================
@@ -583,6 +599,7 @@ HudGroup.prototype.makeMonsterDetailGroup = function (game) {
 HudGroup.prototype.monsterSubtractClicked = function (button, pointer) {
     if (game.hud.currentMonsterInstance.damage > 0) {
         game.hud.currentMonsterInstance.damage--
+        game.hud.currentMonsterInstance.updateDamage()
         this._monsterDamageText.setText(game.hud.currentMonsterInstance.damage)
         this._monsterDamageText.alignIn(this._damageBox, Phaser.CENTER, 0, 3)
     }
@@ -590,6 +607,7 @@ HudGroup.prototype.monsterSubtractClicked = function (button, pointer) {
 
 HudGroup.prototype.monsterAddClicked = function (button, pointer) {
     game.hud.currentMonsterInstance.damage++
+    game.hud.currentMonsterInstance.updateDamage()
     this._monsterDamageText.setText(game.hud.currentMonsterInstance.damage)
     this._monsterDamageText.alignIn(this._damageBox, Phaser.CENTER, 0, 3)
 }
