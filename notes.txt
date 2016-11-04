@@ -489,6 +489,55 @@ I feel that I should fix some of the UI bugs, double clicking bugs, for example.
 Adding Custom Fonts in Phaser
 http://www.melkybee.com/blog/2015/04/26/adding-custom-fonts-in-phaser/
 
+The post below is interesting. I was thinking that those things would need some kind of tagging system.
+
+Investigator "Weights," Item Traits, and Monster Traits
+http://boardgamegeek.com/thread/1666116/investigator-weights-item-traits-and-monster-trait
+
+The following traits for Items are in the game (in addition to Common, Unique, and Spell items).
+* Weapon
+* HeavyWeapon
+* BladedWeapon
+* Firearm
+* Recovery
+* Book
+* Tool
+* LightSource
+* Trinket
+* Powerful
+* Weak
+* Utility
+* AttackSpell
+* Small
+* Large
+
+Monsters also have traits that the app uses to generate slightly less-random encounters.
+* Humanoid
+* Beast
+* Incorporeal
+* Small
+* Large
+* Massive
+* Human
+* Caster
+* Leader
+* Undead
+* Smart
+* Fast
+* Flying
+* Aquatic
+* Subterranean
+* Arctic
+* Interdimensional
+* Tentacles
+* Wings
+* Tail
+* Claws
+* Mouths
+* Unique
+* Medium
+* Huge
+
 ===========================================================
 ===========================================================
 ===========================================================
