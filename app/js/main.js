@@ -168,29 +168,26 @@ var GameState = {
         game.physics.startSystem(Phaser.Physics.P2JS);
         game.world.setBounds(0, 0, 2560, 2560);
         game.camera.bounds = null
+        game.camera.focusOnXY(game.gamedata.playerStart.x, game.gamedata.playerStart.y)
         game.stageViewRect = new Phaser.Rectangle(0, 0, game.camera.view.width, game.camera.view.height)
+        game.presentationOffsetY = 48
         cursors = game.input.keyboard.createCursorKeys();
 
-        game.presentationOffsetY = 48
-        game.walkLerp = 0.5;
-        game.followLerp = 0.06;
-        game.camera.focusOnXY(game.gamedata.playerStart.x, game.gamedata.playerStart.y)
-        // Move Player
         player = game.add.sprite(game.gamedata.playerStart.x, game.gamedata.playerStart.y, 'pixelTransparent');
         game.physics.p2.enable(player);
-        game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, game.walkLerp, game.walkLerp);
+        game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.5, 0.5);
 
         game.add.tileSprite(0, 0, 2560, 2560, 'background');
-
-        //=================================================
-        // First Reveal
-        MakeRevealList(game, 'reveal-lobby')
 
         //=================================================
         // Add HUD
         var hudInstance = new HudGroup(game)
         game.stage.addChild(hudInstance)
         game.hudInstance = hudInstance;
+
+        //=================================================
+        // First Reveal
+        MakeRevealList(game, game.gamedata.playerStart.firstReveal)
     },
 
     update: function () {
@@ -1220,6 +1217,14 @@ TokenSprite.prototype.fadeOut = function (callback) {
         fadeOutTween.onComplete.addOnce(callback, this);
     }
 }
+
+//=========================================================
+function MonsterAttackDialogGroup(game) {
+    Phaser.Group.call(this, game);
+}
+
+MonsterAttackDialogGroup.prototype = Object.create(Phaser.Group.prototype);
+MonsterAttackDialogGroup.prototype.constructor = MonsterAttackDialogGroup;
 
 //=========================================================
 function DialogGroup(game, id, messageText, imageKey, buttonType, buttonData, skillTarget) {
