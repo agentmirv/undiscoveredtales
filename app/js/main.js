@@ -188,6 +188,9 @@ var GameState = {
         //=================================================
         // First Reveal
         MakeRevealList(game, game.gamedata.playerStart.firstReveal)
+
+        //var test = new MonsterAttackDialogGroup(game)
+        //game.stage.addChild(test)
     },
 
     update: function () {
@@ -270,6 +273,29 @@ Helper.shuffle = function (array) {
 
 //TODO Polyfill for array.find?
 //TODO Polyfill for array.filter?
+
+function MonsterAttackDialogGroup(game) {
+    Phaser.Group.call(this, game);
+    var dialogRect = new Phaser.Rectangle(96 * 3, 16, game.stageViewRect.width -96 * 3, game.stageViewRect.height)
+
+    // Message
+    var dialogMessage = new DialogMessageMonster(game, "The Deep One moves 2 spaces toward the nearest investigator. Then it attacks the investigator in its space who has suffered the least Damage.", 600);
+    dialogMessage.alignIn(dialogRect, Phaser.TOP_CENTER, 0, 0)
+    this.addChild(dialogMessage);
+
+    // Attack Button
+    var attackButtonText = new DialogButtonMedium(game, "The monster attacks.", 520)
+    attackButtonText.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 0, 28)
+    this.addChild(attackButtonText);
+
+    // Attack Button
+    var nonAttackButtonText = new DialogButtonMedium(game, "No investigators in the space.", 520)
+    nonAttackButtonText.alignTo(attackButtonText, Phaser.BOTTOM_CENTER, 0, 28)
+    this.addChild(nonAttackButtonText);
+    }
+
+MonsterAttackDialogGroup.prototype = Object.create(Phaser.Group.prototype);
+MonsterAttackDialogGroup.prototype.constructor = MonsterAttackDialogGroup;
 
 //=========================================================
 function MakeMonster(game, id) {
@@ -1221,10 +1247,48 @@ TokenSprite.prototype.fadeOut = function (callback) {
 //=========================================================
 function MonsterAttackDialogGroup(game) {
     Phaser.Group.call(this, game);
+    var dialogRect = new Phaser.Rectangle(96 * 3, 16, game.stageViewRect.width - 96 * 3, game.stageViewRect.height)
+
+    // Message
+    var dialogMessage = new DialogMessageMonster(game, "The Deep One moves 2 spaces toward the nearest investigator. Then it attacks the investigator in its space who has suffered the least Damage.", 600);
+    dialogMessage.alignIn(dialogRect, Phaser.TOP_CENTER, 0, 0)
+    this.addChild(dialogMessage);
+
+    // Attack Button
+    var attackButtonText = new DialogButtonMedium(game, "The monster attacks.", 520)
+    attackButtonText.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 0, 28)
+    this.addChild(attackButtonText);
+
+    var attackButton = game.make.sprite(attackButtonText.x, attackButtonText.y, 'pixelTransparent');
+    attackButton.width = attackButtonText.width;
+    attackButton.height = attackButtonText.height;
+    attackButton.inputEnabled = true;
+    attackButton.events.onInputUp.add(this.attackButtonClicked, this);
+    this.addChild(attackButton);
+
+    // Non Attack Button
+    var nonAttackButtonText = new DialogButtonMedium(game, "No investigators in the space.", 520)
+    nonAttackButtonText.alignTo(attackButtonText, Phaser.BOTTOM_CENTER, 0, 28)
+    this.addChild(nonAttackButtonText);
+
+    var nonAttackButton = game.make.sprite(nonAttackButtonText.x, nonAttackButtonText.y, 'pixelTransparent');
+    nonAttackButton.width = nonAttackButtonText.width;
+    nonAttackButton.height = nonAttackButtonText.height;
+    nonAttackButton.inputEnabled = true;
+    nonAttackButton.events.onInputUp.add(this.nonAttackButtonClicked, this);
+    this.addChild(nonAttackButton);
 }
 
 MonsterAttackDialogGroup.prototype = Object.create(Phaser.Group.prototype);
 MonsterAttackDialogGroup.prototype.constructor = MonsterAttackDialogGroup;
+
+MonsterAttackDialogGroup.prototype.attackButtonClicked = function (button, pointer) {
+    console.log(this)
+}
+
+MonsterAttackDialogGroup.prototype.nonAttackButtonClicked = function (button, pointer) {
+    console.log(this)
+}
 
 //=========================================================
 function DialogGroup(game, id, messageText, imageKey, buttonType, buttonData, skillTarget) {
@@ -1720,6 +1784,33 @@ function DialogButtonMedium(game, text, width) {
 
 DialogButtonMedium.prototype = Object.create(Phaser.Group.prototype);
 DialogButtonMedium.prototype.constructor = DialogButtonMedium;
+
+//=========================================================
+function DialogMessageMonster(game, text, width) {
+    Phaser.Group.call(this, game, 0, 0);
+
+    var totalWidth = width;
+    var leftMargin = 10;
+    var rightMargin = 10;
+    var topMargin = 20;
+    var bottomMargin = 15;
+
+    var textWidth = totalWidth -leftMargin - rightMargin;
+    var textStyle = { font: "20px Times New Romans", fill: "#ffffff", align: "center", wordWrap : true, wordWrapWidth: textWidth
+    };
+    var messageText = game.make.text(0, 0, text, textStyle);
+    messageText.x = Math.floor((totalWidth -messageText.width) / 2)
+    messageText.y = topMargin;
+
+    var totalHeight = messageText.height +topMargin +bottomMargin;
+    var outlineBox = new OutlineBox(game, totalWidth, totalHeight);
+
+    this.addChild(outlineBox);
+    this.addChild(messageText);
+    }
+
+DialogMessageMonster.prototype = Object.create(Phaser.Group.prototype);
+DialogMessageMonster.prototype.constructor = DialogButtonMedium;
 
 //=========================================================
 function OutlineBox(game, width, height) {
