@@ -188,9 +188,6 @@ var GameState = {
         //=================================================
         // First Reveal
         MakeRevealList(game, game.gamedata.playerStart.firstReveal)
-
-        //var test = new MonsterAttackDialogGroup(game)
-        //game.stage.addChild(test)
     },
 
     update: function () {
@@ -274,25 +271,38 @@ Helper.shuffle = function (array) {
 //TODO Polyfill for array.find?
 //TODO Polyfill for array.filter?
 
-function MonsterAttackDialogGroup(game) {
+//=========================================================
+function MakeMonsterAttackDialog(game, id) {
+    var attackData = game.gamedata.monsterAttacks.find(function (item) { return item.id == id });
+
+    var test = new MonsterAttackDialogGroup(
+        game,
+        attackData.moveText,
+        attackData.attackButtonText,
+        attackData.nonAttackButtonText
+    )
+    game.stage.addChild(test)
+}
+
+function MonsterAttackDialogGroup(game, moveText, attackButtonText, nonAttackButtonText) {
     Phaser.Group.call(this, game);
     var dialogRect = new Phaser.Rectangle(96 * 3, 16, game.stageViewRect.width -96 * 3, game.stageViewRect.height)
 
     // Message
-    var dialogMessage = new DialogMessageMonster(game, "The Deep One moves 2 spaces toward the nearest investigator. Then it attacks the investigator in its space who has suffered the least Damage.", 600);
+    var dialogMessage = new DialogMessageMonster(game, moveText, 600);
     dialogMessage.alignIn(dialogRect, Phaser.TOP_CENTER, 0, 0)
     this.addChild(dialogMessage);
 
     // Attack Button
-    var attackButtonText = new DialogButtonMedium(game, "The monster attacks.", 520)
+    var attackButtonText = new DialogButtonMedium(game, attackButtonText, 520)
     attackButtonText.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 0, 28)
     this.addChild(attackButtonText);
 
     // Attack Button
-    var nonAttackButtonText = new DialogButtonMedium(game, "No investigators in the space.", 520)
+    var nonAttackButtonText = new DialogButtonMedium(game, nonAttackButtonText, 520)
     nonAttackButtonText.alignTo(attackButtonText, Phaser.BOTTOM_CENTER, 0, 28)
     this.addChild(nonAttackButtonText);
-    }
+}
 
 MonsterAttackDialogGroup.prototype = Object.create(Phaser.Group.prototype);
 MonsterAttackDialogGroup.prototype.constructor = MonsterAttackDialogGroup;

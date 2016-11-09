@@ -822,11 +822,11 @@
       "tags": "claws"
     }
   ],
-  "monster-attacks": [
+  "monsterAttacks": [
     {
         "id": "deep-one-1",
         "moveText": "The Deep One moves 2 spaces toward the nearest investigator. Then it attacks the investigator in its space who has suffered the least Damage.",
-        "attackButtonText": "THe monster attacks.",
+        "attackButtonText": "The monster attacks.",
         "attackText": "The deep one sinks its horrible teeth into your shoulder (Strength; 2). If you pass, you resist the pain and break free from its grasp. If you fail, the creature's savage tearing throws you off-balance; suffer 2 facedown Damage and become Dazed.",
         "nonAttackButtonText": "No investigators in the space."
     }
