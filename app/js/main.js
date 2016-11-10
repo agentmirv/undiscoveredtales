@@ -281,6 +281,7 @@ function MakeMonsterAttackDialog(game, id) {
         attackData.attackButtonText,
         attackData.nonAttackButtonText
     )
+
     game.stage.addChild(test)
 }
 
@@ -822,6 +823,9 @@ HudGroup.prototype.scenarioEventDone = function () {
         HudGroup.prototype.showEnemyPhaseBG()
         HudGroup.prototype.showMonsterTray()
         HudGroup.prototype.showMonsterDetail()
+
+        // TODO: Get random attack for monsterInstance (reshuffle if empty?)
+        // Display monster attack dialog
     } else {
         MakeScene(game, "scene-player")
         HudGroup.prototype.hideMonsterTray()
