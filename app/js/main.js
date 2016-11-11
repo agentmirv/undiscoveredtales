@@ -45,6 +45,7 @@ var GameState = {
         game.hud.activePhase = "player";
         game.hud.fireSet = false;
         game.hud.randomEventDeck = []
+        game.hud.randomMonsterAttackDeck = []
         game.hud.showEnemyPhaseBG = false
         game.hud.monsterTrayOpen = false
         game.hud.monsterTrayDetail = false
@@ -736,27 +737,28 @@ HudGroup.prototype.fireSpreads = function () {
 }
 
 HudGroup.prototype.randomEvent = function () {
-    if (game.hud.randomEventDeck.length == 0) {
-        // get list of visible map tiles
-        var visibleMapTileIds = []
-        for (var i = 0; i < game.gamedataInstances.mapTiles.length; i++) {
-            visibleMapTileIds.push(game.gamedataInstances.mapTiles[i].id)
+    var randomEventData = null
+
+    var visibleMapTileIds = []
+    for (var i = 0; i < game.gamedataInstances.mapTiles.length; i++) {
+        visibleMapTileIds.push(game.gamedataInstances.mapTiles[i].id)
+    }
+    
+    while (randomEventData == null) {
+        if (game.hud.randomEventDeck.length == 0) {
+            game.hud.randomEventDeck = game.gamedata.randomEvents.slice(0)
+            game.hud.randomEventDeck = Helper.shuffle(game.hud.randomEventDeck)
         }
 
-        // populate random events based on mapTile requirement
-        game.hud.randomEventDeck = game.gamedata.randomEvents.filter(function (element) {
-            var mapTileMissing = false
-            if (element.hasOwnProperty("target") && element.target == "mapTile" && element.hasOwnProperty("mapTile")) {
-                mapTileMissing = visibleMapTileIds.indexOf(element.mapTile) < 0
+        var drawRandomEvent = game.hud.randomEventDeck.pop()
+        if (drawRandomEvent.hasOwnProperty("target") && drawRandomEvent.target == "mapTile" && drawRandomEvent.hasOwnProperty("mapTile")) {
+            if (visibleMapTileIds.indexOf(drawRandomEvent.mapTile) >= 0) {
+                randomEventData = drawRandomEvent
             }
-
-            return !mapTileMissing
-        })
-
-        game.hud.randomEventDeck = Helper.shuffle(game.hud.randomEventDeck)
+        } else {
+            randomEventData = drawRandomEvent
+        }
     }
-
-    var randomEventData = game.hud.randomEventDeck.pop()
 
     var dialogInstance = new MakeRandomEvent(game, randomEventData.id)
 
@@ -826,6 +828,7 @@ HudGroup.prototype.scenarioEventDone = function () {
 
         // TODO: Get random attack for monsterInstance (reshuffle if empty?)
         // Display monster attack dialog
+
     } else {
         MakeScene(game, "scene-player")
         HudGroup.prototype.hideMonsterTray()
