@@ -818,22 +818,25 @@ HudGroup.prototype.scenarioEventDone = function () {
     var monsterCount = game.gamedataInstances.monsters.length
 
     if (monsterCount > 0) {
-        // Monsters Attack
-        var monsterInstance = game.gamedataInstances.monsters[0]
-        game.hudInstance.setMonsterDetail(monsterInstance)
-
-        HudGroup.prototype.showEnemyPhaseBG()
-        HudGroup.prototype.showMonsterTray()
-        HudGroup.prototype.showMonsterDetail()
-
-        // TODO: Get random attack for monsterInstance (reshuffle if empty?)
-        // Display monster attack dialog
-
+        HudGroup.prototype.monsterAttack()
     } else {
         MakeScene(game, "scene-player")
         HudGroup.prototype.hideMonsterTray()
         HudGroup.prototype.hideMonsterDetail()
     }
+}
+
+HudGroup.prototype.monsterAttack = function () {
+    // Monsters Attack
+    var monsterInstance = game.gamedataInstances.monsters[0]
+    game.hudInstance.setMonsterDetail(monsterInstance)
+
+    HudGroup.prototype.showEnemyPhaseBG()
+    HudGroup.prototype.showMonsterTray()
+    HudGroup.prototype.showMonsterDetail()
+
+    // TODO: Get random attack for monsterInstance (reshuffle if empty?)
+    // Display monster attack dialog
 }
 
 HudGroup.prototype.showEnemyPhaseBG = function () {
