@@ -836,7 +836,23 @@ HudGroup.prototype.monsterAttack = function () {
     HudGroup.prototype.showMonsterDetail()
 
     // TODO: Get random attack for monsterInstance (reshuffle if empty?)
+    var randomMonsterAttackData = null
+
+    while (randomMonsterAttackData == null) {
+        if (game.hud.randomMonsterAttackDeck.length == 0) {
+            game.hud.randomMonsterAttackDeck = game.gamedata.monsterAttacks.slice(0)
+            game.hud.randomMonsterAttackDeck = Helper.shuffle(game.hud.randomMonsterAttackDeck)
+        }
+
+        var drawRandomMonsterAttack = game.hud.randomMonsterAttackDeck.pop()
+
+        if (drawRandomMonsterAttack.monster == monsterInstance.id) {
+            randomMonsterAttackData = drawRandomMonsterAttack 
+        }
+    }
+
     // Display monster attack dialog
+    MakeMonsterAttackDialog(game, randomMonsterAttackData.id)
 }
 
 HudGroup.prototype.showEnemyPhaseBG = function () {
