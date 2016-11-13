@@ -335,12 +335,16 @@ function MonsterAttackDialogGroup(game, moveText, attackButtonText, nonAttackBut
     attackTextContinue.alignTo(attackTextDialog, Phaser.BOTTOM_CENTER, 0, 28)
     this.addChild(attackTextContinue);
 
-    var attackTextContinueButton = game.make.sprite(attackTextDialog.x, attackTextDialog.y, 'pixelTransparent');
-    attackTextContinueButton.width = attackTextDialog.width;
-    attackTextContinueButton.height = attackTextDialog.height;
+    var attackTextContinueButton = game.make.sprite(attackTextContinue.x, attackTextContinue.y, 'pixelTransparent');
+    attackTextContinueButton.width = attackTextContinue.width;
+    attackTextContinueButton.height = attackTextContinue.height;
     attackTextContinueButton.inputEnabled = true;
-    //dialogContinueButton.events.onInputUp.add(this.buttonClicked, this);
+    attackTextContinueButton.events.onInputUp.add(this.attackContinueButtonClicked, this);
     this.addChild(attackTextContinueButton);
+
+    attackTextDialog.visible = false
+    attackTextContinue.visible = false
+    attackTextContinueButton.visible = false
 
     // NonAttack Text
     var nonAttackTextDialog = new DialogMessageMonster(game, nonAttackText, 600);
@@ -356,8 +360,12 @@ function MonsterAttackDialogGroup(game, moveText, attackButtonText, nonAttackBut
     nonAttackTextContinueButton.width = nonAttackTextContinue.width;
     nonAttackTextContinueButton.height = nonAttackTextContinue.height;
     nonAttackTextContinueButton.inputEnabled = true;
-    //dialogContinueButton.events.onInputUp.add(this.buttonClicked, this);
+    nonAttackTextContinueButton.events.onInputUp.add(this.nonAttackContinueButtonClicked, this);
     this.addChild(nonAttackTextContinueButton);
+
+    nonAttackTextDialog.visible = false
+    nonAttackTextContinue.visible = false
+    nonAttackTextContinueButton.visible = false
 }
 
 MonsterAttackDialogGroup.prototype = Object.create(Phaser.Group.prototype);
@@ -368,6 +376,14 @@ MonsterAttackDialogGroup.prototype.attackButtonClicked = function (button, point
 }
 
 MonsterAttackDialogGroup.prototype.nonAttackButtonClicked = function (button, pointer) {
+    console.log(this)
+}
+
+MonsterAttackDialogGroup.prototype.attackContinueButtonClicked = function (button, pointer) {
+    console.log(this)
+}
+
+MonsterAttackDialogGroup.prototype.nonAttackContinueButtonClicked = function (button, pointer) {
     console.log(this)
 }
 
