@@ -295,6 +295,7 @@ function MakeMonsterAttackDialog(game, id) {
 function MonsterAttackDialogGroup(game, moveText, attackButtonText, nonAttackButtonText, attackText, nonAttackText) {
     Phaser.Group.call(this, game);
     var dialogRect = new Phaser.Rectangle(96 * 3, 16, game.stageViewRect.width -96 * 3, game.stageViewRect.height)
+    this.attackResolved = false;
 
     // Move Text
     var moveTextDialog = new DialogMessageMonster(game, moveText, 600);
@@ -325,6 +326,13 @@ function MonsterAttackDialogGroup(game, moveText, attackButtonText, nonAttackBut
     nonAttackButton.events.onInputUp.add(this.nonAttackButtonClicked, this);
     this.addChild(nonAttackButton);
 
+    this._mainGroup = game.make.group(this)
+    this._mainGroup.addChild(moveTextDialog)
+    this._mainGroup.addChild(attackButtonText)
+    this._mainGroup.addChild(attackButton)
+    this._mainGroup.addChild(nonAttackButtonText)
+    this._mainGroup.addChild(nonAttackButton)
+
     // Attack Text
     var attackTextDialog = new DialogMessageMonster(game, attackText, 600);
     attackTextDialog.alignIn(dialogRect, Phaser.TOP_CENTER, 0, 0)
@@ -342,9 +350,11 @@ function MonsterAttackDialogGroup(game, moveText, attackButtonText, nonAttackBut
     attackTextContinueButton.events.onInputUp.add(this.attackContinueButtonClicked, this);
     this.addChild(attackTextContinueButton);
 
-    attackTextDialog.visible = false
-    attackTextContinue.visible = false
-    attackTextContinueButton.visible = false
+    this._attackGroup = game.make.group(this)
+    this._attackGroup.addChild(attackTextDialog)
+    this._attackGroup.addChild(attackTextContinue)
+    this._attackGroup.addChild(attackTextContinueButton)
+    this._attackGroup.visible = false
 
     // NonAttack Text
     var nonAttackTextDialog = new DialogMessageMonster(game, nonAttackText, 600);
@@ -363,20 +373,28 @@ function MonsterAttackDialogGroup(game, moveText, attackButtonText, nonAttackBut
     nonAttackTextContinueButton.events.onInputUp.add(this.nonAttackContinueButtonClicked, this);
     this.addChild(nonAttackTextContinueButton);
 
-    nonAttackTextDialog.visible = false
-    nonAttackTextContinue.visible = false
-    nonAttackTextContinueButton.visible = false
+    this._nonAttackGroup = game.make.group(this)
+    this._nonAttackGroup.addChild(nonAttackTextDialog)
+    this._nonAttackGroup.addChild(nonAttackTextContinue)
+    this._nonAttackGroup.addChild(nonAttackTextContinueButton)
+    this._nonAttackGroup.visible = false
 }
 
 MonsterAttackDialogGroup.prototype = Object.create(Phaser.Group.prototype);
 MonsterAttackDialogGroup.prototype.constructor = MonsterAttackDialogGroup;
 
 MonsterAttackDialogGroup.prototype.attackButtonClicked = function (button, pointer) {
-    console.log(this)
+    if (!this.attackResolved) {
+        this.attackResolved = true
+        console.log(this)
+    }
 }
 
 MonsterAttackDialogGroup.prototype.nonAttackButtonClicked = function (button, pointer) {
-    console.log(this)
+    if (!this.attackResolved) {
+        this.attackResolved = true
+        console.log(this)
+    }
 }
 
 MonsterAttackDialogGroup.prototype.attackContinueButtonClicked = function (button, pointer) {
