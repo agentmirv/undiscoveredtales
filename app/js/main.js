@@ -285,14 +285,14 @@ function MakeMonsterAttackDialog(game, id) {
         attackData.moveText,
         attackData.attackButtonText,
         attackData.nonAttackButtonText,
-        attackText,
-        nonAttackButtonText
+        attackData.attackText,
+        attackData.nonAttackText
     )
 
     game.stage.addChild(test)
 }
 
-function MonsterAttackDialogGroup(game, moveText, attackButtonText, nonAttackButtonText, attackButtonText, nonAttackButtonText) {
+function MonsterAttackDialogGroup(game, moveText, attackButtonText, nonAttackButtonText, attackText, nonAttackText) {
     Phaser.Group.call(this, game);
     var dialogRect = new Phaser.Rectangle(96 * 3, 16, game.stageViewRect.width -96 * 3, game.stageViewRect.height)
 
@@ -306,14 +306,36 @@ function MonsterAttackDialogGroup(game, moveText, attackButtonText, nonAttackBut
     attackButtonText.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 0, 28)
     this.addChild(attackButtonText);
 
+    var attackButton = game.make.sprite(attackButtonText.x, attackButtonText.y, 'pixelTransparent');
+    attackButton.width = attackButtonText.width;
+    attackButton.height = attackButtonText.height;
+    attackButton.inputEnabled = true;
+    attackButton.events.onInputUp.add(this.attackButtonClicked, this);
+    this.addChild(attackButton);
+
     // Attack Button
     var nonAttackButtonText = new DialogButtonMedium(game, nonAttackButtonText, 520)
     nonAttackButtonText.alignTo(attackButtonText, Phaser.BOTTOM_CENTER, 0, 28)
     this.addChild(nonAttackButtonText);
+    
+    var nonAttackButton = game.make.sprite(nonAttackButtonText.x, nonAttackButtonText.y, 'pixelTransparent');
+    nonAttackButton.width = nonAttackButtonText.width;
+    nonAttackButton.height = nonAttackButtonText.height;
+    nonAttackButton.inputEnabled = true;
+    nonAttackButton.events.onInputUp.add(this.nonAttackButtonClicked, this);
+    this.addChild(nonAttackButton);
 }
 
 MonsterAttackDialogGroup.prototype = Object.create(Phaser.Group.prototype);
 MonsterAttackDialogGroup.prototype.constructor = MonsterAttackDialogGroup;
+
+MonsterAttackDialogGroup.prototype.attackButtonClicked = function (button, pointer) {
+    console.log(this)
+}
+
+MonsterAttackDialogGroup.prototype.nonAttackButtonClicked = function (button, pointer) {
+    console.log(this)
+}
 
 //=========================================================
 function MakeMonster(game, id) {
@@ -1287,52 +1309,6 @@ TokenSprite.prototype.fadeOut = function (callback) {
     if (callback != null) {
         fadeOutTween.onComplete.addOnce(callback, this);
     }
-}
-
-//=========================================================
-function MonsterAttackDialogGroup(game) {
-    Phaser.Group.call(this, game);
-    var dialogRect = new Phaser.Rectangle(96 * 3, 16, game.stageViewRect.width - 96 * 3, game.stageViewRect.height)
-
-    // Message
-    var dialogMessage = new DialogMessageMonster(game, "The Deep One moves 2 spaces toward the nearest investigator. Then it attacks the investigator in its space who has suffered the least Damage.", 600);
-    dialogMessage.alignIn(dialogRect, Phaser.TOP_CENTER, 0, 0)
-    this.addChild(dialogMessage);
-
-    // Attack Button
-    var attackButtonText = new DialogButtonMedium(game, "The monster attacks.", 520)
-    attackButtonText.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 0, 28)
-    this.addChild(attackButtonText);
-
-    var attackButton = game.make.sprite(attackButtonText.x, attackButtonText.y, 'pixelTransparent');
-    attackButton.width = attackButtonText.width;
-    attackButton.height = attackButtonText.height;
-    attackButton.inputEnabled = true;
-    attackButton.events.onInputUp.add(this.attackButtonClicked, this);
-    this.addChild(attackButton);
-
-    // Non Attack Button
-    var nonAttackButtonText = new DialogButtonMedium(game, "No investigators in the space.", 520)
-    nonAttackButtonText.alignTo(attackButtonText, Phaser.BOTTOM_CENTER, 0, 28)
-    this.addChild(nonAttackButtonText);
-
-    var nonAttackButton = game.make.sprite(nonAttackButtonText.x, nonAttackButtonText.y, 'pixelTransparent');
-    nonAttackButton.width = nonAttackButtonText.width;
-    nonAttackButton.height = nonAttackButtonText.height;
-    nonAttackButton.inputEnabled = true;
-    nonAttackButton.events.onInputUp.add(this.nonAttackButtonClicked, this);
-    this.addChild(nonAttackButton);
-}
-
-MonsterAttackDialogGroup.prototype = Object.create(Phaser.Group.prototype);
-MonsterAttackDialogGroup.prototype.constructor = MonsterAttackDialogGroup;
-
-MonsterAttackDialogGroup.prototype.attackButtonClicked = function (button, pointer) {
-    console.log(this)
-}
-
-MonsterAttackDialogGroup.prototype.nonAttackButtonClicked = function (button, pointer) {
-    console.log(this)
 }
 
 //=========================================================
