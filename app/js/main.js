@@ -279,8 +279,8 @@ Helper.shuffle = function (array) {
 //=========================================================
 function MakeMonsterAttackDialog(game, id) {
     var attackData = game.gamedata.monsterAttacks.find(function (item) { return item.id == id });
-
-    var test = new MonsterAttackDialogGroup(
+    console.log(attackData)
+    var monsterAttackDialogGroup = new MonsterAttackDialogGroup(
         game,
         attackData.moveText,
         attackData.attackButtonText,
@@ -289,7 +289,7 @@ function MakeMonsterAttackDialog(game, id) {
         attackData.nonAttackText
     )
 
-    game.stage.addChild(test)
+    game.stage.addChild(monsterAttackDialogGroup)
 }
 
 function MonsterAttackDialogGroup(game, moveText, attackButtonText, nonAttackButtonText, attackText, nonAttackText) {
@@ -303,34 +303,34 @@ function MonsterAttackDialogGroup(game, moveText, attackButtonText, nonAttackBut
     this.addChild(moveTextDialog);
 
     // Attack Button
-    var attackButtonText = new DialogButtonMedium(game, attackButtonText, 520)
-    attackButtonText.alignTo(moveTextDialog, Phaser.BOTTOM_CENTER, 0, 28)
-    this.addChild(attackButtonText);
+    var attackButtonTextGroup = new DialogButtonMedium(game, attackButtonText, 520)
+    attackButtonTextGroup.alignTo(moveTextDialog, Phaser.BOTTOM_CENTER, 0, 28)
+    this.addChild(attackButtonTextGroup);
 
-    var attackButton = game.make.sprite(attackButtonText.x, attackButtonText.y, 'pixelTransparent');
-    attackButton.width = attackButtonText.width;
-    attackButton.height = attackButtonText.height;
+    var attackButton = game.make.sprite(attackButtonTextGroup.x, attackButtonTextGroup.y, 'pixelTransparent');
+    attackButton.width = attackButtonTextGroup.width;
+    attackButton.height = attackButtonTextGroup.height;
     attackButton.inputEnabled = true;
     attackButton.events.onInputUp.add(this.attackButtonClicked, this);
     this.addChild(attackButton);
 
     // Non Attack Button
-    var nonAttackButtonText = new DialogButtonMedium(game, nonAttackButtonText, 520)
-    nonAttackButtonText.alignTo(attackButtonText, Phaser.BOTTOM_CENTER, 0, 28)
-    this.addChild(nonAttackButtonText);
+    var nonAttackButtonTextGroup = new DialogButtonMedium(game, nonAttackButtonText, 520)
+    nonAttackButtonTextGroup.alignTo(attackButtonTextGroup, Phaser.BOTTOM_CENTER, 0, 28)
+    this.addChild(nonAttackButtonTextGroup);
     
-    var nonAttackButton = game.make.sprite(nonAttackButtonText.x, nonAttackButtonText.y, 'pixelTransparent');
-    nonAttackButton.width = nonAttackButtonText.width;
-    nonAttackButton.height = nonAttackButtonText.height;
+    var nonAttackButton = game.make.sprite(nonAttackButtonTextGroup.x, nonAttackButtonTextGroup.y, 'pixelTransparent');
+    nonAttackButton.width = nonAttackButtonTextGroup.width;
+    nonAttackButton.height = nonAttackButtonTextGroup.height;
     nonAttackButton.inputEnabled = true;
     nonAttackButton.events.onInputUp.add(this.nonAttackButtonClicked, this);
     this.addChild(nonAttackButton);
 
     this._mainGroup = game.make.group(this)
     this._mainGroup.addChild(moveTextDialog)
-    this._mainGroup.addChild(attackButtonText)
+    this._mainGroup.addChild(attackButtonTextGroup)
     this._mainGroup.addChild(attackButton)
-    this._mainGroup.addChild(nonAttackButtonText)
+    this._mainGroup.addChild(nonAttackButtonTextGroup)
     this._mainGroup.addChild(nonAttackButton)
 
     // Attack Text
@@ -386,14 +386,22 @@ MonsterAttackDialogGroup.prototype.constructor = MonsterAttackDialogGroup;
 MonsterAttackDialogGroup.prototype.attackButtonClicked = function (button, pointer) {
     if (!this.attackResolved) {
         this.attackResolved = true
-        console.log(this)
+        var dialog = this
+        var fadeOutTween = game.add.tween(this._mainGroup).to({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+        var fadeInTween = game.add.tween(this._attackGroup).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, false, 0, 0, false);
+        fadeInTween.onStart.addOnce(function () { dialog._attackGroup.visible = true })
+        fadeOutTween.chain(fadeInTween)
     }
 }
 
 MonsterAttackDialogGroup.prototype.nonAttackButtonClicked = function (button, pointer) {
     if (!this.attackResolved) {
         this.attackResolved = true
-        console.log(this)
+        var dialog = this
+        var fadeOutTween = game.add.tween(this._mainGroup).to({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+        var fadeInTween = game.add.tween(this._nonAttackGroup).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, false, 0, 0, false);
+        fadeInTween.onStart.addOnce(function () { dialog._nonAttackGroup.visible = true })
+        fadeOutTween.chain(fadeInTween)
     }
 }
 
