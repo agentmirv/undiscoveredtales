@@ -43,6 +43,7 @@ var GameState = {
         game.revealList.dialogs = [];
         game.hud = {};
         game.hud.activePhase = "player";
+        game.hud.activeStep = "";
         game.hud.fireSet = false;
         game.hud.randomEventDeck = []
         game.hud.randomMonsterAttackDeck = []
@@ -187,8 +188,11 @@ var GameState = {
         game.hudInstance = hudInstance;
 
         //=================================================
-        // First Reveal
-        MakeRevealList(game, game.gamedata.playerStart.firstReveal)
+        // Game Start
+        //=================================================
+        //MakeRevealList(game, game.gamedata.playerStart.firstReveal)
+
+        MakeMonster(game, "deep-one")
     },
 
     update: function () {
@@ -280,13 +284,15 @@ function MakeMonsterAttackDialog(game, id) {
         game,
         attackData.moveText,
         attackData.attackButtonText,
-        attackData.nonAttackButtonText
+        attackData.nonAttackButtonText,
+        attackText,
+        nonAttackButtonText
     )
 
     game.stage.addChild(test)
 }
 
-function MonsterAttackDialogGroup(game, moveText, attackButtonText, nonAttackButtonText) {
+function MonsterAttackDialogGroup(game, moveText, attackButtonText, nonAttackButtonText, attackButtonText, nonAttackButtonText) {
     Phaser.Group.call(this, game);
     var dialogRect = new Phaser.Rectangle(96 * 3, 16, game.stageViewRect.width -96 * 3, game.stageViewRect.height)
 
@@ -414,6 +420,7 @@ PlayerSceneGroup.prototype.constructor = PlayerSceneGroup;
 
 PlayerSceneGroup.prototype.updatePhase = function () {
     game.hud.activePhase = "player"
+    game.hud.activeStep = ""
     game.hudInstance.updatePhaseButtonImage()
 }
 
@@ -458,6 +465,7 @@ EnemySceneGroup.prototype.constructor = EnemySceneGroup;
 
 EnemySceneGroup.prototype.updatePhase = function () {
     game.hud.activePhase = "enemy"
+    game.hud.activeStep = "events"
     game.hudInstance.updatePhaseButtonImage()
 }
 
@@ -477,7 +485,7 @@ function HudGroup(game) {
     // Enemy Phase Background
     this._enemyPhaseBGImage = game.make.tileSprite(0, 0, game.stageViewRect.width, game.stageViewRect.height, 'pixelWhite');
     this._enemyPhaseBGImage.tint = "0x000000";
-    this._enemyPhaseBGImage.alpha = 0.7
+    this._enemyPhaseBGImage.alpha = 0.9
     this._enemyPhaseBGImage.inputEnabled = true;
     this.addChild(this._enemyPhaseBGImage);
     this._enemyPhaseBGImage.kill()
@@ -827,6 +835,8 @@ HudGroup.prototype.scenarioEventDone = function () {
 }
 
 HudGroup.prototype.monsterAttack = function () {
+    game.hud.activeStep = "monsterAttack"
+
     // Monsters Attack
     var monsterInstance = game.gamedataInstances.monsters[0]
     game.hudInstance.setMonsterDetail(monsterInstance)
@@ -840,8 +850,7 @@ HudGroup.prototype.monsterAttack = function () {
 
     while (randomMonsterAttackData == null) {
         if (game.hud.randomMonsterAttackDeck.length == 0) {
-            game.hud.randomMonsterAttackDeck = game.gamedata.monsterAttacks.slice(0)
-            game.hud.randomMonsterAttackDeck = Helper.shuffle(game.hud.randomMonsterAttackDeck)
+            game.hud.randomMonsterAttackDeck = Helper.shuffle(game.gamedata.monsterAttacks.slice(0))
         }
 
         var drawRandomMonsterAttack = game.hud.randomMonsterAttackDeck.pop()
@@ -858,7 +867,7 @@ HudGroup.prototype.monsterAttack = function () {
 HudGroup.prototype.showEnemyPhaseBG = function () {
     if (!game.hud.showEnemyPhaseBG) {
         game.hud.showEnemyPhaseBG = true
-        game.hudInstance._enemyPhaseBGImage.alpha = 0.7
+        game.hudInstance._enemyPhaseBGImage.alpha = 0.9
         game.hudInstance._enemyPhaseBGImage.revive()
         var fadeTween = game.add.tween(game.hudInstance._enemyPhaseBGImage).from({ alpha: 0 }, 100, Phaser.Easing.Linear.None, true, 0, 0, false);
     }
