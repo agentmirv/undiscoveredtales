@@ -296,14 +296,14 @@ function MonsterAttackDialogGroup(game, moveText, attackButtonText, nonAttackBut
     Phaser.Group.call(this, game);
     var dialogRect = new Phaser.Rectangle(96 * 3, 16, game.stageViewRect.width -96 * 3, game.stageViewRect.height)
 
-    // Message
-    var dialogMessage = new DialogMessageMonster(game, moveText, 600);
-    dialogMessage.alignIn(dialogRect, Phaser.TOP_CENTER, 0, 0)
-    this.addChild(dialogMessage);
+    // Move Text
+    var moveTextDialog = new DialogMessageMonster(game, moveText, 600);
+    moveTextDialog.alignIn(dialogRect, Phaser.TOP_CENTER, 0, 0)
+    this.addChild(moveTextDialog);
 
     // Attack Button
     var attackButtonText = new DialogButtonMedium(game, attackButtonText, 520)
-    attackButtonText.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 0, 28)
+    attackButtonText.alignTo(moveTextDialog, Phaser.BOTTOM_CENTER, 0, 28)
     this.addChild(attackButtonText);
 
     var attackButton = game.make.sprite(attackButtonText.x, attackButtonText.y, 'pixelTransparent');
@@ -313,7 +313,7 @@ function MonsterAttackDialogGroup(game, moveText, attackButtonText, nonAttackBut
     attackButton.events.onInputUp.add(this.attackButtonClicked, this);
     this.addChild(attackButton);
 
-    // Attack Button
+    // Non Attack Button
     var nonAttackButtonText = new DialogButtonMedium(game, nonAttackButtonText, 520)
     nonAttackButtonText.alignTo(attackButtonText, Phaser.BOTTOM_CENTER, 0, 28)
     this.addChild(nonAttackButtonText);
@@ -324,6 +324,40 @@ function MonsterAttackDialogGroup(game, moveText, attackButtonText, nonAttackBut
     nonAttackButton.inputEnabled = true;
     nonAttackButton.events.onInputUp.add(this.nonAttackButtonClicked, this);
     this.addChild(nonAttackButton);
+
+    // Attack Text
+    var attackTextDialog = new DialogMessageMonster(game, attackText, 600);
+    attackTextDialog.alignIn(dialogRect, Phaser.TOP_CENTER, 0, 0)
+    this.addChild(attackTextDialog);
+
+    // Attack Text Continue
+    var attackTextContinue = new DialogButtonThin(game, "Continue", 180);
+    attackTextContinue.alignTo(attackTextDialog, Phaser.BOTTOM_CENTER, 0, 28)
+    this.addChild(attackTextContinue);
+
+    var attackTextContinueButton = game.make.sprite(attackTextDialog.x, attackTextDialog.y, 'pixelTransparent');
+    attackTextContinueButton.width = attackTextDialog.width;
+    attackTextContinueButton.height = attackTextDialog.height;
+    attackTextContinueButton.inputEnabled = true;
+    //dialogContinueButton.events.onInputUp.add(this.buttonClicked, this);
+    this.addChild(attackTextContinueButton);
+
+    // NonAttack Text
+    var nonAttackTextDialog = new DialogMessageMonster(game, nonAttackText, 600);
+    nonAttackTextDialog.alignIn(dialogRect, Phaser.TOP_CENTER, 0, 0)
+    this.addChild(nonAttackTextDialog);
+
+    // NonAttack Text Continue
+    var nonAttackTextContinue = new DialogButtonThin(game, "Continue", 180);
+    nonAttackTextContinue.alignTo(nonAttackTextDialog, Phaser.BOTTOM_CENTER, 0, 28)
+    this.addChild(nonAttackTextContinue);
+
+    var nonAttackTextContinueButton = game.make.sprite(nonAttackTextContinue.x, nonAttackTextContinue.y, 'pixelTransparent');
+    nonAttackTextContinueButton.width = nonAttackTextContinue.width;
+    nonAttackTextContinueButton.height = nonAttackTextContinue.height;
+    nonAttackTextContinueButton.inputEnabled = true;
+    //dialogContinueButton.events.onInputUp.add(this.buttonClicked, this);
+    this.addChild(nonAttackTextContinueButton);
 }
 
 MonsterAttackDialogGroup.prototype = Object.create(Phaser.Group.prototype);
