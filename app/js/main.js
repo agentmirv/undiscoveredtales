@@ -50,6 +50,7 @@ var GameState = {
         game.hud.showEnemyPhaseBG = false
         game.hud.monsterTrayOpen = false
         game.hud.monsterTrayDetail = false
+        game.hud.currentMonsterIndex = -1
         game.hud.currentMonsterInstance = null
         game.hudInstance = {};
 
@@ -279,7 +280,7 @@ Helper.shuffle = function (array) {
 //=========================================================
 function MakeMonsterAttackDialog(game, id) {
     var attackData = game.gamedata.monsterAttacks.find(function (item) { return item.id == id });
-    console.log(attackData)
+    
     var monsterAttackDialogGroup = new MonsterAttackDialogGroup(
         game,
         attackData.moveText,
@@ -406,11 +407,17 @@ MonsterAttackDialogGroup.prototype.nonAttackButtonClicked = function (button, po
 }
 
 MonsterAttackDialogGroup.prototype.attackContinueButtonClicked = function (button, pointer) {
-    console.log(this)
+    var fadeOutTween = game.add.tween(this._attackGroup).to({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+    fadeOutTween.onComplete.addOnce(function () {
+        HudGroup.prototype.monsterAttack()
+    })
 }
 
 MonsterAttackDialogGroup.prototype.nonAttackContinueButtonClicked = function (button, pointer) {
-    console.log(this)
+    var fadeOutTween = game.add.tween(this._nonAttackGroup).to({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+    fadeOutTween.onComplete.addOnce(function () {
+        HudGroup.prototype.monsterAttack()
+    })
 }
 
 //=========================================================
@@ -568,6 +575,7 @@ EnemySceneGroup.prototype.updatePhase = function () {
 }
 
 EnemySceneGroup.prototype.beginEnemySteps = function () {
+    game.hud.currentMonsterIndex = -1
     game.hudInstance.fireEvent()
 }
 
@@ -921,45 +929,67 @@ HudGroup.prototype.scenarioEvent = function () {
 }
 
 HudGroup.prototype.scenarioEventDone = function () {
-    var monsterCount = game.gamedataInstances.monsters.length
-
-    if (monsterCount > 0) {
-        HudGroup.prototype.monsterAttack()
-    } else {
-        MakeScene(game, "scene-player")
-        HudGroup.prototype.hideMonsterTray()
-        HudGroup.prototype.hideMonsterDetail()
-    }
+    HudGroup.prototype.monsterAttack()
 }
 
 HudGroup.prototype.monsterAttack = function () {
-    game.hud.activeStep = "monsterAttack"
+    if (game.gamedataInstances.monsters.length > 0 && game.hud.currentMonsterIndex < game.gamedataInstances.monsters.length - 1) {
+        game.hud.currentMonsterIndex += 1
+        game.hud.activeStep = "monsterAttack"
 
-    // Monsters Attack
-    var monsterInstance = game.gamedataInstances.monsters[0]
-    game.hudInstance.setMonsterDetail(monsterInstance)
+        // Monsters Attack
+        var monsterInstance = game.gamedataInstances.monsters[game.hud.currentMonsterIndex]
+        game.hudInstance.setMonsterDetail(monsterInstance)
 
-    HudGroup.prototype.showEnemyPhaseBG()
-    HudGroup.prototype.showMonsterTray()
-    HudGroup.prototype.showMonsterDetail()
+        HudGroup.prototype.showEnemyPhaseBG()
+        HudGroup.prototype.showMonsterTray()
+        HudGroup.prototype.showMonsterDetail()
 
-    // TODO: Get random attack for monsterInstance (reshuffle if empty?)
-    var randomMonsterAttackData = null
+        // TODO: Get random attack for monsterInstance (reshuffle if empty?)
+        var randomMonsterAttackData = null
 
-    while (randomMonsterAttackData == null) {
-        if (game.hud.randomMonsterAttackDeck.length == 0) {
-            game.hud.randomMonsterAttackDeck = Helper.shuffle(game.gamedata.monsterAttacks.slice(0))
+        while (randomMonsterAttackData == null) {
+            if (game.hud.randomMonsterAttackDeck.length == 0) {
+                game.hud.randomMonsterAttackDeck = Helper.shuffle(game.gamedata.monsterAttacks.slice(0))
+            }
+
+            var drawRandomMonsterAttack = game.hud.randomMonsterAttackDeck.pop()
+
+            if (drawRandomMonsterAttack.monster == monsterInstance.id) {
+                randomMonsterAttackData = drawRandomMonsterAttack
+            }
         }
 
-        var drawRandomMonsterAttack = game.hud.randomMonsterAttackDeck.pop()
-
-        if (drawRandomMonsterAttack.monster == monsterInstance.id) {
-            randomMonsterAttackData = drawRandomMonsterAttack 
-        }
+        // Display monster attack dialog
+        MakeMonsterAttackDialog(game, randomMonsterAttackData.id)
+    } else {
+        HudGroup.prototype.hideMonsterDetail()
+        HudGroup.prototype.horrorCheck()
     }
+}
 
-    // Display monster attack dialog
-    MakeMonsterAttackDialog(game, randomMonsterAttackData.id)
+HudGroup.prototype.horrorCheck = function () {
+    if (game.gamedataInstances.monsters.length > 0) {
+        HudGroup.prototype.hideMonsterDetail()
+        HudGroup.prototype.hideMonsterTray()
+        HudGroup.prototype.hideEnemyPhaseBG(function () {
+            HudGroup.prototype.showEnemyPhaseBG()
+            HudGroup.prototype.showMonsterTray()
+            // Horror Check Dialog
+        })
+    } else {
+        HudGroup.prototype.enemyPhaseDone()
+    }
+}
+
+HudGroup.prototype.enemyPhaseDone = function () {
+    game.hud.activeStep = ""
+
+    HudGroup.prototype.hideMonsterTray()
+    HudGroup.prototype.hideMonsterDetail()
+    HudGroup.prototype.hideEnemyPhaseBG(function () {
+        MakeScene(game, "scene-player")
+    })
 }
 
 HudGroup.prototype.showEnemyPhaseBG = function () {
@@ -967,17 +997,20 @@ HudGroup.prototype.showEnemyPhaseBG = function () {
         game.hud.showEnemyPhaseBG = true
         game.hudInstance._enemyPhaseBGImage.alpha = 0.9
         game.hudInstance._enemyPhaseBGImage.revive()
-        var fadeTween = game.add.tween(game.hudInstance._enemyPhaseBGImage).from({ alpha: 0 }, 100, Phaser.Easing.Linear.None, true, 0, 0, false);
+        var fadeTween = game.add.tween(game.hudInstance._enemyPhaseBGImage).from({ alpha: 0 }, 300, Phaser.Easing.Linear.None, true, 0, 0, false);
     }
 }
 
-HudGroup.prototype.hideEnemyPhaseBG = function () {
+HudGroup.prototype.hideEnemyPhaseBG = function (callback) {
     if (game.hud.showEnemyPhaseBG) {
         game.hud.showEnemyPhaseBG = false
-        var fadeTween = game.add.tween(game.hudInstance._enemyPhaseBGImage).to({ alpha: 0 }, 100, Phaser.Easing.Linear.None, true, 0, 0, false);
+        var fadeTween = game.add.tween(game.hudInstance._enemyPhaseBGImage).to({ alpha: 0 }, 300, Phaser.Easing.Linear.None, true, 0, 0, false);
         fadeTween.onComplete.addOnce(function () {
             game.hudInstance._enemyPhaseBGImage.alpha = 0
             game.hudInstance._enemyPhaseBGImage.kill()
+            if (callback != null) {
+                callback()
+            }
         })
     }
 }
