@@ -43,11 +43,14 @@ var GameState = {
         game.revealList.dialogs = [];
         game.hud = {};
         game.hud.activePhase = "player";
+        game.hud.activeStep = "";
         game.hud.fireSet = false;
         game.hud.randomEventDeck = []
+        game.hud.randomMonsterAttackDeck = []
         game.hud.showEnemyPhaseBG = false
         game.hud.monsterTrayOpen = false
         game.hud.monsterTrayDetail = false
+        game.hud.currentMonsterIndex = -1
         game.hud.currentMonsterInstance = null
         game.hudInstance = {};
 
@@ -168,29 +171,28 @@ var GameState = {
         game.physics.startSystem(Phaser.Physics.P2JS);
         game.world.setBounds(0, 0, 2560, 2560);
         game.camera.bounds = null
+        game.camera.focusOnXY(game.gamedata.playerStart.x, game.gamedata.playerStart.y)
         game.stageViewRect = new Phaser.Rectangle(0, 0, game.camera.view.width, game.camera.view.height)
+        game.presentationOffsetY = 48
         cursors = game.input.keyboard.createCursorKeys();
 
-        game.presentationOffsetY = 48
-        game.walkLerp = 0.5;
-        game.followLerp = 0.06;
-        game.camera.focusOnXY(game.gamedata.playerStart.x, game.gamedata.playerStart.y)
-        // Move Player
         player = game.add.sprite(game.gamedata.playerStart.x, game.gamedata.playerStart.y, 'pixelTransparent');
         game.physics.p2.enable(player);
-        game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, game.walkLerp, game.walkLerp);
+        game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.5, 0.5);
 
         game.add.tileSprite(0, 0, 2560, 2560, 'background');
-
-        //=================================================
-        // First Reveal
-        MakeRevealList(game, 'reveal-lobby')
 
         //=================================================
         // Add HUD
         var hudInstance = new HudGroup(game)
         game.stage.addChild(hudInstance)
         game.hudInstance = hudInstance;
+
+        //=================================================
+        // Game Start
+        //=================================================
+        MakeRevealList(game, game.gamedata.playerStart.firstReveal)
+        //MakeMonster(game, "deep-one")
     },
 
     update: function () {
@@ -273,6 +275,202 @@ Helper.shuffle = function (array) {
 
 //TODO Polyfill for array.find?
 //TODO Polyfill for array.filter?
+
+//=========================================================
+function MakeHorrorCheckDialog(game) {
+    var horrorCheckDialogGroup = new HorrorCheckDialogGroup(game)
+    game.stage.addChild(horrorCheckDialogGroup)
+}
+
+function HorrorCheckDialogGroup(game) {
+    Phaser.Group.call(this, game);
+
+    // Modal
+    var modalBackground = game.make.sprite(game.stageViewRect.x, game.stageViewRect.y, 'pixelTransparent');
+    modalBackground.width = game.stageViewRect.width;
+    modalBackground.height = game.stageViewRect.height;
+    modalBackground.inputEnabled = true;
+    this.addChild(modalBackground);
+
+    var messageText = "Each investigator must resolve a horror check against the monster within range with the highest horror rating. After all horror checks have been resolved, tap the end phase button to continue."
+
+    // Message
+    var dialogMessage = new DialogMessage(game, messageText, null);
+    dialogMessage.alignIn(game.stageViewRect, Phaser.CENTER, 0, -game.presentationOffsetY)
+    this.addChild(dialogMessage);
+
+    // Button for [Continue]
+    var dialogContinue = new DialogButtonThin(game, "Continue", 180);
+    dialogContinue.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 0, 10)
+    this.addChild(dialogContinue);
+
+    var dialogContinueButton = game.make.sprite(dialogContinue.x, dialogContinue.y, 'pixelTransparent');
+    dialogContinueButton.width = dialogContinue.width;
+    dialogContinueButton.height = dialogContinue.height;
+    dialogContinueButton.inputEnabled = true;
+    dialogContinueButton.events.onInputUp.add(this.continueClicked, this);
+    this.addChild(dialogContinueButton);
+}
+
+HorrorCheckDialogGroup.prototype = Object.create(Phaser.Group.prototype);
+HorrorCheckDialogGroup.prototype.constructor = HorrorCheckDialogGroup;
+
+HorrorCheckDialogGroup.prototype.continueClicked = function (button, pointer) {
+    var fadeOutTween = game.add.tween(this).to({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+    fadeOutTween.onComplete.addOnce(function () {
+        this.destroy(true);
+    }, this);
+}
+
+//=========================================================
+function MakeMonsterAttackDialog(game, id) {
+    var attackData = game.gamedata.monsterAttacks.find(function (item) { return item.id == id });
+    
+    var monsterAttackDialogGroup = new MonsterAttackDialogGroup(
+        game,
+        attackData.moveText,
+        attackData.attackButtonText,
+        attackData.nonAttackButtonText,
+        attackData.attackText,
+        attackData.nonAttackText
+    )
+
+    game.stage.addChild(monsterAttackDialogGroup)
+}
+
+function MonsterAttackDialogGroup(game, moveText, attackButtonText, nonAttackButtonText, attackText, nonAttackText) {
+    Phaser.Group.call(this, game);
+    var dialogRect = new Phaser.Rectangle(96 * 3, 16, game.stageViewRect.width -96 * 3, game.stageViewRect.height)
+    this._attackResolved = false;
+    this._nonAttackExists = nonAttackText != null;
+
+    // Move Text
+    var moveTextDialog = new DialogMessageMonster(game, moveText, 600);
+    moveTextDialog.alignIn(dialogRect, Phaser.TOP_CENTER, 0, 0)
+    this.addChild(moveTextDialog);
+
+    // Attack Button
+    var attackButtonTextGroup = new DialogButtonMedium(game, attackButtonText, 520)
+    attackButtonTextGroup.alignTo(moveTextDialog, Phaser.BOTTOM_CENTER, 0, 28)
+    this.addChild(attackButtonTextGroup);
+
+    var attackButton = game.make.sprite(attackButtonTextGroup.x, attackButtonTextGroup.y, 'pixelTransparent');
+    attackButton.width = attackButtonTextGroup.width;
+    attackButton.height = attackButtonTextGroup.height;
+    attackButton.inputEnabled = true;
+    attackButton.events.onInputUp.add(this.attackButtonClicked, this);
+    this.addChild(attackButton);
+
+    // Non Attack Button
+    var nonAttackButtonTextGroup = new DialogButtonMedium(game, nonAttackButtonText, 520)
+    nonAttackButtonTextGroup.alignTo(attackButtonTextGroup, Phaser.BOTTOM_CENTER, 0, 28)
+    this.addChild(nonAttackButtonTextGroup);
+    
+    var nonAttackButton = game.make.sprite(nonAttackButtonTextGroup.x, nonAttackButtonTextGroup.y, 'pixelTransparent');
+    nonAttackButton.width = nonAttackButtonTextGroup.width;
+    nonAttackButton.height = nonAttackButtonTextGroup.height;
+    nonAttackButton.inputEnabled = true;
+    nonAttackButton.events.onInputUp.add(this.nonAttackButtonClicked, this);
+    this.addChild(nonAttackButton);
+
+    this._mainGroup = game.make.group(this)
+    this._mainGroup.addChild(moveTextDialog)
+    this._mainGroup.addChild(attackButtonTextGroup)
+    this._mainGroup.addChild(attackButton)
+    this._mainGroup.addChild(nonAttackButtonTextGroup)
+    this._mainGroup.addChild(nonAttackButton)
+
+    // Attack Text
+    var attackTextDialog = new DialogMessageMonster(game, attackText, 600);
+    attackTextDialog.alignIn(dialogRect, Phaser.TOP_CENTER, 0, 0)
+    this.addChild(attackTextDialog);
+
+    // Attack Text Continue
+    var attackTextContinue = new DialogButtonThin(game, "Continue", 180);
+    attackTextContinue.alignTo(attackTextDialog, Phaser.BOTTOM_CENTER, 0, 28)
+    this.addChild(attackTextContinue);
+
+    var attackTextContinueButton = game.make.sprite(attackTextContinue.x, attackTextContinue.y, 'pixelTransparent');
+    attackTextContinueButton.width = attackTextContinue.width;
+    attackTextContinueButton.height = attackTextContinue.height;
+    attackTextContinueButton.inputEnabled = true;
+    attackTextContinueButton.events.onInputUp.add(this.attackContinueButtonClicked, this);
+    this.addChild(attackTextContinueButton);
+
+    this._attackGroup = game.make.group(this)
+    this._attackGroup.addChild(attackTextDialog)
+    this._attackGroup.addChild(attackTextContinue)
+    this._attackGroup.addChild(attackTextContinueButton)
+    this._attackGroup.visible = false
+
+    // NonAttack Text
+    var nonAttackTextDialog = new DialogMessageMonster(game, nonAttackText, 600);
+    nonAttackTextDialog.alignIn(dialogRect, Phaser.TOP_CENTER, 0, 0)
+    this.addChild(nonAttackTextDialog);
+
+    // NonAttack Text Continue
+    var nonAttackTextContinue = new DialogButtonThin(game, "Continue", 180);
+    nonAttackTextContinue.alignTo(nonAttackTextDialog, Phaser.BOTTOM_CENTER, 0, 28)
+    this.addChild(nonAttackTextContinue);
+
+    var nonAttackTextContinueButton = game.make.sprite(nonAttackTextContinue.x, nonAttackTextContinue.y, 'pixelTransparent');
+    nonAttackTextContinueButton.width = nonAttackTextContinue.width;
+    nonAttackTextContinueButton.height = nonAttackTextContinue.height;
+    nonAttackTextContinueButton.inputEnabled = true;
+    nonAttackTextContinueButton.events.onInputUp.add(this.nonAttackContinueButtonClicked, this);
+    this.addChild(nonAttackTextContinueButton);
+
+    this._nonAttackGroup = game.make.group(this)
+    this._nonAttackGroup.addChild(nonAttackTextDialog)
+    this._nonAttackGroup.addChild(nonAttackTextContinue)
+    this._nonAttackGroup.addChild(nonAttackTextContinueButton)
+    this._nonAttackGroup.visible = false
+}
+
+MonsterAttackDialogGroup.prototype = Object.create(Phaser.Group.prototype);
+MonsterAttackDialogGroup.prototype.constructor = MonsterAttackDialogGroup;
+
+MonsterAttackDialogGroup.prototype.attackButtonClicked = function (button, pointer) {
+    if (!this._attackResolved) {
+        this._attackResolved = true
+        var dialog = this
+        var fadeOutTween = game.add.tween(this._mainGroup).to({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+        var fadeInTween = game.add.tween(this._attackGroup).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, false, 0, 0, false);
+        fadeInTween.onStart.addOnce(function () { dialog._attackGroup.visible = true })
+        fadeOutTween.chain(fadeInTween)
+    }
+}
+
+MonsterAttackDialogGroup.prototype.nonAttackButtonClicked = function (button, pointer) {
+    if (!this._attackResolved) {
+        this._attackResolved = true
+        var dialog = this
+        var fadeOutTween = game.add.tween(this._mainGroup).to({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+        var fadeInTween = game.add.tween(this._nonAttackGroup).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, false, 0, 0, false);
+
+        if (this._nonAttackExists)
+        {
+            fadeInTween.onStart.addOnce(function () { dialog._nonAttackGroup.visible = true })
+            fadeOutTween.chain(fadeInTween)
+        } else {
+            fadeOutTween.onComplete.addOnce(function () { HudGroup.prototype.monsterAttack() })
+        }
+    }
+}
+
+MonsterAttackDialogGroup.prototype.attackContinueButtonClicked = function (button, pointer) {
+    var fadeOutTween = game.add.tween(this._attackGroup).to({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+    fadeOutTween.onComplete.addOnce(function () {
+        HudGroup.prototype.monsterAttack()
+    })
+}
+
+MonsterAttackDialogGroup.prototype.nonAttackContinueButtonClicked = function (button, pointer) {
+    var fadeOutTween = game.add.tween(this._nonAttackGroup).to({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+    fadeOutTween.onComplete.addOnce(function () {
+        HudGroup.prototype.monsterAttack()
+    })
+}
 
 //=========================================================
 function MakeMonster(game, id) {
@@ -379,6 +577,7 @@ PlayerSceneGroup.prototype.constructor = PlayerSceneGroup;
 
 PlayerSceneGroup.prototype.updatePhase = function () {
     game.hud.activePhase = "player"
+    game.hud.activeStep = ""
     game.hudInstance.updatePhaseButtonImage()
 }
 
@@ -423,10 +622,12 @@ EnemySceneGroup.prototype.constructor = EnemySceneGroup;
 
 EnemySceneGroup.prototype.updatePhase = function () {
     game.hud.activePhase = "enemy"
+    game.hud.activeStep = "events"
     game.hudInstance.updatePhaseButtonImage()
 }
 
 EnemySceneGroup.prototype.beginEnemySteps = function () {
+    game.hud.currentMonsterIndex = -1
     game.hudInstance.fireEvent()
 }
 
@@ -442,7 +643,7 @@ function HudGroup(game) {
     // Enemy Phase Background
     this._enemyPhaseBGImage = game.make.tileSprite(0, 0, game.stageViewRect.width, game.stageViewRect.height, 'pixelWhite');
     this._enemyPhaseBGImage.tint = "0x000000";
-    this._enemyPhaseBGImage.alpha = 0.7
+    this._enemyPhaseBGImage.alpha = 0.9
     this._enemyPhaseBGImage.inputEnabled = true;
     this.addChild(this._enemyPhaseBGImage);
     this._enemyPhaseBGImage.kill()
@@ -702,27 +903,28 @@ HudGroup.prototype.fireSpreads = function () {
 }
 
 HudGroup.prototype.randomEvent = function () {
-    if (game.hud.randomEventDeck.length == 0) {
-        // get list of visible map tiles
-        var visibleMapTileIds = []
-        for (var i = 0; i < game.gamedataInstances.mapTiles.length; i++) {
-            visibleMapTileIds.push(game.gamedataInstances.mapTiles[i].id)
+    var randomEventData = null
+
+    var visibleMapTileIds = []
+    for (var i = 0; i < game.gamedataInstances.mapTiles.length; i++) {
+        visibleMapTileIds.push(game.gamedataInstances.mapTiles[i].id)
+    }
+    
+    while (randomEventData == null) {
+        if (game.hud.randomEventDeck.length == 0) {
+            game.hud.randomEventDeck = game.gamedata.randomEvents.slice(0)
+            game.hud.randomEventDeck = Helper.shuffle(game.hud.randomEventDeck)
         }
 
-        // populate random events based on mapTile requirement
-        game.hud.randomEventDeck = game.gamedata.randomEvents.filter(function (element) {
-            var mapTileMissing = false
-            if (element.hasOwnProperty("target") && element.target == "mapTile" && element.hasOwnProperty("mapTile")) {
-                mapTileMissing = visibleMapTileIds.indexOf(element.mapTile) < 0
+        var drawRandomEvent = game.hud.randomEventDeck.pop()
+        if (drawRandomEvent.hasOwnProperty("target") && drawRandomEvent.target == "mapTile" && drawRandomEvent.hasOwnProperty("mapTile")) {
+            if (visibleMapTileIds.indexOf(drawRandomEvent.mapTile) >= 0) {
+                randomEventData = drawRandomEvent
             }
-
-            return !mapTileMissing
-        })
-
-        game.hud.randomEventDeck = Helper.shuffle(game.hud.randomEventDeck)
+        } else {
+            randomEventData = drawRandomEvent
+        }
     }
-
-    var randomEventData = game.hud.randomEventDeck.pop()
 
     var dialogInstance = new MakeRandomEvent(game, randomEventData.id)
 
@@ -779,39 +981,89 @@ HudGroup.prototype.scenarioEvent = function () {
 }
 
 HudGroup.prototype.scenarioEventDone = function () {
-    var monsterCount = game.gamedataInstances.monsters.length
+    HudGroup.prototype.monsterAttack()
+}
 
-    if (monsterCount > 0) {
+HudGroup.prototype.monsterAttack = function () {
+    if (game.gamedataInstances.monsters.length > 0 && game.hud.currentMonsterIndex < game.gamedataInstances.monsters.length - 1) {
+        game.hud.currentMonsterIndex += 1
+        game.hud.activeStep = "monsterAttack"
+
         // Monsters Attack
-        var monsterInstance = game.gamedataInstances.monsters[0]
+        var monsterInstance = game.gamedataInstances.monsters[game.hud.currentMonsterIndex]
         game.hudInstance.setMonsterDetail(monsterInstance)
 
         HudGroup.prototype.showEnemyPhaseBG()
         HudGroup.prototype.showMonsterTray()
         HudGroup.prototype.showMonsterDetail()
+
+        // TODO: Get random attack for monsterInstance (reshuffle if empty?)
+        var randomMonsterAttackData = null
+
+        while (randomMonsterAttackData == null) {
+            if (game.hud.randomMonsterAttackDeck.length == 0) {
+                game.hud.randomMonsterAttackDeck = Helper.shuffle(game.gamedata.monsterAttacks.slice(0))
+            }
+
+            var drawRandomMonsterAttack = game.hud.randomMonsterAttackDeck.pop()
+
+            if (drawRandomMonsterAttack.monster == monsterInstance.id) {
+                randomMonsterAttackData = drawRandomMonsterAttack
+            }
+        }
+
+        // Display monster attack dialog
+        MakeMonsterAttackDialog(game, randomMonsterAttackData.id)
     } else {
-        MakeScene(game, "scene-player")
-        HudGroup.prototype.hideMonsterTray()
         HudGroup.prototype.hideMonsterDetail()
+        HudGroup.prototype.horrorCheck()
     }
+}
+
+HudGroup.prototype.horrorCheck = function () {
+    if (game.gamedataInstances.monsters.length > 0) {
+        HudGroup.prototype.hideMonsterDetail()
+        HudGroup.prototype.hideMonsterTray()
+        HudGroup.prototype.hideEnemyPhaseBG(function () {
+            HudGroup.prototype.showEnemyPhaseBG()
+            HudGroup.prototype.showMonsterTray()
+            // Horror Check Dialog
+            MakeHorrorCheckDialog(game)
+        })
+    } else {
+        HudGroup.prototype.enemyPhaseDone()
+    }
+}
+
+HudGroup.prototype.enemyPhaseDone = function () {
+    game.hud.activeStep = ""
+
+    HudGroup.prototype.hideMonsterTray()
+    HudGroup.prototype.hideMonsterDetail()
+    HudGroup.prototype.hideEnemyPhaseBG(function () {
+        MakeScene(game, "scene-player")
+    })
 }
 
 HudGroup.prototype.showEnemyPhaseBG = function () {
     if (!game.hud.showEnemyPhaseBG) {
         game.hud.showEnemyPhaseBG = true
-        game.hudInstance._enemyPhaseBGImage.alpha = 0.7
+        game.hudInstance._enemyPhaseBGImage.alpha = 0.9
         game.hudInstance._enemyPhaseBGImage.revive()
-        var fadeTween = game.add.tween(game.hudInstance._enemyPhaseBGImage).from({ alpha: 0 }, 100, Phaser.Easing.Linear.None, true, 0, 0, false);
+        var fadeTween = game.add.tween(game.hudInstance._enemyPhaseBGImage).from({ alpha: 0 }, 300, Phaser.Easing.Linear.None, true, 0, 0, false);
     }
 }
 
-HudGroup.prototype.hideEnemyPhaseBG = function () {
+HudGroup.prototype.hideEnemyPhaseBG = function (callback) {
     if (game.hud.showEnemyPhaseBG) {
         game.hud.showEnemyPhaseBG = false
-        var fadeTween = game.add.tween(game.hudInstance._enemyPhaseBGImage).to({ alpha: 0 }, 100, Phaser.Easing.Linear.None, true, 0, 0, false);
+        var fadeTween = game.add.tween(game.hudInstance._enemyPhaseBGImage).to({ alpha: 0 }, 300, Phaser.Easing.Linear.None, true, 0, 0, false);
         fadeTween.onComplete.addOnce(function () {
             game.hudInstance._enemyPhaseBGImage.alpha = 0
             game.hudInstance._enemyPhaseBGImage.kill()
+            if (callback != null) {
+                callback()
+            }
         })
     }
 }
@@ -1715,6 +1967,33 @@ function DialogButtonMedium(game, text, width) {
 
 DialogButtonMedium.prototype = Object.create(Phaser.Group.prototype);
 DialogButtonMedium.prototype.constructor = DialogButtonMedium;
+
+//=========================================================
+function DialogMessageMonster(game, text, width) {
+    Phaser.Group.call(this, game, 0, 0);
+
+    var totalWidth = width;
+    var leftMargin = 10;
+    var rightMargin = 10;
+    var topMargin = 20;
+    var bottomMargin = 15;
+
+    var textWidth = totalWidth -leftMargin - rightMargin;
+    var textStyle = { font: "20px Times New Romans", fill: "#ffffff", align: "center", wordWrap : true, wordWrapWidth: textWidth
+    };
+    var messageText = game.make.text(0, 0, text, textStyle);
+    messageText.x = Math.floor((totalWidth -messageText.width) / 2)
+    messageText.y = topMargin;
+
+    var totalHeight = messageText.height +topMargin +bottomMargin;
+    var outlineBox = new OutlineBox(game, totalWidth, totalHeight);
+
+    this.addChild(outlineBox);
+    this.addChild(messageText);
+    }
+
+DialogMessageMonster.prototype = Object.create(Phaser.Group.prototype);
+DialogMessageMonster.prototype.constructor = DialogButtonMedium;
 
 //=========================================================
 function OutlineBox(game, width, height) {
