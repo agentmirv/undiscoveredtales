@@ -191,9 +191,8 @@ var GameState = {
         //=================================================
         // Game Start
         //=================================================
-        //MakeRevealList(game, game.gamedata.playerStart.firstReveal)
-
-        MakeMonster(game, "deep-one")
+        MakeRevealList(game, game.gamedata.playerStart.firstReveal)
+        //MakeMonster(game, "deep-one")
     },
 
     update: function () {
@@ -278,6 +277,52 @@ Helper.shuffle = function (array) {
 //TODO Polyfill for array.filter?
 
 //=========================================================
+function MakeHorrorCheckDialog(game) {
+    var horrorCheckDialogGroup = new HorrorCheckDialogGroup(game)
+    game.stage.addChild(horrorCheckDialogGroup)
+}
+
+function HorrorCheckDialogGroup(game) {
+    Phaser.Group.call(this, game);
+
+    // Modal
+    var modalBackground = game.make.sprite(game.stageViewRect.x, game.stageViewRect.y, 'pixelTransparent');
+    modalBackground.width = game.stageViewRect.width;
+    modalBackground.height = game.stageViewRect.height;
+    modalBackground.inputEnabled = true;
+    this.addChild(modalBackground);
+
+    var messageText = "Each investigator must resolve a horror check against the monster within range with the highest horror rating. After all horror checks have been resolved, tap the end phase button to continue."
+
+    // Message
+    var dialogMessage = new DialogMessage(game, messageText, null);
+    dialogMessage.alignIn(game.stageViewRect, Phaser.CENTER, 0, -game.presentationOffsetY)
+    this.addChild(dialogMessage);
+
+    // Button for [Continue]
+    var dialogContinue = new DialogButtonThin(game, "Continue", 180);
+    dialogContinue.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 0, 10)
+    this.addChild(dialogContinue);
+
+    var dialogContinueButton = game.make.sprite(dialogContinue.x, dialogContinue.y, 'pixelTransparent');
+    dialogContinueButton.width = dialogContinue.width;
+    dialogContinueButton.height = dialogContinue.height;
+    dialogContinueButton.inputEnabled = true;
+    dialogContinueButton.events.onInputUp.add(this.continueClicked, this);
+    this.addChild(dialogContinueButton);
+}
+
+HorrorCheckDialogGroup.prototype = Object.create(Phaser.Group.prototype);
+HorrorCheckDialogGroup.prototype.constructor = HorrorCheckDialogGroup;
+
+HorrorCheckDialogGroup.prototype.continueClicked = function (button, pointer) {
+    var fadeOutTween = game.add.tween(this).to({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+    fadeOutTween.onComplete.addOnce(function () {
+        this.destroy(true);
+    }, this);
+}
+
+//=========================================================
 function MakeMonsterAttackDialog(game, id) {
     var attackData = game.gamedata.monsterAttacks.find(function (item) { return item.id == id });
     
@@ -296,7 +341,8 @@ function MakeMonsterAttackDialog(game, id) {
 function MonsterAttackDialogGroup(game, moveText, attackButtonText, nonAttackButtonText, attackText, nonAttackText) {
     Phaser.Group.call(this, game);
     var dialogRect = new Phaser.Rectangle(96 * 3, 16, game.stageViewRect.width -96 * 3, game.stageViewRect.height)
-    this.attackResolved = false;
+    this._attackResolved = false;
+    this._nonAttackExists = nonAttackText != null;
 
     // Move Text
     var moveTextDialog = new DialogMessageMonster(game, moveText, 600);
@@ -385,8 +431,8 @@ MonsterAttackDialogGroup.prototype = Object.create(Phaser.Group.prototype);
 MonsterAttackDialogGroup.prototype.constructor = MonsterAttackDialogGroup;
 
 MonsterAttackDialogGroup.prototype.attackButtonClicked = function (button, pointer) {
-    if (!this.attackResolved) {
-        this.attackResolved = true
+    if (!this._attackResolved) {
+        this._attackResolved = true
         var dialog = this
         var fadeOutTween = game.add.tween(this._mainGroup).to({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
         var fadeInTween = game.add.tween(this._attackGroup).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, false, 0, 0, false);
@@ -396,13 +442,19 @@ MonsterAttackDialogGroup.prototype.attackButtonClicked = function (button, point
 }
 
 MonsterAttackDialogGroup.prototype.nonAttackButtonClicked = function (button, pointer) {
-    if (!this.attackResolved) {
-        this.attackResolved = true
+    if (!this._attackResolved) {
+        this._attackResolved = true
         var dialog = this
         var fadeOutTween = game.add.tween(this._mainGroup).to({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
         var fadeInTween = game.add.tween(this._nonAttackGroup).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, false, 0, 0, false);
-        fadeInTween.onStart.addOnce(function () { dialog._nonAttackGroup.visible = true })
-        fadeOutTween.chain(fadeInTween)
+
+        if (this._nonAttackExists)
+        {
+            fadeInTween.onStart.addOnce(function () { dialog._nonAttackGroup.visible = true })
+            fadeOutTween.chain(fadeInTween)
+        } else {
+            fadeOutTween.onComplete.addOnce(function () { HudGroup.prototype.monsterAttack() })
+        }
     }
 }
 
@@ -976,6 +1028,7 @@ HudGroup.prototype.horrorCheck = function () {
             HudGroup.prototype.showEnemyPhaseBG()
             HudGroup.prototype.showMonsterTray()
             // Horror Check Dialog
+            MakeHorrorCheckDialog(game)
         })
     } else {
         HudGroup.prototype.enemyPhaseDone()
