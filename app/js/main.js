@@ -879,7 +879,7 @@ HudGroup.prototype.monsterAddClicked = function (button, pointer) {
 }
 
 HudGroup.prototype.showMonsterTrayClicked = function (button, pointer) {
-    if (game.hud.activePhase == "player") {
+    if (game.hud.activePhase == "player" || game.hud.activeStep == "horrorCheck") {
         if (game.hud.monsterTrayOpen) {
             HudGroup.prototype.hideEnemyPhaseBG()
             HudGroup.prototype.hideMonsterTray()
@@ -888,7 +888,7 @@ HudGroup.prototype.showMonsterTrayClicked = function (button, pointer) {
             HudGroup.prototype.showEnemyPhaseBG()
             HudGroup.prototype.showMonsterTray()
         }
-    }
+    } 
 }
 
 HudGroup.prototype.endPhaseClicked = function (button, pointer) {
