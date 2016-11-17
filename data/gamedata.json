@@ -848,5 +848,22 @@
         "attackText": "The deep one's gills flare at the scent of blood. As it charges, its horrible mouth distends to reveal row upon row of shark-like teeth (Agility; 2). If you pass, you use the beast's momentum to throw it to the ground; the monster suffers 1 damage. If you fail, you feel its jagged teeth tear at your flesh; suffer 3 Damage.",
         "nonAttackButtonText": "No investigators in the space."
     }
+  ],
+  "horrorChecks": [
+    {
+      "id": "deep-one-1",
+      "monster": "deep-one",
+      "text": "You hear a horrible scrunching sound, and realize the deep one is gnawing on a worm-ridden human arm. Suffer 1 Horror."
+    },
+    {
+      "id": "deep-one-2",
+      "monster": "deep-one",
+      "text": "The deep one's movements and mannerisms are subtly, terribly human. Suffer 2 Horror (Will + 1 negates)."
+    },
+    {
+      "id": "deep-one-3",
+      "monster": "deep-one",
+      "text": "The deep one's gurgling seems to trigger something deep within your primitive mind. Suffer 1 facedown Horror. A rush of primal fear washes over you (Will; 2). If you pass, you take a few deep breaths and maintain control. If you fail, old and painful terrors bubble to the surface; flip 2 Horror faceup."
+    }
   ]
 }

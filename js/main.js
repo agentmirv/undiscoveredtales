@@ -47,6 +47,7 @@ var GameState = {
         game.hud.fireSet = false;
         game.hud.randomEventDeck = []
         game.hud.randomMonsterAttackDeck = []
+        game.hud.randomMonsterHorrorCheckDeck = []
         game.hud.showEnemyPhaseBG = false
         game.hud.monsterTrayOpen = false
         game.hud.monsterTrayDetail = false
@@ -277,13 +278,67 @@ Helper.shuffle = function (array) {
 //TODO Polyfill for array.filter?
 
 //=========================================================
-function MakeHorrorCheckConfirmDialog(game) {
-    var horrorCheckConfirmDialogGroup = new HorrorCheckConfirmDialogGroup(game)
+function MakeMonsterHorrorCheckDialogGroup(game, id) {
+    var horrorCheckData = game.gamedata.horrorChecks.find(function (item) { return item.id == id });
+
+    var monsterHorrorCheckDialogGroup = new MonsterHorrorCheckDialogGroup(
+        game,
+        horrorCheckData.text
+    )
+
+    game.add.tween(monsterHorrorCheckDialogGroup).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+    game.stage.addChild(monsterHorrorCheckDialogGroup)
+}
+
+function MonsterHorrorCheckDialogGroup(game, messageText) {
+    Phaser.Group.call(this, game);
+
+    // Modal
+    var modalBackground = game.make.sprite(game.stageViewRect.x, game.stageViewRect.y, 'pixelTransparent');
+    modalBackground.width = game.stageViewRect.width;
+    modalBackground.height = game.stageViewRect.height;
+    modalBackground.inputEnabled = true;
+    this.addChild(modalBackground);
+
+    // Message
+    var dialogMessage = new DialogMessage(game, messageText, null);
+    dialogMessage.alignIn(game.stageViewRect, Phaser.CENTER, 0, -game.presentationOffsetY)
+    this.addChild(dialogMessage);
+
+    // Button for [Continue]
+    var dialogContinue = new DialogButtonThin(game, "Continue", 180);
+    dialogContinue.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 0, 10)
+    this.addChild(dialogContinue);
+
+    var dialogContinueButton = game.make.sprite(dialogContinue.x, dialogContinue.y, 'pixelTransparent');
+    dialogContinueButton.width = dialogContinue.width;
+    dialogContinueButton.height = dialogContinue.height;
+    dialogContinueButton.inputEnabled = true;
+    dialogContinueButton.events.onInputUp.add(this.continueClicked, this);
+    this.addChild(dialogContinueButton);
+}
+
+MonsterHorrorCheckDialogGroup.prototype = Object.create(Phaser.Group.prototype);
+MonsterHorrorCheckDialogGroup.prototype.constructor = MonsterHorrorCheckDialogGroup;
+
+MonsterHorrorCheckDialogGroup.prototype.continueClicked = function (button, pointer) {
+    var fadeOutTween = game.add.tween(this).to({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+    fadeOutTween.onComplete.addOnce(function () {
+        this.destroy(true);
+    }, this);
+}
+
+//=========================================================
+function MakeHorrorCheckConfirmDialog(game, monsterInstance) {
+    var horrorCheckConfirmDialogGroup = new HorrorCheckConfirmDialogGroup(game, monsterInstance)
+    game.add.tween(horrorCheckConfirmDialogGroup).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
     game.stage.addChild(horrorCheckConfirmDialogGroup)
 }
 
-function HorrorCheckConfirmDialogGroup(game) {
+function HorrorCheckConfirmDialogGroup(game, monsterInstance) {
     Phaser.Group.call(this, game);
+
+    this._monsterInstance = monsterInstance
 
     // Modal
     var modalBackground = game.make.sprite(game.stageViewRect.x, game.stageViewRect.y, 'pixelTransparent');
@@ -335,6 +390,7 @@ HorrorCheckConfirmDialogGroup.prototype.cancelClicked = function (button, pointe
 HorrorCheckConfirmDialogGroup.prototype.confirmClicked = function (button, pointer) {
     var fadeOutTween = game.add.tween(this).to({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
     fadeOutTween.onComplete.addOnce(function () {
+        HudGroup.prototype.monsterHorrorCheck(this._monsterInstance)
         this.destroy(true);
     }, this);
 }
@@ -342,6 +398,7 @@ HorrorCheckConfirmDialogGroup.prototype.confirmClicked = function (button, point
 //=========================================================
 function MakeHorrorCheckDialog(game) {
     var horrorCheckDialogGroup = new HorrorCheckDialogGroup(game)
+    game.add.tween(horrorCheckDialogGroup).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
     game.stage.addChild(horrorCheckDialogGroup)
 }
 
@@ -582,7 +639,7 @@ Monster.prototype.monsterClicked = function () {
             HudGroup.prototype.showMonsterDetail()
         }
     } else if (game.hud.activeStep == "horrorCheck") {
-        MakeHorrorCheckConfirmDialog(game)
+        MakeHorrorCheckConfirmDialog(game, this)
     }
 }
 
@@ -1083,6 +1140,24 @@ HudGroup.prototype.monsterAttack = function () {
         HudGroup.prototype.hideMonsterDetail()
         HudGroup.prototype.horrorCheck()
     }
+}
+
+HudGroup.prototype.monsterHorrorCheck = function (monsterInstance) {
+    var randomMonsterHorrorCheckData = null
+ 
+    while (randomMonsterHorrorCheckData == null) {
+        if (game.hud.randomMonsterHorrorCheckDeck.length == 0) {
+            game.hud.randomMonsterHorrorCheckDeck = Helper.shuffle(game.gamedata.horrorChecks.slice(0))
+        }
+
+        var drawRandomMonsterHorrorCheck = game.hud.randomMonsterHorrorCheckDeck.pop()
+
+        if (drawRandomMonsterHorrorCheck.monster == monsterInstance.id) {
+            randomMonsterHorrorCheckData = drawRandomMonsterHorrorCheck
+        }
+    }
+
+    MakeMonsterHorrorCheckDialogGroup(game, randomMonsterHorrorCheckData.id)
 }
 
 HudGroup.prototype.horrorCheck = function () {
