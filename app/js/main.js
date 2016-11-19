@@ -794,8 +794,8 @@ function HudGroup(game) {
     this.addChild(endPhaseButton);
 
     // Monster Tray
-    this._monsterTrayBgImage = game.make.tileSprite(0, 0, 96 * 6, 96, "hudButton")
-    this._monsterTrayBgImage.alignIn(game.stageViewRect, Phaser.BOTTOM_CENTER, 0, 0)
+    this._monsterTrayBgImage = game.make.tileSprite(0, 0, 96 * 7, 96, "hudButton")
+    this._monsterTrayBgImage.alignIn(game.stageViewRect, Phaser.BOTTOM_LEFT, -96 * 4.5, 0)
     this._monsterTrayBgImage.tint = "0x044500"
     this._monsterTray = game.make.group()
     this._monsterTray.addChild(this._monsterTrayBgImage);
@@ -844,7 +844,7 @@ HudGroup.prototype.setMonsterDetail = function (monsterInstance) {
 }
 
 HudGroup.prototype.makeMonsterDetailGroup = function (game) {
-    var textStyle = { font: "26px Times New Romans", fill: "#ffffff", align: "center" };
+    var textStyle = { font: "24px Times New Romans", fill: "#ffffff", align: "center" };
 
     var monsterDetailGroup = game.make.group()
     var monsterDetailBgImage = game.make.tileSprite(0, 0, 96 * 3, 96 * 4, "hudButton")
