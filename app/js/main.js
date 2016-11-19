@@ -635,13 +635,13 @@ function Monster() {
 
 Monster.prototype.monsterClicked = function () {
     if (game.hud.activePhase == "player") {
-        game.hudInstance.setMonsterDetail(this)
         HudGroup.prototype.showEnemyPhaseBG()
-        if (game.hud.monsterDetailOpen) {
+        if (game.hud.monsterDetailOpen && game.hud.currentMonsterInstance == this) {
             HudGroup.prototype.hideMonsterDetail()
         } else {
             HudGroup.prototype.showMonsterDetail()
         }
+        game.hudInstance.setMonsterDetail(this)
     } else if (game.hud.activeStep == "horrorCheck") {
         MakeHorrorCheckConfirmDialog(game, this)
     }
