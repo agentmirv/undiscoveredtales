@@ -827,7 +827,7 @@
     {
       "id": "deep-one-1",
       "monster": "deep-one",
-      "name": "Deep One 1",
+      "name": "Deep One",
       "baseHitPoints": "4",
       "imageKey": "deep-one-image"
     },

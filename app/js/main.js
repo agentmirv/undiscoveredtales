@@ -192,9 +192,9 @@ var GameState = {
         //=================================================
         // Game Start
         //=================================================
-        //MakeRevealList(game, game.gamedata.playerStart.firstReveal)
-        MakeMonster(game, "deep-one-1")
-        MakeMonster(game, "deep-one-2")
+        MakeRevealList(game, game.gamedata.playerStart.firstReveal)
+        //MakeMonster(game, "deep-one-1")
+        //MakeMonster(game, "deep-one-2")
     },
 
     update: function () {
@@ -601,6 +601,7 @@ function MakeMonster(game, id) {
     // Set Instance
     var monsterInstance = new Monster()
     monsterInstance.id = monsterData.id
+    monsterInstance.monster = monsterData.monster
     monsterInstance.type = monsterData.type
     monsterInstance.name = monsterData.name
     monsterInstance.imageKey = monsterData.imageKey
@@ -619,7 +620,6 @@ function MakeMonster(game, id) {
     monsterInstance.detailSprite = game.make.sprite(0, 0, Helper.getImage(monsterInstance.imageKey))
     monsterInstance.detailSprite.alignIn(game.hudInstance._monsterDetailBgImage, Phaser.CENTER, 0, -72)
     game.hudInstance._monsterDetail.addChild(monsterInstance.detailSprite)
-    console.log(monsterInstance.detailSprite)
 
     // Set Tray Sprite Hit Points
     monsterInstance._hitPointsBox = new OutlineBox(game, 32, 32)
@@ -810,8 +810,8 @@ function HudGroup(game) {
     this.addChild(endPhaseButton);
 
     // Monster Tray
-    this._monsterTrayBgImage = game.make.tileSprite(0, 0, 96 * 7, 96, "hudButton")
-    this._monsterTrayBgImage.alignIn(game.stageViewRect, Phaser.BOTTOM_LEFT, -96 * 4.5, 0)
+    this._monsterTrayBgImage = game.make.tileSprite(0, 0, 96 * 8, 96, "hudButton")
+    this._monsterTrayBgImage.alignIn(game.stageViewRect, Phaser.BOTTOM_LEFT, -96 * 3.5, 0)
     this._monsterTrayBgImage.tint = "0x044500"
     this._monsterTray = game.make.group()
     this._monsterTray.addChild(this._monsterTrayBgImage);
