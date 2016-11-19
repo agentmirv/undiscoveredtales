@@ -825,7 +825,7 @@
   ],
   "monsters":[
     {
-      "id": "deep-one-1",
+      "id": "deep-one",
       "monster": "deep-one",
       "name": "Deep One",
       "baseHitPoints": "4",
