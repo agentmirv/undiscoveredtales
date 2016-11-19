@@ -650,6 +650,8 @@ Monster.prototype.monsterClicked = function () {
 Monster.prototype.updateDamage = function() {
     this._monsterDamageText.setText(this.damage)
     this._monsterDamageText.alignIn(this._hitPointsBox, Phaser.CENTER, 0, 3)
+    this._monsterDamageText.x = Math.floor(this._monsterDamageText.x)
+    this._monsterDamageText.y = Math.floor(this._monsterDamageText.y)
 }
 
 //=========================================================
@@ -841,6 +843,8 @@ HudGroup.prototype.setMonsterDetail = function (monsterInstance) {
 
     this._nameText.setText(game.hud.currentMonsterInstance.name)
     this._nameText.alignIn(this._nameBox, Phaser.CENTER, 0, 3)
+    this._nameText.x = Math.floor(this._nameText.x)
+    this._nameText.y = Math.floor(this._nameText.y)
 }
 
 HudGroup.prototype.makeMonsterDetailGroup = function (game) {
@@ -952,6 +956,7 @@ HudGroup.prototype.monsterAddClicked = function (button, pointer) {
     game.hud.currentMonsterInstance.updateDamage()
     this._monsterDamageText.setText(game.hud.currentMonsterInstance.damage)
     this._monsterDamageText.alignIn(this._damageBox, Phaser.CENTER, 0, 3)
+    this._monsterDamageText.x = Math.floor(this._monsterDamageText.x)
 }
 
 HudGroup.prototype.showMonsterTrayClicked = function (button, pointer) {
@@ -1739,6 +1744,8 @@ function DialogGroup(game, id, messageText, imageKey, buttonType, buttonData, sk
         var textStyle = { font: "30px Times New Romans", fill: "#ffffff", align: "center" };
         this._numberText = game.make.text(0, 0, this._skillTestDisplay, textStyle);
         this._numberText.alignIn(this._numberBox, Phaser.CENTER, 0, 3)
+        this._numberText.x = Math.floor(this._numberText.x)
+        this._numberText.y = Math.floor(this._numberText.y)
         this.addChild(this._numberText);
 
         // Subtract number
@@ -1877,6 +1884,8 @@ DialogGroup.prototype.skillSubtractClicked = function (button, pointer) {
         this._skillTestDisplay--
         this._numberText.setText(this._skillTestDisplay)
         this._numberText.alignIn(this._numberBox, Phaser.CENTER, 0, 3)
+        this._numberText.x = Math.floor(this._numberText.x)
+        this._numberText.y = Math.floor(this._numberText.y)
     }
 }
 
@@ -1884,6 +1893,8 @@ DialogGroup.prototype.skillAddClicked = function (button, pointer) {
     this._skillTestDisplay++
     this._numberText.setText(this._skillTestDisplay)
     this._numberText.alignIn(this._numberBox, Phaser.CENTER, 0, 3)
+    this._numberText.x = Math.floor(this._numberText.x)
+    this._numberText.y = Math.floor(this._numberText.y)
 }
 
 DialogGroup.prototype.skillConfirmClicked = function (button, pointer) {
