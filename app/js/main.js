@@ -998,7 +998,7 @@ HudGroup.prototype.endPhaseClicked = function (button, pointer) {
         HudGroup.prototype.hideEnemyPhaseBG()
         HudGroup.prototype.hideMonsterTray()
         HudGroup.prototype.hideMonsterDetail()
-    } else {
+    } else if(game.hud.activeStep == "horrorCheck") {
         dialogInstance = MakeDialog(game, "dialog-hud-endphase-enemy")
         HudGroup.prototype.hideEnemyPhaseBG()
         HudGroup.prototype.hideMonsterTray()
