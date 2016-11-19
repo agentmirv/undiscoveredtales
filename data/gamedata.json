@@ -758,6 +758,16 @@
       "maskColor": "0x727272"
     },
     {
+      "imageKey": "deep-one-image-2",
+      "primaryImageKey": "deepOne",
+      "backgroundImageKey": "squareBackground",
+      "maskImageKey": "monsterMask",
+      "imagePrimaryColor": "0xFFFFFF",
+      "imageShadowColor": "0xFF0000",
+      "backgroundColor": "0x28511c",
+      "maskColor": "0x727272"
+    },
+    {
       "imageKey": "explore-image",
       "primaryImageKey": "explore",
       "backgroundImageKey": "circleToken",
@@ -816,9 +826,17 @@
   "monsters":[
     {
       "id": "deep-one",
+      "monster": "deep-one",
       "name": "Deep One",
       "baseHitPoints": "4",
       "imageKey": "deep-one-image"
+    },
+    {
+      "id": "deep-one-2",
+      "monster": "deep-one",
+      "name": "Deep One 2",
+      "baseHitPoints": "5",
+      "imageKey": "deep-one-image-2"
     }
   ],
   "monsterAttacks": [
