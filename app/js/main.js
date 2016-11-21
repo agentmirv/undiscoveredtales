@@ -192,9 +192,9 @@ var GameState = {
         //=================================================
         // Game Start
         //=================================================
-        MakeRevealList(game, game.gamedata.playerStart.firstReveal)
-        //MakeMonster(game, "deep-one-1")
-        //MakeMonster(game, "deep-one-2")
+        //MakeRevealList(game, game.gamedata.playerStart.firstReveal)
+        MakeMonster(game, "deep-one")
+        MakeMonster(game, "deep-one-2")
     },
 
     update: function () {
@@ -602,7 +602,6 @@ function MakeMonster(game, id) {
     var monsterInstance = new Monster()
     monsterInstance.id = monsterData.id
     monsterInstance.monster = monsterData.monster
-    monsterInstance.type = monsterData.type
     monsterInstance.name = monsterData.name
     monsterInstance.imageKey = monsterData.imageKey
     monsterInstance.hitPoints = parseInt(monsterData.baseHitPoints) + game.gamedata.investigators.length
@@ -976,6 +975,24 @@ HudGroup.prototype.monsterAddClicked = function (button, pointer) {
     this._monsterDamageText.setText(game.hud.currentMonsterInstance.damage)
     this._monsterDamageText.alignIn(this._damageBox, Phaser.CENTER, 0, 3)
     this._monsterDamageText.x = Math.floor(this._monsterDamageText.x)
+
+    if (game.hud.currentMonsterInstance.damage == game.hud.currentMonsterInstance.hitPoints) {
+        console.log("discard monster dialog")
+        console.log(game.hud.currentMonsterInstance)
+        // hide monster attack dialog
+        // create discard monster dialog
+        //  cancel button:
+        //      * destroy discard monster dialog
+        //      * show monster attack dialog
+        //  confirm button:
+        //      * destroy discard monster dialog
+        //      * destroy monster attack dialog
+        //          * player phase
+        //              * hide monster detail
+        //              * hide monster tray
+        //          * monster attack step
+        //              * next monster attack
+    }
 }
 
 HudGroup.prototype.showMonsterTrayClicked = function (button, pointer) {
