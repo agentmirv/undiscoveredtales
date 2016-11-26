@@ -457,6 +457,8 @@ function MakeMonsterAttackDialog(game, id) {
     )
 
     game.stage.addChild(monsterAttackDialogGroup)
+    
+    return monsterAttackDialogGroup
 }
 
 function MonsterAttackDialogGroup(game, moveText, attackButtonText, nonAttackButtonText, attackText, nonAttackText) {
@@ -592,6 +594,16 @@ MonsterAttackDialogGroup.prototype.nonAttackContinueButtonClicked = function (bu
     fadeOutTween.onComplete.addOnce(function () {
         HudGroup.prototype.monsterAttack()
     })
+}
+
+MonsterAttackDialogGroup.prototype.hideDialog = function () {
+    if (!this._attackResolved && !this._nonAttackResolved) {
+        this._mainGroup.visible = false
+    } else if (this._attackResolved) {
+        this._attackGroup.visible = false
+    } else if (this._nonAttackResolved) {
+        this._nonAttackGroup.visible = false
+    }
 }
 
 //=========================================================
@@ -841,6 +853,8 @@ function HudGroup(game) {
     monsterButton.inputEnabled = true;
     monsterButton.events.onInputUp.add(this.showMonsterTrayClicked, this);
     this.addChild(monsterButton);
+    
+    game.hudInstance.monsterAttackDialog = null
 }
 
 HudGroup.prototype = Object.create(Phaser.Group.prototype);
@@ -981,6 +995,7 @@ HudGroup.prototype.monsterAddClicked = function (button, pointer) {
         console.log("discard monster dialog")
         console.log(game.hud.currentMonsterInstance)
         // hide monster attack dialog
+        game.hudInstance.monsterAttackDialog.hideDialog()
         // create discard monster dialog
         //  cancel button:
         //      * destroy discard monster dialog
@@ -1196,7 +1211,7 @@ HudGroup.prototype.monsterAttack = function () {
         }
 
         // Display monster attack dialog
-        MakeMonsterAttackDialog(game, randomMonsterAttackData.id)
+        game.hudInstance.monsterAttackDialog = MakeMonsterAttackDialog(game, randomMonsterAttackData.id)
     } else {
         HudGroup.prototype.hideMonsterDetail()
         HudGroup.prototype.horrorCheck()
