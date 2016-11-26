@@ -463,6 +463,7 @@ function MonsterAttackDialogGroup(game, moveText, attackButtonText, nonAttackBut
     Phaser.Group.call(this, game);
     var dialogRect = new Phaser.Rectangle(96 * 3, 16, game.stageViewRect.width -96 * 3, game.stageViewRect.height)
     this._attackResolved = false;
+    this._nonAttackResolved = false;
     this._nonAttackExists = nonAttackText != null;
 
     // Move Text
@@ -552,7 +553,7 @@ MonsterAttackDialogGroup.prototype = Object.create(Phaser.Group.prototype);
 MonsterAttackDialogGroup.prototype.constructor = MonsterAttackDialogGroup;
 
 MonsterAttackDialogGroup.prototype.attackButtonClicked = function (button, pointer) {
-    if (!this._attackResolved) {
+    if (!this._attackResolved && !this._nonAttackResolved) {
         this._attackResolved = true
         var dialog = this
         var fadeOutTween = game.add.tween(this._mainGroup).to({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
@@ -563,8 +564,8 @@ MonsterAttackDialogGroup.prototype.attackButtonClicked = function (button, point
 }
 
 MonsterAttackDialogGroup.prototype.nonAttackButtonClicked = function (button, pointer) {
-    if (!this._attackResolved) {
-        this._attackResolved = true
+    if (!this._attackResolved && !this._nonAttackResolved) {
+        this._nonAttackResolved = true
         var dialog = this
         var fadeOutTween = game.add.tween(this._mainGroup).to({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
         var fadeInTween = game.add.tween(this._nonAttackGroup).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, false, 0, 0, false);
