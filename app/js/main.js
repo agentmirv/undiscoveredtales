@@ -279,6 +279,54 @@ Helper.shuffle = function (array) {
 //TODO Polyfill for array.filter?
 
 //=========================================================
+function MakeMonsterDiscardDialog(game) {
+    var monsterDiscardDialogGroup = new MonsterDiscardDialogGroup(game)
+    game.add.tween(monsterDiscardDialogGroup).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+    game.stage.addChild(monsterDiscardDialogGroup)
+}
+
+function MonsterDiscardDialogGroup(game) {
+    Phaser.Group.call(this, game);
+
+    var dialogRect = new Phaser.Rectangle(96 * 3, 16, game.stageViewRect.width - 96 * 3, game.stageViewRect.height)
+
+    // Message
+    var messageText = "Are you sure you wish to discard the " + game.hud.currentMonsterInstance.name + "?"
+    var dialogMessage = new DialogMessageMonster(game, messageText, 600);
+    dialogMessage.alignIn(dialogRect, Phaser.TOP_CENTER, 0, 0)
+    this.addChild(dialogMessage);
+
+    // Confirm
+    var buttonYOffset = 23;
+    var dialogConfirm = new DialogButtonMedium(game, "Confirm", 500);
+    dialogConfirm.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 0, buttonYOffset)
+    this.addChild(dialogConfirm);
+
+    var dialogConfirmButton = game.make.sprite(dialogConfirm.x, dialogConfirm.y, 'pixelTransparent');
+    dialogConfirmButton.width = dialogConfirm.width;
+    dialogConfirmButton.height = dialogConfirm.height;
+    dialogConfirmButton.inputEnabled = true;
+    //dialogConfirmButton.events.onInputUp.add(this.buttonClicked, this);
+    this.addChild(dialogConfirmButton);
+
+    // Cancel
+    buttonYOffset += 63;
+    var dialogCancel = new DialogButtonMedium(game, "Cancel", 500);
+    dialogCancel.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 0, buttonYOffset)
+    this.addChild(dialogCancel);
+
+    var dialogCancelButton = game.make.sprite(dialogCancel.x, dialogCancel.y, 'pixelTransparent');
+    dialogCancelButton.width = dialogCancel.width;
+    dialogCancelButton.height = dialogCancel.height;
+    dialogCancelButton.inputEnabled = true;
+    //dialogConfirmButton.events.onInputUp.add(this.buttonClicked, this);
+    this.addChild(dialogCancelButton);
+}
+
+MonsterDiscardDialogGroup.prototype = Object.create(Phaser.Group.prototype);
+MonsterDiscardDialogGroup.prototype.constructor = MonsterDiscardDialogGroup;
+
+//=========================================================
 function MakeMonsterHorrorCheckDialogGroup(game, id) {
     var horrorCheckData = game.gamedata.horrorChecks.find(function (item) { return item.id == id });
 
@@ -860,6 +908,18 @@ function HudGroup(game) {
 HudGroup.prototype = Object.create(Phaser.Group.prototype);
 HudGroup.prototype.constructor = HudGroup;
 
+HudGroup.prototype.hideMonsterAttackDialog = function () {
+    if (game.hudInstance.monsterAttackDialog != null) {
+        game.hudInstance.monsterAttackDialog.hideDialog()
+    }
+}
+
+HudGroup.prototype.showMonsterAttackDialog = function () {
+    if (game.hudInstance.monsterAttackDialog != null) {
+
+    }
+}
+
 HudGroup.prototype.setMonsterDetail = function (monsterInstance) {
     if (game.hud.currentMonsterInstance != null) {
         game.hud.currentMonsterInstance.hideDetailImage()
@@ -994,9 +1054,11 @@ HudGroup.prototype.monsterAddClicked = function (button, pointer) {
     if (game.hud.currentMonsterInstance.damage == game.hud.currentMonsterInstance.hitPoints) {
         console.log("discard monster dialog")
         console.log(game.hud.currentMonsterInstance)
-        // hide monster attack dialog
-        game.hudInstance.monsterAttackDialog.hideDialog()
+        // hide monster attack dialog (if present)
+        game.hudInstance.hideMonsterAttackDialog()
         // create discard monster dialog
+        MakeMonsterDiscardDialog(game)
+
         //  cancel button:
         //      * destroy discard monster dialog
         //      * show monster attack dialog
