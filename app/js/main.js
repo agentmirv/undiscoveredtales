@@ -192,9 +192,9 @@ var GameState = {
         //=================================================
         // Game Start
         //=================================================
-        //MakeRevealList(game, game.gamedata.playerStart.firstReveal)
-        MakeMonster(game, "deep-one")
-        MakeMonster(game, "deep-one-2")
+        MakeRevealList(game, game.gamedata.playerStart.firstReveal)
+        //MakeMonster(game, "deep-one")
+        //MakeMonster(game, "deep-one-2")
     },
 
     update: function () {
@@ -345,8 +345,9 @@ MonsterDiscardDialogGroup.prototype.confirmButtonClicked = function () {
         // hide monster detail
         HudGroup.prototype.hideMonsterDetail()
     } else if (game.hud.activeStep == "monsterAttack") {
-        //MakeHorrorCheckConfirmDialog(game, this)
-        // TODO: next monster attack
+        // next monster attack
+        game.hud.currentMonsterIndex -= 1
+        HudGroup.prototype.monsterAttack()
     }
 }
 
