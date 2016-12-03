@@ -3,7 +3,8 @@ var game = new Phaser.Game(1280, 720, Phaser.AUTO, 'phaser-app')
 
 var GameState = {
     preload: function () {
-        game.load.image('background', 'assets/images/debug-grid-1920x1920.png')
+        //game.load.image('background', 'assets/images/debug-grid-1920x1920.png')
+        game.load.image('background', 'assets/images/tilebackground.png')
         game.load.image('pixelWhite', 'assets/images/FFFFFF-1.png')
         game.load.image('pixelBlack', 'assets/images/000000-1.png')
         game.load.image('pixelTransparent', 'assets/images/1x1.png')
@@ -171,7 +172,7 @@ var GameState = {
         // Initialize Stuff
         game.physics.startSystem(Phaser.Physics.P2JS);
         game.world.setBounds(0, 0, 2560, 2560);
-        game.camera.bounds = null
+        game.camera.bounds = null // leave this until the world dimensions are determined via the map tile coordinates and dimensions
         game.camera.focusOnXY(game.gamedata.playerStart.x, game.gamedata.playerStart.y)
         game.stageViewRect = new Phaser.Rectangle(0, 0, game.camera.view.width, game.camera.view.height)
         game.presentationOffsetY = 48
@@ -179,7 +180,7 @@ var GameState = {
 
         player = game.add.sprite(game.gamedata.playerStart.x, game.gamedata.playerStart.y, 'pixelTransparent');
         game.physics.p2.enable(player);
-        game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.5, 0.5);
+        game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.8, 0.8);
 
         game.add.tileSprite(0, 0, 2560, 2560, 'background');
 
@@ -1393,6 +1394,10 @@ HudGroup.prototype.hideEnemyPhaseBG = function (callback) {
                 callback()
             }
         })
+    } else {
+        if (callback != null) {
+            callback()
+        }
     }
 }
 
