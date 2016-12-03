@@ -193,7 +193,7 @@ var GameState = {
         // Game Start
         //=================================================
         MakeRevealList(game, game.gamedata.playerStart.firstReveal)
-        //MakeMonster(game, "deep-one-1")
+        //MakeMonster(game, "deep-one")
         //MakeMonster(game, "deep-one-2")
     },
 
@@ -277,6 +277,88 @@ Helper.shuffle = function (array) {
 
 //TODO Polyfill for array.find?
 //TODO Polyfill for array.filter?
+
+//=========================================================
+function MakeMonsterDiscardDialog(game) {
+    var monsterDiscardDialogGroup = new MonsterDiscardDialogGroup(game)
+    game.add.tween(monsterDiscardDialogGroup).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+    game.stage.addChild(monsterDiscardDialogGroup)
+}
+
+function MonsterDiscardDialogGroup(game) {
+    Phaser.Group.call(this, game);
+
+    var dialogRect = new Phaser.Rectangle(96 * 3, 16, game.stageViewRect.width - 96 * 3, game.stageViewRect.height)
+
+    // Modal
+    var modalBackground = game.make.sprite(game.stageViewRect.x, game.stageViewRect.y, 'pixelTransparent');
+    modalBackground.width = game.stageViewRect.width;
+    modalBackground.height = game.stageViewRect.height;
+    modalBackground.inputEnabled = true;
+    this.addChild(modalBackground);
+
+    // Message
+    var messageText = "Are you sure you wish to discard the " + game.hud.currentMonsterInstance.name + "?"
+    var dialogMessage = new DialogMessageMonster(game, messageText, 600);
+    dialogMessage.alignIn(dialogRect, Phaser.TOP_CENTER, 0, 0)
+    this.addChild(dialogMessage);
+
+    // Confirm
+    var buttonYOffset = 23;
+    var dialogConfirm = new DialogButtonMedium(game, "Confirm", 500);
+    dialogConfirm.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 0, buttonYOffset)
+    this.addChild(dialogConfirm);
+
+    var dialogConfirmButton = game.make.sprite(dialogConfirm.x, dialogConfirm.y, 'pixelTransparent');
+    dialogConfirmButton.width = dialogConfirm.width;
+    dialogConfirmButton.height = dialogConfirm.height;
+    dialogConfirmButton.inputEnabled = true;
+    dialogConfirmButton.events.onInputUp.add(this.confirmButtonClicked, this);
+    this.addChild(dialogConfirmButton);
+
+    // Cancel
+    buttonYOffset += 63;
+    var dialogCancel = new DialogButtonMedium(game, "Cancel", 500);
+    dialogCancel.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 0, buttonYOffset)
+    this.addChild(dialogCancel);
+
+    var dialogCancelButton = game.make.sprite(dialogCancel.x, dialogCancel.y, 'pixelTransparent');
+    dialogCancelButton.width = dialogCancel.width;
+    dialogCancelButton.height = dialogCancel.height;
+    dialogCancelButton.inputEnabled = true;
+    dialogCancelButton.events.onInputUp.add(this.cancelButtonClicked, this);
+    this.addChild(dialogCancelButton);
+}
+
+MonsterDiscardDialogGroup.prototype = Object.create(Phaser.Group.prototype);
+MonsterDiscardDialogGroup.prototype.constructor = MonsterDiscardDialogGroup;
+
+MonsterDiscardDialogGroup.prototype.confirmButtonClicked = function () {
+    // destroy discard monster dialog
+    this.destroy(true);
+    // destroy monster attack dialog
+    game.hudInstance.destroyMonsterAttackDialog()
+    // destroy monster
+    game.hudInstance.discardCurrentMonster()
+    
+    if (game.hud.activePhase == "player") {
+        // hide monster detail
+        HudGroup.prototype.hideMonsterDetail()
+    } else if (game.hud.activeStep == "monsterAttack") {
+        // next monster attack
+        game.hud.currentMonsterIndex -= 1
+        HudGroup.prototype.monsterAttack()
+    }
+}
+
+MonsterDiscardDialogGroup.prototype.cancelButtonClicked = function () {
+    // Subtract from Monster Damage
+    game.hudInstance.monsterSubtractClicked()
+    // show monster attack dialog
+    game.hudInstance.showMonsterAttackDialog()
+    // destroy discard monster dialog
+    this.destroy(true);
+}
 
 //=========================================================
 function MakeMonsterHorrorCheckDialogGroup(game, id) {
@@ -457,12 +539,15 @@ function MakeMonsterAttackDialog(game, id) {
     )
 
     game.stage.addChild(monsterAttackDialogGroup)
+    
+    return monsterAttackDialogGroup
 }
 
 function MonsterAttackDialogGroup(game, moveText, attackButtonText, nonAttackButtonText, attackText, nonAttackText) {
     Phaser.Group.call(this, game);
     var dialogRect = new Phaser.Rectangle(96 * 3, 16, game.stageViewRect.width -96 * 3, game.stageViewRect.height)
     this._attackResolved = false;
+    this._nonAttackResolved = false;
     this._nonAttackExists = nonAttackText != null;
 
     // Move Text
@@ -552,7 +637,7 @@ MonsterAttackDialogGroup.prototype = Object.create(Phaser.Group.prototype);
 MonsterAttackDialogGroup.prototype.constructor = MonsterAttackDialogGroup;
 
 MonsterAttackDialogGroup.prototype.attackButtonClicked = function (button, pointer) {
-    if (!this._attackResolved) {
+    if (!this._attackResolved && !this._nonAttackResolved) {
         this._attackResolved = true
         var dialog = this
         var fadeOutTween = game.add.tween(this._mainGroup).to({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
@@ -563,8 +648,8 @@ MonsterAttackDialogGroup.prototype.attackButtonClicked = function (button, point
 }
 
 MonsterAttackDialogGroup.prototype.nonAttackButtonClicked = function (button, pointer) {
-    if (!this._attackResolved) {
-        this._attackResolved = true
+    if (!this._attackResolved && !this._nonAttackResolved) {
+        this._nonAttackResolved = true
         var dialog = this
         var fadeOutTween = game.add.tween(this._mainGroup).to({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
         var fadeInTween = game.add.tween(this._nonAttackGroup).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, false, 0, 0, false);
@@ -593,6 +678,16 @@ MonsterAttackDialogGroup.prototype.nonAttackContinueButtonClicked = function (bu
     })
 }
 
+MonsterAttackDialogGroup.prototype.hideDialog = function () {
+    if (!this._attackResolved && !this._nonAttackResolved) {
+        this._mainGroup.visible = false
+    } else if (this._attackResolved) {
+        this._attackGroup.visible = false
+    } else if (this._nonAttackResolved) {
+        this._nonAttackGroup.visible = false
+    }
+}
+
 //=========================================================
 function MakeMonster(game, id) {
     var monsterData = game.gamedata.monsters.find(function (item) { return item.id == id });
@@ -602,7 +697,6 @@ function MakeMonster(game, id) {
     var monsterInstance = new Monster()
     monsterInstance.id = monsterData.id
     monsterInstance.monster = monsterData.monster
-    monsterInstance.type = monsterData.type
     monsterInstance.name = monsterData.name
     monsterInstance.imageKey = monsterData.imageKey
     monsterInstance.hitPoints = parseInt(monsterData.baseHitPoints) + game.gamedata.investigators.length
@@ -610,11 +704,10 @@ function MakeMonster(game, id) {
     monsterInstance.color = ""
 
     // Set Tray Sprite
-    var xOffset = game.gamedataInstances.monsters.length * 96
     monsterInstance.traySprite = game.make.sprite(0, 0, Helper.getImage(monsterInstance.imageKey))
-    monsterInstance.traySprite.alignIn(game.hudInstance._monsterTrayBgImage, Phaser.BOTTOM_LEFT, -xOffset, 0)
+    monsterInstance.alignInTray(game.gamedataInstances.monsters.length)
     monsterInstance.traySprite.inputEnabled = true
-    monsterInstance.traySprite.events.onInputUp.add(Monster.prototype.monsterClicked, monsterInstance);
+    monsterInstance.traySprite.events.onInputUp.add(Monster.prototype.trayClicked, monsterInstance);
 
     // Set Detail Sprite
     monsterInstance.detailSprite = game.make.sprite(0, 0, Helper.getImage(monsterInstance.imageKey))
@@ -639,7 +732,12 @@ function Monster() {
     ///
 }
 
-Monster.prototype.monsterClicked = function () {
+Monster.prototype.alignInTray = function (position) {
+    var xOffset = position * 96
+    this.traySprite.alignIn(game.hudInstance._monsterTrayBgImage, Phaser.BOTTOM_LEFT, -xOffset, 0)
+}
+
+Monster.prototype.trayClicked = function () {
     if (game.hud.activePhase == "player") {
         HudGroup.prototype.showEnemyPhaseBG()
         if (game.hud.monsterDetailOpen && game.hud.currentMonsterInstance == this) {
@@ -666,6 +764,11 @@ Monster.prototype.showDetailImage = function () {
 
 Monster.prototype.hideDetailImage = function () {
     this.detailSprite.kill()
+}
+
+Monster.prototype.discard = function () {
+    this.traySprite.destroy(true)
+    this.detailSprite.destroy(true)
 }
 
 //=========================================================
@@ -841,10 +944,44 @@ function HudGroup(game) {
     monsterButton.inputEnabled = true;
     monsterButton.events.onInputUp.add(this.showMonsterTrayClicked, this);
     this.addChild(monsterButton);
+    
+    game.hudInstance.monsterAttackDialog = null
 }
 
 HudGroup.prototype = Object.create(Phaser.Group.prototype);
 HudGroup.prototype.constructor = HudGroup;
+
+HudGroup.prototype.discardCurrentMonster = function () {
+    // Remove from List
+    var oldList = game.gamedataInstances.monsters
+    game.gamedataInstances.monsters = oldList.filter(function (value) { return value != game.hud.currentMonsterInstance })
+
+    // Reposition remaining monsters in tray
+    for (var i = 0; i < game.gamedataInstances.monsters.length; i++) {
+        game.gamedataInstances.monsters[i].alignInTray(i)
+    }
+
+    game.hud.currentMonsterInstance.discard()
+    game.hud.currentMonsterInstance = null
+}
+
+HudGroup.prototype.destroyMonsterAttackDialog = function () {
+    if (game.hudInstance.monsterAttackDialog != null) {
+        game.hudInstance.monsterAttackDialog.destroy(true)
+    }
+}
+
+HudGroup.prototype.hideMonsterAttackDialog = function () {
+    if (game.hudInstance.monsterAttackDialog != null) {
+        game.hudInstance.monsterAttackDialog.hideDialog()
+    }
+}
+
+HudGroup.prototype.showMonsterAttackDialog = function () {
+    if (game.hudInstance.monsterAttackDialog != null) {
+
+    }
+}
 
 HudGroup.prototype.setMonsterDetail = function (monsterInstance) {
     if (game.hud.currentMonsterInstance != null) {
@@ -976,6 +1113,13 @@ HudGroup.prototype.monsterAddClicked = function (button, pointer) {
     this._monsterDamageText.setText(game.hud.currentMonsterInstance.damage)
     this._monsterDamageText.alignIn(this._damageBox, Phaser.CENTER, 0, 3)
     this._monsterDamageText.x = Math.floor(this._monsterDamageText.x)
+
+    if (game.hud.currentMonsterInstance.damage == game.hud.currentMonsterInstance.hitPoints) {
+        // hide monster attack dialog (if present)
+        game.hudInstance.hideMonsterAttackDialog()
+        // create discard monster dialog
+        MakeMonsterDiscardDialog(game)
+    }
 }
 
 HudGroup.prototype.showMonsterTrayClicked = function (button, pointer) {
@@ -1178,7 +1322,7 @@ HudGroup.prototype.monsterAttack = function () {
         }
 
         // Display monster attack dialog
-        MakeMonsterAttackDialog(game, randomMonsterAttackData.id)
+        game.hudInstance.monsterAttackDialog = MakeMonsterAttackDialog(game, randomMonsterAttackData.id)
     } else {
         HudGroup.prototype.hideMonsterDetail()
         HudGroup.prototype.horrorCheck()
