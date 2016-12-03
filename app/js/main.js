@@ -290,6 +290,13 @@ function MonsterDiscardDialogGroup(game) {
 
     var dialogRect = new Phaser.Rectangle(96 * 3, 16, game.stageViewRect.width - 96 * 3, game.stageViewRect.height)
 
+    // Modal
+    var modalBackground = game.make.sprite(game.stageViewRect.x, game.stageViewRect.y, 'pixelTransparent');
+    modalBackground.width = game.stageViewRect.width;
+    modalBackground.height = game.stageViewRect.height;
+    modalBackground.inputEnabled = true;
+    this.addChild(modalBackground);
+
     // Message
     var messageText = "Are you sure you wish to discard the " + game.hud.currentMonsterInstance.name + "?"
     var dialogMessage = new DialogMessageMonster(game, messageText, 600);
@@ -306,7 +313,7 @@ function MonsterDiscardDialogGroup(game) {
     dialogConfirmButton.width = dialogConfirm.width;
     dialogConfirmButton.height = dialogConfirm.height;
     dialogConfirmButton.inputEnabled = true;
-    //dialogConfirmButton.events.onInputUp.add(this.buttonClicked, this);
+    dialogConfirmButton.events.onInputUp.add(this.confirmButtonClicked, this);
     this.addChild(dialogConfirmButton);
 
     // Cancel
@@ -319,12 +326,38 @@ function MonsterDiscardDialogGroup(game) {
     dialogCancelButton.width = dialogCancel.width;
     dialogCancelButton.height = dialogCancel.height;
     dialogCancelButton.inputEnabled = true;
-    //dialogConfirmButton.events.onInputUp.add(this.buttonClicked, this);
+    dialogCancelButton.events.onInputUp.add(this.cancelButtonClicked, this);
     this.addChild(dialogCancelButton);
 }
 
 MonsterDiscardDialogGroup.prototype = Object.create(Phaser.Group.prototype);
 MonsterDiscardDialogGroup.prototype.constructor = MonsterDiscardDialogGroup;
+
+MonsterDiscardDialogGroup.prototype.confirmButtonClicked = function () {
+    // destroy discard monster dialog
+    this.destroy(true);
+    // destroy monster attack dialog
+    game.hudInstance.destroyMonsterAttackDialog()
+    // destroy monster
+    game.hudInstance.discardCurrentMonster()
+    
+    if (game.hud.activePhase == "player") {
+        // hide monster detail
+        HudGroup.prototype.hideMonsterDetail()
+    } else if (game.hud.activeStep == "monsterAttack") {
+        //MakeHorrorCheckConfirmDialog(game, this)
+        // TODO: next monster attack
+    }
+}
+
+MonsterDiscardDialogGroup.prototype.cancelButtonClicked = function () {
+    // Subtract from Monster Damage
+    game.hudInstance.monsterSubtractClicked()
+    // show monster attack dialog
+    game.hudInstance.showMonsterAttackDialog()
+    // destroy discard monster dialog
+    this.destroy(true);
+}
 
 //=========================================================
 function MakeMonsterHorrorCheckDialogGroup(game, id) {
@@ -670,11 +703,10 @@ function MakeMonster(game, id) {
     monsterInstance.color = ""
 
     // Set Tray Sprite
-    var xOffset = game.gamedataInstances.monsters.length * 96
     monsterInstance.traySprite = game.make.sprite(0, 0, Helper.getImage(monsterInstance.imageKey))
-    monsterInstance.traySprite.alignIn(game.hudInstance._monsterTrayBgImage, Phaser.BOTTOM_LEFT, -xOffset, 0)
+    monsterInstance.alignInTray(game.gamedataInstances.monsters.length)
     monsterInstance.traySprite.inputEnabled = true
-    monsterInstance.traySprite.events.onInputUp.add(Monster.prototype.monsterClicked, monsterInstance);
+    monsterInstance.traySprite.events.onInputUp.add(Monster.prototype.trayClicked, monsterInstance);
 
     // Set Detail Sprite
     monsterInstance.detailSprite = game.make.sprite(0, 0, Helper.getImage(monsterInstance.imageKey))
@@ -699,7 +731,12 @@ function Monster() {
     ///
 }
 
-Monster.prototype.monsterClicked = function () {
+Monster.prototype.alignInTray = function (position) {
+    var xOffset = position * 96
+    this.traySprite.alignIn(game.hudInstance._monsterTrayBgImage, Phaser.BOTTOM_LEFT, -xOffset, 0)
+}
+
+Monster.prototype.trayClicked = function () {
     if (game.hud.activePhase == "player") {
         HudGroup.prototype.showEnemyPhaseBG()
         if (game.hud.monsterDetailOpen && game.hud.currentMonsterInstance == this) {
@@ -726,6 +763,11 @@ Monster.prototype.showDetailImage = function () {
 
 Monster.prototype.hideDetailImage = function () {
     this.detailSprite.kill()
+}
+
+Monster.prototype.discard = function () {
+    this.traySprite.destroy(true)
+    this.detailSprite.destroy(true)
 }
 
 //=========================================================
@@ -908,6 +950,26 @@ function HudGroup(game) {
 HudGroup.prototype = Object.create(Phaser.Group.prototype);
 HudGroup.prototype.constructor = HudGroup;
 
+HudGroup.prototype.discardCurrentMonster = function () {
+    // Remove from List
+    var oldList = game.gamedataInstances.monsters
+    game.gamedataInstances.monsters = oldList.filter(function (value) { return value != game.hud.currentMonsterInstance })
+
+    // Reposition remaining monsters in tray
+    for (var i = 0; i < game.gamedataInstances.monsters.length; i++) {
+        game.gamedataInstances.monsters[i].alignInTray(i)
+    }
+
+    game.hud.currentMonsterInstance.discard()
+    game.hud.currentMonsterInstance = null
+}
+
+HudGroup.prototype.destroyMonsterAttackDialog = function () {
+    if (game.hudInstance.monsterAttackDialog != null) {
+        game.hudInstance.monsterAttackDialog.destroy(true)
+    }
+}
+
 HudGroup.prototype.hideMonsterAttackDialog = function () {
     if (game.hudInstance.monsterAttackDialog != null) {
         game.hudInstance.monsterAttackDialog.hideDialog()
@@ -1052,24 +1114,10 @@ HudGroup.prototype.monsterAddClicked = function (button, pointer) {
     this._monsterDamageText.x = Math.floor(this._monsterDamageText.x)
 
     if (game.hud.currentMonsterInstance.damage == game.hud.currentMonsterInstance.hitPoints) {
-        console.log("discard monster dialog")
-        console.log(game.hud.currentMonsterInstance)
         // hide monster attack dialog (if present)
         game.hudInstance.hideMonsterAttackDialog()
         // create discard monster dialog
         MakeMonsterDiscardDialog(game)
-
-        //  cancel button:
-        //      * destroy discard monster dialog
-        //      * show monster attack dialog
-        //  confirm button:
-        //      * destroy discard monster dialog
-        //      * destroy monster attack dialog
-        //          * player phase
-        //              * hide monster detail
-        //              * hide monster tray
-        //          * monster attack step
-        //              * next monster attack
     }
 }
 

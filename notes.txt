@@ -539,7 +539,11 @@ Monsters also have traits that the app uses to generate slightly less-random enc
 * Huge
 
 ===========================================================
+2016 December 02, Friday 08:10 PM ~~~
 ===========================================================
+Freeing JavaScript object
+http://stackoverflow.com/questions/4523172/freeing-javascript-object
+
 ===========================================================
 ===========================================================
 ===========================================================
