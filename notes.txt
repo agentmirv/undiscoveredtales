@@ -544,6 +544,8 @@ Monsters also have traits that the app uses to generate slightly less-random enc
 Freeing JavaScript object
 http://stackoverflow.com/questions/4523172/freeing-javascript-object
 
+What does it look like when the discard of a monster triggers an event?
+
 ===========================================================
 ===========================================================
 ===========================================================
