@@ -49,6 +49,11 @@ var GameState = {
         game.hud.randomEventDeck = []
         game.hud.randomMonsterAttackDeck = []
         game.hud.randomMonsterHorrorCheckDeck = []
+        game.hud.randomAttackHeavyWeapon = []
+        game.hud.randomAttackBladedWeapon = []
+        game.hud.randomAttackFirearm = []
+        game.hud.randomAttackSpell = []
+        game.hud.randomAttackUnarmed = []
         game.hud.showEnemyPhaseBG = false
         game.hud.monsterTrayOpen = false
         game.hud.monsterTrayDetail = false
@@ -167,6 +172,14 @@ var GameState = {
 
             game.cache.addBitmapData(imageTileData.imageKey, mapTileBmd)
         }
+
+        //=================================================
+        // Make attack decks
+        game.hud.randomAttackHeavyWeapon = game.gamedata.attacks.filter(function (item) { return item.type == "heavy-weapon" })
+        game.hud.randomAttackBladedWeapon = game.gamedata.attacks.filter(function (item) { return item.type == "bladed-weapon" })
+        game.hud.randomAttackFirearm = game.gamedata.attacks.filter(function (item) { return item.type == "firearm" })
+        game.hud.randomAttackSpell = game.gamedata.attacks.filter(function (item) { return item.type == "spell" })
+        game.hud.randomAttackUnarmed = game.gamedata.attacks.filter(function (item) { return item.type == "unarmed" })
 
         //=================================================
         // Initialize Stuff
