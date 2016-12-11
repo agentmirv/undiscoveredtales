@@ -206,9 +206,9 @@ var GameState = {
         //=================================================
         // Game Start
         //=================================================
-        MakeRevealList(game, game.gamedata.playerStart.firstReveal)
-        //MakeMonster(game, "deep-one")
-        //MakeMonster(game, "deep-one-2")
+        //MakeRevealList(game, game.gamedata.playerStart.firstReveal)
+        MakeMonster(game, "deep-one")
+        MakeMonster(game, "deep-one-2")
     },
 
     update: function () {
@@ -291,6 +291,76 @@ Helper.shuffle = function (array) {
 
 //TODO Polyfill for array.find?
 //TODO Polyfill for array.filter?
+
+//=========================================================
+function MakePlayerAttackDialog(game) {
+
+    var playerAttackDialogGroup = new PlayerAttackDialogGroup(
+        game
+    )
+
+    game.stage.addChild(playerAttackDialogGroup)
+
+    return playerAttackDialogGroup
+}
+
+function PlayerAttackDialogGroup(game) {
+    Phaser.Group.call(this, game);
+    var dialogRect = new Phaser.Rectangle(96 * 3, 16, game.stageViewRect.width - 96 * 3, game.stageViewRect.height)
+    this._attackResolved = false;
+
+    var moveText = "What type of weapon will you attack with?"
+
+    // Weapon Select Text
+    var weaponTextDialog = new DialogMessageMonster(game, moveText, 600);
+    weaponTextDialog.alignIn(dialogRect, Phaser.TOP_CENTER, 0, 0)
+    this.addChild(weaponTextDialog);
+
+    var weaponButtonData = [
+        {
+            text: "@ Attack with a Heavy Weapon",
+            weapon: "heavy-weapon"
+        },
+        {
+            text: "@ Attack with a Bladed Weapon",
+            weapon: "bladed-weapon"
+        },
+        {
+            text: "@ Attack with a Firearm",
+            weapon: "firearm"
+        },
+        {
+            text: "@ Attack with a Spell",
+            weapon: "spell"
+        },
+        {
+            text: "@ Attack with a Unarmed",
+            weapon: "unarmed"
+        },
+        {
+            text: "Cancel",
+            weapon: null
+        }
+    ]
+
+    for (var i = 0; i < weaponButtonData.length; i++) {
+        weaponData = weaponButtonData[i]
+
+        var attackButtonTextGroup = new DialogButtonMedium(game, weaponData.text, 520)
+        attackButtonTextGroup.alignTo(weaponTextDialog, Phaser.BOTTOM_CENTER, 0, 28 + (65 * i))
+        this.addChild(attackButtonTextGroup);
+
+        var attackButton = game.make.sprite(attackButtonTextGroup.x, attackButtonTextGroup.y, 'pixelTransparent');
+        attackButton.width = attackButtonTextGroup.width;
+        attackButton.height = attackButtonTextGroup.height;
+        attackButton.inputEnabled = true;
+        //attackButton.events.onInputUp.add(this.attackButtonClicked, this);
+        this.addChild(attackButton);
+    }
+}
+
+PlayerAttackDialogGroup.prototype = Object.create(Phaser.Group.prototype);
+PlayerAttackDialogGroup.prototype.constructor = PlayerAttackDialogGroup;
 
 //=========================================================
 function MakeMonsterDiscardDialog(game) {
@@ -1094,7 +1164,7 @@ HudGroup.prototype.makeMonsterDetailGroup = function (game) {
     attackButton.width = dialogAttack.width;
     attackButton.height = dialogAttack.height;
     attackButton.inputEnabled = true;
-    //attackButton.events.onInputUp.add(this.skillConfirmClicked, this);
+    attackButton.events.onInputUp.add(this.monsterAttackClicked, this);
     monsterDetailGroup.addChild(attackButton);
 
     // Evade
@@ -1110,6 +1180,10 @@ HudGroup.prototype.makeMonsterDetailGroup = function (game) {
     monsterDetailGroup.addChild(evadeButton);
 
     return monsterDetailGroup
+}
+
+HudGroup.prototype.monsterAttackClicked = function (button, pointer) {
+    MakePlayerAttackDialog(game)
 }
 
 HudGroup.prototype.monsterSubtractClicked = function (button, pointer) {
