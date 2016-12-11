@@ -181,6 +181,12 @@ var GameState = {
         game.hud.randomAttackSpell = game.gamedata.attacks.filter(function (item) { return item.type == "spell" })
         game.hud.randomAttackUnarmed = game.gamedata.attacks.filter(function (item) { return item.type == "unarmed" })
 
+        game.hud.randomAttackHeavyWeapon = Helper.shuffle(game.hud.randomAttackHeavyWeapon)
+        game.hud.randomAttackBladedWeapon = Helper.shuffle(game.hud.randomAttackBladedWeapon)
+        game.hud.randomAttackFirearm = Helper.shuffle(game.hud.randomAttackFirearm)
+        game.hud.randomAttackSpell = Helper.shuffle(game.hud.randomAttackSpell)
+        game.hud.randomAttackUnarmed = Helper.shuffle(game.hud.randomAttackUnarmed)
+
         //=================================================
         // Initialize Stuff
         game.physics.startSystem(Phaser.Physics.P2JS);
@@ -372,7 +378,50 @@ PlayerAttackDialogGroup.prototype = Object.create(Phaser.Group.prototype);
 PlayerAttackDialogGroup.prototype.constructor = PlayerAttackDialogGroup;
 
 PlayerAttackDialogGroup.prototype.attackButtonClicked = function (button, pointer) {
-    console.log(button.weapon)
+    if (button.weapon != null) {
+        var weaponAttack = null
+        // if the weapon attack deck is null, repopulate and reshuffle
+        // draw weapon attack
+        if (button.weapon == "heavy-weapon") {
+            if (game.hud.randomAttackHeavyWeapon.length == 0) {
+                game.hud.randomAttackHeavyWeapon = game.gamedata.attacks.filter(function (item) { return item.type == "heavy-weapon" })
+                game.hud.randomAttackHeavyWeapon = Helper.shuffle(game.hud.randomAttackHeavyWeapon)
+            }
+            weaponAttack = game.hud.randomAttackHeavyWeapon.pop()
+        } else if (button.weapon == "bladed-weapon") {
+            if (game.hud.randomAttackBladedWeapon.length == 0) {
+                game.hud.randomAttackBladedWeapon = game.gamedata.attacks.filter(function (item) { return item.type == "bladed-weapon" })
+                game.hud.randomAttackBladedWeapon = Helper.shuffle(game.hud.randomAttackBladedWeapon)
+            }
+            weaponAttack = game.hud.randomAttackBladedWeapon.pop()
+        } else if (button.weapon == "firearm") {
+            if (game.hud.randomAttackFirearm.length == 0) {
+                game.hud.randomAttackFirearm = game.gamedata.attacks.filter(function (item) { return item.type == "firearm" })
+                game.hud.randomAttackFirearm = Helper.shuffle(game.hud.randomAttackFirearm)
+            }
+            weaponAttack = game.hud.randomAttackFirearm.pop()
+        } else if (button.weapon == "spell") {
+            if (game.hud.randomAttackSpell.length == 0) {
+                game.hud.randomAttackSpell = game.gamedata.attacks.filter(function (item) { return item.type == "spell" })
+                game.hud.randomAttackSpell = Helper.shuffle(game.hud.randomAttackSpell)
+            }
+            weaponAttack = game.hud.randomAttackSpell.pop()
+        } else if (button.weapon == "unarmed") {
+            if (game.hud.randomAttackUnarmed.length == 0) {
+                game.hud.randomAttackUnarmed = game.gamedata.attacks.filter(function (item) { return item.type == "unarmed" })
+                game.hud.randomAttackUnarmed = Helper.shuffle(game.hud.randomAttackUnarmed)
+            }
+            weaponAttack = game.hud.randomAttackUnarmed.pop()
+        }
+
+        // create weapon dialog
+        console.log(weaponAttack)
+
+        // fade in weapon dialog
+    }
+
+    // destroy player attack dialog
+    this.destroy(true);
 }
 
 //=========================================================
@@ -1322,7 +1371,7 @@ HudGroup.prototype.randomEvent = function () {
     
     while (randomEventData == null) {
         if (game.hud.randomEventDeck.length == 0) {
-            game.hud.randomEventDeck = game.gamedata.randomEvents.slice(0)
+            game.hud.randomEventDeck = game.gamedata.randomEvents.slice(0) // copy array?
             game.hud.randomEventDeck = Helper.shuffle(game.hud.randomEventDeck)
         }
 
