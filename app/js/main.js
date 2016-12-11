@@ -299,6 +299,7 @@ function MakePlayerAttackDialog(game) {
         game
     )
 
+    game.add.tween(playerAttackDialogGroup).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
     game.stage.addChild(playerAttackDialogGroup)
 
     return playerAttackDialogGroup
@@ -308,6 +309,13 @@ function PlayerAttackDialogGroup(game) {
     Phaser.Group.call(this, game);
     var dialogRect = new Phaser.Rectangle(96 * 3, 16, game.stageViewRect.width - 96 * 3, game.stageViewRect.height)
     this._attackResolved = false;
+
+    // Modal
+    var modalBackground = game.make.sprite(game.stageViewRect.x, game.stageViewRect.y, 'pixelTransparent');
+    modalBackground.width = game.stageViewRect.width;
+    modalBackground.height = game.stageViewRect.height;
+    modalBackground.inputEnabled = true;
+    this.addChild(modalBackground);
 
     var moveText = "What type of weapon will you attack with?"
 
@@ -354,13 +362,18 @@ function PlayerAttackDialogGroup(game) {
         attackButton.width = attackButtonTextGroup.width;
         attackButton.height = attackButtonTextGroup.height;
         attackButton.inputEnabled = true;
-        //attackButton.events.onInputUp.add(this.attackButtonClicked, this);
+        attackButton.weapon = weaponData.weapon
+        attackButton.events.onInputUp.add(this.attackButtonClicked, this);
         this.addChild(attackButton);
     }
 }
 
 PlayerAttackDialogGroup.prototype = Object.create(Phaser.Group.prototype);
 PlayerAttackDialogGroup.prototype.constructor = PlayerAttackDialogGroup;
+
+PlayerAttackDialogGroup.prototype.attackButtonClicked = function (button, pointer) {
+    console.log(button.weapon)
+}
 
 //=========================================================
 function MakeMonsterDiscardDialog(game) {
