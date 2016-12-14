@@ -883,5 +883,67 @@
       "monster": "deep-one",
       "text": "The deep one's gurgling seems to trigger something deep within your primitive mind. Suffer 1 facedown Horror. A rush of primal fear washes over you (Will; 2). If you pass, you take a few deep breaths and maintain control. If you fail, old and painful terrors bubble to the surface; flip 2 Horror faceup."
     }
+  ],
+  "attacks" :[
+    {
+      "id": "attack-heavy-weapon-1",
+      "type": "heavy-weapon",
+      "tags": [ ],
+      "text": "A blood fury consumes you, and you swing madly at your enemy (Strength); roll 2 additional dice if you have suffered 3 or more Damage. The monster suffers damage equal to your test result."
+    },
+    {
+      "id": "attack-heavy-weapon-2",
+      "type": "heavy-weapon",
+      "tags": [ ],
+      "text": "AS your foe closes in on you, you heave your weapon upward in a tight swing (Strength; 2). If you pass, your weapon connects with your attacker's chest with a sickening crunch; the monster suffers damage equal to your test result. If you fail, the difficult angle makes for an ineffectual swing."
+    },
+    {
+      "id": "attack-bladed-weapon-1",
+      "type": "bladed-weapon",
+      "tags": [ ],
+      "text": "You clasp your blade firmly and swing in a wide arc (Agility; 2). If you pass, you slice into your foe; the monster suffers damage equal to the weapon's damage plus your test result. If you fail, your enemy deftly doges the attack."
+    },
+    {
+      "id": "attack-bladed-weapon-2",
+      "type": "bladed-weapon",
+      "tags": [ ],
+      "text": "You spring forward with a flurry of quick thrusts, probing for an opening (Agilityl; 2). If you pass, your blade pierces the enemy's flesh; the monster suffers damage equal to the weapon's damage plus your test result. If you fail, your blade encounters nothing but air."
+    },
+    {
+      "id": "attack-firearm-1",
+      "type": "firearm",
+      "tags": [ ],
+        "text": "Not trusting your aim, you strive to make up for it with sheer volume of lead. You fire, reload, and fire again (Agility; 2). If you pass, a number of shots strike your foe; the monster suffers damage equal to the weapon's damage. If you fail, you manage to miss your enemy entierly."
+    },
+    {
+      "id": "attack-firearm-2",
+      "type": "firearm",
+      "tags": [ ],
+        "text": "Closing one eye, you sight along the barrel and train your weapon on your opponent (Agility; 2). If you pass, you hear the thunder of your gun and see your foe stagger as the bullet strikes home; the monster suffers damage equal to the weapon's damage. If you fail, you resolve to try with both eyes open next time."
+    },
+    {
+      "id": "attack-spell-1",
+      "type": "spell",
+      "tags": [ ],
+        "text": "You trace a mystic sigil in the air, letting your mind expand into it (Lore; 2). If you pass, the curse bursts from you; the monster suffers damage equal to the Spell's damage. If you fail, you make an error and the hex fails.\n\nThen flip the Spell you attacked with."
+    },
+    {
+      "id": "attack-spell-2",
+      "type": "spell",
+      "tags": [ ],
+        "text": "You struggle to pronounce the blasphemous phrase, arcane words twisting your tongue (Lore; 2). If you pass, some primordial instinct guides your speech; the monster suffers damage equal to the Spell's damage plus your test result. If you fail, your mouth cannot form the words and you stutter into silence.\n\nThen flip the Spell you attacked with."
+    },
+    {
+      "id": "attack-unarmed-1",
+      "type": "unarmed",
+      "tags": [ ],
+        "text": "You challenge your enemy to fisticuffs. Your foe pauses, sizing you up (Influence; 2); roll 2 extra dice if you have suffered 3 or more Damage. If you pass, you take advantage of the momentary confusion and deliver a powerful swing to the head; the monster suffers damage equal to your test result. If you fail, your incoming fist is slapped beusedly aside."
+    },
+    {
+      "id": "attack-unarmed-2",
+      "type": "unarmed",
+      "tags": [ ],
+        "text": "You study your opponent's movements (Observation; 2). If you pass, you see weakness in the left knee and attack; the monster suffers 2 damage. If you fail, your opponent gives away nothing and you miss your opportunity."
+    }
   ]
 }
