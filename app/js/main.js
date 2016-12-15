@@ -684,6 +684,7 @@ function MakeMonsterAttackDialog(game, id) {
         attackData.nonAttackText
     )
 
+    game.add.tween(monsterAttackDialogGroup).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
     game.stage.addChild(monsterAttackDialogGroup)
     
     return monsterAttackDialogGroup
@@ -831,6 +832,16 @@ MonsterAttackDialogGroup.prototype.hideDialog = function () {
         this._attackGroup.visible = false
     } else if (this._nonAttackResolved) {
         this._nonAttackGroup.visible = false
+    }
+}
+
+MonsterAttackDialogGroup.prototype.showDialog = function () {
+    if (!this._attackResolved && !this._nonAttackResolved) {
+        this._mainGroup.visible = true
+    } else if (this._attackResolved) {
+        this._attackGroup.visible = true
+    } else if (this._nonAttackResolved) {
+        this._nonAttackGroup.visible = true
     }
 }
 
@@ -1125,7 +1136,7 @@ HudGroup.prototype.hideMonsterAttackDialog = function () {
 
 HudGroup.prototype.showMonsterAttackDialog = function () {
     if (game.hudInstance.monsterAttackDialog != null) {
-
+        game.hudInstance.monsterAttackDialog.showDialog()
     }
 }
 
@@ -1245,7 +1256,9 @@ HudGroup.prototype.makeMonsterDetailGroup = function (game) {
 }
 
 HudGroup.prototype.monsterAttackClicked = function (button, pointer) {
-    MakePlayerAttackDialog(game)
+    if (game.hud.activePhase == "player") {
+        MakePlayerAttackDialog(game)
+    }
 }
 
 HudGroup.prototype.monsterSubtractClicked = function (button, pointer) {
