@@ -212,9 +212,9 @@ var GameState = {
         //=================================================
         // Game Start
         //=================================================
-        MakeRevealList(game, game.gamedata.playerStart.firstReveal)
-        //MakeMonster(game, "deep-one")
-        //MakeMonster(game, "deep-one-2")
+        //MakeRevealList(game, game.gamedata.playerStart.firstReveal)
+        MakeMonster(game, "deep-one")
+        MakeMonster(game, "deep-one-2")
     },
 
     update: function () {
@@ -299,13 +299,47 @@ Helper.shuffle = function (array) {
 //TODO Polyfill for array.filter?
 
 //=========================================================
+function WeaponAttackDialogGroup(game, attackText) {
+    Phaser.Group.call(this, game);
+    var dialogRect = new Phaser.Rectangle(96 * 3, 16, game.stageViewRect.width - 96 * 3, game.stageViewRect.height)
+
+    // Attack Text
+    var attackTextDialog = new DialogMessageMonster(game, attackText, 600);
+    attackTextDialog.alignIn(dialogRect, Phaser.TOP_CENTER, 0, 0)
+    this.addChild(attackTextDialog);
+
+    // Attack Text Continue
+    var attackTextContinue = new DialogButtonThin(game, "Continue", 180);
+    attackTextContinue.alignTo(attackTextDialog, Phaser.BOTTOM_CENTER, 0, 28)
+    this.addChild(attackTextContinue);
+
+    var attackTextContinueButton = game.make.sprite(attackTextContinue.x, attackTextContinue.y, 'pixelTransparent');
+    attackTextContinueButton.width = attackTextContinue.width;
+    attackTextContinueButton.height = attackTextContinue.height;
+    attackTextContinueButton.inputEnabled = true;
+    attackTextContinueButton.events.onInputUp.add(this.contineuButtonClicked, this);
+    this.addChild(attackTextContinueButton);
+
+    this.addChild(attackTextDialog)
+    this.addChild(attackTextContinue)
+    this.addChild(attackTextContinueButton)
+}
+
+WeaponAttackDialogGroup.prototype = Object.create(Phaser.Group.prototype);
+WeaponAttackDialogGroup.prototype.constructor = WeaponAttackDialogGroup;
+
+WeaponAttackDialogGroup.prototype.contineuButtonClicked = function () {
+    this.destroy(true);
+}
+
+//=========================================================
 function MakePlayerAttackDialog(game) {
 
     var playerAttackDialogGroup = new PlayerAttackDialogGroup(
         game
     )
 
-    game.add.tween(playerAttackDialogGroup).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+    game.add.tween(playerAttackDialogGroup).from({ alpha: 0 }, 200, Phaser.Easing.Linear.None, true, 0, 0, false);
     game.stage.addChild(playerAttackDialogGroup)
 
     return playerAttackDialogGroup
@@ -378,50 +412,59 @@ PlayerAttackDialogGroup.prototype = Object.create(Phaser.Group.prototype);
 PlayerAttackDialogGroup.prototype.constructor = PlayerAttackDialogGroup;
 
 PlayerAttackDialogGroup.prototype.attackButtonClicked = function (button, pointer) {
-    if (button.weapon != null) {
+    if (this._attackResolved == false) {
+        this._attackResolved = true
         var weaponAttack = null
-        // if the weapon attack deck is null, repopulate and reshuffle
-        // draw weapon attack
-        if (button.weapon == "heavy-weapon") {
-            if (game.hud.randomAttackHeavyWeapon.length == 0) {
-                game.hud.randomAttackHeavyWeapon = game.gamedata.attacks.filter(function (item) { return item.type == "heavy-weapon" })
-                game.hud.randomAttackHeavyWeapon = Helper.shuffle(game.hud.randomAttackHeavyWeapon)
+        if (button.weapon != null) {
+            // if the weapon attack deck is null, repopulate and reshuffle
+            // draw weapon attack
+            if (button.weapon == "heavy-weapon") {
+                if (game.hud.randomAttackHeavyWeapon.length == 0) {
+                    game.hud.randomAttackHeavyWeapon = game.gamedata.attacks.filter(function (item) { return item.type == "heavy-weapon" })
+                    game.hud.randomAttackHeavyWeapon = Helper.shuffle(game.hud.randomAttackHeavyWeapon)
+                }
+                weaponAttack = game.hud.randomAttackHeavyWeapon.pop()
+            } else if (button.weapon == "bladed-weapon") {
+                if (game.hud.randomAttackBladedWeapon.length == 0) {
+                    game.hud.randomAttackBladedWeapon = game.gamedata.attacks.filter(function (item) { return item.type == "bladed-weapon" })
+                    game.hud.randomAttackBladedWeapon = Helper.shuffle(game.hud.randomAttackBladedWeapon)
+                }
+                weaponAttack = game.hud.randomAttackBladedWeapon.pop()
+            } else if (button.weapon == "firearm") {
+                if (game.hud.randomAttackFirearm.length == 0) {
+                    game.hud.randomAttackFirearm = game.gamedata.attacks.filter(function (item) { return item.type == "firearm" })
+                    game.hud.randomAttackFirearm = Helper.shuffle(game.hud.randomAttackFirearm)
+                }
+                weaponAttack = game.hud.randomAttackFirearm.pop()
+            } else if (button.weapon == "spell") {
+                if (game.hud.randomAttackSpell.length == 0) {
+                    game.hud.randomAttackSpell = game.gamedata.attacks.filter(function (item) { return item.type == "spell" })
+                    game.hud.randomAttackSpell = Helper.shuffle(game.hud.randomAttackSpell)
+                }
+                weaponAttack = game.hud.randomAttackSpell.pop()
+            } else if (button.weapon == "unarmed") {
+                if (game.hud.randomAttackUnarmed.length == 0) {
+                    game.hud.randomAttackUnarmed = game.gamedata.attacks.filter(function (item) { return item.type == "unarmed" })
+                    game.hud.randomAttackUnarmed = Helper.shuffle(game.hud.randomAttackUnarmed)
+                }
+                weaponAttack = game.hud.randomAttackUnarmed.pop()
             }
-            weaponAttack = game.hud.randomAttackHeavyWeapon.pop()
-        } else if (button.weapon == "bladed-weapon") {
-            if (game.hud.randomAttackBladedWeapon.length == 0) {
-                game.hud.randomAttackBladedWeapon = game.gamedata.attacks.filter(function (item) { return item.type == "bladed-weapon" })
-                game.hud.randomAttackBladedWeapon = Helper.shuffle(game.hud.randomAttackBladedWeapon)
-            }
-            weaponAttack = game.hud.randomAttackBladedWeapon.pop()
-        } else if (button.weapon == "firearm") {
-            if (game.hud.randomAttackFirearm.length == 0) {
-                game.hud.randomAttackFirearm = game.gamedata.attacks.filter(function (item) { return item.type == "firearm" })
-                game.hud.randomAttackFirearm = Helper.shuffle(game.hud.randomAttackFirearm)
-            }
-            weaponAttack = game.hud.randomAttackFirearm.pop()
-        } else if (button.weapon == "spell") {
-            if (game.hud.randomAttackSpell.length == 0) {
-                game.hud.randomAttackSpell = game.gamedata.attacks.filter(function (item) { return item.type == "spell" })
-                game.hud.randomAttackSpell = Helper.shuffle(game.hud.randomAttackSpell)
-            }
-            weaponAttack = game.hud.randomAttackSpell.pop()
-        } else if (button.weapon == "unarmed") {
-            if (game.hud.randomAttackUnarmed.length == 0) {
-                game.hud.randomAttackUnarmed = game.gamedata.attacks.filter(function (item) { return item.type == "unarmed" })
-                game.hud.randomAttackUnarmed = Helper.shuffle(game.hud.randomAttackUnarmed)
-            }
-            weaponAttack = game.hud.randomAttackUnarmed.pop()
         }
 
-        // create weapon dialog
-        console.log(weaponAttack)
-
-        // fade in weapon dialog
+        // destroy player attack dialog
+        var fadeOutTween = game.add.tween(this).to({ alpha: 0 }, 200, Phaser.Easing.Linear.None, true, 0, 0, false);
+        fadeOutTween.onComplete.addOnce(function () {
+            this.destroy(true);
+            if (weaponAttack != null) {
+                console.log(weaponAttack)
+                // create weapon dialog
+                var attackDialog = new WeaponAttackDialogGroup(game, weaponAttack.text)
+                // fade in weapon dialog
+                game.add.tween(attackDialog).from({ alpha: 0 }, 200, Phaser.Easing.Linear.None, true, 0, 0, false);
+                game.stage.addChild(attackDialog)
+            }
+        }, this);
     }
-
-    // destroy player attack dialog
-    this.destroy(true);
 }
 
 //=========================================================
@@ -684,7 +727,7 @@ function MakeMonsterAttackDialog(game, id) {
         attackData.nonAttackText
     )
 
-    game.add.tween(monsterAttackDialogGroup).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+    game.add.tween(monsterAttackDialogGroup).from({ alpha: 0 }, 200, Phaser.Easing.Linear.None, true, 0, 0, false);
     game.stage.addChild(monsterAttackDialogGroup)
     
     return monsterAttackDialogGroup

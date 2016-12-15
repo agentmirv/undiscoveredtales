@@ -895,7 +895,7 @@
       "id": "attack-heavy-weapon-2",
       "type": "heavy-weapon",
       "tags": [ ],
-      "text": "AS your foe closes in on you, you heave your weapon upward in a tight swing (Strength; 2). If you pass, your weapon connects with your attacker's chest with a sickening crunch; the monster suffers damage equal to your test result. If you fail, the difficult angle makes for an ineffectual swing."
+      "text": "As your foe closes in on you, you heave your weapon upward in a tight swing (Strength; 2). If you pass, your weapon connects with your attacker's chest with a sickening crunch; the monster suffers damage equal to your test result. If you fail, the difficult angle makes for an ineffectual swing."
     },
     {
       "id": "attack-bladed-weapon-1",
