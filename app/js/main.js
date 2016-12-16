@@ -319,10 +319,6 @@ function WeaponAttackDialogGroup(game, attackText) {
     attackTextContinueButton.inputEnabled = true;
     attackTextContinueButton.events.onInputUp.add(this.contineuButtonClicked, this);
     this.addChild(attackTextContinueButton);
-
-    this.addChild(attackTextDialog)
-    this.addChild(attackTextContinue)
-    this.addChild(attackTextContinueButton)
 }
 
 WeaponAttackDialogGroup.prototype = Object.create(Phaser.Group.prototype);
@@ -350,13 +346,6 @@ function PlayerAttackDialogGroup(game) {
     Phaser.Group.call(this, game);
     var dialogRect = new Phaser.Rectangle(96 * 3, 16, game.stageViewRect.width - 96 * 3, game.stageViewRect.height)
     this._attackResolved = false;
-
-    //// Modal
-    //var modalBackground = game.make.sprite(game.stageViewRect.x, game.stageViewRect.y, 'pixelTransparent');
-    //modalBackground.width = game.stageViewRect.width;
-    //modalBackground.height = game.stageViewRect.height;
-    //modalBackground.inputEnabled = true;
-    //this.addChild(modalBackground);
 
     var moveText = "What type of weapon will you attack with?"
 
@@ -457,12 +446,11 @@ PlayerAttackDialogGroup.prototype.attackButtonClicked = function (button, pointe
         fadeOutTween.onComplete.addOnce(function () {
             this.destroy(true);
             if (weaponAttack != null) {
-                console.log(weaponAttack)
                 // create weapon dialog
-                var attackDialog = new WeaponAttackDialogGroup(game, weaponAttack.text)
+                game.hudInstance.playerAttackResolveDialog = new WeaponAttackDialogGroup(game, weaponAttack.text)
                 // fade in weapon dialog
-                game.add.tween(attackDialog).from({ alpha: 0 }, 200, Phaser.Easing.Linear.None, true, 0, 0, false);
-                game.stage.addChild(attackDialog)
+                game.add.tween(game.hudInstance.playerAttackResolveDialog).from({ alpha: 0 }, 200, Phaser.Easing.Linear.None, true, 0, 0, false);
+                game.stage.addChild(game.hudInstance.playerAttackResolveDialog)
             } else {
                 game.hud.activeStep = "";
             }
@@ -530,6 +518,8 @@ MonsterDiscardDialogGroup.prototype.confirmButtonClicked = function () {
     this.destroy(true);
     // destroy monster attack dialog
     game.hudInstance.destroyMonsterAttackDialog()
+    // destroy player attack dialog
+    game.hudInstance.destroyPlayerAttackDialog()
     // destroy monster
     game.hudInstance.discardCurrentMonster()
     
@@ -548,6 +538,8 @@ MonsterDiscardDialogGroup.prototype.cancelButtonClicked = function () {
     game.hudInstance.monsterSubtractClicked()
     // show monster attack dialog
     game.hudInstance.showMonsterAttackDialog()
+    // show player attack dialog
+    game.hudInstance.showPlayerAttackDialog()
     // destroy discard monster dialog
     this.destroy(true);
 }
@@ -1148,7 +1140,9 @@ function HudGroup(game) {
     monsterButton.events.onInputUp.add(this.showMonsterTrayClicked, this);
     this.addChild(monsterButton);
     
-    game.hudInstance.monsterAttackDialog = null
+    this.monsterAttackDialog = null
+    this.playerAttackPromptDialog = null
+    this.playerAttackResolveDialog = null
 }
 
 HudGroup.prototype = Object.create(Phaser.Group.prototype);
@@ -1166,6 +1160,34 @@ HudGroup.prototype.discardCurrentMonster = function () {
 
     game.hud.currentMonsterInstance.discard()
     game.hud.currentMonsterInstance = null
+}
+
+HudGroup.prototype.destroyPlayerAttackDialog = function () {
+    game.hud.activeStep = ""
+    if (game.hudInstance.playerAttackPromptDialog != null) {
+        game.hudInstance.playerAttackPromptDialog.destroy(true)
+    }
+    if (game.hudInstance.playerAttackResolveDialog != null) {
+        game.hudInstance.playerAttackResolveDialog.destroy(true)
+    }
+}
+
+HudGroup.prototype.hidePlayerAttackDialog = function () {
+    if (game.hudInstance.playerAttackPromptDialog != null) {
+        game.hudInstance.playerAttackPromptDialog.visible = false
+    }
+    if (game.hudInstance.playerAttackResolveDialog != null) {
+        game.hudInstance.playerAttackResolveDialog.visible = false
+    }
+}
+
+HudGroup.prototype.showPlayerAttackDialog = function () {
+    if (game.hudInstance.playerAttackPromptDialog != null) {
+        game.hudInstance.playerAttackPromptDialog.visible = true
+    }
+    if (game.hudInstance.playerAttackResolveDialog != null) {
+        game.hudInstance.playerAttackResolveDialog.visible = true
+    }
 }
 
 HudGroup.prototype.destroyMonsterAttackDialog = function () {
@@ -1304,7 +1326,7 @@ HudGroup.prototype.makeMonsterDetailGroup = function (game) {
 HudGroup.prototype.monsterAttackClicked = function (button, pointer) {
     if (game.hud.activePhase == "player" && game.hud.activeStep == "") {
         game.hud.activeStep = "attack";
-        MakePlayerAttackDialog(game)
+        this.playerAttackPromptDialog = MakePlayerAttackDialog(game)
     }
 }
 
@@ -1327,6 +1349,8 @@ HudGroup.prototype.monsterAddClicked = function (button, pointer) {
     if (game.hud.currentMonsterInstance.damage == game.hud.currentMonsterInstance.hitPoints) {
         // hide monster attack dialog (if present)
         game.hudInstance.hideMonsterAttackDialog()
+        // hide player attack dialog (if present)
+        game.hudInstance.hidePlayerAttackDialog()
         // create discard monster dialog
         MakeMonsterDiscardDialog(game)
     }
