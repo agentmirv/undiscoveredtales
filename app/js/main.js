@@ -329,6 +329,7 @@ WeaponAttackDialogGroup.prototype = Object.create(Phaser.Group.prototype);
 WeaponAttackDialogGroup.prototype.constructor = WeaponAttackDialogGroup;
 
 WeaponAttackDialogGroup.prototype.contineuButtonClicked = function () {
+    game.hud.activeStep = "";
     this.destroy(true);
 }
 
@@ -350,12 +351,12 @@ function PlayerAttackDialogGroup(game) {
     var dialogRect = new Phaser.Rectangle(96 * 3, 16, game.stageViewRect.width - 96 * 3, game.stageViewRect.height)
     this._attackResolved = false;
 
-    // Modal
-    var modalBackground = game.make.sprite(game.stageViewRect.x, game.stageViewRect.y, 'pixelTransparent');
-    modalBackground.width = game.stageViewRect.width;
-    modalBackground.height = game.stageViewRect.height;
-    modalBackground.inputEnabled = true;
-    this.addChild(modalBackground);
+    //// Modal
+    //var modalBackground = game.make.sprite(game.stageViewRect.x, game.stageViewRect.y, 'pixelTransparent');
+    //modalBackground.width = game.stageViewRect.width;
+    //modalBackground.height = game.stageViewRect.height;
+    //modalBackground.inputEnabled = true;
+    //this.addChild(modalBackground);
 
     var moveText = "What type of weapon will you attack with?"
 
@@ -462,6 +463,8 @@ PlayerAttackDialogGroup.prototype.attackButtonClicked = function (button, pointe
                 // fade in weapon dialog
                 game.add.tween(attackDialog).from({ alpha: 0 }, 200, Phaser.Easing.Linear.None, true, 0, 0, false);
                 game.stage.addChild(attackDialog)
+            } else {
+                game.hud.activeStep = "";
             }
         }, this);
     }
@@ -938,7 +941,7 @@ Monster.prototype.alignInTray = function (position) {
 }
 
 Monster.prototype.trayClicked = function () {
-    if (game.hud.activePhase == "player") {
+    if (game.hud.activePhase == "player" && game.hud.activeStep == "") {
         HudGroup.prototype.showEnemyPhaseBG()
         if (game.hud.monsterDetailOpen && game.hud.currentMonsterInstance == this) {
             HudGroup.prototype.hideMonsterDetail()
@@ -1299,7 +1302,8 @@ HudGroup.prototype.makeMonsterDetailGroup = function (game) {
 }
 
 HudGroup.prototype.monsterAttackClicked = function (button, pointer) {
-    if (game.hud.activePhase == "player") {
+    if (game.hud.activePhase == "player" && game.hud.activeStep == "") {
+        game.hud.activeStep = "attack";
         MakePlayerAttackDialog(game)
     }
 }
@@ -1329,7 +1333,7 @@ HudGroup.prototype.monsterAddClicked = function (button, pointer) {
 }
 
 HudGroup.prototype.showMonsterTrayClicked = function (button, pointer) {
-    if (game.hud.activePhase == "player" || game.hud.activeStep == "horrorCheck") {
+    if ((game.hud.activePhase == "player" && game.hud.activeStep == "" ) || game.hud.activeStep == "horrorCheck") {
         if (game.hud.monsterTrayOpen) {
             HudGroup.prototype.hideEnemyPhaseBG()
             HudGroup.prototype.hideMonsterTray()
@@ -1343,7 +1347,7 @@ HudGroup.prototype.showMonsterTrayClicked = function (button, pointer) {
 
 HudGroup.prototype.endPhaseClicked = function (button, pointer) {
     var dialogInstance
-    if (game.hud.activePhase == "player") {
+    if (game.hud.activePhase == "player" && game.hud.activeStep == "") {
         dialogInstance = MakeDialog(game, "dialog-hud-endphase-player")
         HudGroup.prototype.hideEnemyPhaseBG()
         HudGroup.prototype.hideMonsterTray()
