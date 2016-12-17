@@ -901,7 +901,7 @@
       "id": "attack-bladed-weapon-1",
       "type": "bladed-weapon",
       "tags": [ ],
-      "text": "You clasp your blade firmly and swing in a wide arc (Agility; 2). If you pass, you slice into your foe; the monster suffers damage equal to the weapon's damage plus your test result. If you fail, your enemy deftly doges the attack."
+      "text": "You clasp your blade firmly and swing in a wide arc (Agility; 2). If you pass, you slice into your foe; the monster suffers damage equal to the weapon's damage plus your test result. If you fail, your enemy deftly dodges the attack."
     },
     {
       "id": "attack-bladed-weapon-2",

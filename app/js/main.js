@@ -253,7 +253,7 @@ var GameState = {
     render: function () {
         //game.debug.cameraInfo(game.camera, 32, 32);
         //game.debug.spriteInfo(player, 32, 130);
-        //game.debug.text(game.revealDialogs.length, 32, 230)
+        //game.debug.text(game.hud.activeStep, 32, 500)
         //game.debug.text(cameraPoint.x, 32, 230)
         //game.debug.text(cameraPoint.y, 32, 250)
         //game.debug.text(playerPoint.x, 32, 270)
@@ -516,17 +516,17 @@ MonsterDiscardDialogGroup.prototype.constructor = MonsterDiscardDialogGroup;
 MonsterDiscardDialogGroup.prototype.confirmButtonClicked = function () {
     // destroy discard monster dialog
     this.destroy(true);
-    // destroy monster attack dialog
-    game.hudInstance.destroyMonsterAttackDialog()
-    // destroy player attack dialog
-    game.hudInstance.destroyPlayerAttackDialog()
     // destroy monster
     game.hudInstance.discardCurrentMonster()
     
     if (game.hud.activePhase == "player") {
+        // destroy player attack dialog
+        game.hudInstance.destroyPlayerAttackDialog()
         // hide monster detail
         HudGroup.prototype.hideMonsterDetail()
     } else if (game.hud.activeStep == "monsterAttack") {
+        // destroy monster attack dialog
+        game.hudInstance.destroyMonsterAttackDialog()
         // next monster attack
         game.hud.currentMonsterIndex -= 1
         HudGroup.prototype.monsterAttack()
