@@ -212,9 +212,9 @@ var GameState = {
         //=================================================
         // Game Start
         //=================================================
-        MakeRevealList(game, game.gamedata.playerStart.firstReveal)
-        //MakeMonster(game, "deep-one")
-        //MakeMonster(game, "deep-one-2")
+        //MakeRevealList(game, game.gamedata.playerStart.firstReveal)
+        MakeMonster(game, "deep-one")
+        MakeMonster(game, "deep-one-2")
     },
 
     update: function () {
@@ -297,6 +297,153 @@ Helper.shuffle = function (array) {
 
 //TODO Polyfill for array.find?
 //TODO Polyfill for array.filter?
+
+//=========================================================
+function MakePlayerEvadeDialog(game) {
+    console.log(arguments)
+    var evadeData = game.gamedata.evadeChecks.find(function (item) { return item.monster == game.hud.currentMonsterInstance.id });
+
+    var playerEvadeDialogGroup = new PlayerEvadeDialogGroup(
+        game,
+        evadeData.text
+    )
+
+    game.add.tween(playerEvadeDialogGroup).from({ alpha: 0 }, 200, Phaser.Easing.Linear.None, true, 0, 0, false);
+    game.stage.addChild(playerEvadeDialogGroup)
+
+    return playerEvadeDialogGroup
+}
+
+function PlayerEvadeDialogGroup(game, text) {
+    Phaser.Group.call(this, game);
+    var dialogRect = new Phaser.Rectangle(96 * 3, 16, game.stageViewRect.width - 96 * 3, game.stageViewRect.height)
+    //this._attackResolved = false;
+    //this._nonAttackResolved = false;
+    //this._nonAttackExists = nonAttackText != null;
+
+    // Move Text
+    var textDialog = new DialogMessageMonster(game, "Resolve an Evade check?", 600);
+    textDialog.alignIn(dialogRect, Phaser.TOP_CENTER, 0, 0)
+    this.addChild(textDialog);
+
+    // Confirm Button
+    var confirmButtonTextGroup = new DialogButtonMedium(game, "Confirm", 520)
+    confirmButtonTextGroup.alignTo(textDialog, Phaser.BOTTOM_CENTER, 0, 28)
+    this.addChild(confirmButtonTextGroup);
+
+    var confirmButton = game.make.sprite(confirmButtonTextGroup.x, confirmButtonTextGroup.y, 'pixelTransparent');
+    confirmButton.width = confirmButtonTextGroup.width;
+    confirmButton.height = confirmButtonTextGroup.height;
+    confirmButton.inputEnabled = true;
+    //confirmButton.events.onInputUp.add(this.confirmButtonClicked, this);
+    this.addChild(confirmButton);
+
+    // Cancel Button
+    var cancelButtonTextGroup = new DialogButtonMedium(game, "Cancel", 520)
+    cancelButtonTextGroup.alignTo(confirmButtonTextGroup, Phaser.BOTTOM_CENTER, 0, 28)
+    this.addChild(cancelButtonTextGroup);
+
+    var cancelButton = game.make.sprite(cancelButtonTextGroup.x, cancelButtonTextGroup.y, 'pixelTransparent');
+    cancelButton.width = cancelButtonTextGroup.width;
+    cancelButton.height = cancelButtonTextGroup.height;
+    cancelButton.inputEnabled = true;
+    //cancelButton.events.onInputUp.add(this.cancelButtonClicked, this);
+    this.addChild(cancelButton);
+
+    this._mainGroup = game.make.group(this)
+    this._mainGroup.addChild(textDialog)
+    this._mainGroup.addChild(confirmButtonTextGroup)
+    this._mainGroup.addChild(confirmButton)
+    this._mainGroup.addChild(cancelButtonTextGroup)
+    this._mainGroup.addChild(cancelButton)
+
+    // Resolve Text
+    var resolveTextDialog = new DialogMessageMonster(game, text, 600);
+    resolveTextDialog.alignIn(dialogRect, Phaser.TOP_CENTER, 0, 0)
+    this.addChild(resolveTextDialog);
+
+    // Resolve Text Continue
+    var resolveTextContinue = new DialogButtonThin(game, "Continue", 180);
+    resolveTextContinue.alignTo(resolveTextDialog, Phaser.BOTTOM_CENTER, 0, 28)
+    this.addChild(resolveTextContinue);
+
+    var resolveTextContinueButton = game.make.sprite(resolveTextContinue.x, resolveTextContinue.y, 'pixelTransparent');
+    resolveTextContinueButton.width = resolveTextContinue.width;
+    resolveTextContinueButton.height = resolveTextContinue.height;
+    resolveTextContinueButton.inputEnabled = true;
+    //resolveTextContinueButton.events.onInputUp.add(this.attackContinueButtonClicked, this);
+    this.addChild(resolveTextContinueButton);
+
+    this._resolveGroup = game.make.group(this)
+    this._resolveGroup.addChild(resolveTextDialog)
+    this._resolveGroup.addChild(resolveTextContinue)
+    this._resolveGroup.addChild(resolveTextContinueButton)
+    this._resolveGroup.visible = false
+}
+
+PlayerEvadeDialogGroup.prototype = Object.create(Phaser.Group.prototype);
+PlayerEvadeDialogGroup.prototype.constructor = PlayerEvadeDialogGroup;
+
+//PlayerEvadeDialogGroup.prototype.attackButtonClicked = function (button, pointer) {
+//    if (!this._attackResolved && !this._nonAttackResolved) {
+//        this._attackResolved = true
+//        var dialog = this
+//        var fadeOutTween = game.add.tween(this._mainGroup).to({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+//        var fadeInTween = game.add.tween(this._attackGroup).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, false, 0, 0, false);
+//        fadeInTween.onStart.addOnce(function () { dialog._attackGroup.visible = true })
+//        fadeOutTween.chain(fadeInTween)
+//    }
+//}
+
+//PlayerEvadeDialogGroup.prototype.nonAttackButtonClicked = function (button, pointer) {
+//    if (!this._attackResolved && !this._nonAttackResolved) {
+//        this._nonAttackResolved = true
+//        var dialog = this
+//        var fadeOutTween = game.add.tween(this._mainGroup).to({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+//        var fadeInTween = game.add.tween(this._nonAttackGroup).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, false, 0, 0, false);
+
+//        if (this._nonAttackExists) {
+//            fadeInTween.onStart.addOnce(function () { dialog._nonAttackGroup.visible = true })
+//            fadeOutTween.chain(fadeInTween)
+//        } else {
+//            fadeOutTween.onComplete.addOnce(function () { HudGroup.prototype.monsterAttack() })
+//        }
+//    }
+//}
+
+//PlayerEvadeDialogGroup.prototype.attackContinueButtonClicked = function (button, pointer) {
+//    var fadeOutTween = game.add.tween(this._attackGroup).to({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+//    fadeOutTween.onComplete.addOnce(function () {
+//        HudGroup.prototype.monsterAttack()
+//    })
+//}
+
+//PlayerEvadeDialogGroup.prototype.nonAttackContinueButtonClicked = function (button, pointer) {
+//    var fadeOutTween = game.add.tween(this._nonAttackGroup).to({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+//    fadeOutTween.onComplete.addOnce(function () {
+//        HudGroup.prototype.monsterAttack()
+//    })
+//}
+
+//PlayerEvadeDialogGroup.prototype.hideDialog = function () {
+//    if (!this._attackResolved && !this._nonAttackResolved) {
+//        this._mainGroup.visible = false
+//    } else if (this._attackResolved) {
+//        this._attackGroup.visible = false
+//    } else if (this._nonAttackResolved) {
+//        this._nonAttackGroup.visible = false
+//    }
+//}
+
+//PlayerEvadeDialogGroup.prototype.showDialog = function () {
+//    if (!this._attackResolved && !this._nonAttackResolved) {
+//        this._mainGroup.visible = true
+//    } else if (this._attackResolved) {
+//        this._attackGroup.visible = true
+//    } else if (this._nonAttackResolved) {
+//        this._nonAttackGroup.visible = true
+//    }
+//}
 
 //=========================================================
 function WeaponAttackDialogGroup(game, attackText) {
@@ -1143,6 +1290,7 @@ function HudGroup(game) {
     this.monsterAttackDialog = null
     this.playerAttackPromptDialog = null
     this.playerAttackResolveDialog = null
+    this.playerEvadeDialog = null
 }
 
 HudGroup.prototype = Object.create(Phaser.Group.prototype);
@@ -1317,10 +1465,17 @@ HudGroup.prototype.makeMonsterDetailGroup = function (game) {
     evadeButton.width = dialogEvade.width;
     evadeButton.height = dialogEvade.height;
     evadeButton.inputEnabled = true;
-    //evadeButton.events.onInputUp.add(this.skillConfirmClicked, this);
+    evadeButton.events.onInputUp.add(this.monsterEvadeClicked, this);
     monsterDetailGroup.addChild(evadeButton);
 
     return monsterDetailGroup
+}
+
+HudGroup.prototype.monsterEvadeClicked = function (button, pointer) {
+    if (game.hud.activePhase == "player" && game.hud.activeStep == "") {
+        game.hud.activeStep = "evade";
+        this.playerEvadeDialog = MakePlayerEvadeDialog(game)
+    }
 }
 
 HudGroup.prototype.monsterAttackClicked = function (button, pointer) {
