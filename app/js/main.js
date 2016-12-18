@@ -300,8 +300,8 @@ Helper.shuffle = function (array) {
 
 //=========================================================
 function MakePlayerEvadeDialog(game) {
-    console.log(arguments)
-    var evadeData = game.gamedata.evadeChecks.find(function (item) { return item.monster == game.hud.currentMonsterInstance.id });
+    console.log(game.hud.currentMonsterInstance.id)
+    var evadeData = game.gamedata.evadeChecks.find(function (item) { return item.monster == game.hud.currentMonsterInstance.monster });
 
     var playerEvadeDialogGroup = new PlayerEvadeDialogGroup(
         game,
@@ -317,9 +317,7 @@ function MakePlayerEvadeDialog(game) {
 function PlayerEvadeDialogGroup(game, text) {
     Phaser.Group.call(this, game);
     var dialogRect = new Phaser.Rectangle(96 * 3, 16, game.stageViewRect.width - 96 * 3, game.stageViewRect.height)
-    //this._attackResolved = false;
-    //this._nonAttackResolved = false;
-    //this._nonAttackExists = nonAttackText != null;
+    this._evadeResolved = false;
 
     // Move Text
     var textDialog = new DialogMessageMonster(game, "Resolve an Evade check?", 600);
@@ -335,7 +333,7 @@ function PlayerEvadeDialogGroup(game, text) {
     confirmButton.width = confirmButtonTextGroup.width;
     confirmButton.height = confirmButtonTextGroup.height;
     confirmButton.inputEnabled = true;
-    //confirmButton.events.onInputUp.add(this.confirmButtonClicked, this);
+    confirmButton.events.onInputUp.add(this.confirmButtonClicked, this);
     this.addChild(confirmButton);
 
     // Cancel Button
@@ -347,7 +345,7 @@ function PlayerEvadeDialogGroup(game, text) {
     cancelButton.width = cancelButtonTextGroup.width;
     cancelButton.height = cancelButtonTextGroup.height;
     cancelButton.inputEnabled = true;
-    //cancelButton.events.onInputUp.add(this.cancelButtonClicked, this);
+    cancelButton.events.onInputUp.add(this.cancelButtonClicked, this);
     this.addChild(cancelButton);
 
     this._mainGroup = game.make.group(this)
@@ -371,7 +369,7 @@ function PlayerEvadeDialogGroup(game, text) {
     resolveTextContinueButton.width = resolveTextContinue.width;
     resolveTextContinueButton.height = resolveTextContinue.height;
     resolveTextContinueButton.inputEnabled = true;
-    //resolveTextContinueButton.events.onInputUp.add(this.attackContinueButtonClicked, this);
+    resolveTextContinueButton.events.onInputUp.add(this.resolveContinueButtonClicked, this);
     this.addChild(resolveTextContinueButton);
 
     this._resolveGroup = game.make.group(this)
@@ -384,46 +382,32 @@ function PlayerEvadeDialogGroup(game, text) {
 PlayerEvadeDialogGroup.prototype = Object.create(Phaser.Group.prototype);
 PlayerEvadeDialogGroup.prototype.constructor = PlayerEvadeDialogGroup;
 
-//PlayerEvadeDialogGroup.prototype.attackButtonClicked = function (button, pointer) {
-//    if (!this._attackResolved && !this._nonAttackResolved) {
-//        this._attackResolved = true
-//        var dialog = this
-//        var fadeOutTween = game.add.tween(this._mainGroup).to({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
-//        var fadeInTween = game.add.tween(this._attackGroup).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, false, 0, 0, false);
-//        fadeInTween.onStart.addOnce(function () { dialog._attackGroup.visible = true })
-//        fadeOutTween.chain(fadeInTween)
-//    }
-//}
+PlayerEvadeDialogGroup.prototype.confirmButtonClicked = function (button, pointer) {
+    if (!this._evadeResolved) {
+        this._evadeResolved = true
+        var dialog = this
+        var fadeOutTween = game.add.tween(this._mainGroup).to({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+        var fadeInTween = game.add.tween(this._resolveGroup).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, false, 0, 0, false);
+        fadeInTween.onStart.addOnce(function () { dialog._resolveGroup.visible = true })
+        fadeOutTween.chain(fadeInTween)
+    }
+}
 
-//PlayerEvadeDialogGroup.prototype.nonAttackButtonClicked = function (button, pointer) {
-//    if (!this._attackResolved && !this._nonAttackResolved) {
-//        this._nonAttackResolved = true
-//        var dialog = this
-//        var fadeOutTween = game.add.tween(this._mainGroup).to({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
-//        var fadeInTween = game.add.tween(this._nonAttackGroup).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, false, 0, 0, false);
+PlayerEvadeDialogGroup.prototype.cancelButtonClicked = function (button, pointer) {
+    var fadeOutTween = game.add.tween(this._mainGroup).to({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+    fadeOutTween.onComplete.addOnce(function () {
+        //HudGroup.prototype.monsterAttack()
+        game.hud.activeStep = "";
+    })
+}
 
-//        if (this._nonAttackExists) {
-//            fadeInTween.onStart.addOnce(function () { dialog._nonAttackGroup.visible = true })
-//            fadeOutTween.chain(fadeInTween)
-//        } else {
-//            fadeOutTween.onComplete.addOnce(function () { HudGroup.prototype.monsterAttack() })
-//        }
-//    }
-//}
-
-//PlayerEvadeDialogGroup.prototype.attackContinueButtonClicked = function (button, pointer) {
-//    var fadeOutTween = game.add.tween(this._attackGroup).to({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
-//    fadeOutTween.onComplete.addOnce(function () {
-//        HudGroup.prototype.monsterAttack()
-//    })
-//}
-
-//PlayerEvadeDialogGroup.prototype.nonAttackContinueButtonClicked = function (button, pointer) {
-//    var fadeOutTween = game.add.tween(this._nonAttackGroup).to({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
-//    fadeOutTween.onComplete.addOnce(function () {
-//        HudGroup.prototype.monsterAttack()
-//    })
-//}
+PlayerEvadeDialogGroup.prototype.resolveContinueButtonClicked = function (button, pointer) {
+    var fadeOutTween = game.add.tween(this._resolveGroup).to({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+    fadeOutTween.onComplete.addOnce(function () {
+        //HudGroup.prototype.monsterAttack()
+        game.hud.activeStep = "";
+    })
+}
 
 //PlayerEvadeDialogGroup.prototype.hideDialog = function () {
 //    if (!this._attackResolved && !this._nonAttackResolved) {
