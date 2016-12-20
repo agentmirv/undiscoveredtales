@@ -212,9 +212,9 @@ var GameState = {
         //=================================================
         // Game Start
         //=================================================
-        //MakeRevealList(game, game.gamedata.playerStart.firstReveal)
-        MakeMonster(game, "deep-one")
-        MakeMonster(game, "deep-one-2")
+        MakeRevealList(game, game.gamedata.playerStart.firstReveal)
+        //MakeMonster(game, "deep-one")
+        //MakeMonster(game, "deep-one-2")
     },
 
     update: function () {
@@ -409,25 +409,21 @@ PlayerEvadeDialogGroup.prototype.resolveContinueButtonClicked = function (button
     })
 }
 
-//PlayerEvadeDialogGroup.prototype.hideDialog = function () {
-//    if (!this._attackResolved && !this._nonAttackResolved) {
-//        this._mainGroup.visible = false
-//    } else if (this._attackResolved) {
-//        this._attackGroup.visible = false
-//    } else if (this._nonAttackResolved) {
-//        this._nonAttackGroup.visible = false
-//    }
-//}
+PlayerEvadeDialogGroup.prototype.hideDialog = function () {
+    if (!this._evadeResolved) {
+        this._mainGroup.visible = false
+    } else {
+        this._resolveGroup.visible = false
+    } 
+}
 
-//PlayerEvadeDialogGroup.prototype.showDialog = function () {
-//    if (!this._attackResolved && !this._nonAttackResolved) {
-//        this._mainGroup.visible = true
-//    } else if (this._attackResolved) {
-//        this._attackGroup.visible = true
-//    } else if (this._nonAttackResolved) {
-//        this._nonAttackGroup.visible = true
-//    }
-//}
+PlayerEvadeDialogGroup.prototype.showDialog = function () {
+    if (!this._evadeResolved) {
+        this._mainGroup.visible = true
+    } else {
+        this._resolveGroup.visible = true
+    } 
+}
 
 //=========================================================
 function WeaponAttackDialogGroup(game, attackText) {
@@ -671,6 +667,8 @@ MonsterDiscardDialogGroup.prototype.cancelButtonClicked = function () {
     game.hudInstance.showMonsterAttackDialog()
     // show player attack dialog
     game.hudInstance.showPlayerAttackDialog()
+    // show player evade dialog
+    game.hudInstance.showPlayerEvadeDialog()
     // destroy discard monster dialog
     this.destroy(true);
 }
@@ -1294,6 +1292,25 @@ HudGroup.prototype.discardCurrentMonster = function () {
     game.hud.currentMonsterInstance = null
 }
 
+HudGroup.prototype.destroyPlayerEvadeDialog = function () {
+    game.hud.activeStep = ""
+    if (game.hudInstance.playerEvadeDialog != null) {
+        game.hudInstance.playerEvadeDialog.destroy(true)
+    }
+}
+
+HudGroup.prototype.hidePlayerEvadeDialog = function () {
+    if (game.hudInstance.playerEvadeDialog != null) {
+        game.hudInstance.playerEvadeDialog.hideDialog()
+    }
+}
+
+HudGroup.prototype.showPlayerEvadeDialog = function () {
+    if (game.hudInstance.playerEvadeDialog != null) {
+        game.hudInstance.playerEvadeDialog.showDialog()
+    }
+}
+
 HudGroup.prototype.destroyPlayerAttackDialog = function () {
     game.hud.activeStep = ""
     if (game.hudInstance.playerAttackPromptDialog != null) {
@@ -1490,6 +1507,8 @@ HudGroup.prototype.monsterAddClicked = function (button, pointer) {
         game.hudInstance.hideMonsterAttackDialog()
         // hide player attack dialog (if present)
         game.hudInstance.hidePlayerAttackDialog()
+        // hide player evade dialog (if present)
+        game.hudInstance.hidePlayerEvadeDialog()
         // create discard monster dialog
         MakeMonsterDiscardDialog(game)
     }
