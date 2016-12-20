@@ -884,6 +884,23 @@
       "text": "The deep one's gurgling seems to trigger something deep within your primitive mind. Suffer 1 facedown Horror. A rush of primal fear washes over you (Will; 2). If you pass, you take a few deep breaths and maintain control. If you fail, old and painful terrors bubble to the surface; flip 2 Horror faceup."
     }
   ],
+  "evadeChecks": [
+    {
+      "id": "deep-one-1",
+      "monster": "deep-one",
+      "text": "The deep one grabs you by the leg and throws you into the air (Agility; 2)! If you pass, you manage to just barely land on your feet with jarring force. If you fail, you hit the ground roughly; suffer 1 facedown Damage and forfeit your action."
+    },
+    {
+      "id": "deep-one-2",
+      "monster": "deep-one",
+      "text": "The creature's limbs seem unnaturally long and flexible as it moves to block your progress (Agility; 3). If you pass, you are able to slip by. If you fail, the deep one's repulsive arms wrap around you; forfeit your action."
+    },
+    {
+      "id": "deep-one-3",
+      "monster": "deep-one",
+      "text": "A hideous, gurgling click sounds from the creature's distended mouth whenever you make the slightest move. The deep one's filmy eyes rotate to follow you. Suffer 2 facedown Horror (Will + 1 negates). If you suffer 1 or more Horror, you find the creature's attention too unsettling to move; forfeit your action."
+    }
+  ],
   "attacks" :[
     {
       "id": "attack-heavy-weapon-1",
