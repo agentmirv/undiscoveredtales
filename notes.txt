@@ -547,9 +547,64 @@ http://stackoverflow.com/questions/4523172/freeing-javascript-object
 What does it look like when the discard of a monster triggers an event?
 
 ===========================================================
+2016 December 28, Wednesday 06:17 PM ~~~
 ===========================================================
+Before I fix anything else, I should refactor.
+
 ===========================================================
+2016 December 31, Saturday 01:18 PM ~~~
 ===========================================================
+function [A-Za-z]+[ ]*\([^)]*\)[ ]*{
+
+function Helper() {
+function MakePlayerEvadeDialog(game) {
+function PlayerEvadeDialogGroup(game, text) {
+
+function WeaponAttackDialogGroup(game, attackText) {
+function MakePlayerAttackDialog(game) {
+function PlayerAttackDialogGroup(game) {
+
+function MakeMonsterDiscardDialog(game) {
+function MonsterDiscardDialogGroup(game) {
+
+function MakeMonsterHorrorCheckDialogGroup(game, id) {
+function MonsterHorrorCheckDialogGroup(game, messageText) {
+
+function MakeHorrorCheckConfirmDialog(game, monsterInstance) {
+function HorrorCheckConfirmDialogGroup(game, monsterInstance) {
+
+function MakeHorrorCheckDialog(game) {
+function HorrorCheckDialogGroup(game) {
+
+function MakeMonsterAttackDialog(game, id) {
+function MonsterAttackDialogGroup(game, moveText, attackButtonText, nonAttackButtonText, attackText, nonAttackText) {
+function MakeMonster(game, id) {
+function Monster() {
+
+function MakeScene(game, id) {
+function PlayerSceneGroup(game) {
+function EnemySceneGroup(game) {
+
+function HudGroup(game) {
+function MakeRandomEvent(game, id) {
+function MakeRandomEventResolve(game, id) {
+
+function MakeRevealList(game, id) {
+function MakeRevealDialog(game, id) {
+
+function MakeMapTile(game, id) {
+function MapTileGroup(game, id, x, y, imageKey, angle) {
+function MakeToken(game, id) {
+function MakeDialog(game, id) {
+function TokenSprite(game, id, x, y, imageKey, clickId, clickConditions, addToWorld) {
+
+function DialogGroup(game, id, messageText, imageKey, buttonType, buttonData, skillTarget) {
+function DialogMessage(game, text, imageKey) {
+function DialogButtonThin(game, text, width) {
+function DialogButtonMedium(game, text, width) {
+function DialogMessageMonster(game, text, width) {
+function OutlineBox(game, width, height) {
+
 ===========================================================
 ===========================================================
 ===========================================================
