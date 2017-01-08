@@ -555,37 +555,131 @@ Before I fix anything else, I should refactor.
 2016 December 31, Saturday 01:18 PM ~~~
 ===========================================================
 function [A-Za-z]+[ ]*\([^)]*\)[ ]*{
+[A-Za-z]+\.prototype
 
 function Helper() {
+
 function MakePlayerEvadeDialog(game) {
 function PlayerEvadeDialogGroup(game, text) {
+PlayerEvadeDialogGroup.prototype = Object.create(Phaser.Group.prototype);
+PlayerEvadeDialogGroup.prototype.constructor = PlayerEvadeDialogGroup;
+PlayerEvadeDialogGroup.prototype.confirmButtonClicked = function (button, pointer) {
+PlayerEvadeDialogGroup.prototype.cancelButtonClicked = function (button, pointer) {
+PlayerEvadeDialogGroup.prototype.resolveContinueButtonClicked = function (button, pointer) {
+PlayerEvadeDialogGroup.prototype.hideDialog = function () {
+PlayerEvadeDialogGroup.prototype.showDialog = function () {
 
 function WeaponAttackDialogGroup(game, attackText) {
+WeaponAttackDialogGroup.prototype = Object.create(Phaser.Group.prototype);
+WeaponAttackDialogGroup.prototype.constructor = WeaponAttackDialogGroup;
+WeaponAttackDialogGroup.prototype.contineuButtonClicked = function () {
+
 function MakePlayerAttackDialog(game) {
 function PlayerAttackDialogGroup(game) {
+PlayerAttackDialogGroup.prototype = Object.create(Phaser.Group.prototype);
+PlayerAttackDialogGroup.prototype.constructor = PlayerAttackDialogGroup;
+PlayerAttackDialogGroup.prototype.attackButtonClicked = function (button, pointer) {
 
 function MakeMonsterDiscardDialog(game) {
 function MonsterDiscardDialogGroup(game) {
+MonsterDiscardDialogGroup.prototype = Object.create(Phaser.Group.prototype);
+MonsterDiscardDialogGroup.prototype.constructor = MonsterDiscardDialogGroup;
+MonsterDiscardDialogGroup.prototype.confirmButtonClicked = function () {
+MonsterDiscardDialogGroup.prototype.cancelButtonClicked = function () {
 
 function MakeMonsterHorrorCheckDialogGroup(game, id) {
 function MonsterHorrorCheckDialogGroup(game, messageText) {
+MonsterHorrorCheckDialogGroup.prototype = Object.create(Phaser.Group.prototype);
+MonsterHorrorCheckDialogGroup.prototype.constructor = MonsterHorrorCheckDialogGroup;
+MonsterHorrorCheckDialogGroup.prototype.continueClicked = function (button, pointer) {
 
 function MakeHorrorCheckConfirmDialog(game, monsterInstance) {
 function HorrorCheckConfirmDialogGroup(game, monsterInstance) {
+HorrorCheckConfirmDialogGroup.prototype = Object.create(Phaser.Group.prototype);
+HorrorCheckConfirmDialogGroup.prototype.constructor = HorrorCheckConfirmDialogGroup;
+HorrorCheckConfirmDialogGroup.prototype.cancelClicked = function (button, pointer) {
+HorrorCheckConfirmDialogGroup.prototype.confirmClicked = function (button, pointer) {
 
 function MakeHorrorCheckDialog(game) {
 function HorrorCheckDialogGroup(game) {
+HorrorCheckDialogGroup.prototype = Object.create(Phaser.Group.prototype);
+HorrorCheckDialogGroup.prototype.constructor = HorrorCheckDialogGroup;
+HorrorCheckDialogGroup.prototype.continueClicked = function (button, pointer) {
 
 function MakeMonsterAttackDialog(game, id) {
 function MonsterAttackDialogGroup(game, moveText, attackButtonText, nonAttackButtonText, attackText, nonAttackText) {
+MonsterAttackDialogGroup.prototype = Object.create(Phaser.Group.prototype);
+MonsterAttackDialogGroup.prototype.constructor = MonsterAttackDialogGroup;
+MonsterAttackDialogGroup.prototype.attackButtonClicked = function (button, pointer) {
+MonsterAttackDialogGroup.prototype.nonAttackButtonClicked = function (button, pointer) {
+MonsterAttackDialogGroup.prototype.attackContinueButtonClicked = function (button, pointer) {
+MonsterAttackDialogGroup.prototype.nonAttackContinueButtonClicked = function (button, pointer) {
+MonsterAttackDialogGroup.prototype.hideDialog = function () {
+MonsterAttackDialogGroup.prototype.showDialog = function () {
+
 function MakeMonster(game, id) {
 function Monster() {
+Monster.prototype.alignInTray = function (position) {
+Monster.prototype.trayClicked = function () {
+Monster.prototype.updateDamage = function() {
+Monster.prototype.showDetailImage = function () {
+Monster.prototype.hideDetailImage = function () {
+Monster.prototype.discard = function () {
 
 function MakeScene(game, id) {
 function PlayerSceneGroup(game) {
+PlayerSceneGroup.prototype = Object.create(Phaser.Group.prototype);
+PlayerSceneGroup.prototype.constructor = PlayerSceneGroup;
+PlayerSceneGroup.prototype.updatePhase = function () {
+PlayerSceneGroup.prototype.destroyScene = function () {
+
 function EnemySceneGroup(game) {
+EnemySceneGroup.prototype = Object.create(Phaser.Group.prototype);
+EnemySceneGroup.prototype.constructor = EnemySceneGroup;
+EnemySceneGroup.prototype.updatePhase = function () {
+EnemySceneGroup.prototype.beginEnemySteps = function () {
+EnemySceneGroup.prototype.destroyScene = function () {
 
 function HudGroup(game) {
+HudGroup.prototype = Object.create(Phaser.Group.prototype);
+HudGroup.prototype.constructor = HudGroup;
+HudGroup.prototype.discardCurrentMonster = function () {
+HudGroup.prototype.destroyPlayerEvadeDialog = function () {
+HudGroup.prototype.hidePlayerEvadeDialog = function () {
+HudGroup.prototype.showPlayerEvadeDialog = function () {
+HudGroup.prototype.destroyPlayerAttackDialog = function () {
+HudGroup.prototype.hidePlayerAttackDialog = function () {
+HudGroup.prototype.showPlayerAttackDialog = function () {
+HudGroup.prototype.destroyMonsterAttackDialog = function () {
+HudGroup.prototype.hideMonsterAttackDialog = function () {
+HudGroup.prototype.showMonsterAttackDialog = function () {
+HudGroup.prototype.setMonsterDetail = function (monsterInstance) {
+HudGroup.prototype.makeMonsterDetailGroup = function (game) {
+HudGroup.prototype.monsterEvadeClicked = function (button, pointer) {
+HudGroup.prototype.monsterAttackClicked = function (button, pointer) {
+HudGroup.prototype.monsterSubtractClicked = function (button, pointer) {
+HudGroup.prototype.monsterAddClicked = function (button, pointer) {
+HudGroup.prototype.showMonsterTrayClicked = function (button, pointer) {
+HudGroup.prototype.endPhaseClicked = function (button, pointer) {
+HudGroup.prototype.updatePhaseButtonImage = function () {
+HudGroup.prototype.fireEvent = function () {
+HudGroup.prototype.fireExtinguished = function () {
+HudGroup.prototype.fireSpreads = function () {
+HudGroup.prototype.randomEvent = function () {
+HudGroup.prototype.randomEventDone = function () {
+HudGroup.prototype.scenarioEvent = function () {
+HudGroup.prototype.scenarioEventDone = function () {
+HudGroup.prototype.monsterAttack = function () {
+HudGroup.prototype.monsterHorrorCheck = function (monsterInstance) {
+HudGroup.prototype.horrorCheck = function () {
+HudGroup.prototype.enemyPhaseDone = function () {
+HudGroup.prototype.showEnemyPhaseBG = function () {
+HudGroup.prototype.hideEnemyPhaseBG = function (callback) {
+HudGroup.prototype.showMonsterTray = function () {
+HudGroup.prototype.hideMonsterTray = function () {
+HudGroup.prototype.showMonsterDetail = function () {
+HudGroup.prototype.hideMonsterDetail = function () {
+
 function MakeRandomEvent(game, id) {
 function MakeRandomEventResolve(game, id) {
 
@@ -594,19 +688,56 @@ function MakeRevealDialog(game, id) {
 
 function MakeMapTile(game, id) {
 function MapTileGroup(game, id, x, y, imageKey, angle) {
+MapTileGroup.prototype = Object.create(Phaser.Group.prototype);
+MapTileGroup.prototype.constructor = MapTileGroup;
+
 function MakeToken(game, id) {
 function MakeDialog(game, id) {
 function TokenSprite(game, id, x, y, imageKey, clickId, clickConditions, addToWorld) {
+TokenSprite.prototype = Object.create(Phaser.Sprite.prototype);
+TokenSprite.prototype.constructor = TokenSprite;
+TokenSprite.prototype.tokenClicked = function (token, pointer) {
+TokenSprite.prototype.openDialog = function() {
+TokenSprite.prototype.fadeOut = function (callback) {
 
 function DialogGroup(game, id, messageText, imageKey, buttonType, buttonData, skillTarget) {
+DialogGroup.prototype = Object.create(Phaser.Group.prototype);
+DialogGroup.prototype.constructor = DialogGroup;
+DialogGroup.prototype.cancelClicked = function (button, pointer) {
+DialogGroup.prototype.skillSubtractClicked = function (button, pointer) {
+DialogGroup.prototype.skillAddClicked = function (button, pointer) {
+DialogGroup.prototype.skillConfirmClicked = function (button, pointer) {
+DialogGroup.prototype.buttonClicked = function (button, pointer) {
+DialogGroup.prototype.fadeOut = function (callback) {
+
 function DialogMessage(game, text, imageKey) {
+DialogMessage.prototype = Object.create(Phaser.Group.prototype);
+DialogMessage.prototype.constructor = DialogMessage;
+
 function DialogButtonThin(game, text, width) {
+DialogButtonThin.prototype = Object.create(Phaser.Group.prototype);
+DialogButtonThin.prototype.constructor = DialogButtonThin;
+
 function DialogButtonMedium(game, text, width) {
+DialogButtonMedium.prototype = Object.create(Phaser.Group.prototype);
+DialogButtonMedium.prototype.constructor = DialogButtonMedium;
+
 function DialogMessageMonster(game, text, width) {
+DialogMessageMonster.prototype = Object.create(Phaser.Group.prototype);
+DialogMessageMonster.prototype.constructor = DialogButtonMedium;
+
 function OutlineBox(game, width, height) {
+OutlineBox.prototype = Object.create(Phaser.Group.prototype);
+OutlineBox.prototype.constructor = OutlineBox;
 
 ===========================================================
+2017 January 07, Saturday 10:07 PM ~~~
 ===========================================================
+Had been working on (paper) to review the existing system.
+Outlined the different dialogs in an attempt to find an abstraction.
+Separated dialogs that are generated from map tokens from the ones generated by buttons in what I am calling the HUD.
+Eventually, I want to separate the different behaviors into 'modules' that each have their own API.
+
 ===========================================================
 ===========================================================
 ===========================================================
