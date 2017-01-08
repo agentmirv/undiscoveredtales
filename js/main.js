@@ -300,7 +300,6 @@ Helper.shuffle = function (array) {
 
 //=========================================================
 function MakePlayerEvadeDialog(game) {
-    console.log(game.hud.currentMonsterInstance.id)
     var evadeData = game.gamedata.evadeChecks.find(function (item) { return item.monster == game.hud.currentMonsterInstance.monster });
 
     var playerEvadeDialogGroup = new PlayerEvadeDialogGroup(
