@@ -2,6 +2,7 @@
 
 function PlayerSprite(game, x, y) {
     Phaser.Sprite.call(this, game, x, y, 'pixelTransparent');
+    game.world.addChild(this);
     game.physics.p2.enable(this);
     game.camera.follow(this, Phaser.Camera.FOLLOW_LOCKON, 0.8, 0.8);
     this.cutSceneCamera = false;

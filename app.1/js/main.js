@@ -62,50 +62,51 @@ var GameState = {
         game.presentationOffsetY = 48
         cursors = game.input.keyboard.createCursorKeys();
 
-        player = game.add.sprite(game.gamedata.playerStart.x, game.gamedata.playerStart.y, 'pixelTransparent');
-        game.physics.p2.enable(player);
-        game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.8, 0.8);
+        game.player = new PlayerSprite(game, game.gamedata.playerStart.x, game.gamedata.playerStart.y);
+        //player = game.add.sprite(game.gamedata.playerStart.x, game.gamedata.playerStart.y, 'pixelTransparent');
+        //game.physics.p2.enable(player);
+        //game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.8, 0.8);
 
         game.add.tileSprite(0, 0, 2560, 2560, 'background');
 
         //=================================================
         // Add HUD
-        var hudInstance = new HudGroup(game)
-        game.stage.addChild(hudInstance)
-        game.hudInstance = hudInstance;
+        //var hudInstance = new HudGroup(game)
+        //game.stage.addChild(hudInstance)
+        //game.hudInstance = hudInstance;
 
         //=================================================
         // Game Start
         //=================================================
-        MakeRevealList(game, game.gamedata.playerStart.firstReveal)
+        //MakeRevealList(game, game.gamedata.playerStart.firstReveal)
         //MakeMonster(game, "deep-one")
         //MakeMonster(game, "deep-one-2")
     },
 
     update: function () {
-        if (!game.cutSceneCamera && game.hud.activePhase == "player") {
+        if (!game.player.cutSceneCamera && game.hud.activePhase == "player") {
             var playerVelocity = 400;
-            player.body.setZeroVelocity();
+            game.player.body.setZeroVelocity();
 
             if (cursors.up.isDown) {
-                player.body.moveUp(playerVelocity)
+                game.player.body.moveUp(playerVelocity)
             }
             else if (cursors.down.isDown) {
-                player.body.moveDown(playerVelocity);
+                game.player.body.moveDown(playerVelocity);
             }
 
             if (cursors.left.isDown) {
-                player.body.velocity.x = -playerVelocity;
+                game.player.body.velocity.x = -playerVelocity;
             }
             else if (cursors.right.isDown) {
-                player.body.moveRight(playerVelocity);
+                game.player.body.moveRight(playerVelocity);
             }
 
             if (game.input.activePointer.isDown) {
                 if (game.origDragPoint) {
                     // move the camera by the amount the mouse has moved since last update	
-                    player.body.x += game.origDragPoint.x - game.input.activePointer.position.x;
-                    player.body.y += game.origDragPoint.y - game.input.activePointer.position.y;
+                    game.player.body.x += game.origDragPoint.x - game.input.activePointer.position.x;
+                    game.player.body.y += game.origDragPoint.y - game.input.activePointer.position.y;
                 }
                 // set new drag origin to current position	
                 game.origDragPoint = game.input.activePointer.position.clone();
