@@ -81,6 +81,10 @@ var GameState = {
         //MakeRevealList(game, game.gamedata.playerStart.firstReveal)
         //MakeMonster(game, "deep-one")
         //MakeMonster(game, "deep-one-2")
+        
+        var tokenInstance = MakeToken(game, "token-box-lobby");
+        game.world.addChild(tokenInstance)
+        
     },
 
     update: function () {

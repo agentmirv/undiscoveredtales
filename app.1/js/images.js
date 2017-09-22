@@ -141,3 +141,7 @@ ImageHelper.create = function (game) {
         game.cache.addBitmapData(imageTileData.imageKey, mapTileBmd)
     }
 }
+
+ImageHelper.getImage = function (game, imageKey) {
+    return game.cache.getBitmapData(imageKey)
+}

@@ -12,7 +12,7 @@ PlayerSprite.prototype = Object.create(Phaser.Sprite.prototype);
 PlayerSprite.prototype.constructor = PlayerSprite;
 
 PlayerSprite.prototype.Move = function (destinationPoint) {
-    return new PlayerMove(this.game, this, destinationPoint);
+    return new PlayerMove(this, destinationPoint);
 }
 
 function PlayerMove(player, destinationPoint) {
@@ -36,10 +36,10 @@ PlayerMove.prototype.Start = function () {
         moveTween.onStart.addOnce(function () {
             this.onStart.dispatch();
             this._player.cutSceneCamera = true;
-        });
+        }, this);
         
         moveTween.onComplete.addOnce(function () {
             this.onComplete.dispatch();
-        })
+        }, this);
     }
 }
