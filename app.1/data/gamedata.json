@@ -962,5 +962,26 @@
       "tags": [ ],
         "text": "You study your opponent's movements (Observation; 2). If you pass, you see weakness in the left knee and attack; the monster suffers 2 damage. If you fail, your opponent gives away nothing and you miss your opportunity."
     }
-  ]
+  ],
+  "dialogGroups": [
+      {
+        "id": "test",
+        "type": "action",
+        "dialogs": [
+          {
+            "text": "This is a token. Do with it what you will.",
+            "buttons": [
+              {
+                "text": "Cancel",
+                "actions": []
+              },
+              {
+                "text": "@ Search",
+                "actions": []
+              }
+            ]
+          }
+        ]
+      }
+    ]
 }

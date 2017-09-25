@@ -53,24 +53,10 @@ TokenSprite.prototype.tokenClicked = function (token, pointer) {
 
     playerMove.onComplete.addOnce(function () {
         console.log("move onComplete");
+        //TokenSprite.prototype.openDialog.call(token);
     });
     
     playerMove.Start();
-
-    // // Check if the positions are equal first (perhaps the last click did the tween)
-    // if (movePlayer.equals(new Phaser.Point(Math.floor(player.body.x), Math.floor(player.body.y)))) {
-    //     TokenSprite.prototype.openDialog.call(token);
-    // } else {
-    //     var moveTween = game.add.tween(player.body).to({ x: movePlayer.x, y: movePlayer.y }, 1200, Phaser.Easing.Quadratic.Out, true, 0, 0, false);
-
-    //     moveTween.onStart.addOnce(function () {
-    //         game.cutSceneCamera = true;
-    //     })
-
-    //     moveTween.onComplete.addOnce(function () {
-    //         TokenSprite.prototype.openDialog.call(token);
-    //     })
-    // }
 }
 
 TokenSprite.prototype.openDialog = function () {

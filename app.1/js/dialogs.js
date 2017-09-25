@@ -1256,6 +1256,34 @@ DialogMessage.prototype = Object.create(Phaser.Group.prototype);
 DialogMessage.prototype.constructor = DialogMessage;
 
 //=========================================================
+function DialogMessageMonster(game, text, width) {
+    Phaser.Group.call(this, game, 0, 0);
+
+    var totalWidth = width;
+    var leftMargin = 10;
+    var rightMargin = 10;
+    var topMargin = 20;
+    var bottomMargin = 15;
+
+    var textWidth = totalWidth - leftMargin - rightMargin;
+    var textStyle = {
+        font: "20px Times New Romans", fill: "#ffffff", align: "center", wordWrap: true, wordWrapWidth: textWidth
+    };
+    var messageText = game.make.text(0, 0, text, textStyle);
+    messageText.x = Math.floor((totalWidth - messageText.width) / 2)
+    messageText.y = topMargin;
+
+    var totalHeight = messageText.height + topMargin + bottomMargin;
+    var outlineBox = new OutlineBox(game, totalWidth, totalHeight);
+
+    this.addChild(outlineBox);
+    this.addChild(messageText);
+}
+
+DialogMessageMonster.prototype = Object.create(Phaser.Group.prototype);
+DialogMessageMonster.prototype.constructor = DialogButtonMedium;
+
+//=========================================================
 function DialogButtonThin(game, text, width) {
     Phaser.Group.call(this, game, 0, 0);
 
@@ -1306,34 +1334,6 @@ function DialogButtonMedium(game, text, width) {
 
 DialogButtonMedium.prototype = Object.create(Phaser.Group.prototype);
 DialogButtonMedium.prototype.constructor = DialogButtonMedium;
-
-//=========================================================
-function DialogMessageMonster(game, text, width) {
-    Phaser.Group.call(this, game, 0, 0);
-
-    var totalWidth = width;
-    var leftMargin = 10;
-    var rightMargin = 10;
-    var topMargin = 20;
-    var bottomMargin = 15;
-
-    var textWidth = totalWidth - leftMargin - rightMargin;
-    var textStyle = {
-        font: "20px Times New Romans", fill: "#ffffff", align: "center", wordWrap: true, wordWrapWidth: textWidth
-    };
-    var messageText = game.make.text(0, 0, text, textStyle);
-    messageText.x = Math.floor((totalWidth - messageText.width) / 2)
-    messageText.y = topMargin;
-
-    var totalHeight = messageText.height + topMargin + bottomMargin;
-    var outlineBox = new OutlineBox(game, totalWidth, totalHeight);
-
-    this.addChild(outlineBox);
-    this.addChild(messageText);
-}
-
-DialogMessageMonster.prototype = Object.create(Phaser.Group.prototype);
-DialogMessageMonster.prototype.constructor = DialogButtonMedium;
 
 //=========================================================
 function OutlineBox(game, width, height) {
