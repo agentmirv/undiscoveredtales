@@ -48,14 +48,14 @@ function ActionDialog(game, id, messageText, imageKey, buttonData) {
     dialogCancelButton.width = dialogCancel.width;
     dialogCancelButton.height = dialogCancel.height;
     dialogCancelButton.inputEnabled = true;
-    dialogCancelButton.events.onInputUp.add(this.cancelClicked, this);
+    //dialogCancelButton.events.onInputUp.add(this.cancelClicked, this);
     this.addChild(dialogCancelButton);
 
     var dialogActionButton = game.make.sprite(dialogAction.x, dialogAction.y, 'pixelTransparent');
     dialogActionButton.width = dialogAction.width;
     dialogActionButton.height = dialogAction.height;
     dialogActionButton.inputEnabled = true;
-    dialogActionButton.events.onInputUp.add(this.buttonClicked, this);
+    //dialogActionButton.events.onInputUp.add(this.buttonClicked, this);
     dialogActionButton.data = data; //dynamic property
     this.addChild(dialogActionButton);
 }

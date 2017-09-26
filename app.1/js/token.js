@@ -53,7 +53,7 @@ TokenSprite.prototype.tokenClicked = function (token, pointer) {
 
     playerMove.onComplete.addOnce(function () {
         console.log("move onComplete");
-        //TokenSprite.prototype.openDialog.call(token);
+        TokenSprite.prototype.openDialog.call(token);
     });
     
     playerMove.Start();
@@ -73,10 +73,11 @@ TokenSprite.prototype.openDialog = function () {
         dialogGroupId = this.dialogGroupId
     }
 
-    var dialogInstance = MakeDialog(game, clickId)
+    MakeDialogGroup(game, this.dialogGroupId);
+    //var dialogInstance = MakeDialog(game, clickId)
     // TODO add fadeIn()
-    game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
-    game.stage.addChild(dialogInstance)
+    //game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+    //game.stage.addChild(dialogInstance)
 }
 
 TokenSprite.prototype.fadeOut = function (callback) {

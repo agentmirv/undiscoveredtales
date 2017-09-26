@@ -967,11 +967,11 @@
   "dialogGroups": [
       {
         "id": "test",
-        "type": "action",
         "dialogs": [
           {
             "text": "This is a token. Do with it what you will.",
-            "imageKey": "explore-image",
+            "type": "action",
+            "imageKey": "search-image",
             "buttons": [
               {
                 "text": "Cancel",
