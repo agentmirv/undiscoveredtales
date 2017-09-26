@@ -254,6 +254,7 @@
       "x":1200,
       "y":1200,
       "imageKey":"search-image",
+      "dialogGroupId": "test",
       "clickConditions": [
         {
           "globalId": "box-lobby",
@@ -970,6 +971,7 @@
         "dialogs": [
           {
             "text": "This is a token. Do with it what you will.",
+            "imageKey": "explore-image",
             "buttons": [
               {
                 "text": "Cancel",

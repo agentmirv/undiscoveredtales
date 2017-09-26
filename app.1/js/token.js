@@ -9,8 +9,8 @@ function MakeToken(game, id) {
         tokenData.x,
         tokenData.y,
         tokenData.imageKey,
-        tokenData.clickId,
-        tokenData.clickConditions,
+        tokenData.dialogGroupId,
+        //tokenData.clickConditions,
         tokenData.addToWorld);
 
     game.gamedataInstances.mapTokens.push(tokenInstance);
@@ -19,16 +19,16 @@ function MakeToken(game, id) {
 }
 
 //=========================================================
-function TokenSprite(game, id, x, y, imageKey, clickId, clickConditions, addToWorld) {
+function TokenSprite(game, id, x, y, imageKey, dialogGroupId, addToWorld) {
     Phaser.Sprite.call(this, game, x, y, ImageHelper.getImage(game, imageKey));
 
     this.id = id
     this.imageKey = imageKey;
-    this.clickId = clickId;
-    this.clickConditions = clickConditions;
+    this.dialogGroupId = dialogGroupId;
+    //this.clickConditions = clickConditions;
     this.addToWorld = addToWorld;
 
-    if (this.clickId != null || this.clickConditions != null) {
+    if (this.dialogGroupId != null) {// || this.clickConditions != null) {
         this.inputEnabled = true;
         this.events.onInputUp.add(this.tokenClicked, this);
     }
@@ -60,8 +60,8 @@ TokenSprite.prototype.tokenClicked = function (token, pointer) {
 }
 
 TokenSprite.prototype.openDialog = function () {
-    var clickId = null
-    if (this.clickConditions != null && Array.isArray((this.clickConditions))) {
+    var dialogGroupId = null
+    /*if (this.clickConditions != null && Array.isArray((this.clickConditions))) {
         for (var i = 0; i < this.clickConditions.length; i++) {
             var condition = this.clickConditions[i]
             var globalVar = game.gamedata.globalVars.find(function (item) { return item.id == condition.globalId })
@@ -69,8 +69,8 @@ TokenSprite.prototype.openDialog = function () {
                 clickId = condition.dialogId
             }
         }
-    } else if (this.clickId != null) {
-        clickId = this.clickId
+    } else */ if (this.dialogGroupId != null) {
+        dialogGroupId = this.dialogGroupId
     }
 
     var dialogInstance = MakeDialog(game, clickId)

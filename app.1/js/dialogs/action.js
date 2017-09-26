@@ -1,21 +1,22 @@
 /* global Phaser */
 //=========================================================
-function MakeActionDialog(game, id) {
-    var dialogGroupData = game.gamedata.dialogGroups.find(function (item) { return item.id == id });
+function MakeActionDialog(game, dialogGroupData, id) {
+    var dialogData = dialogGroupData.dialogs.find(function (item) { return item.id == id });
 
-    var dialogGroupInstance = new ActionDialogGroup(
+    var dialogInstance = new ActionDialog(
         game,
-        dialogGroupData.id,
-        dialogGroupData.text,
-        dialogGroupData.imageKey,
-        dialogGroupData.buttons);
+        dialogData.id,
+        dialogData.text,
+        dialogData.imageKey,
+        dialogData.buttons);
 
-    game.stage.addChild(dialogGroupInstance);
-    //return dialogGroupInstance;
+    game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+    game.stage.addChild(dialogInstance);
+    //return dialogInstance;
 }
 
 //=========================================================
-function ActionDialogGroup(game, id, messageText, imageKey, buttonData) {
+function ActionDialog(game, id, messageText, imageKey, buttonData) {
     Phaser.Group.call(this, game);
 
     this._id = id
@@ -59,5 +60,5 @@ function ActionDialogGroup(game, id, messageText, imageKey, buttonData) {
     this.addChild(dialogActionButton);
 }
 
-DialogGroup.prototype = Object.create(Phaser.Group.prototype);
-DialogGroup.prototype.constructor = DialogGroup;
+ActionDialog.prototype = Object.create(Phaser.Group.prototype);
+ActionDialog.prototype.constructor = ActionDialog;
