@@ -182,7 +182,7 @@ function BaseDialog(game) {
 BaseDialog.prototype = Object.create(Phaser.Group.prototype);
 BaseDialog.prototype.constructor = BaseDialog;
 
-BaseDialog.prototype.fadeIn = function () {
+BaseDialog.prototype.open = function () {
     var fadeInTween = this.game.add.tween(this).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
 
     fadeInTween.onComplete.addOnce(function () {
@@ -191,11 +191,12 @@ BaseDialog.prototype.fadeIn = function () {
 
 }
 
-BaseDialog.prototype.fadeOut = function () {
+BaseDialog.prototype.close = function () {
     var fadeOutTween = this.game.add.tween(this).to({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
 
     fadeOutTween.onComplete.addOnce(function () {
         this.onClose.dispatch();
+        this.game.player.cutSceneCamera = false;
         this.destroy(true);
     }, this);
 }

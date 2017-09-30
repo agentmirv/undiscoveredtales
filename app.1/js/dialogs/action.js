@@ -11,16 +11,13 @@ function MakeActionDialog(game, dialogGroupData, id) {
         dialogData.buttons);
 
     game.stage.addChild(dialogInstance);
-    dialogInstance.fadeIn();
+    dialogInstance.open();
     //return dialogInstance;
 }
 
 //=========================================================
 function ActionDialog(game, id, messageText, imageKey, buttonData) {
     BaseDialog.call(this, game);
-
-    this._id = id
-    this._buttonData = buttonData;
 
     // Modal
     var modalBackground = game.make.sprite(game.stageViewRect.x, game.stageViewRect.y, 'pixelTransparent');
@@ -35,7 +32,6 @@ function ActionDialog(game, id, messageText, imageKey, buttonData) {
     this.addChild(dialogMessage);
 
      // Buttons for [Cancel] [Action]
-    var data = this._buttonData[0]
     var dialogCancel = new DialogButtonThin(game, "Cancel", 280);
     dialogCancel.alignTo(dialogMessage, Phaser.BOTTOM_LEFT, -10, 10)
     this.addChild(dialogCancel);
@@ -45,8 +41,10 @@ function ActionDialog(game, id, messageText, imageKey, buttonData) {
     dialogCancelButton.height = dialogCancel.height;
     dialogCancelButton.inputEnabled = true;
     //dialogCancelButton.events.onInputUp.add(this.cancelClicked, this);
+    dialogCancelButton.events.onInputUp.add(function () { ProcessAction(this) }, this);
     this.addChild(dialogCancelButton);
 
+    var data = buttonData[0];
     var dialogAction = new DialogButtonThin(game, data.text, 280);
     dialogAction.alignTo(dialogMessage, Phaser.BOTTOM_RIGHT, -10, 10)
     this.addChild(dialogAction);
@@ -57,6 +55,7 @@ function ActionDialog(game, id, messageText, imageKey, buttonData) {
     dialogActionButton.inputEnabled = true;
     //dialogActionButton.events.onInputUp.add(this.buttonClicked, this);
     //dialogActionButton.data = data; //dynamic property
+    dialogActionButton.events.onInputUp.add(function () { ProcessAction(this, data) }, this);
     this.addChild(dialogActionButton);
 }
 

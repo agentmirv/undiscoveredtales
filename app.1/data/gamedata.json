@@ -974,11 +974,7 @@
             "imageKey": "search-image",
             "buttons": [
               {
-                "text": "Cancel",
-                "actions": []
-              },
-              {
-                "text": "@ Search",
+                "text": "@ Something",
                 "actions": []
               }
             ]

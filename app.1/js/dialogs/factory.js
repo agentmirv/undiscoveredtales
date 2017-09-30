@@ -12,3 +12,11 @@ function MakeDialogGroup(game, id) {
             break;
     }
 }
+
+function ProcessAction(dialog, buttonData) {
+    if(buttonData)
+    {
+        console.log(buttonData);
+    }
+    dialog.close();
+}
