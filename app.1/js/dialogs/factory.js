@@ -13,10 +13,10 @@ function MakeDialogGroup(game, id) {
     }
 }
 
-function ProcessAction(dialog, buttonData) {
+function ProcessActions(buttonData) {
     if(buttonData)
     {
+        // process all actions
         console.log(buttonData);
     }
-    dialog.close();
 }

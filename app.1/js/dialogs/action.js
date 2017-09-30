@@ -41,7 +41,12 @@ function ActionDialog(game, id, messageText, imageKey, buttonData) {
     dialogCancelButton.height = dialogCancel.height;
     dialogCancelButton.inputEnabled = true;
     //dialogCancelButton.events.onInputUp.add(this.cancelClicked, this);
-    dialogCancelButton.events.onInputUp.add(function () { ProcessAction(this) }, this);
+    dialogCancelButton.events.onInputUp.add(function () { 
+        this.onClose.addOnce(function () {
+            ProcessActions(); 
+        }, this);
+        this.close();
+    }, this);
     this.addChild(dialogCancelButton);
 
     var data = buttonData[0];
@@ -55,7 +60,12 @@ function ActionDialog(game, id, messageText, imageKey, buttonData) {
     dialogActionButton.inputEnabled = true;
     //dialogActionButton.events.onInputUp.add(this.buttonClicked, this);
     //dialogActionButton.data = data; //dynamic property
-    dialogActionButton.events.onInputUp.add(function () { ProcessAction(this, data) }, this);
+    dialogActionButton.events.onInputUp.add(function () { 
+        this.onClose.addOnce(function () {
+            ProcessActions(data); 
+        }, this);
+        this.close();
+    }, this);
     this.addChild(dialogActionButton);
 }
 
