@@ -1,4 +1,4 @@
-﻿//=========================================================
+//=========================================================
 function MakePlayerEvadeDialog(game) {
     var evadeData = game.gamedata.evadeChecks.find(function (item) { return item.monster == game.hud.currentMonsterInstance.monster });
 

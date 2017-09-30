@@ -970,8 +970,8 @@
         "dialogs": [
           {
             "text": "This is a token. Do with it what you will.",
-            "type": "action",
             "imageKey": "search-image",
+            "type": "action",
             "buttons": [
               {
                 "text": "@ Something",

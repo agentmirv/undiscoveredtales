@@ -19,6 +19,8 @@ function MakeActionDialog(game, dialogGroupData, id) {
 function ActionDialog(game, id, messageText, imageKey, buttonData) {
     BaseDialog.call(this, game);
 
+    var data = null;
+
     // Modal
     var modalBackground = game.make.sprite(game.stageViewRect.x, game.stageViewRect.y, 'pixelTransparent');
     modalBackground.width = game.stageViewRect.width;
@@ -32,6 +34,7 @@ function ActionDialog(game, id, messageText, imageKey, buttonData) {
     this.addChild(dialogMessage);
 
      // Buttons for [Cancel] [Action]
+    data = null;
     var dialogCancel = new DialogButtonThin(game, "Cancel", 280);
     dialogCancel.alignTo(dialogMessage, Phaser.BOTTOM_LEFT, -10, 10)
     this.addChild(dialogCancel);
@@ -40,16 +43,15 @@ function ActionDialog(game, id, messageText, imageKey, buttonData) {
     dialogCancelButton.width = dialogCancel.width;
     dialogCancelButton.height = dialogCancel.height;
     dialogCancelButton.inputEnabled = true;
-    //dialogCancelButton.events.onInputUp.add(this.cancelClicked, this);
     dialogCancelButton.events.onInputUp.add(function () { 
         this.onClose.addOnce(function () {
-            ProcessActions(); 
+            ProcessActions(null); 
         }, this);
         this.close();
     }, this);
     this.addChild(dialogCancelButton);
 
-    var data = buttonData[0];
+    data = buttonData[0];
     var dialogAction = new DialogButtonThin(game, data.text, 280);
     dialogAction.alignTo(dialogMessage, Phaser.BOTTOM_RIGHT, -10, 10)
     this.addChild(dialogAction);
@@ -58,8 +60,6 @@ function ActionDialog(game, id, messageText, imageKey, buttonData) {
     dialogActionButton.width = dialogAction.width;
     dialogActionButton.height = dialogAction.height;
     dialogActionButton.inputEnabled = true;
-    //dialogActionButton.events.onInputUp.add(this.buttonClicked, this);
-    //dialogActionButton.data = data; //dynamic property
     dialogActionButton.events.onInputUp.add(function () { 
         this.onClose.addOnce(function () {
             ProcessActions(data); 
