@@ -10,14 +10,14 @@ function MakeActionDialog(game, dialogGroupData, id) {
         dialogData.imageKey,
         dialogData.buttons);
 
-    game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
     game.stage.addChild(dialogInstance);
+    dialogInstance.fadeIn();
     //return dialogInstance;
 }
 
 //=========================================================
 function ActionDialog(game, id, messageText, imageKey, buttonData) {
-    Phaser.Group.call(this, game);
+    BaseDialog.call(this, game);
 
     this._id = id
     this._buttonData = buttonData;
@@ -40,10 +40,6 @@ function ActionDialog(game, id, messageText, imageKey, buttonData) {
     dialogCancel.alignTo(dialogMessage, Phaser.BOTTOM_LEFT, -10, 10)
     this.addChild(dialogCancel);
 
-    var dialogAction = new DialogButtonThin(game, data.text, 280);
-    dialogAction.alignTo(dialogMessage, Phaser.BOTTOM_RIGHT, -10, 10)
-    this.addChild(dialogAction);
-
     var dialogCancelButton = game.make.sprite(dialogCancel.x, dialogCancel.y, 'pixelTransparent');
     dialogCancelButton.width = dialogCancel.width;
     dialogCancelButton.height = dialogCancel.height;
@@ -51,14 +47,18 @@ function ActionDialog(game, id, messageText, imageKey, buttonData) {
     //dialogCancelButton.events.onInputUp.add(this.cancelClicked, this);
     this.addChild(dialogCancelButton);
 
+    var dialogAction = new DialogButtonThin(game, data.text, 280);
+    dialogAction.alignTo(dialogMessage, Phaser.BOTTOM_RIGHT, -10, 10)
+    this.addChild(dialogAction);
+
     var dialogActionButton = game.make.sprite(dialogAction.x, dialogAction.y, 'pixelTransparent');
     dialogActionButton.width = dialogAction.width;
     dialogActionButton.height = dialogAction.height;
     dialogActionButton.inputEnabled = true;
     //dialogActionButton.events.onInputUp.add(this.buttonClicked, this);
-    dialogActionButton.data = data; //dynamic property
+    //dialogActionButton.data = data; //dynamic property
     this.addChild(dialogActionButton);
 }
 
-ActionDialog.prototype = Object.create(Phaser.Group.prototype);
+ActionDialog.prototype = Object.create(BaseDialog.prototype);
 ActionDialog.prototype.constructor = ActionDialog;

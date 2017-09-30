@@ -171,3 +171,31 @@ function DialogMessage(game, text, imageKey) {
 
 DialogMessage.prototype = Object.create(Phaser.Group.prototype);
 DialogMessage.prototype.constructor = DialogMessage;
+
+//=========================================================
+function BaseDialog(game) {
+    Phaser.Group.call(this, game);
+    this.onOpen = new Phaser.Signal();
+    this.onClose = new Phaser.Signal();
+}
+
+BaseDialog.prototype = Object.create(Phaser.Group.prototype);
+BaseDialog.prototype.constructor = BaseDialog;
+
+BaseDialog.prototype.fadeIn = function () {
+    var fadeInTween = this.game.add.tween(this).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+
+    fadeInTween.onComplete.addOnce(function () {
+        this.onOpen.dispatch();
+    }, this);
+
+}
+
+BaseDialog.prototype.fadeOut = function () {
+    var fadeOutTween = this.game.add.tween(this).to({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+
+    fadeOutTween.onComplete.addOnce(function () {
+        this.onClose.dispatch();
+        this.destroy(true);
+    }, this);
+}
