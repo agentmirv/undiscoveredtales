@@ -2,7 +2,7 @@
 
 //=========================================================
 function OutlineBox(game, width, height) {
-    Phaser.Group.call(this, game, 0, 0);
+    Phaser.Group.call(this, game);
 
     var localX = 0;
     var localY = 0;
@@ -40,8 +40,21 @@ OutlineBox.prototype = Object.create(Phaser.Group.prototype);
 OutlineBox.prototype.constructor = OutlineBox;
 
 //=========================================================
+function DialogButtonInput(game, button) {
+    Phaser.Sprite.call(this, game, 0, 0, 'pixelTransparent');
+    
+    this.width = button.width;
+    this.height = button.height;
+    this.alignIn(button);
+    this.inputEnabled = true;
+}
+
+DialogButtonInput.prototype = Object.create(Phaser.Sprite.prototype);
+DialogButtonInput.prototype.constructor = DialogButtonInput;
+
+//=========================================================
 function DialogButtonThin(game, text, width) {
-    Phaser.Group.call(this, game, 0, 0);
+    Phaser.Group.call(this, game);
 
     var totalWidth = width;
     var leftMargin = 10;
@@ -58,8 +71,11 @@ function DialogButtonThin(game, text, width) {
     var totalHeight = messageText.height + topMargin + bottomMargin;
     var outlineBox = new OutlineBox(game, totalWidth, totalHeight);
 
+    this.buttonInput = new DialogButtonInput(game, outlineBox);
+
     this.addChild(outlineBox);
     this.addChild(messageText);
+    this.addChild(this.buttonInput);
 }
 
 DialogButtonThin.prototype = Object.create(Phaser.Group.prototype);
@@ -67,7 +83,7 @@ DialogButtonThin.prototype.constructor = DialogButtonThin;
 
 //=========================================================
 function DialogButtonMedium(game, text, width) {
-    Phaser.Group.call(this, game, 0, 0);
+    Phaser.Group.call(this, game);
 
     var totalWidth = width;
     var leftMargin = 10;
@@ -93,7 +109,7 @@ DialogButtonMedium.prototype.constructor = DialogButtonMedium;
 
 //=========================================================
 function DialogMessageMonster(game, text, width) {
-    Phaser.Group.call(this, game, 0, 0);
+    Phaser.Group.call(this, game);
 
     var totalWidth = width;
     var leftMargin = 10;
@@ -121,7 +137,7 @@ DialogMessageMonster.prototype.constructor = DialogButtonMedium;
 
 //=========================================================
 function DialogMessage(game, text, imageKey) {
-    Phaser.Group.call(this, game, 0, 0);
+    Phaser.Group.call(this, game);
 
     var totalWidth = 600;
     var leftMargin = 20;
