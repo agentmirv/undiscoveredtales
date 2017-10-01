@@ -193,6 +193,7 @@ function BaseDialog(game) {
     Phaser.Group.call(this, game);
     this.onOpen = new Phaser.Signal();
     this.onClose = new Phaser.Signal();
+    this._processActions = MakeProcessActions(game);
 }
 
 BaseDialog.prototype = Object.create(Phaser.Group.prototype);
@@ -217,10 +218,10 @@ BaseDialog.prototype.close = function () {
     }, this);
 }
 
-BaseDialog.prototype.processAction = function (buttonData) {
+BaseDialog.prototype.processActions = function (buttonData) {
     return function () { 
         this.onClose.addOnce(function () {
-            ProcessActions(buttonData); 
+            this._processActions(buttonData);
         }, this);
         this.close();
     }

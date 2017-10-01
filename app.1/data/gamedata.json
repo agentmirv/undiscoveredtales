@@ -24,6 +24,10 @@
   },
   "globalVars": [
       {
+        "id": "test-global",
+        "value": ""
+      },
+      {
         "id": "box-lobby",
         "value": "initial"
       },
@@ -975,9 +979,30 @@
             "buttons": [
               {
                 "text": "@ Something",
+                "actions": [
+                  {"type": "setGlobal", "globalId": "test-global", "value": "valueB" }
+                  ]
+              }
+            ]
+          },
+          {
+            "id": "startB",
+            "text": "This is a token. Didn't you already do this?",
+            "imageKey": "search-image",
+            "type": "action",
+            "buttons": [
+              {
+                "text": "@ Something",
                 "actions": []
               }
             ]
+          }          
+        ],
+        "startConditions": [
+          {
+            "globalId": "test-global",
+            "value": "valueB",
+            "dialogId": "startB"
           }
         ]
       }
