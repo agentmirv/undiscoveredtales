@@ -980,7 +980,7 @@
               {
                 "text": "@ Something",
                 "actions": [
-                  {"type": "setGlobal", "globalId": "test-global", "value": "valueB" }
+                    {"type": "setGlobal", "globalId": "test-global", "value": "valueB" }
                   ]
               }
             ]

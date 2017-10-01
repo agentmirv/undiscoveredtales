@@ -10,7 +10,6 @@ function MakeToken(game, id) {
         tokenData.y,
         tokenData.imageKey,
         tokenData.dialogGroupId,
-        //tokenData.clickConditions,
         tokenData.addToWorld);
 
     game.gamedataInstances.mapTokens.push(tokenInstance);
@@ -25,10 +24,9 @@ function TokenSprite(game, id, x, y, imageKey, dialogGroupId, addToWorld) {
     this.id = id
     this.imageKey = imageKey;
     this.dialogGroupId = dialogGroupId;
-    //this.clickConditions = clickConditions;
     this.addToWorld = addToWorld;
 
-    if (this.dialogGroupId != null) {// || this.clickConditions != null) {
+    if (this.dialogGroupId != null) {
         this.inputEnabled = true;
         this.events.onInputUp.add(this.tokenClicked, this);
     }
@@ -40,7 +38,6 @@ TokenSprite.prototype.constructor = TokenSprite;
 TokenSprite.prototype.tokenClicked = function (token, pointer) {
     if (this.game.player.cutSceneCamera) return;
 
-    // this == token?
     var movePlayer = new Phaser.Point()
     movePlayer.x = token.centerX + 300 - 20 - 48 //half message width - left margin - half image width
     movePlayer.y = token.centerY + game.presentationOffsetY
@@ -48,36 +45,15 @@ TokenSprite.prototype.tokenClicked = function (token, pointer) {
     var playerMove = this.game.player.Move(movePlayer);
     
     playerMove.onStart.addOnce(function () {
-        console.log("move onStart");
+        //console.log("move onStart");
     });
 
     playerMove.onComplete.addOnce(function () {
-        console.log("move onComplete");
-        TokenSprite.prototype.openDialog.call(token);
-    });
+        //console.log("move onComplete");
+        MakeDialogGroup(game, this.dialogGroupId);
+    }, this);
     
     playerMove.Start();
-}
-
-TokenSprite.prototype.openDialog = function () {
-    var dialogGroupId = null
-    /*if (this.clickConditions != null && Array.isArray((this.clickConditions))) {
-        for (var i = 0; i < this.clickConditions.length; i++) {
-            var condition = this.clickConditions[i]
-            var globalVar = game.gamedata.globalVars.find(function (item) { return item.id == condition.globalId })
-            if (globalVar.value == condition.value) {
-                clickId = condition.dialogId
-            }
-        }
-    } else */ if (this.dialogGroupId != null) {
-        dialogGroupId = this.dialogGroupId
-    }
-
-    MakeDialogGroup(game, this.dialogGroupId);
-    //var dialogInstance = MakeDialog(game, clickId)
-    // TODO add fadeIn()
-    //game.add.tween(dialogInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
-    //game.stage.addChild(dialogInstance)
 }
 
 TokenSprite.prototype.fadeOut = function (callback) {
