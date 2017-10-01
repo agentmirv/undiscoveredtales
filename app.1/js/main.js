@@ -78,7 +78,7 @@ var GameState = {
         //=================================================
         // Game Start
         //=================================================
-        //MakeRevealList(game, game.gamedata.playerStart.firstReveal)
+        //MakeRevealGroup(game, game.gamedata.playerStart.firstReveal)
         //MakeMonster(game, "deep-one")
         //MakeMonster(game, "deep-one-2")
         

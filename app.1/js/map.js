@@ -37,18 +37,20 @@ function MakeRevealDialog(game, id) {
             }
 
             // Begin Remove Door tokens
+            // Get this mapTileData to look at its entryTokenIds
             var mapTileData = game.gamedata.mapTiles.find(function (item) { return item.id == mapTileId });
             // Look at each entryTokenId of the room
             for (var j = 0; j < mapTileData.entryTokenIds.length; j++) {
                 var removeToken = true;
                 var tokenId = mapTileData.entryTokenIds[j];
 
-                // Find this entryTokenId in all rooms
+                // Find this entryTokenId in all rooms in gamedata
                 for (var k = 0; k < game.gamedata.mapTiles.length; k++) {
                     var mapTileDataCheck = game.gamedata.mapTiles[k];
-                    // Look for tokenId in mapTileData.entryTokenIds
+                    // Find tokenId in mapTileData.entryTokenIds
                     if (mapTileDataCheck.entryTokenIds.indexOf(tokenId) >= 0) {
                         // Check if mapTileData.id in game.gamedataInstances.mapTiles
+                        // If the mapTile has the entryToken and the mapTile is not instanced, then don't remove the token
                         if (!game.gamedataInstances.mapTiles.some(function (item) { return item.id == mapTileDataCheck.id })) {
                             // If it is not in, then it is not revealed
                             removeToken = false

@@ -995,5 +995,42 @@
           }
         ]
       }
+    ],
+  "revealGroups": [
+      {
+        "id": "reveal-lobby",
+        "dialogs": [
+          {
+            "text": "You had planned on knocking and waiting for an invitation to enter, but instead you come upon the front door swinging on its hinges. Place the Lobby tile and Walls.",
+            "mapTiles": [ "maptile-lobby" ],
+            "addMultipleTokens" : [
+              "token-wall1-lobby",
+              "token-wall2-lobby",
+              "token-wall3-lobby"
+            ]
+          },
+          {
+            "text": "Dead leaves and dust have blown in through the open door, leaving trails of detritus extending into the room. Place your investigators.",
+            "addSingleToken" : "token-investigators-lobby"
+          },
+          {
+            "text": "You see a large wooden box on the table in the center of the room. Place a Search token.",
+            "addSingleToken" : "token-box-lobby"
+          },
+          {
+            "text": "You hear a faint rustling behind this door. Place an Explore token.",
+            "addSingleToken" : [ "token-door3-lobby" ]
+          },
+          {
+            "text": "Two other doors lead from this room. Place Explore tokens.",
+            "mapTiles": [ "maptile-lobby" ],
+            "addMultipleTokens" : [
+              "token-door1-lobby",
+              "token-door2-lobby"
+            ],
+            "actions": [{ "type": "scene", "sceneId": "scene-player" }]
+          } 
+        ]
+      }
     ]
 }
