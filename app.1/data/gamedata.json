@@ -259,18 +259,6 @@
       "y":1200,
       "imageKey":"search-image",
       "dialogGroupId": "test",
-      "clickConditions": [
-        {
-          "globalId": "box-lobby",
-          "value": "initial",
-          "dialogId": "dialog-box-lobby"
-        },
-        {
-          "globalId": "box-lobby",
-          "value": "tried",
-          "dialogId": "dialog-box-lobby-tried"
-        }
-      ],
       "addToWorld": true
     },
     {
@@ -992,7 +980,9 @@
             "type": "statement",
             "buttons": [
               {
-                "actions": []
+                "actions": [
+                    {"type": "removeTokens", "tokenIds": ["token-box-lobby"] }
+                  ]
               }
             ]
           }          

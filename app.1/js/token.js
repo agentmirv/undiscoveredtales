@@ -56,14 +56,29 @@ TokenSprite.prototype.tokenClicked = function (token, pointer) {
     playerMove.Start();
 }
 
-TokenSprite.prototype.fadeOut = function (callback) {
-    var fadeOutTween = game.add.tween(this).to({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
-
+TokenSprite.prototype.fadeOut = function () {
+    var fadeOutTween = this.game.add.tween(this).to({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
     fadeOutTween.onComplete.addOnce(function () {
+        this.removeInstance();
+        this.game.world.removeChild(this);
         this.destroy(true);
     }, this);
-
-    if (callback != null) {
-        fadeOutTween.onComplete.addOnce(callback, this);
-    }
 }
+
+TokenSprite.prototype.removeInstance = function () {
+    var instanceIndex = -1;
+    this.game.gamedataInstances.mapTokens.find(function (item, index) { 
+        var match = false;
+        
+        if (item.id == this.id) {
+            match = true;
+            instanceIndex = index;
+        }
+        
+        return match;
+    })
+    
+    if (instanceIndex >=0) {
+        this.game.gamedataInstances.mapTokens.splice(instanceIndex, 1);
+    }
+}    

@@ -38,8 +38,23 @@ function MakeProcessActions(game) {
             
                     // Actions
                     if (action.type == "setGlobal") {
+                        //=========================================================
+                        // Set Global
                         var globalVar = game.gamedata.globalVars.find(function (item) { return item.id == action.globalId });
                         globalVar.value = action.value
+                        
+                    } else if (action.type == "removeTokens") {
+                        //=========================================================
+                        // Remove Tokens
+                        // Loop on tokenIds array
+                        for (var j = 0; j < action.tokenIds.length; j++) {
+                            var id = action.tokenIds[j];
+                            // Remove Id
+                            var token = game.gamedataInstances.mapTokens.find(function (item) { return item.id == id })
+                            if (token != null) {
+                                token.fadeOut();
+                            }
+                        }
                     }
                 }
             }
