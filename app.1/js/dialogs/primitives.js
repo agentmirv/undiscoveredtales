@@ -216,3 +216,12 @@ BaseDialog.prototype.close = function () {
         this.destroy(true);
     }, this);
 }
+
+BaseDialog.prototype.processAction = function (buttonData) {
+    return function () { 
+        this.onClose.addOnce(function () {
+            ProcessActions(buttonData); 
+        }, this);
+        this.close();
+    }
+}

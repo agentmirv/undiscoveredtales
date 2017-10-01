@@ -37,23 +37,13 @@ function ActionDialog(game, id, messageText, imageKey, buttonData) {
     data = null;
     var dialogCancel = new DialogButtonThin(game, "Cancel", 280);
     dialogCancel.alignTo(dialogMessage, Phaser.BOTTOM_LEFT, -10, 10);
-    dialogCancel.buttonInput.events.onInputUp.add(function () { 
-        this.onClose.addOnce(function () {
-            ProcessActions(null); 
-        }, this);
-        this.close();
-    }, this);
+    dialogCancel.buttonInput.events.onInputUp.add(this.processAction(null), this);
     this.addChild(dialogCancel);
 
     data = buttonData[0];
     var dialogAction = new DialogButtonThin(game, data.text, 280);
     dialogAction.alignTo(dialogMessage, Phaser.BOTTOM_RIGHT, -10, 10)
-    dialogAction.buttonInput.events.onInputUp.add(function () { 
-        this.onClose.addOnce(function () {
-            ProcessActions(data); 
-        }, this);
-        this.close();
-    }, this);
+    dialogAction.buttonInput.events.onInputUp.add(this.processAction(data), this);
     this.addChild(dialogAction);
 }
 
