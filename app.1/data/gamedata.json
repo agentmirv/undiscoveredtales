@@ -989,10 +989,9 @@
             "id": "startB",
             "text": "This is a token. Didn't you already do this?",
             "imageKey": "search-image",
-            "type": "action",
+            "type": "statement",
             "buttons": [
               {
-                "text": "@ Something",
                 "actions": []
               }
             ]

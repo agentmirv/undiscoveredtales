@@ -33,7 +33,7 @@ function ActionDialog(game, id, messageText, imageKey, buttonData) {
     data = null;
     var dialogCancel = new DialogButtonThin(game, "Cancel", 280);
     dialogCancel.alignTo(dialogMessage, Phaser.BOTTOM_LEFT, -10, 10);
-    dialogCancel.buttonInput.events.onInputUp.add(this.processActions(null), this);
+    dialogCancel.buttonInput.events.onInputUp.add(this.processActions(data), this);
     this.addChild(dialogCancel);
 
     data = buttonData[0];

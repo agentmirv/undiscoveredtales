@@ -19,6 +19,9 @@ function MakeDialogGroup(game, id) {
         case "action":
             MakeActionDialog(game, dialogGroupData, dialogData.id);
             break;
+        case "statement":
+            MakeStatementDialog(game, dialogGroupData, dialogData.id);
+            break;
     }
 }
 
