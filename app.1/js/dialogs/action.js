@@ -22,10 +22,7 @@ function ActionDialog(game, id, messageText, imageKey, buttonData) {
     var data = null;
 
     // Modal
-    var modalBackground = game.make.sprite(game.stageViewRect.x, game.stageViewRect.y, 'pixelTransparent');
-    modalBackground.width = game.stageViewRect.width;
-    modalBackground.height = game.stageViewRect.height;
-    modalBackground.inputEnabled = true;
+    var modalBackground = new DialogModalBackground(game);
     this.addChild(modalBackground);
 
     // Message

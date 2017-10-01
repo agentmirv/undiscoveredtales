@@ -225,3 +225,17 @@ BaseDialog.prototype.processAction = function (buttonData) {
         this.close();
     }
 }
+
+//=========================================================
+function DialogModalBackground(game) {
+    Phaser.Sprite.call(this, game, game.stageViewRect.x, game.stageViewRect.y, 'pixelTransparent');
+    
+    // Modal
+    this.width = game.stageViewRect.width;
+    this.height = game.stageViewRect.height;
+    this.inputEnabled = true;
+}
+
+DialogModalBackground.prototype = Object.create(Phaser.Sprite.prototype);
+DialogModalBackground.prototype.constructor = DialogModalBackground;
+
