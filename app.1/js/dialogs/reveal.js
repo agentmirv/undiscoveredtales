@@ -22,20 +22,25 @@ function RevealDialog(game, messageText, imageKey, revealGroup) {
     var modalBackground = new DialogModalBackground(game);
     this.addChild(modalBackground);
 
+    if (imageKey != null) {
+        // Reveal Image
+        var revealPointer = game.make.image(0, 0, ImageHelper.getImage(game, imageKey))
+        revealPointer.alignIn(game.stageViewRect, Phaser.CENTER, 0, -208 + 48 - game.presentationOffsetY)
+        this.addChild(revealPointer);
+    
+        // Reveal Pointer
+        var revealPointer = game.make.image(0, 0, 'revealPointer')
+        revealPointer.alignIn(game.stageViewRect, Phaser.CENTER, 0, -48 - 48 + 4 - game.presentationOffsetY)
+        this.addChild(revealPointer);
+    }
+    
     // Message
-    var dialogMessage = new DialogMessage(game, messageText, imageKey);
+    var dialogMessage = new DialogMessage(game, messageText, null);
     dialogMessage.alignIn(game.stageViewRect, Phaser.CENTER, 0, -game.presentationOffsetY)
     this.addChild(dialogMessage);
 
      // Button for [Continue]
-    data = { 
-            "actions": [
-                { 
-                    "type": "reveal",
-                    "revealGroup": revealGroup
-                },
-            ],
-    };
+    data = { "actions": [{  "type": "reveal", "revealGroup": revealGroup }] };
     var dialogContinue = new DialogButtonThin(game, "Continue", 180);
     dialogContinue.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 0, 10)
     dialogContinue.buttonInput.events.onInputUp.add(this.processActions(data), this);
