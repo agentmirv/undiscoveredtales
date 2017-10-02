@@ -24,7 +24,7 @@ function MapTile(game, mapTileData) {
     this.data = mapTileData;
     this.id = this.data.id
     this.isRevealed = false
-    var sprite = game.make.sprite(this.data.x, this.data.y, ImageHelper.getImage(this.data.imageKey))
+    var sprite = game.make.sprite(this.data.x, this.data.y, ImageHelper.getImage(game, this.data.imageKey))
 
     // Set Sprite Anchor
     if (this.data.angle == 90) {

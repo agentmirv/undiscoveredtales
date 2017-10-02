@@ -13,7 +13,9 @@ function MakeToken(game, id) {
         tokenData.addToWorld);
 
     game.gamedataInstances.mapTokens.push(tokenInstance);
-
+    game.add.tween(tokenInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+    game.world.addChild(tokenInstance)
+    
     return tokenInstance;
 }
 
