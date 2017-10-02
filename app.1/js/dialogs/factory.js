@@ -32,9 +32,11 @@ function MakeProcessActions(game) {
                     } else if (action.type == "reveal") {
                         //=========================================================
                         // Continue Reveal
-                        console.log('continue reveal')
-                        console.log(action)
                         ContinueRevealGroup(game, action.revealGroup)
+                    } else if (action.type == "scene") {
+                        //=========================================================
+                        // Scene
+                        MakeScene(game, action.sceneId)
                     }
                 }
             }

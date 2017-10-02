@@ -6,6 +6,7 @@ function MakeRevealDialog(game, revealDialogData, revealGroup, imageKey) {
         game,
         revealDialogData.text,
         imageKey,
+        revealDialogData,
         revealGroup);
 
     game.stage.addChild(dialogInstance);
@@ -13,7 +14,7 @@ function MakeRevealDialog(game, revealDialogData, revealGroup, imageKey) {
 }
 
 //=========================================================
-function RevealDialog(game, messageText, imageKey, revealGroup) {
+function RevealDialog(game, messageText, imageKey, revealDialogData, revealGroup) {
     BaseDialog.call(this, game);
 
     var data = null;
@@ -41,6 +42,9 @@ function RevealDialog(game, messageText, imageKey, revealGroup) {
 
      // Button for [Continue]
     data = { "actions": [{  "type": "reveal", "revealGroup": revealGroup }] };
+    if (Array.isArray(revealDialogData.actions)) {
+        data.actions = revealDialogData.actions.concat(data.actions)
+    }
     var dialogContinue = new DialogButtonThin(game, "Continue", 180);
     dialogContinue.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 0, 10)
     dialogContinue.buttonInput.events.onInputUp.add(this.processActions(data), this);
