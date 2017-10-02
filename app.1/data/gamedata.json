@@ -985,6 +985,18 @@
                   ]
               }
             ]
+          },
+          {
+            "id": "startC",
+            "text": "Here we are again, isn't it grand?",
+            "type": "statement",
+            "buttons": [
+              {
+                "actions": [
+                    {"type": "removeTokens", "tokenIds": ["token-box-lobby"] }
+                  ]
+              }
+            ]
           }          
         ],
         "startConditions": [

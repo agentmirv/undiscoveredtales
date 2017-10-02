@@ -32,11 +32,15 @@ function MakeProcessActions(game) {
                     } else if (action.type == "reveal") {
                         //=========================================================
                         // Continue Reveal
-                        ContinueRevealGroup(game, action.revealGroup)
+                        ContinueRevealGroup(game, buttonData.revealGroup)
                     } else if (action.type == "scene") {
                         //=========================================================
                         // Scene
                         MakeScene(game, action.sceneId)
+                    } else if (action.type == "dialog") {
+                        //=========================================================
+                        // Continue Dialog
+                        //ContinueDialogGroup(game, buttonData.revealGroup)
                     }
                 }
             }
@@ -45,7 +49,7 @@ function MakeProcessActions(game) {
 }
 
 //=========================================================
-function MakeDialogGroup(game, id) {
+function StartDialogGroup(game, id) {
     var dialogGroupData = game.gamedata.dialogGroups.find(function (item) { return item.id == id });
     
     // Examine conditions on the dialogs
@@ -62,12 +66,20 @@ function MakeDialogGroup(game, id) {
         }
     } 
     
+    ContinueDialogGroup(game, dialogData, dialogGroupData);
+}
+
+function ContinueDialogGroup(game, dialogData, dialogGroupData) {
+
     switch(dialogData.type) {
         case "action":
-            MakeActionDialog(game, dialogGroupData, dialogData.id);
+            MakeActionDialog(game, dialogData, dialogGroupData);
             break;
         case "statement":
-            MakeStatementDialog(game, dialogGroupData, dialogData.id);
+            MakeStatementDialog(game, dialogData, dialogGroupData);
+            break;
+        case "skilltest":
+            //MakeStatementDialog(game, dialogGroupData, dialogData);
             break;
     }
 }

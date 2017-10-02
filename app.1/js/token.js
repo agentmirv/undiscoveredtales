@@ -55,7 +55,7 @@ TokenSprite.prototype.tokenClicked = function (token, pointer) {
 
     playerMove.onComplete.addOnce(function () {
         //console.log("move onComplete");
-        MakeDialogGroup(game, this.dialogGroupId);
+        StartDialogGroup(game, this.dialogGroupId);
     }, this);
     
     playerMove.Start();

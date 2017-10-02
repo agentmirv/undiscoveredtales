@@ -1,20 +1,14 @@
 /* global Phaser */
 //=========================================================
 function MakeRevealDialog(game, revealDialogData, revealGroup, imageKey) {
-
-    var dialogInstance = new RevealDialog(
-        game,
-        revealDialogData.text,
-        imageKey,
-        revealDialogData,
-        revealGroup);
+    var dialogInstance = new RevealDialog(game, revealDialogData, revealGroup, imageKey);
 
     game.stage.addChild(dialogInstance);
     dialogInstance.open();
 }
 
 //=========================================================
-function RevealDialog(game, messageText, imageKey, revealDialogData, revealGroup) {
+function RevealDialog(game, revealDialogData, revealGroup, imageKey) {
     BaseDialog.call(this, game);
 
     var data = null;
@@ -36,12 +30,12 @@ function RevealDialog(game, messageText, imageKey, revealDialogData, revealGroup
     }
     
     // Message
-    var dialogMessage = new DialogMessage(game, messageText, null);
+    var dialogMessage = new DialogMessage(game, revealDialogData.text, null);
     dialogMessage.alignIn(game.stageViewRect, Phaser.CENTER, 0, -game.presentationOffsetY)
     this.addChild(dialogMessage);
 
      // Button for [Continue]
-    data = { "actions": [{  "type": "reveal", "revealGroup": revealGroup }] };
+    data = { "actions": [{  "type": "reveal" }], "revealGroup": revealGroup };
     if (Array.isArray(revealDialogData.actions)) {
         data.actions = revealDialogData.actions.concat(data.actions)
     }

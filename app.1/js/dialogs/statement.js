@@ -1,21 +1,14 @@
 /* global Phaser */
 //=========================================================
-function MakeStatementDialog(game, dialogGroupData, id) {
-    var dialogData = dialogGroupData.dialogs.find(function (item) { return item.id == id });
-
-    var dialogInstance = new StatementDialog(
-        game,
-        dialogData.id,
-        dialogData.text,
-        dialogData.imageKey,
-        dialogData.buttons);
+function MakeStatementDialog(game, dialogData, dialogGroupData) {
+    var dialogInstance = new StatementDialog(game, dialogData, dialogGroupData);
 
     game.stage.addChild(dialogInstance);
     dialogInstance.open();
 }
 
 //=========================================================
-function StatementDialog(game, id, messageText, imageKey, buttonData) {
+function StatementDialog(game, dialogData, dialogGroupData) { //id, messageText, imageKey, buttonData) {
     BaseDialog.call(this, game);
 
     var data = null;
@@ -25,12 +18,13 @@ function StatementDialog(game, id, messageText, imageKey, buttonData) {
     this.addChild(modalBackground);
 
     // Message
-    var dialogMessage = new DialogMessage(game, messageText, imageKey);
+    var dialogMessage = new DialogMessage(game, dialogData.text, dialogData.imageKey);
     dialogMessage.alignIn(game.stageViewRect, Phaser.CENTER, 0, -game.presentationOffsetY)
     this.addChild(dialogMessage);
 
      // Button for [Continue]
-    data = buttonData[0];
+    data = dialogData.buttons[0];
+    data.dialogGroup = dialogGroupData;
     var dialogContinue = new DialogButtonThin(game, "Continue", 180);
     dialogContinue.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 0, 10)
     dialogContinue.buttonInput.events.onInputUp.add(this.processActions(data), this);
