@@ -981,7 +981,7 @@
             "buttons": [
               {
                 "actions": [
-                    {"type": "removeTokens", "tokenIds": ["token-box-lobby"] }
+                    {"type": "dialog", "dialogId": "startC" }
                   ]
               }
             ]
@@ -989,6 +989,7 @@
           {
             "id": "startC",
             "text": "Here we are again, isn't it grand?",
+            "imageKey": "search-image",
             "type": "statement",
             "buttons": [
               {

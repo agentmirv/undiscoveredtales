@@ -1,14 +1,14 @@
 /* global Phaser */
 //=========================================================
-function MakeActionDialog(game, dialogData, dialogGroupData) {
-    var dialogInstance = new ActionDialog(game, dialogData, dialogGroupData);
+function MakeActionDialog(game, dialogData, dialogGroup) {
+    var dialogInstance = new ActionDialog(game, dialogData, dialogGroup);
 
     game.stage.addChild(dialogInstance);
     dialogInstance.open();
 }
 
 //=========================================================
-function ActionDialog(game, dialogData, dialogGroupData) {
+function ActionDialog(game, dialogData, dialogGroup) {
     BaseDialog.call(this, game);
 
     var data = null;
@@ -30,7 +30,7 @@ function ActionDialog(game, dialogData, dialogGroupData) {
     this.addChild(dialogCancel);
 
     data = dialogData.buttons[0];
-    data.dialogGroup = dialogGroupData;
+    data.dialogGroup = dialogGroup;
     var dialogAction = new DialogButtonThin(game, data.text, 280);
     dialogAction.alignTo(dialogMessage, Phaser.BOTTOM_RIGHT, -10, 10)
     dialogAction.buttonInput.events.onInputUp.add(this.processActions(data), this);
