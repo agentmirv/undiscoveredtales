@@ -29,7 +29,7 @@ function ActionDialog(game, dialogData, dialogGroup) {
     dialogCancel.buttonInput.events.onInputUp.add(this.processActions(data), this);
     this.addChild(dialogCancel);
 
-    data = dialogData.buttons[0];
+    data = dialogData.buttons[0] || {};
     data.dialogGroup = dialogGroup;
     var dialogAction = new DialogButtonThin(game, data.text, 280);
     dialogAction.alignTo(dialogMessage, Phaser.BOTTOM_RIGHT, -10, 10)

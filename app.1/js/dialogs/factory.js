@@ -83,7 +83,7 @@ function ProcessDialogType(game, dialogData, dialogGroup) {
             MakeStatementDialog(game, dialogData, dialogGroup);
             break;
         case "skilltest":
-            //MakeStatementDialog(game, dialogGroupData, dialogData);
+            MakeSkillTestDialog(game, dialogData, dialogGroup);
             break;
     }
 }

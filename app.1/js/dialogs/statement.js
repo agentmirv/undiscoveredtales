@@ -23,7 +23,7 @@ function StatementDialog(game, dialogData, dialogGroup) { //id, messageText, ima
     this.addChild(dialogMessage);
 
      // Button for [Continue]
-    data = dialogData.buttons[0];
+    data = dialogData.buttons[0] || {};
     data.dialogGroup = dialogGroup;
     var dialogContinue = new DialogButtonThin(game, "Continue", 180);
     dialogContinue.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 0, 10)

@@ -258,7 +258,7 @@
       "x":1200,
       "y":1200,
       "imageKey":"search-image",
-      "dialogGroupId": "test",
+      "dialogGroupId": "box-lobby",
       "addToWorld": true
     },
     {
@@ -1005,6 +1005,73 @@
             "globalId": "test-global",
             "value": "valueB",
             "dialogId": "startB"
+          }
+        ]
+      },
+      {
+        "id": "box-lobby",
+        "dialogs": [
+            {
+              "id": "dialog-box-lobby",
+              "imageKey": "search-image",
+              "text": "A heavy wooden box lies on the table. The lid can be opened by moving an ornate latch.",
+              "type": "action",
+              "buttons": [
+                { "text": "@ Search",
+                  "actions": [ {"type": "dialog", "dialogId": "dialog-box-lobby-skilltest"} ]
+                }
+              ]
+            },
+            {
+              "id": "dialog-box-lobby-tried",
+              "imageKey": "search-image",
+              "text": "You want to search the damned box, but you feel the cursed latch mocking you.",
+              "type": "action",
+              "buttons": [
+                { "text": "@ Search",
+                  "actions": [ {"type": "dialog", "dialogId": "dialog-box-lobby-skilltest"} ]
+                }
+              ]
+            },
+            {
+              "id": "dialog-box-lobby-skilltest",
+              "imageKey": "search-image",
+              "text": "The unholy design of the latch depicts a humanoid form with beast-like appendages. You steel yourself for designs of an immoral calculus. (Test Will) ",
+              "type": "skilltest",
+              "skillTarget": 2,
+              "successActions": [
+                {"type": "setGlobal", "globalId": "box-lobby", "value": "searched" },
+                {"type": "dialog", "dialogId": "dialog-box-lobby-skilltest-success"}
+              ],
+              "failActions": [
+                {"type": "setGlobal", "globalId": "box-lobby", "value": "tried" },
+                {"type": "dialog", "dialogId": "dialog-box-lobby-skilltest-fail"}
+              ]
+            },
+            {
+              "id": "dialog-box-lobby-skilltest-success",
+              "imageKey": "search-image",
+              "text": "You unfasten the latch with a subtle twist, revealing a newspaper clipping inside the box. The article describes the discovery of human remains in the Malahath River. The paper is two weeks old, according to the date. Gain 1 Clue. Then discard this Search token.",
+              "type": "statement",
+              "buttons": [
+                { "text": "Continue",
+                  "actions": [ {"type": "removeTokens", "tokenIds": ["token-box-lobby"] } ]
+                }
+              ]
+            },
+            {
+              "id": "dialog-box-lobby-skilltest-fail",
+              "imageKey": "search-image",
+              "text": "Your hands shake as you attempt to handle the latch. The image of a man-beast stalking you from the shadows clouds your mind. Feeling confounded, you set the box back down.",
+              "type": "statement",
+              "buttons": [ ]
+            }            
+          ],
+        "startConditions": [
+          {
+            "globalId": "box-lobby",
+            "value": "tried",
+            "dialogId": "dialog-box-lobby-tried"
           }
         ]
       }
