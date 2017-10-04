@@ -27,7 +27,7 @@ function MakeRevealDialogData(game, revealDialogData, revealGroup) {
         for (var i = 0; i < revealDialogData.mapTiles.length; i++) {
             var mapTileId = revealDialogData.mapTiles[i];
             var mapTileInstance = MakeMapTile(game, mapTileId);
-
+            
             calculateCenter.x += mapTileInstance.centerX
             calculateCenter.y += mapTileInstance.centerY
         }

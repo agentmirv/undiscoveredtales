@@ -16,7 +16,7 @@ function MakeToken(game, id) {
     game.add.tween(tokenInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
     
     if (tokenInstance.addToWorld) {
-        game.world.addChild(tokenInstance);
+        game.tokenLayer.addChild(tokenInstance);
     }
 
     return tokenInstance;
@@ -65,7 +65,7 @@ TokenSprite.prototype.fadeOut = function () {
     var fadeOutTween = this.game.add.tween(this).to({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
     fadeOutTween.onComplete.addOnce(function () {
         this.removeInstance();
-        this.game.world.removeChild(this);
+        this.game.tokenLayer.removeChild(this);
         this.destroy(true);
     }, this);
 }
@@ -83,7 +83,7 @@ TokenSprite.prototype.removeInstance = function () {
         return match;
     })
     
-    if (instanceIndex >=0) {
+    if (instanceIndex >= 0) {
         this.game.gamedataInstances.mapTokens.splice(instanceIndex, 1);
     }
 }    

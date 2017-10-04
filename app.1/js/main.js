@@ -69,6 +69,9 @@ var GameState = {
 
         game.add.tileSprite(0, 0, 2560, 2560, 'background');
 
+        game.mapTileLayer = game.add.group();
+        game.tokenLayer = game.add.group();
+
         //=================================================
         // Add HUD
         //var hudInstance = new HudGroup(game)
