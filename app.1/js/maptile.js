@@ -11,7 +11,6 @@ function MakeMapTile(game, id) {
     } else {
         mapTileInstance = new MapTile(game, mapTileData);
         game.mapTileLayer.addChild(mapTileInstance);
-        game.gamedataInstances.mapTiles.push(mapTileInstance);
         var fadeInTween = game.add.tween(mapTileInstance).from({ alpha: 0 }, 600, Phaser.Easing.Linear.None, true, 0, 0, false);
     }
 
@@ -42,6 +41,7 @@ function MapTile(game, mapTileData) {
     this.addChild(sprite);
     
     // Remove Door Tokens when the connecting rooms are revealed
+    game.gamedataInstances.mapTiles.push(this);
     this.removeDoorTokens();
 }
 
