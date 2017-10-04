@@ -313,7 +313,7 @@
       "x":1488,
       "y":768,
       "imageKey":"explore-image",
-      "clickId":"dialog-door-east-bedroom",
+      "dialogGroupId":"dialog-door-east-bedroom",
       "clickConditions": [
         {
           "globalId": "door-east-bedroom",
@@ -333,7 +333,7 @@
       "x":624,
       "y":960,
       "imageKey":"explore-image",
-      "clickId":"dialog-door-west-bedroom",
+      "dialogGroupId":"dialog-door-west-bedroom",
       "addToWorld": true
     },
     {
@@ -1230,6 +1230,52 @@
           "buttons": [
             { "actions": [ {"type": "removeTokens", "tokenIds": ["token-bird-hall"] } ] }
           ]
+        }        
+      ]
+    },
+    {
+      "id": "dialog-door-east-bedroom",
+      "dialogs": [
+        {
+          "id": "dialog-door-east-bedroom",
+          "imageKey": "explore-image",
+          "text": "A rising sun is carved into the door to the east bedroom. There is no handle on this door.",
+          "type": "statement",
+          "buttons": [ ]
+        },
+        {
+          "id": "dialog-door-east-bedroom-broken",
+          "imageKey": "explore-image",
+          "text": "The door to the east bedroom is smashed and hanging by a single hinge.",
+          "type": "action",
+          "buttons": [
+            { "text": "@ Explore"
+            }
+          ]
+        }        
+      ],
+      "startConditions": [
+        {
+          "globalId": "door-east-bedroom",
+          "value": "initial",
+          "dialogId": "dialog-door-east-bedroom"
+        },
+        {
+          "globalId": "door-east-bedroom",
+          "value": "broken",
+          "dialogId": "dialog-door-east-bedroom-broken"
+        }      
+      ]      
+    },
+    {
+      "id": "dialog-door-west-bedroom",
+      "dialogs": [
+        {
+          "id": "dialog-door-west-bedroom",
+          "imageKey": "explore-image",
+          "text": "A setting sun is carved into the door of the west bedroom. There is no handle on this door.",
+          "type": "statement",
+          "buttons": [ ]
         }        
       ]
     }
