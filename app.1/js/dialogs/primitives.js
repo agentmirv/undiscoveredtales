@@ -100,8 +100,11 @@ function DialogButtonMedium(game, text, width) {
     var totalHeight = messageText.height + topMargin + bottomMargin;
     var outlineBox = new OutlineBox(game, totalWidth, totalHeight);
 
+    this.buttonInput = new DialogButtonInput(game, outlineBox);
+
     this.addChild(outlineBox);
     this.addChild(messageText);
+    this.addChild(this.buttonInput);
 }
 
 DialogButtonMedium.prototype = Object.create(Phaser.Group.prototype);

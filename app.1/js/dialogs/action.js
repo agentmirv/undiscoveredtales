@@ -22,7 +22,7 @@ function ActionDialog(game, dialogData, dialogGroup) {
     dialogMessage.alignIn(game.stageViewRect, Phaser.CENTER, 0, -game.presentationOffsetY)
     this.addChild(dialogMessage);
 
-     // Buttons for [Cancel] [Action]
+    // Buttons for [Cancel] [Action]
     data = null;
     var dialogCancel = new DialogButtonThin(game, "Cancel", 280);
     dialogCancel.alignTo(dialogMessage, Phaser.BOTTOM_LEFT, -10, 10);

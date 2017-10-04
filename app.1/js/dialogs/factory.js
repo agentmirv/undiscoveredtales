@@ -45,7 +45,7 @@ function MakeProcessActions(game) {
                         //=========================================================
                         // Continue Reveal
                         StartRevealGroup(game, action.revealGroupId)
-                    }
+                    } 
                 }
             }
         }
@@ -88,6 +88,9 @@ function ProcessDialogType(game, dialogData, dialogGroup) {
             break;
         case "skilltest":
             MakeSkillTestDialog(game, dialogData, dialogGroup);
+            break;
+        case "custom":
+            MakeCustomDialog(game, dialogData, dialogGroup);
             break;
     }
 }
