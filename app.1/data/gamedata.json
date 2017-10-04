@@ -266,7 +266,7 @@
       "id":"token-door1-lobby",
       "y":912,
       "imageKey":"explore-image",
-      "clickId":"dialog-door1-lobby",
+      "dialogGroupId":"dialog-door1-lobby",
       "addToWorld": true
     },
     {
@@ -274,7 +274,7 @@
       "x":912,
       "y":1056,
       "imageKey":"explore-image",
-      "clickId":"dialog-door2-lobby",
+      "dialogGroupId":"dialog-door2-lobby",
       "addToWorld": true
     },
     {
@@ -282,7 +282,7 @@
       "x":1488,
       "y":1344,
       "imageKey":"explore-image",
-      "clickId":"dialog-door3-lobby",
+      "dialogGroupId":"dialog-door3-lobby",
       "addToWorld": true
     },
     {
@@ -957,125 +957,173 @@
     }
   ],
   "dialogGroups": [
-      {
-        "id": "test",
-        "dialogs": [
+    {
+      "id": "test",
+      "dialogs": [
+        {
+          "text": "This is a token. Do with it what you will.",
+          "imageKey": "search-image",
+          "type": "action",
+          "buttons": [
+            {
+              "text": "@ Something",
+              "actions": [
+                  {"type": "setGlobal", "globalId": "test-global", "value": "valueB" }
+                ]
+            }
+          ]
+        },
+        {
+          "id": "startB",
+          "text": "This is a token. Didn't you already do this?",
+          "imageKey": "search-image",
+          "type": "statement",
+          "buttons": [
+            {
+              "actions": [
+                  {"type": "dialog", "dialogId": "startC" }
+                ]
+            }
+          ]
+        },
+        {
+          "id": "startC",
+          "text": "Here we are again, isn't it grand?",
+          "imageKey": "search-image",
+          "type": "statement",
+          "buttons": [
+            {
+              "actions": [
+                  {"type": "removeTokens", "tokenIds": ["token-box-lobby"] }
+                ]
+            }
+          ]
+        }          
+      ],
+      "startConditions": [
+        {
+          "globalId": "test-global",
+          "value": "valueB",
+          "dialogId": "startB"
+        }
+      ]
+    },
+    {
+      "id": "box-lobby",
+      "dialogs": [
           {
-            "text": "This is a token. Do with it what you will.",
+            "id": "dialog-box-lobby",
             "imageKey": "search-image",
+            "text": "A heavy wooden box lies on the table. The lid can be opened by moving an ornate latch.",
             "type": "action",
             "buttons": [
-              {
-                "text": "@ Something",
-                "actions": [
-                    {"type": "setGlobal", "globalId": "test-global", "value": "valueB" }
-                  ]
+              { "text": "@ Search",
+                "actions": [ {"type": "dialog", "dialogId": "dialog-box-lobby-skilltest"} ]
               }
             ]
           },
           {
-            "id": "startB",
-            "text": "This is a token. Didn't you already do this?",
+            "id": "dialog-box-lobby-tried",
             "imageKey": "search-image",
-            "type": "statement",
+            "text": "You want to search the damned box, but you feel the cursed latch mocking you.",
+            "type": "action",
             "buttons": [
-              {
-                "actions": [
-                    {"type": "dialog", "dialogId": "startC" }
-                  ]
+              { "text": "@ Search",
+                "actions": [ {"type": "dialog", "dialogId": "dialog-box-lobby-skilltest"} ]
               }
             ]
           },
           {
-            "id": "startC",
-            "text": "Here we are again, isn't it grand?",
+            "id": "dialog-box-lobby-skilltest",
             "imageKey": "search-image",
+            "text": "The unholy design of the latch depicts a humanoid form with beast-like appendages. You steel yourself for designs of an immoral calculus. (Test Will) ",
+            "type": "skilltest",
+            "skillTarget": 2,
+            "successActions": [
+              {"type": "setGlobal", "globalId": "box-lobby", "value": "searched" },
+              {"type": "dialog", "dialogId": "dialog-box-lobby-skilltest-success"}
+            ],
+            "failActions": [
+              {"type": "setGlobal", "globalId": "box-lobby", "value": "tried" },
+              {"type": "dialog", "dialogId": "dialog-box-lobby-skilltest-fail"}
+            ]
+          },
+          {
+            "id": "dialog-box-lobby-skilltest-success",
+            "imageKey": "search-image",
+            "text": "You unfasten the latch with a subtle twist, revealing a newspaper clipping inside the box. The article describes the discovery of human remains in the Malahath River. The paper is two weeks old, according to the date. Gain 1 Clue. Then discard this Search token.",
             "type": "statement",
             "buttons": [
-              {
-                "actions": [
-                    {"type": "removeTokens", "tokenIds": ["token-box-lobby"] }
-                  ]
+              { "text": "Continue",
+                "actions": [ {"type": "removeTokens", "tokenIds": ["token-box-lobby"] } ]
               }
             ]
-          }          
+          },
+          {
+            "id": "dialog-box-lobby-skilltest-fail",
+            "imageKey": "search-image",
+            "text": "Your hands shake as you attempt to handle the latch. The image of a man-beast stalking you from the shadows clouds your mind. Feeling confounded, you set the box back down.",
+            "type": "statement",
+            "buttons": [ ]
+          }            
         ],
-        "startConditions": [
-          {
-            "globalId": "test-global",
-            "value": "valueB",
-            "dialogId": "startB"
-          }
-        ]
-      },
-      {
-        "id": "box-lobby",
-        "dialogs": [
-            {
-              "id": "dialog-box-lobby",
-              "imageKey": "search-image",
-              "text": "A heavy wooden box lies on the table. The lid can be opened by moving an ornate latch.",
-              "type": "action",
-              "buttons": [
-                { "text": "@ Search",
-                  "actions": [ {"type": "dialog", "dialogId": "dialog-box-lobby-skilltest"} ]
-                }
-              ]
-            },
-            {
-              "id": "dialog-box-lobby-tried",
-              "imageKey": "search-image",
-              "text": "You want to search the damned box, but you feel the cursed latch mocking you.",
-              "type": "action",
-              "buttons": [
-                { "text": "@ Search",
-                  "actions": [ {"type": "dialog", "dialogId": "dialog-box-lobby-skilltest"} ]
-                }
-              ]
-            },
-            {
-              "id": "dialog-box-lobby-skilltest",
-              "imageKey": "search-image",
-              "text": "The unholy design of the latch depicts a humanoid form with beast-like appendages. You steel yourself for designs of an immoral calculus. (Test Will) ",
-              "type": "skilltest",
-              "skillTarget": 2,
-              "successActions": [
-                {"type": "setGlobal", "globalId": "box-lobby", "value": "searched" },
-                {"type": "dialog", "dialogId": "dialog-box-lobby-skilltest-success"}
-              ],
-              "failActions": [
-                {"type": "setGlobal", "globalId": "box-lobby", "value": "tried" },
-                {"type": "dialog", "dialogId": "dialog-box-lobby-skilltest-fail"}
-              ]
-            },
-            {
-              "id": "dialog-box-lobby-skilltest-success",
-              "imageKey": "search-image",
-              "text": "You unfasten the latch with a subtle twist, revealing a newspaper clipping inside the box. The article describes the discovery of human remains in the Malahath River. The paper is two weeks old, according to the date. Gain 1 Clue. Then discard this Search token.",
-              "type": "statement",
-              "buttons": [
-                { "text": "Continue",
-                  "actions": [ {"type": "removeTokens", "tokenIds": ["token-box-lobby"] } ]
-                }
-              ]
-            },
-            {
-              "id": "dialog-box-lobby-skilltest-fail",
-              "imageKey": "search-image",
-              "text": "Your hands shake as you attempt to handle the latch. The image of a man-beast stalking you from the shadows clouds your mind. Feeling confounded, you set the box back down.",
-              "type": "statement",
-              "buttons": [ ]
-            }            
-          ],
-        "startConditions": [
-          {
-            "globalId": "box-lobby",
-            "value": "tried",
-            "dialogId": "dialog-box-lobby-tried"
-          }
-        ]
-      }
-    ],
+      "startConditions": [
+        {
+          "globalId": "box-lobby",
+          "value": "tried",
+          "dialogId": "dialog-box-lobby-tried"
+        }
+      ]
+    },
+    {
+      "id": "dialog-door1-lobby",
+      "dialogs": [
+        {
+          "id": "dialog-door1-lobby",
+          "imageKey": "explore-image",
+          "text": "This door leads deeper into the mansion.",
+          "type": "action",
+          "buttons": [
+            { "text": "@ Explore",
+              "actions": [ {"type": "startReveal", "revealGroupId": "reveal-halls" } ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dialog-door2-lobby",
+      "dialogs": [
+        {
+          "id": "dialog-door2-lobby",
+          "imageKey": "explore-image",
+          "text": "This door leads deeper into the mansion.",
+          "type": "action",
+          "buttons": [
+            { "text": "@ Explore",
+              "actions": [ {"type": "startReveal", "revealGroupId": "reveal-halls" } ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dialog-door3-lobby",
+      "dialogs": [
+        {
+          "id": "dialog-door3-lobby",
+          "imageKey": "explore-image",
+          "text": "This door leads to a room at the front of the house. The handle is ice cold.",
+          "type": "action",
+          "buttons": [
+            { "text": "@ Explore",
+              "actions": [ {"type": "startReveal", "revealGroupId": "reveal-study" } ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
   "revealGroups": [
       {
         "id": "reveal-lobby",
@@ -1111,6 +1159,78 @@
             "actions": [{ "type": "scene", "sceneId": "scene-player" }]
           } 
         ]
-      }
+      },
+      {
+        "id": "reveal-study",
+        "dialogs": [
+          {
+            "id": "reveal-study-dialog-room",
+            "text": "The door leads to a dark study. You can see your breath in the cold air. Place the Study tile and Wall. Remove any Explore tokens leading to it.",
+            "mapTiles": [ "maptile-study" ],
+            "addMultipleTokens" : [ "token-wall-study" ]
+          },
+          {
+            "id": "reveal-study-dialog-fireplace",
+            "text": "Cold drafts blow in from the disused fireplace. Place a Search token.",
+            "addSingleToken" : [ "token-fireplace-study" ]
+          },
+          {
+            "id": "reveal-study-explored",
+            "text": "You may move one space into the new area.",
+            "mapTiles": [ "maptile-study" ]
+          }
+        ]
+      },
+      {
+        "id": "reveal-halls",
+        "dialogs": [
+          {
+            "id": "reveal-halls-dialog-room",
+            "text": "A hallway leads to several bedrooms. Place the Hall Corner 1 tile, the Hall End tile, and Walls. Remove any Explore tokens.",
+            "mapTiles": [ "maptile-hall-corner-1", "maptile-hall-end" ],
+            "addMultipleTokens" : [
+              "token-wall1-hall",
+              "token-wall2-hall"
+            ]
+          },
+          {
+            "id": "reveal-halls-dialog-bird",
+            "text": "A white cockatoo is perched atop the edge of an upended table. Its feathers are dusty and unkempt. You wonder if this is the only living thing in the house. In the quiet, the bird watches you with its black beady eyes. Place an Interact token.",
+            "addSingleToken" : [ "token-bird-hall" ]
+          },
+          {
+            "id": "reveal-halls-dialog-door-east",
+            "text": "This door leads to the east bedroom.",
+            "addSingleToken" : [ "token-door-east-bedroom" ]
+          },
+          {
+            "id": "reveal-halls-dialog-door-west",
+            "text": "This door leads to the west bedroom.",
+            "addSingleToken" : [ "token-door-west-bedroom" ]
+          },
+          {
+            "id": "reveal-halls-explored",
+            "text": "You may move one space into the new area.",
+            "mapTiles": [ "maptile-hall-corner-1", "maptile-hall-end" ]
+          }          
+        ]
+      },
+      {
+        "id": "reveal-deep-one",
+        "dialogs": [
+          {
+            "id": "reveal-halls-dialog-door-east-broken",
+            "text": "You hear a low guttural roar. The door rattles as something smashes it violently from the other side, then the door crashes open.",
+            "showSingleToken" : [ "token-door-east-bedroom" ],
+            "actions": [{"type": "setGlobal", "globalId": "door-east-bedroom", "value": "broken" }]
+          },
+          {
+            "id": "reveal-halls-deep-one-beast",
+            "text": "A hideous beast shambles through the broken door. It sniffs the air and begins to hunt. Spawn a Deep One in the Hall End.",
+            "addSingleToken" : [ "token-deep-one-beast" ],
+            "actions": [{ "type": "monster", "monsterId": "deep-one" }]
+          }          
+        ]
+      }      
     ]
 }

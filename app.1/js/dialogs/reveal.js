@@ -33,9 +33,9 @@ function RevealDialog(game, revealDialogData, revealGroup, imageKey) {
     var dialogMessage = new DialogMessage(game, revealDialogData.text, null);
     dialogMessage.alignIn(game.stageViewRect, Phaser.CENTER, 0, -game.presentationOffsetY)
     this.addChild(dialogMessage);
-
+ 
      // Button for [Continue]
-    data = { "actions": [{  "type": "reveal" }], "revealGroup": revealGroup };
+    data = { "actions": [{  "type": "continueReveal" }], "revealGroup": revealGroup };
     if (Array.isArray(revealDialogData.actions)) {
         data.actions = revealDialogData.actions.concat(data.actions)
     }

@@ -29,7 +29,7 @@ function MakeProcessActions(game) {
                                 token.fadeOut();
                             }
                         }
-                    } else if (action.type == "reveal") {
+                    } else if (action.type == "continueReveal") {
                         //=========================================================
                         // Continue Reveal
                         ContinueRevealGroup(game, buttonData.revealGroup)
@@ -41,6 +41,10 @@ function MakeProcessActions(game) {
                         //=========================================================
                         // Continue Dialog
                         ContinueDialogGroup(game, action.dialogId, buttonData.dialogGroup)
+                    } else if (action.type == "startReveal") {
+                        //=========================================================
+                        // Continue Reveal
+                        StartRevealGroup(game, action.revealGroupId)
                     }
                 }
             }
