@@ -48,13 +48,13 @@ PlayerSceneGroup.prototype = Object.create(Phaser.Group.prototype);
 PlayerSceneGroup.prototype.constructor = PlayerSceneGroup;
 
 PlayerSceneGroup.prototype.updatePhase = function () {
-    game.hud.activePhase = "player"
-    game.hud.activeStep = ""
-    game.hudInstance.updatePhaseButtonImage()
+    //game.hud.activePhase = "player"
+    //game.hud.activeStep = ""
+    //game.hudInstance.updatePhaseButtonImage()
 }
 
 PlayerSceneGroup.prototype.destroyScene = function () {
-    game.cutSceneCamera = false
+    //game.cutSceneCamera = false
     this.destroy(true)
 }
 
