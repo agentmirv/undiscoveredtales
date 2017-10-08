@@ -3,6 +3,7 @@ function Hud(game) {
     Phaser.Group.call(this, game);
 
     this.phase = "";
+    this.isFireActive = false;
 
     var endPhaseButton = new HudButton(game, "endPhase-image-player", "endPhase-image-enemy");
     endPhaseButton.alignIn(game.stageViewRect, Phaser.BOTTOM_RIGHT, 0, 0);
@@ -71,7 +72,11 @@ function Hud(game) {
     this.fireStepBegin.add(function () {
         console.log("fireStepBegin");
         // Create Dialog and wire up
-        this.fireStepEnd.dispatch();
+        var done = new Phaser.Signal();
+        done.addOnce(function () {
+            this.fireStepEnd.dispatch();
+        }, this);
+        this.fireStep(done);
     }, this);
     
     this.fireStepEnd.add(function () {
@@ -175,4 +180,22 @@ Hud.prototype.startPlayerPhase = function () {
     scene.onComplete.addOnce(function () {
         this.playerPhaseBegin.dispatch();
     }, this);
+}
+
+Hud.prototype.fireStep = function (doneSignal) {
+    if (this.isFireActive) {
+        // Create Dialog and Wire up
+        var fireDialog = MakeFireDialog(game);
+        
+        fireDialog.onExtinguished.addOnce(function () {
+            this.isFireActive = false;
+            doneSignal.dispatch();
+        }, this);
+        
+        fireDialog.onSpreads.addOnce(function () {
+            doneSignal.dispatch();
+        }, this);
+    } else {
+        doneSignal.dispatch();
+    }
 }
