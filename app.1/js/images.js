@@ -2,8 +2,8 @@ function ImageHelper () {
 }
 
 ImageHelper.preload = function(game) {
-    game.load.image('background', 'assets/images/debug-grid-1920x1920.png')
-    //game.load.image('background', 'assets/images/tilebackground.png')
+    //game.load.image('background', 'assets/images/debug-grid-1920x1920.png')
+    game.load.image('background', 'assets/images/tilebackground.png')
     game.load.image('pixelWhite', 'assets/images/FFFFFF-1.png')
     game.load.image('pixelBlack', 'assets/images/000000-1.png')
     game.load.image('pixelOrange', 'assets/images/FF4D00-1.png')
@@ -41,13 +41,13 @@ ImageHelper.create = function (game) {
     var endPhaseButtonImage = game.make.image(0, 0, "arrow")
     endPhaseButtonImage.tint = "0xFFFFFF"
     endHudBgImage.tint = "0x044500"
-    hudBmd.copy(endHudBgImage)
+    hudBmd.copy(endHudBgImage, 0, 0, 92, 92, 2, 2)
     hudBmd.copy(endPhaseButtonImage, 0, 0, 64, 64, 16, 16)
     game.cache.addBitmapData("endPhase-image-player", hudBmd)
 
     hudBmd = game.make.bitmapData(96, 96)
     endHudBgImage.tint = "0x450000"
-    hudBmd.copy(endHudBgImage)
+    hudBmd.copy(endHudBgImage, 0, 0, 92, 92, 2, 2)
     hudBmd.copy(endPhaseButtonImage, 0, 0, 64, 64, 16, 16)
     game.cache.addBitmapData("endPhase-image-enemy", hudBmd)
 
@@ -56,13 +56,13 @@ ImageHelper.create = function (game) {
     var inventoryButtonImage = game.make.image(0, 0, "light-backpack")
     inventoryButtonImage.tint = "0xFFFFFF"
     endHudBgImage.tint = "0x044500"
-    hudBmd.copy(endHudBgImage)
+    hudBmd.copy(endHudBgImage, 0, 0, 92, 92, 2, 2)
     hudBmd.copy(inventoryButtonImage, 0, 0, 64, 64, 16, 16)
     game.cache.addBitmapData("inventory-image-player", hudBmd)
 
     hudBmd = game.make.bitmapData(96, 96)
     endHudBgImage.tint = "0x450000"
-    hudBmd.copy(endHudBgImage)
+    hudBmd.copy(endHudBgImage, 0, 0, 92, 92, 2, 2)
     hudBmd.copy(inventoryButtonImage, 0, 0, 64, 64, 16, 16)
     game.cache.addBitmapData("inventory-image-enemy", hudBmd)
 
@@ -71,13 +71,13 @@ ImageHelper.create = function (game) {
     var monsterButtonImage = game.make.image(0, 0, "interlaced-tentacles")
     monsterButtonImage.tint = "0xFFFFFF"
     endHudBgImage.tint = "0x044500"
-    hudBmd.copy(endHudBgImage)
+    hudBmd.copy(endHudBgImage, 0, 0, 92, 92, 2, 2)
     hudBmd.copy(monsterButtonImage, 0, 0, 64, 64, 16, 16)
     game.cache.addBitmapData("monster-image-player", hudBmd)
 
     hudBmd = game.make.bitmapData(96, 96)
     endHudBgImage.tint = "0x450000"
-    hudBmd.copy(endHudBgImage)
+    hudBmd.copy(endHudBgImage, 0, 0, 92, 92, 2, 2)
     hudBmd.copy(monsterButtonImage, 0, 0, 64, 64, 16, 16)
     game.cache.addBitmapData("monster-image-enemy", hudBmd)
 
@@ -86,13 +86,13 @@ ImageHelper.create = function (game) {
     var menuButtonImage = game.make.image(0, 0, "bookmarklet")
     menuButtonImage.tint = "0xFFFFFF"
     endHudBgImage.tint = "0x044500"
-    hudBmd.copy(endHudBgImage)
+    hudBmd.copy(endHudBgImage, 0, 0, 92, 92, 2, 2)
     hudBmd.copy(menuButtonImage, 0, 0, 64, 64, 16, 16)
     game.cache.addBitmapData("menu-image-player", hudBmd)
 
     hudBmd = game.make.bitmapData(96, 96)
     endHudBgImage.tint = "0x450000"
-    hudBmd.copy(endHudBgImage)
+    hudBmd.copy(endHudBgImage, 0, 0, 92, 92, 2, 2)
     hudBmd.copy(menuButtonImage, 0, 0, 64, 64, 16, 16)
     game.cache.addBitmapData("menu-image-enemy", hudBmd)
 
