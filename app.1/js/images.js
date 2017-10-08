@@ -34,67 +34,20 @@ ImageHelper.preload = function(game) {
 ImageHelper.create = function (game) {
     //=================================================
     // Hud images
-    var hudBmd = game.make.bitmapData(96, 96)
+    //var hudBmd = game.make.bitmapData(96, 96)
     var endHudBgImage = game.make.image(0, 0, "hudButton")
 
     // End Phase
-    var endPhaseButtonImage = game.make.image(0, 0, "arrow")
-    endPhaseButtonImage.tint = "0xFFFFFF"
-    endHudBgImage.tint = "0x044500"
-    hudBmd.copy(endHudBgImage, 0, 0, 92, 92, 2, 2)
-    hudBmd.copy(endPhaseButtonImage, 0, 0, 64, 64, 16, 16)
-    game.cache.addBitmapData("endPhase-image-player", hudBmd)
-
-    hudBmd = game.make.bitmapData(96, 96)
-    endHudBgImage.tint = "0x450000"
-    hudBmd.copy(endHudBgImage, 0, 0, 92, 92, 2, 2)
-    hudBmd.copy(endPhaseButtonImage, 0, 0, 64, 64, 16, 16)
-    game.cache.addBitmapData("endPhase-image-enemy", hudBmd)
-
+    ImageHelper.addMainButtonBMD(game, endHudBgImage, "arrow", "endPhase-image-player", "endPhase-image-enemy");
+    
     // Inventory
-    hudBmd = game.make.bitmapData(96, 96)
-    var inventoryButtonImage = game.make.image(0, 0, "light-backpack")
-    inventoryButtonImage.tint = "0xFFFFFF"
-    endHudBgImage.tint = "0x044500"
-    hudBmd.copy(endHudBgImage, 0, 0, 92, 92, 2, 2)
-    hudBmd.copy(inventoryButtonImage, 0, 0, 64, 64, 16, 16)
-    game.cache.addBitmapData("inventory-image-player", hudBmd)
-
-    hudBmd = game.make.bitmapData(96, 96)
-    endHudBgImage.tint = "0x450000"
-    hudBmd.copy(endHudBgImage, 0, 0, 92, 92, 2, 2)
-    hudBmd.copy(inventoryButtonImage, 0, 0, 64, 64, 16, 16)
-    game.cache.addBitmapData("inventory-image-enemy", hudBmd)
+    ImageHelper.addMainButtonBMD(game, endHudBgImage, "light-backpack", "inventory-image-player", "inventory-image-enemy");
 
     // Monster
-    hudBmd = game.make.bitmapData(96, 96)
-    var monsterButtonImage = game.make.image(0, 0, "interlaced-tentacles")
-    monsterButtonImage.tint = "0xFFFFFF"
-    endHudBgImage.tint = "0x044500"
-    hudBmd.copy(endHudBgImage, 0, 0, 92, 92, 2, 2)
-    hudBmd.copy(monsterButtonImage, 0, 0, 64, 64, 16, 16)
-    game.cache.addBitmapData("monster-image-player", hudBmd)
-
-    hudBmd = game.make.bitmapData(96, 96)
-    endHudBgImage.tint = "0x450000"
-    hudBmd.copy(endHudBgImage, 0, 0, 92, 92, 2, 2)
-    hudBmd.copy(monsterButtonImage, 0, 0, 64, 64, 16, 16)
-    game.cache.addBitmapData("monster-image-enemy", hudBmd)
+    ImageHelper.addMainButtonBMD(game, endHudBgImage, "interlaced-tentacles", "monster-image-player", "monster-image-enemy");
 
     // Menu
-    hudBmd = game.make.bitmapData(96, 96)
-    var menuButtonImage = game.make.image(0, 0, "bookmarklet")
-    menuButtonImage.tint = "0xFFFFFF"
-    endHudBgImage.tint = "0x044500"
-    hudBmd.copy(endHudBgImage, 0, 0, 92, 92, 2, 2)
-    hudBmd.copy(menuButtonImage, 0, 0, 64, 64, 16, 16)
-    game.cache.addBitmapData("menu-image-player", hudBmd)
-
-    hudBmd = game.make.bitmapData(96, 96)
-    endHudBgImage.tint = "0x450000"
-    hudBmd.copy(endHudBgImage, 0, 0, 92, 92, 2, 2)
-    hudBmd.copy(menuButtonImage, 0, 0, 64, 64, 16, 16)
-    game.cache.addBitmapData("menu-image-enemy", hudBmd)
+    ImageHelper.addMainButtonBMD(game, endHudBgImage, "bookmarklet", "menu-image-player", "menu-image-enemy");
 
     //=================================================
     // ImageTokens BitmapData
@@ -178,3 +131,20 @@ ImageHelper.create = function (game) {
 ImageHelper.getImage = function (game, imageKey) {
     return game.cache.getBitmapData(imageKey)
 }
+
+ImageHelper.addMainButtonBMD = function (game, endHudBgImage, iconImageId, greenImgId, redImgId) {
+    var iconImage = game.make.image(0, 0, iconImageId);
+    var hudBmd = game.make.bitmapData(96, 96);
+    iconImage.tint = "0xFFFFFF";
+    endHudBgImage.tint = "0x044500";
+    hudBmd.copy(endHudBgImage, 0, 0, 92, 92, 2, 2);
+    hudBmd.copy(iconImage, 0, 0, 64, 64, 16, 16);
+    game.cache.addBitmapData(greenImgId, hudBmd);
+
+    hudBmd = game.make.bitmapData(96, 96);
+    endHudBgImage.tint = "0x450000";
+    hudBmd.copy(endHudBgImage, 0, 0, 92, 92, 2, 2);
+    hudBmd.copy(iconImage, 0, 0, 64, 64, 16, 16);
+    game.cache.addBitmapData(redImgId, hudBmd);
+}
+
