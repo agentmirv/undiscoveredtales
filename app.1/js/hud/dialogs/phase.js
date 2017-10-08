@@ -15,13 +15,21 @@ function PhaseDialog(game, phase) {
 
     this.onCancel = new Phaser.Signal();
     this.onConfirm = new Phaser.Signal();
+    
+    var text = "";
+    
+    if (phase == "player") {
+        text = "End the Player Phase?";
+    } else {
+        text = "End the Enemy Phase?";
+    }
 
     // Modal
     var modalBackground = new DialogModalBackground(game);
     this.addChild(modalBackground);
 
     // Message
-    var dialogMessage = new DialogMessage(game, "End the Player Phase?", null);
+    var dialogMessage = new DialogMessage(game, text, null);
     dialogMessage.alignIn(game.stageViewRect, Phaser.CENTER, 0, -game.presentationOffsetY)
     this.addChild(dialogMessage);
 
