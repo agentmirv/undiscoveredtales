@@ -48,9 +48,9 @@ PlayerSceneGroup.prototype = Object.create(Phaser.Group.prototype);
 PlayerSceneGroup.prototype.constructor = PlayerSceneGroup;
 
 PlayerSceneGroup.prototype.updatePhase = function () {
-    //game.hud.activePhase = "player"
-    //game.hud.activeStep = ""
-    //game.hudInstance.updatePhaseButtonImage()
+    game.hud.activePhase = "player"
+    game.hud.activeStep = ""
+    game.hudInstance.updatePhaseButtonImage()
 }
 
 PlayerSceneGroup.prototype.destroyScene = function () {
@@ -93,14 +93,14 @@ EnemySceneGroup.prototype = Object.create(Phaser.Group.prototype);
 EnemySceneGroup.prototype.constructor = EnemySceneGroup;
 
 EnemySceneGroup.prototype.updatePhase = function () {
-    //game.hud.activePhase = "enemy"
-    //game.hud.activeStep = "events"
-    //game.hudInstance.updatePhaseButtonImage()
+    game.hud.activePhase = "enemy"
+    game.hud.activeStep = "events"
+    game.hudInstance.updatePhaseButtonImage()
 }
 
 EnemySceneGroup.prototype.beginEnemySteps = function () {
-    //game.hud.currentMonsterIndex = -1
-    //game.hudInstance.fireEvent()
+    game.hud.currentMonsterIndex = -1
+    game.hudInstance.fireEvent()
 }
 
 EnemySceneGroup.prototype.destroyScene = function () {

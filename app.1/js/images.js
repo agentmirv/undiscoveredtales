@@ -25,6 +25,8 @@ ImageHelper.preload = function(game) {
     game.load.image('squareBackground', 'assets/images/SquareBackground.png');
     game.load.image('monsterMask', 'assets/images/MonsterMask.png');
     game.load.image('interlaced-tentacles', 'assets/images/interlaced-tentacles.png');
+    game.load.image('light-backpack', 'assets/images/light-backpack.png');
+    game.load.image('bookmarklet', 'assets/images/bookmarklet.png');
     game.load.spritesheet('tileWallsSheet', 'assets/images/TileWalls.png', 96, 96);
     game.load.json('gamedata', 'data/gamedata.json');
 }
@@ -49,6 +51,21 @@ ImageHelper.create = function (game) {
     hudBmd.copy(endPhaseButtonImage, 0, 0, 64, 64, 16, 16)
     game.cache.addBitmapData("endPhase-image-enemy", hudBmd)
 
+    // Inventory
+    hudBmd = game.make.bitmapData(96, 96)
+    var inventoryButtonImage = game.make.image(0, 0, "light-backpack")
+    inventoryButtonImage.tint = "0xFFFFFF"
+    endHudBgImage.tint = "0x044500"
+    hudBmd.copy(endHudBgImage)
+    hudBmd.copy(inventoryButtonImage, 0, 0, 64, 64, 16, 16)
+    game.cache.addBitmapData("inventory-image-player", hudBmd)
+
+    hudBmd = game.make.bitmapData(96, 96)
+    endHudBgImage.tint = "0x450000"
+    hudBmd.copy(endHudBgImage)
+    hudBmd.copy(inventoryButtonImage, 0, 0, 64, 64, 16, 16)
+    game.cache.addBitmapData("inventory-image-enemy", hudBmd)
+
     // Monster
     hudBmd = game.make.bitmapData(96, 96)
     var monsterButtonImage = game.make.image(0, 0, "interlaced-tentacles")
@@ -63,6 +80,21 @@ ImageHelper.create = function (game) {
     hudBmd.copy(endHudBgImage)
     hudBmd.copy(monsterButtonImage, 0, 0, 64, 64, 16, 16)
     game.cache.addBitmapData("monster-image-enemy", hudBmd)
+
+    // Menu
+    hudBmd = game.make.bitmapData(96, 96)
+    var menuButtonImage = game.make.image(0, 0, "bookmarklet")
+    menuButtonImage.tint = "0xFFFFFF"
+    endHudBgImage.tint = "0x044500"
+    hudBmd.copy(endHudBgImage)
+    hudBmd.copy(menuButtonImage, 0, 0, 64, 64, 16, 16)
+    game.cache.addBitmapData("menu-image-player", hudBmd)
+
+    hudBmd = game.make.bitmapData(96, 96)
+    endHudBgImage.tint = "0x450000"
+    hudBmd.copy(endHudBgImage)
+    hudBmd.copy(menuButtonImage, 0, 0, 64, 64, 16, 16)
+    game.cache.addBitmapData("menu-image-enemy", hudBmd)
 
     //=================================================
     // ImageTokens BitmapData
