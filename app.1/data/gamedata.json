@@ -1312,7 +1312,7 @@
               "token-door1-lobby",
               "token-door2-lobby"
             ],
-            "actions": [{ "type": "scene", "sceneId": "scene-player" }]
+            "actions": [{ "type": "hud", "command": "startPlayerPhase" }]
           } 
         ]
       },

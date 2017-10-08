@@ -1,4 +1,4 @@
-﻿//=========================================================
+//=========================================================
 function MakeScene(game, id) {
     var sceneData = game.gamedata.scenes.find(function (item) { return item.id == id });
     var sceneInstance = null;
@@ -54,7 +54,7 @@ PlayerSceneGroup.prototype.updatePhase = function () {
 }
 
 PlayerSceneGroup.prototype.destroyScene = function () {
-    //game.cutSceneCamera = false
+    game.cutSceneCamera = false
     this.destroy(true)
 }
 

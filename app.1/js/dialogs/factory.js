@@ -45,7 +45,13 @@ function MakeProcessActions(game) {
                         //=========================================================
                         // Continue Reveal
                         StartRevealGroup(game, action.revealGroupId)
-                    } 
+                    } else if (action.type == "hud") {
+                        //=========================================================
+                        // Start Player Phase
+                        if(action.command == "startPlayerPhase") {
+                            game.hud.startPlayerPhase();
+                        }
+                    }  
                 }
             }
         }

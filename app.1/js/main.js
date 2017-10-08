@@ -78,6 +78,7 @@ var GameState = {
         //game.stage.addChild(hudInstance)
         //game.hudInstance = hudInstance;
         var hud = new Hud(game);
+        game.hud = hud;
         game.stage.addChild(hud);
 
         //=================================================
@@ -93,7 +94,7 @@ var GameState = {
     },
 
     update: function () {
-        if (!game.player.cutSceneCamera && game.hud.activePhase == "player") {
+        if (!game.player.cutSceneCamera && game.hud.phase == "player") {
             var playerVelocity = 400;
             game.player.body.setZeroVelocity();
 
