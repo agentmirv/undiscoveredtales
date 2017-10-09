@@ -1388,5 +1388,36 @@
           }          
         ]
       }      
-    ]
+    ],
+  "randomEventGroups": [
+    {
+      "id": "random-event-no-effect-1",
+      "dialogs": [
+        {
+          "text": "A gust of wind rattles the windows for a moment. No immediate effect."
+        }
+      ]
+    },
+    {
+      "id": "random-event-no-effect-2",
+      "dialogs": [
+        {
+          "text": "Loud knocks sound from a room beyond. Loose beams shift as the house settles. No immediate effect."
+        }
+      ]
+    },
+    {
+      "id": "random-event-self-doubt",
+      "dialogs": [
+        {
+          "text": "You obsess over a previous converstation with a team member. This event affects the investigator with the least Influence.",
+          "type": "resolve"
+        },
+        {
+          "id": "resolve",
+          "text": "Working with a team is not your strength; you feel slighted by your last converstation with the team (Influence; 1). If you pass, you gain some insight on yourself and become Focused. If you fail, you let your obsession cloud your insight; lose 1 Clue."
+        }
+      ]
+    }
+  ]
 }

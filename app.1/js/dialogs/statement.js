@@ -8,7 +8,7 @@ function MakeStatementDialog(game, dialogData, dialogGroup) {
 }
 
 //=========================================================
-function StatementDialog(game, dialogData, dialogGroup) { //id, messageText, imageKey, buttonData) {
+function StatementDialog(game, dialogData, dialogGroup) { 
     BaseDialog.call(this, game);
 
     var data = null;

@@ -35,7 +35,7 @@ function MakeProcessActions(game) {
                         ContinueRevealGroup(game, buttonData.revealGroup)
                     } else if (action.type == "scene") {
                         //=========================================================
-                        // Scene
+                        // Scene (Not used anymore)
                         MakeScene(game, action.sceneId)
                     } else if (action.type == "dialog") {
                         //=========================================================

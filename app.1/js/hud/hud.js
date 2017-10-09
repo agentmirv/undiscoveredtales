@@ -4,7 +4,10 @@ function Hud(game) {
 
     this.phase = "";
     this.isFireActive = false;
+    this.randomEventDeck = [];
 
+    //=========================================================
+    // End Phase Button
     var endPhaseButton = new HudButton(game, "endPhase-image-player", "endPhase-image-enemy");
     endPhaseButton.alignIn(game.stageViewRect, Phaser.BOTTOM_RIGHT, 0, 0);
     endPhaseButton.onClick.add(function () {
@@ -16,18 +19,22 @@ function Hud(game) {
     }, this);
     this.addChild(endPhaseButton);
 
+    // Inventory Button
     var inventoryButton = new HudButton(game, "inventory-image-player", "inventory-image-enemy");
     inventoryButton.alignIn(game.stageViewRect, Phaser.BOTTOM_LEFT, -192, 0);
     this.addChild(inventoryButton);
 
+    // Monster Button
     var monsterButton = new HudButton(game, "monster-image-player", "monster-image-enemy");
     monsterButton.alignIn(game.stageViewRect, Phaser.BOTTOM_LEFT, -96, 0);
     this.addChild(monsterButton);
 
+    // Menu Button
     var menuButton = new HudButton(game, "menu-image-player", "menu-image-enemy");
     menuButton.alignIn(game.stageViewRect, Phaser.BOTTOM_LEFT, 0, 0);
     this.addChild(menuButton);
 
+    //=========================================================
     // Player Phase Steps
     this.playerPhaseBegin = new Phaser.Signal();
     this.playerPhaseEnd = new Phaser.Signal();
@@ -88,7 +95,11 @@ function Hud(game) {
     this.randomEventStepBegin.add(function () {
         console.log("randomEventStepBegin");
         // Create Dialog(s) and wire up
-        this.randomEventStepEnd.dispatch();
+        var done = new Phaser.Signal();
+        done.addOnce(function () {
+            this.randomEventStepEnd.dispatch();
+        }, this);
+        this.randomEventStep(done);
     }, this);
     
     this.randomEventStepEnd.add(function () {
@@ -198,4 +209,43 @@ Hud.prototype.fireStep = function (doneSignal) {
     } else {
         doneSignal.dispatch();
     }
+}
+
+Hud.prototype.randomEventStep = function (doneSignal) {
+    // TODO: certain scenario events can skip this step
+    // Start Dialogs
+    // How do we know when we're done?
+    
+    if (this.game.gamedata.randomEventGroups.length == 0 ){
+        doneSignal.dispatch();
+        return;
+    }
+    
+    var visibleMapTileIds = [];
+    for (var i = 0; i < this.game.gamedataInstances.mapTiles.length; i++) {
+        visibleMapTileIds.push(this.game.gamedataInstances.mapTiles[i].id);
+    }
+
+    var randomEventData = null;
+    while (randomEventData == null) {
+        if (this.game.hud.randomEventDeck.length == 0) {
+            this.game.hud.randomEventDeck = this.game.gamedata.randomEventGroups.slice(0); // copy array?
+            this.game.hud.randomEventDeck = Helper.shuffle(this.game.hud.randomEventDeck);
+        }
+
+        var drawRandomEvent = this.game.hud.randomEventDeck.pop();
+        
+        if (drawRandomEvent.hasOwnProperty("target") && 
+            drawRandomEvent.target == "mapTile" && 
+            drawRandomEvent.hasOwnProperty("mapTile")) {
+            if (visibleMapTileIds.indexOf(drawRandomEvent.mapTile) >= 0) {
+                randomEventData = drawRandomEvent;
+            }
+        } else {
+            randomEventData = drawRandomEvent;
+        }
+    }
+    
+    // do something with randomEventData
+    MakeRandomEventDialog(this.game, randomEventData.dialogs[0], randomEventData, doneSignal);
 }
