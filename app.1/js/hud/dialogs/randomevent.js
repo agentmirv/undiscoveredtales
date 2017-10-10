@@ -1,14 +1,14 @@
 /* global Phaser */
 //=========================================================
-function MakeRandomEventDialog(game, dialogData, dialogGroup, doneSignal) {
-    var dialogInstance = new RandomEventDialog(game, dialogData, dialogGroup, doneSignal);
+function MakeRandomEventDialog(game, dialogData, dialogGroup) {
+    var dialogInstance = new RandomEventDialog(game, dialogData, dialogGroup);
 
     game.stage.addChild(dialogInstance);
     dialogInstance.open();
 }
 
 //=========================================================
-function RandomEventDialog(game, dialogData, dialogGroup, doneSignal) {
+function RandomEventDialog(game, dialogData, dialogGroup) {
     BaseDialog.call(this, game);
 
     var data = null;
@@ -30,7 +30,7 @@ function RandomEventDialog(game, dialogData, dialogGroup, doneSignal) {
         dialogCancel.alignTo(dialogMessage, Phaser.BOTTOM_LEFT, -10, 10);
         dialogCancel.buttonInput.events.onInputUp.add(function () {
             this.onClose.addOnce(function () {
-                doneSignal.dispatch();
+                dialogGroup.doneSignal.dispatch();
             }, this);
             this.close();
         }, this);
@@ -43,7 +43,7 @@ function RandomEventDialog(game, dialogData, dialogGroup, doneSignal) {
         dialogAction.buttonInput.events.onInputUp.add(function () {
             this.onClose.addOnce(function () {
                 var randomEventDialog = dialogGroup.dialogs.find(function (item) { return item.id == "resolve" });
-                MakeRandomEventDialog(this.game, randomEventDialog, dialogGroup, doneSignal);
+                MakeRandomEventDialog(this.game, randomEventDialog, dialogGroup);
             }, this);
             this.close();
         }, this);
@@ -57,7 +57,7 @@ function RandomEventDialog(game, dialogData, dialogGroup, doneSignal) {
         dialogContinue.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 0, 10)
         dialogContinue.buttonInput.events.onInputUp.add(function () {
             this.onClose.addOnce(function () {
-                doneSignal.dispatch();
+                dialogGroup.doneSignal.dispatch();
             }, this);
             this.close();
         }, this);

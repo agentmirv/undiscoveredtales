@@ -240,12 +240,14 @@ Hud.prototype.randomEventStep = function (doneSignal) {
             drawRandomEvent.hasOwnProperty("mapTile")) {
             if (visibleMapTileIds.indexOf(drawRandomEvent.mapTile) >= 0) {
                 randomEventData = drawRandomEvent;
+                randomEventData.doneSignal = doneSignal;
             }
         } else {
             randomEventData = drawRandomEvent;
+            randomEventData.doneSignal = doneSignal;
         }
     }
     
     // do something with randomEventData
-    MakeRandomEventDialog(this.game, randomEventData.dialogs[0], randomEventData, doneSignal);
+    MakeRandomEventDialog(this.game, randomEventData.dialogs[0], randomEventData);
 }
