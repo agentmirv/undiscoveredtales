@@ -95,11 +95,11 @@ function Hud(game) {
     this.randomEventStepBegin.add(function () {
         console.log("randomEventStepBegin");
         // Create Dialog(s) and wire up
-        var done = new Phaser.Signal();
-        done.addOnce(function () {
+        var doneSignal = new Phaser.Signal();
+        doneSignal.addOnce(function () {
             this.randomEventStepEnd.dispatch();
         }, this);
-        this.randomEventStep(done);
+        this.randomEventStep(doneSignal);
     }, this);
     
     this.randomEventStepEnd.add(function () {
@@ -111,7 +111,11 @@ function Hud(game) {
     this.scenarioEventStepBegin.add(function () {
         console.log("scenarioEventStepBegin");
         // Create Dialog(s) and wire up
-        this.scenarioEventStepEnd.dispatch();
+        var doneSignal = new Phaser.Signal();
+        doneSignal.addOnce(function () {
+            this.scenarioEventStepEnd.dispatch();
+        }, this);
+        this.scenarioEventStep(doneSignal);
     }, this);
     
     this.scenarioEventStepEnd.add(function () {
@@ -213,9 +217,6 @@ Hud.prototype.fireStep = function (doneSignal) {
 
 Hud.prototype.randomEventStep = function (doneSignal) {
     // TODO: certain scenario events can skip this step
-    // Start Dialogs
-    // How do we know when we're done?
-    
     if (this.game.gamedata.randomEventGroups.length == 0 ){
         doneSignal.dispatch();
         return;
@@ -229,7 +230,7 @@ Hud.prototype.randomEventStep = function (doneSignal) {
     var randomEventData = null;
     while (randomEventData == null) {
         if (this.game.hud.randomEventDeck.length == 0) {
-            this.game.hud.randomEventDeck = this.game.gamedata.randomEventGroups.slice(0); // copy array?
+            this.game.hud.randomEventDeck = this.game.gamedata.randomEventGroups.slice(0); 
             this.game.hud.randomEventDeck = Helper.shuffle(this.game.hud.randomEventDeck);
         }
 
@@ -248,6 +249,50 @@ Hud.prototype.randomEventStep = function (doneSignal) {
         }
     }
     
-    // do something with randomEventData
     MakeRandomEventDialog(this.game, randomEventData.dialogs[0], randomEventData);
+}
+
+Hud.prototype.scenarioEventStep = function (doneSignal) {
+    var triggeredScenarioEvent = false
+    // Evaluate all scenario events
+    for (var i = 0; i < game.gamedata.scenarioEvents.length; i++) {
+        var scenarioEvent = game.gamedata.scenarioEvents[i]
+        // If the scenario event is not resolved
+        if (!scenarioEvent.hasOwnProperty("resolved")) {
+            var conditionResult = true
+            // Evaluate all event conditions
+            for (var j = 0; j < scenarioEvent.conditions.length && conditionResult; j++) {
+                var condition = scenarioEvent.conditions[j]
+                conditionResult = false
+                if (condition.type == "globalVar") {
+                    var globalVar = game.gamedata.globalVars.find(function (item) { return item.id == condition.globalId })
+                    if (condition.operator == "equals") {
+                        conditionResult = condition.value == globalVar.value
+                    }
+                }
+            }
+
+            // If the conditions evaluate to true for this event
+            if (conditionResult) {
+                scenarioEvent.resolved = true
+                triggeredScenarioEvent = true
+                
+                // The action is a dialog
+                if (scenarioEvent.action.type == "dialog") {
+                    StartDialogGroup(game, scenarioEvent.action.dialogGroupId, doneSignal)
+
+                // The action is a reaveal
+                } else if (scenarioEvent.action.type == "revealList" && scenarioEvent.action.revealGroupId != null) {
+                    StartRevealGroup(game, scenarioEvent.action.revealListId, doneSignal);
+                }
+
+                break;
+            }
+        }
+    }
+
+    if (!triggeredScenarioEvent) {
+        // If no scenario events were triggered, move on
+        doneSignal.dispatch();
+    }
 }

@@ -369,7 +369,7 @@
   "scenarioEvents": [
     {
       "id": "box-lobby-beast",
-      "action": { "type": "dialog", "dialogId": "dialog-scenario-event-box-lobby" },
+      "action": { "type": "dialog", "dialogGroupId": "dialog-scenario-event-box-lobby" },
       "conditions": [
         {
           "type": "globalVar",
@@ -381,7 +381,7 @@
     },
     {
       "id": "east-bedroom-beast",
-      "action": { "type": "revealList", "revealListId": "reveal-deep-one" },
+      "action": { "type": "revealList", "revealGroupId": "reveal-deep-one" },
       "conditions": [
         {
           "type": "globalVar",
@@ -1277,6 +1277,18 @@
           "type": "statement",
           "buttons": [ ]
         }        
+      ]
+    }, 
+    {
+      "id": "dialog-scenario-event-box-lobby",
+      "dialogs": [
+        {
+          "text": "A shadow of dread darkens your mind. You feel beastly claws reach from the shadows. Each investigator suffers 2 facedown Horror (Will negates).",
+          "type": "statement",
+          "buttons": [
+            { "actions": [ {"type": "scenarioEventEnd" } ] }
+          ]
+        }
       ]
     }
   ],

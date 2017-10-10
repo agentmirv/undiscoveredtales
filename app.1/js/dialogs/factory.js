@@ -51,6 +51,10 @@ function MakeProcessActions(game) {
                         if(action.command == "startPlayerPhase") {
                             game.hud.startPlayerPhase();
                         }
+                    } else if (action.type == "scenarioEventEnd") {
+                        //=========================================================
+                        // Start Player Phase
+                        buttonData.dialogGroup.doneSignal.dispatch();
                     }  
                 }
             }
@@ -59,8 +63,12 @@ function MakeProcessActions(game) {
 }
 
 //=========================================================
-function StartDialogGroup(game, id) {
+function StartDialogGroup(game, id, doneSignal) {
     var dialogGroup = game.gamedata.dialogGroups.find(function (item) { return item.id == id });
+    
+    if(doneSignal !== undefined) {
+        dialogGroup.doneSignal = doneSignal;
+    }
     
     // Examine conditions on the dialogs
     // Select the dialog based on conditions

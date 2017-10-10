@@ -1,7 +1,11 @@
 //=========================================================
-function StartRevealGroup(game, id) {
+function StartRevealGroup(game, id, doneSignal) {
     var revealGroup = game.gamedata.revealGroups.find(function (item) { return item.id == id });
     
+    if(doneSignal !== undefined) {
+        revealGroup.doneSignal = doneSignal;
+    }
+
     if (revealGroup.dialogs.length > 0) {
         var revealDialogData = revealGroup.dialogs.shift();
         MakeRevealDialogData(game, revealDialogData, revealGroup);
