@@ -5,7 +5,7 @@ function Hud(game) {
     this.phase = "";
     this.step = "";
     this.isFireActive = false;
-    this.isMonsterTrayOpen = false; // needs to be on .this?
+    this.isMonsterTrayOpen = false; 
     this.randomEventDeck = [];
 
     //=========================================================
@@ -39,11 +39,13 @@ function Hud(game) {
     }, this);
     this.addChild(endPhaseButton);
 
+    //=========================================================
     // Inventory Button
     var inventoryButton = new HudButton(game, "inventory-image-player", "inventory-image-enemy");
     inventoryButton.alignIn(game.stageViewRect, Phaser.BOTTOM_LEFT, -192, 0);
     this.addChild(inventoryButton);
 
+    //=========================================================
     // Monster Button
     var monsterButton = new HudButton(game, "monster-image-player", "monster-image-enemy");
     monsterButton.alignIn(game.stageViewRect, Phaser.BOTTOM_LEFT, -96, 0);
@@ -63,6 +65,7 @@ function Hud(game) {
     }, this);
     this.addChild(monsterButton);
 
+    //=========================================================
     // Menu Button
     var menuButton = new HudButton(game, "menu-image-player", "menu-image-enemy");
     menuButton.alignIn(game.stageViewRect, Phaser.BOTTOM_LEFT, 0, 0);
@@ -73,6 +76,7 @@ function Hud(game) {
     this.playerPhaseBegin = new Phaser.Signal();
     this.playerPhaseEnd = new Phaser.Signal();
     
+    //=========================================================
     // Enemy Phase Steps
     this.enemyPhaseBegin = new Phaser.Signal();
     this.fireStepBegin = new Phaser.Signal();
@@ -91,7 +95,6 @@ function Hud(game) {
     // Player Phase
     this.playerPhaseBegin.add(function() {
         console.log("playerPhaseBegin");
-        this.phase = "player";
         this.step = "";
     }, this);
 
@@ -108,7 +111,6 @@ function Hud(game) {
     // Enemy Phase Begin
     this.enemyPhaseBegin.add(function() {
         console.log("enemyPhaseBegin");
-        this.phase = "enemy";
         this.fireStepBegin.dispatch();
     }, this);
     
@@ -211,6 +213,8 @@ function Hud(game) {
 Hud.prototype = Object.create(Phaser.Group.prototype);
 Hud.prototype.constructor = Hud;
 
+//=========================================================
+// Toggle Phase
 Hud.prototype.togglePhase = function() {
     var scene = null;
     
@@ -239,6 +243,8 @@ Hud.prototype.togglePhase = function() {
     return scene;
 }
 
+//=========================================================
+// Start Player Phase
 Hud.prototype.startPlayerPhase = function () {
     var scene = this.togglePhase();
     scene.onComplete.addOnce(function () {
@@ -246,6 +252,8 @@ Hud.prototype.startPlayerPhase = function () {
     }, this);
 }
 
+//=========================================================
+// Fire Step
 Hud.prototype.fireStep = function (doneSignal) {
     if (this.isFireActive) {
         // Create Dialog and Wire up
@@ -264,6 +272,8 @@ Hud.prototype.fireStep = function (doneSignal) {
     }
 }
 
+//=========================================================
+// Random Event Step
 Hud.prototype.randomEventStep = function (doneSignal) {
     // TODO: certain scenario events can skip this step
     if (this.game.gamedata.randomEventGroups.length == 0 ){
@@ -301,6 +311,8 @@ Hud.prototype.randomEventStep = function (doneSignal) {
     MakeRandomEventDialog(this.game, randomEventData.dialogs[0], randomEventData);
 }
 
+//=========================================================
+// Scenario Event Step
 Hud.prototype.scenarioEventStep = function (doneSignal) {
     var triggeredScenarioEvent = false
     // Evaluate all scenario events
