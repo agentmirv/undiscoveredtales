@@ -3,15 +3,35 @@ function Hud(game) {
     Phaser.Group.call(this, game);
 
     this.phase = "";
+    this.step = "";
     this.isFireActive = false;
+    this.isMonsterTrayOpen = false; // needs to be on .this?
     this.randomEventDeck = [];
+
+    //=========================================================
+    // Dark Background
+    var darkBackground = new DarkBackground(game);
+    this.addChild(darkBackground);
+    
+    //=========================================================
+    // Monster Tray
+    var monsterTray = new MonsterTray(game);
+    this.addChild(monsterTray);
+
+    //=========================================================
+    // Monster Detail
+    var monsterDetail = new MonsterDetail(game);
+    this.addChild(monsterDetail);
 
     //=========================================================
     // End Phase Button
     var endPhaseButton = new HudButton(game, "endPhase-image-player", "endPhase-image-enemy");
     endPhaseButton.alignIn(game.stageViewRect, Phaser.BOTTOM_RIGHT, 0, 0);
     endPhaseButton.onClick.add(function () {
-        // TODO Add the Confirm Dialog and phase change
+        this.isMonsterTrayOpen = false;
+        darkBackground.hide();
+        monsterTray.hide();
+        monsterDetail.hide();
         var phaseDialog = MakePhaseDialog(game, this.phase);
         phaseDialog.onConfirm.addOnce(function () {
             this.playerPhaseEnd.dispatch();
@@ -27,6 +47,20 @@ function Hud(game) {
     // Monster Button
     var monsterButton = new HudButton(game, "monster-image-player", "monster-image-enemy");
     monsterButton.alignIn(game.stageViewRect, Phaser.BOTTOM_LEFT, -96, 0);
+    monsterButton.onClick.add(function () {
+        if (this.phase == "player" || this.step == "horror") {
+            if (this.isMonsterTrayOpen) {
+                this.isMonsterTrayOpen = false;
+                darkBackground.hide();
+                monsterTray.hide();
+                monsterDetail.hide();
+            } else {
+                this.isMonsterTrayOpen = true;
+                darkBackground.show();
+                monsterTray.show();
+            }
+        }
+    }, this);
     this.addChild(monsterButton);
 
     // Menu Button
@@ -57,6 +91,8 @@ function Hud(game) {
     // Player Phase
     this.playerPhaseBegin.add(function() {
         console.log("playerPhaseBegin");
+        this.phase = "player";
+        this.step = "";
     }, this);
 
     this.playerPhaseEnd.add(function () {
@@ -69,15 +105,18 @@ function Hud(game) {
     }, this);
     
     //=========================================================
-    // Enemy Phase
+    // Enemy Phase Begin
     this.enemyPhaseBegin.add(function() {
         console.log("enemyPhaseBegin");
+        this.phase = "enemy";
         this.fireStepBegin.dispatch();
     }, this);
     
+    //=========================================================
     // Fire Step
     this.fireStepBegin.add(function () {
         console.log("fireStepBegin");
+        this.step = "fire";
         // Create Dialog and wire up
         var done = new Phaser.Signal();
         done.addOnce(function () {
@@ -91,9 +130,11 @@ function Hud(game) {
         this.randomEventStepBegin.dispatch();
     }, this);
 
+    //=========================================================
     // Random Event Step
     this.randomEventStepBegin.add(function () {
         console.log("randomEventStepBegin");
+        this.step = "randomEvent";
         // Create Dialog(s) and wire up
         var doneSignal = new Phaser.Signal();
         doneSignal.addOnce(function () {
@@ -107,9 +148,11 @@ function Hud(game) {
         this.scenarioEventStepBegin.dispatch();
     }, this);
 
+    //=========================================================
     // Scenario Event Step
     this.scenarioEventStepBegin.add(function () {
         console.log("scenarioEventStepBegin");
+        this.step = "scenarioEvent";
         // Create Dialog(s) and wire up
         var doneSignal = new Phaser.Signal();
         doneSignal.addOnce(function () {
@@ -123,9 +166,11 @@ function Hud(game) {
         this.monsterStepBegin.dispatch();
     }, this);
 
+    //=========================================================
     // Monster Step
     this.monsterStepBegin.add(function () {
         console.log("monsterStepBegin");
+        this.step = "monster";
         // Create Dialog(s) and wire up
         // If no monsters, then call this.monsterStepEnd.dispatch();
         this.monsterStepEnd.dispatch();
@@ -136,9 +181,11 @@ function Hud(game) {
         this.horrorStepBegin.dispatch();
     }, this);
 
+    //=========================================================
     // Horror Step
     this.horrorStepBegin.add(function () {
         console.log("horrorStepBegin");
+        this.step = "horror";
         // Create Dialog(s) and wire up
         // If no monsters, then call this.horrorStepEnd.dispatch();
         this.horrorStepEnd.dispatch();
@@ -149,6 +196,8 @@ function Hud(game) {
         this.enemyPhaseEnd.dispatch();
     }, this);
     
+    //=========================================================
+    // Enemy Phase End
     this.enemyPhaseEnd.add(function() {
         console.log("enemyPhaseEnd");
         // Create Scene and wire up
