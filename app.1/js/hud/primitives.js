@@ -36,11 +36,11 @@ function HudButton(game, greenImageId, redImageId) {
     this.onClick = new Phaser.Signal();
     
     // End Phase (Green)
-    this.greenbg = game.make.image(0, 0, Helper.getImage(greenImageId));
+    this.greenbg = game.make.image(0, 0, ImageHelper.getImage(game, greenImageId));
     this.addChild(this.greenbg);
 
     // End Phase (Red)
-    this.redbg = game.make.image(0, 0, Helper.getImage(redImageId));
+    this.redbg = game.make.image(0, 0, ImageHelper.getImage(game, redImageId));
     this.addChild(this.redbg);
     this.redbg.kill();
 
@@ -62,14 +62,14 @@ HudButton.prototype.constructor = HudButton;
 function MonsterTray(game) {
     Phaser.Group.call(this, game);
 
-    this.open = false;
+    this.isOpen = false;
     
     // Monster Tray
-    var monsterTrayBgImage = game.make.tileSprite(0, 0, 96 * 8, 96, "hudButton")
-    monsterTrayBgImage.alignIn(game.stageViewRect, Phaser.BOTTOM_LEFT, -96 * 3.7, 0)
-    monsterTrayBgImage.tint = "0x044500"
+    this.monsterTrayBgImage = game.make.tileSprite(0, 0, 96 * 8, 96, "hudButton")
+    this.monsterTrayBgImage.alignIn(game.stageViewRect, Phaser.BOTTOM_LEFT, -96 * 3.7, 0)
+    this.monsterTrayBgImage.tint = "0x044500"
     
-    this.addChild(monsterTrayBgImage);
+    this.addChild(this.monsterTrayBgImage);
     
     this.y += 96;
 }
@@ -78,18 +78,26 @@ MonsterTray.prototype = Object.create(Phaser.Group.prototype);
 MonsterTray.prototype.constructor = MonsterTray;
 
 MonsterTray.prototype.show = function () {
-    if (!this.open) {
-        this.open = true
+    if (!this.isOpen) {
+        this.isOpen = true
         var slideTween = this.game.add.tween(this).to({ y: this.y - 96 }, 100, Phaser.Easing.Linear.None, true, 0, 0, false);
     }
 }
 
 MonsterTray.prototype.hide = function () {
-    if (this.open) {
-        this.open = false
+    if (this.isOpen) {
+        this.isOpen = false
         var slideTween = this.game.add.tween(this).to({ y: this.y + 96 }, 100, Phaser.Easing.Linear.None, true, 0, 0, false);
     }
 }
+
+MonsterTray.prototype.putMonster = function (monsterInstance, position) {
+    var xOffset = position * 96;
+    monsterInstance.traySprite.alignIn(this.monsterTrayBgImage, Phaser.BOTTOM_LEFT, -xOffset, 0);
+    this.addChild(monsterInstance.traySprite)
+    console.log("tray", monsterInstance.traySprite.x, monsterInstance.traySprite.y);
+}
+
 
 //=========================================================
 function MonsterDetail(game) {
@@ -98,46 +106,45 @@ function MonsterDetail(game) {
     this.open = false;
     var textStyle = { font: "24px Times New Romans", fill: "#ffffff", align: "center" };
 
-    //var monsterDetailGroup = game.make.group()
-    var background = game.make.tileSprite(0, 0, 96 * 3, 96 * 4, "hudButton")
-    background.alignIn(game.stageViewRect, Phaser.TOP_LEFT, 0, 0)
-    background.tint = "0x044500"
+    var background = game.make.tileSprite(0, 0, 96 * 3, 96 * 4, "hudButton");
+    background.alignIn(game.stageViewRect, Phaser.TOP_LEFT, 0, 0);
+    background.tint = "0x044500";
     this.addChild(background);
 
     // Hit Points
-    var hitPointBox = new OutlineBox(game, 50, 50)
-    hitPointBox.alignIn(background, Phaser.TOP_LEFT, -10, -10)
+    var hitPointBox = new OutlineBox(game, 50, 50);
+    hitPointBox.alignIn(background, Phaser.TOP_LEFT, -10, -10);
     this.addChild(hitPointBox);
 
     var hitPointText = game.make.text(0, 0, "0", textStyle);
-    hitPointText.alignIn(hitPointBox, Phaser.CENTER, 0, 3)
+    hitPointText.alignIn(hitPointBox, Phaser.CENTER, 0, 3);
     this.addChild(hitPointText);
 
     // Name
-    var nameBox = new OutlineBox(game, 200, 32)
-    nameBox.alignIn(background, Phaser.CENTER, 0, 0)
+    var nameBox = new OutlineBox(game, 200, 32);
+    nameBox.alignIn(background, Phaser.CENTER, 0, 0);
     this.addChild(nameBox);
 
     var nameText = game.make.text(0, 0, "Name", textStyle);
-    nameText.alignIn(nameBox, Phaser.CENTER, 0, 3)
+    nameText.alignIn(nameBox, Phaser.CENTER, 0, 3);
     this.addChild(nameText);
 
     // Damage
-    var damageBox = new OutlineBox(game, 50, 50)
-    damageBox.alignTo(nameBox, Phaser.BOTTOM_CENTER, 0, 10)
+    var damageBox = new OutlineBox(game, 50, 50);
+    damageBox.alignTo(nameBox, Phaser.BOTTOM_CENTER, 0, 10);
     this.addChild(damageBox);
 
     var damageText = game.make.text(0, 0, "0", textStyle);
-    damageText.alignIn(damageBox, Phaser.CENTER, 0, 3)
+    damageText.alignIn(damageBox, Phaser.CENTER, 0, 3);
     this.addChild(damageText);
 
     // Subtract number
-    var subtractBox = new OutlineBox(game, 50, 50)
-    subtractBox.alignTo(nameBox, Phaser.BOTTOM_CENTER, -64, 10)
+    var subtractBox = new OutlineBox(game, 50, 50);
+    subtractBox.alignTo(nameBox, Phaser.BOTTOM_CENTER, -64, 10);
     this.addChild(subtractBox);
 
     var subtractText = game.make.text(0, 0, "-", textStyle);
-    subtractText.alignIn(subtractBox, Phaser.CENTER, 0, 3)
+    subtractText.alignIn(subtractBox, Phaser.CENTER, 0, 3);
     this.addChild(subtractText);
 
     var subtractButton = game.make.sprite(subtractBox.x, subtractBox.y, 'pixelTransparent');
@@ -148,12 +155,12 @@ function MonsterDetail(game) {
     this.addChild(subtractButton);
 
     // Add number
-    var addNumber = new OutlineBox(game, 50, 50)
-    addNumber.alignTo(nameBox, Phaser.BOTTOM_CENTER, 64, 10)
+    var addNumber = new OutlineBox(game, 50, 50);
+    addNumber.alignTo(nameBox, Phaser.BOTTOM_CENTER, 64, 10);
     this.addChild(addNumber);
 
     var addText = game.make.text(0, 0, "+", textStyle);
-    addText.alignIn(addNumber, Phaser.CENTER, 0, 3)
+    addText.alignIn(addNumber, Phaser.CENTER, 0, 3);
     this.addChild(addText);
 
     var addButtom = game.make.sprite(addNumber.x, addNumber.y, 'pixelTransparent');
@@ -165,7 +172,7 @@ function MonsterDetail(game) {
 
     // Attack
     var dialogAttack = new DialogButtonThin(game, "Attack", 200);
-    dialogAttack.alignTo(nameBox, Phaser.BOTTOM_CENTER, 0, 82)
+    dialogAttack.alignTo(nameBox, Phaser.BOTTOM_CENTER, 0, 82);
     this.addChild(dialogAttack);
 
     var attackButton = game.make.sprite(dialogAttack.x, dialogAttack.y, 'pixelTransparent');
@@ -177,7 +184,7 @@ function MonsterDetail(game) {
 
     // Evade
     var dialogEvade = new DialogButtonThin(game, "Evade", 200);
-    dialogEvade.alignTo(nameBox, Phaser.BOTTOM_CENTER, 0, 130)
+    dialogEvade.alignTo(nameBox, Phaser.BOTTOM_CENTER, 0, 130);
     this.addChild(dialogEvade);
 
     var evadeButton = game.make.sprite(dialogEvade.x, dialogEvade.y, 'pixelTransparent');
@@ -186,7 +193,7 @@ function MonsterDetail(game) {
     evadeButton.inputEnabled = true;
     //evadeButton.events.onInputUp.add(this.monsterEvadeClicked, this);
     this.addChild(evadeButton);
-    
+
     this.x -= 96 * 4
 }
 
@@ -205,5 +212,11 @@ MonsterDetail.prototype.hide = function () {
         this.open = false;
         var slideTween = this.game.add.tween(this).to({ x: this.x - 96 * 4 }, 100, Phaser.Easing.Linear.None, true, 0, 0, false);
     }
+}
+
+MonsterDetail.prototype.setDetail = function (monsterInstance) {
+    monsterInstance.detailSprite.alignIn(this, Phaser.CENTER, 96 * 4, -72);
+    this.addChild(monsterInstance.detailSprite);
+    console.log("detail", monsterInstance.detailSprite.x, monsterInstance.detailSprite.y);
 }
 

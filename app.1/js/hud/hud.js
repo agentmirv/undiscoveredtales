@@ -5,8 +5,9 @@ function Hud(game) {
     this.phase = "";
     this.step = "";
     this.isFireActive = false;
-    this.isMonsterTrayOpen = false; 
     this.randomEventDeck = [];
+    this.monsterInstances = [];
+    this.monsterIndex = -1;
 
     //=========================================================
     // Dark Background
@@ -15,23 +16,22 @@ function Hud(game) {
     
     //=========================================================
     // Monster Tray
-    var monsterTray = new MonsterTray(game);
-    this.addChild(monsterTray);
+    this.monsterTray = new MonsterTray(game);
+    this.addChild(this.monsterTray);
 
     //=========================================================
     // Monster Detail
-    var monsterDetail = new MonsterDetail(game);
-    this.addChild(monsterDetail);
+    this.monsterDetail = new MonsterDetail(game);
+    this.addChild(this.monsterDetail);
 
     //=========================================================
     // End Phase Button
     var endPhaseButton = new HudButton(game, "endPhase-image-player", "endPhase-image-enemy");
     endPhaseButton.alignIn(game.stageViewRect, Phaser.BOTTOM_RIGHT, 0, 0);
     endPhaseButton.onClick.add(function () {
-        this.isMonsterTrayOpen = false;
+        this.monsterTray.hide();
         darkBackground.hide();
-        monsterTray.hide();
-        monsterDetail.hide();
+        this.monsterDetail.hide();
         var phaseDialog = MakePhaseDialog(game, this.phase);
         phaseDialog.onConfirm.addOnce(function () {
             this.playerPhaseEnd.dispatch();
@@ -51,15 +51,13 @@ function Hud(game) {
     monsterButton.alignIn(game.stageViewRect, Phaser.BOTTOM_LEFT, -96, 0);
     monsterButton.onClick.add(function () {
         if (this.phase == "player" || this.step == "horror") {
-            if (this.isMonsterTrayOpen) {
-                this.isMonsterTrayOpen = false;
+            if (this.monsterTray.isOpen) {
+                this.monsterTray.hide();
                 darkBackground.hide();
-                monsterTray.hide();
-                monsterDetail.hide();
+                this.monsterDetail.hide();
             } else {
-                this.isMonsterTrayOpen = true;
+                this.monsterTray.show();
                 darkBackground.show();
-                monsterTray.show();
             }
         }
     }, this);
@@ -69,6 +67,9 @@ function Hud(game) {
     // Menu Button
     var menuButton = new HudButton(game, "menu-image-player", "menu-image-enemy");
     menuButton.alignIn(game.stageViewRect, Phaser.BOTTOM_LEFT, 0, 0);
+    menuButton.onClick.add(function () {
+        // TODO
+    }, this);
     this.addChild(menuButton);
 
     //=========================================================
@@ -356,4 +357,31 @@ Hud.prototype.scenarioEventStep = function (doneSignal) {
         // If no scenario events were triggered, move on
         doneSignal.dispatch();
     }
+}
+
+//=========================================================
+Hud.prototype.makeMonster = function (id) {
+    var monsterInstance = new Monster(this.game, id);
+    
+    // Set Detail Sprite (Place in Monster Detail)
+    this.monsterDetail.setDetail(monsterInstance);
+    
+    // Set Tray Sprite (Place in Monster Tray)
+    this.monsterTray.putMonster(monsterInstance, this.monsterInstances.length);
+
+    this.monsterInstances.push(monsterInstance);
+}
+
+Hud.prototype.discardMonster = function () {
+    // Remove from List
+    var currentMonster = this.monsterInstances[this.monsterIndex];
+    this.monsterInstances = this.monsterInstances.filter(function (value) { return value != currentMonster })
+
+    // Reposition remaining monsters in tray
+    for (var i = 0; i < this.monsterInstances.length; i++) {
+        this.monsterInstances[i].alignInTray(i); // TODO move alignInTray to hud
+    }
+
+    game.hud.currentMonsterInstance.discard()
+    game.hud.currentMonsterInstance = null
 }

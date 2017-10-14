@@ -183,7 +183,7 @@ function DialogMessage(game, text, imageKey) {
     this.addChild(messageText);
 
     if (imageKey != null) {
-        var imageBadgeSprite = game.make.sprite(leftMargin, Math.floor((totalHeight - imageHeight) / 2), Helper.getImage(imageKey))
+        var imageBadgeSprite = game.make.sprite(leftMargin, Math.floor((totalHeight - imageHeight) / 2), ImageHelper.getImage(imageKey))
         this.addChild(imageBadgeSprite);
     }
 }

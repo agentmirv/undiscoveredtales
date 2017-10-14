@@ -80,13 +80,17 @@ var GameState = {
         var hud = new Hud(game);
         game.hud = hud;
         game.stage.addChild(hud);
-
+        //game.hud.phase = "player";
+        //hud.monsterTray.show();
+        //hud.monsterDetail.show();
+        
         //=================================================
         // Game Start
         //=================================================
         StartRevealGroup(game, game.gamedata.playerStart.firstReveal)
-        //MakeMonster(game, "deep-one")
+        //game.hud.makeMonster("deep-one")
         //MakeMonster(game, "deep-one-2")
+
         
         //var tokenInstance = MakeToken(game, "token-box-lobby");
         //game.world.addChild(tokenInstance)
@@ -130,8 +134,8 @@ var GameState = {
         //game.debug.cameraInfo(game.camera, 32, 32);
         //game.debug.spriteInfo(player, 32, 130);
         //game.debug.text(game.hud.activeStep, 32, 500)
-        //game.debug.text(cameraPoint.x, 32, 230)
-        //game.debug.text(cameraPoint.y, 32, 250)
+        //game.debug.text(game.hud.monsterDetail.x, 32, 430)
+        //game.debug.text(game.hud.monsterDetail.y, 32, 450)
         //game.debug.text(playerPoint.x, 32, 270)
         //game.debug.text(playerPoint.y, 32, 290)
 
@@ -147,9 +151,9 @@ function Helper() {
     // do nothing
 }
 
-Helper.getImage = function (imageKey) {
-    return game.cache.getBitmapData(imageKey)
-}
+//Helper.getImage = function (imageKey) {
+//    return game.cache.getBitmapData(imageKey)
+//}
 
 // Fisher-Yates Shuffle
 // https://bost.ocks.org/mike/shuffle/
