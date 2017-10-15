@@ -391,27 +391,39 @@
       "baseHitPoints": "4",
       "attacks": [
         {
-            "id": "deep-one-1",
-            "moveText": "The Deep One moves 2 spaces toward the nearest investigator. Then it attacks the investigator in its space who has suffered the least Damage.",
-            "attackButtonText": "The monster attacks.",
-            "attackText": "The deep one sinks its horrible teeth into your shoulder (Strength; 2). If you pass, you resist the pain and break free from its grasp. If you fail, the creature's savage tearing throws you off-balance; suffer 2 facedown Damage and become Dazed.",
-            "nonAttackButtonText": "No investigators in the space.",
-            "nonAttackText": "The deep one whistles a disonnant melody that sets your teeth on edge."
+          "id": "deep-one-1",
+          "text": "The Deep One moves 2 spaces toward the nearest investigator. Then it attacks the investigator in its space who has suffered the least Damage.",
+          "attack": {
+            "button": "The monster attacks.",
+            "text": "The deep one sinks its horrible teeth into your shoulder (Strength; 2). If you pass, you resist the pain and break free from its grasp. If you fail, the creature's savage tearing throws you off-balance; suffer 2 facedown Damage and become Dazed."
+          },
+          "nonAttack": {
+            "button": "No investigators in the space.",
+            "text": "The deep one whistles a disonnant melody that sets your teeth on edge."
+          }
         },
         {
-            "id": "deep-one-2",
-            "moveText": "The Deep One moves 2 spaces toward the nearest investigator. Then it attacks the investigator in its space who has suffered the least Damage.",
-            "attackButtonText": "The monster attacks.",
-            "attackText": "Leaping with frog-like agility, the deep one manages to get around, behind, and above you before attacking with sharp talons spread. Suffer 2 damage (Strength - 1 negates).",
-            "nonAttackButtonText": "No investigators in the space.",
-            "nonAttackText": "The deep one sniffs at the air."
+          "id": "deep-one-2",
+          "text": "The Deep One moves 2 spaces toward the nearest investigator. Then it attacks the investigator in its space who has suffered the least Damage.",
+          "attack": {
+            "button": "The monster attacks.",
+            "text": "Leaping with frog-like agility, the deep one manages to get around, behind, and above you before attacking with sharp talons spread. Suffer 2 damage (Strength - 1 negates)."
+          },
+          "nonAttack": {
+            "button": "No investigators in the space.",
+            "text": "The deep one sniffs at the air."
+          }
         },
         {
-            "id": "deep-one-3",
-            "moveText": "The Deep One moves 2 spaces toward the nearest investigator. Then it attacks the investigator in its space who has suffered the least Damage.",
-            "attackButtonText": "The monster attacks.",
-            "attackText": "The deep one's gills flare at the scent of blood. As it charges, its horrible mouth distends to reveal row upon row of shark-like teeth (Agility; 2). If you pass, you use the beast's momentum to throw it to the ground; the monster suffers 1 damage. If you fail, you feel its jagged teeth tear at your flesh; suffer 3 Damage.",
-            "nonAttackButtonText": "No investigators in the space."
+          "id": "deep-one-3",
+          "text": "The Deep One moves 2 spaces toward the nearest investigator. Then it attacks the investigator in its space who has suffered the least Damage.",
+          "attack": {
+            "button": "The monster attacks.",
+            "text": "The deep one's gills flare at the scent of blood. As it charges, its horrible mouth distends to reveal row upon row of shark-like teeth (Agility; 2). If you pass, you use the beast's momentum to throw it to the ground; the monster suffers 1 damage. If you fail, you feel its jagged teeth tear at your flesh; suffer 3 Damage."
+          },
+          "nonAttack": {
+            "button": "No investigators in the space."
+          }
         }
       ],
       "horrors": [

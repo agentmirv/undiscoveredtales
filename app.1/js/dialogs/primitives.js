@@ -136,7 +136,7 @@ function DialogMessageMonster(game, text, width) {
 }
 
 DialogMessageMonster.prototype = Object.create(Phaser.Group.prototype);
-DialogMessageMonster.prototype.constructor = DialogButtonMedium;
+DialogMessageMonster.prototype.constructor = DialogMessageMonster;
 
 //=========================================================
 function DialogMessage(game, text, imageKey) {

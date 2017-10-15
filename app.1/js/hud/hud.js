@@ -193,6 +193,9 @@ function Hud(game) {
         console.log("monsterStepBegin");
         this.step = "monster";
         if(this.monsterInstances.length > 0) {
+            this.monsterTray.show();
+            this.darkBackground.show();
+            this.monsterDetail.show();
             var doneSignal = new Phaser.Signal();
             doneSignal.addOnce(function () {
                 this.monsterStepEnd.dispatch();
@@ -451,18 +454,31 @@ Hud.prototype.monsterStep = function (doneSignal) {
     // Select next monster
     this.monsterIndex++;
     
-    if (this.monsterInstances.length >= this.monsterIndex) {
+    if (this.monsterIndex < this.monsterInstances.length) {
         // Get Next Monster
         this.monsterSelected = this.monsterInstances[this.monsterIndex];
-        // TODO Show monsterInstance detail sprite, hide all others        
-        this.monsterTray.show();
-        this.darkBackground.show();
-        this.monsterDetail.show();
+        this.monsterSelected.showDetail();
+        if (this.monsterIndex > 0) {
+            this.monsterInstances[this.monsterIndex - 1].hideDetail();
+        }
+
+        // Get Random Attack
+        if (!this.monsterSelected.source.hasOwnProperty("attackDeck") || this.monsterSelected.source.attackDeck.length == 0)
+        {
+            this.monsterSelected.source.attackDeck = Helper.shuffle(this.monsterSelected.source.attacks.slice(0))
+        }
         
-        // TODO Monster Attack Dialog
-        // When this is done, what happens, call monsterStep again?
+        var attackData = this.monsterSelected.source.attackDeck.pop();
+
+        // Display monster attack dialog
+        var dialog = new MakeMonsterAttackDialog(this.game, attackData);
+        dialog.onNext.addOnce(function () {
+            this.monsterStep(doneSignal);
+        }, this);
+        
     } else {
-        this.monsterTray.show();
+        this.monsterIndex = -1;
+        this.monsterTray.hide();
         this.darkBackground.hide();
         this.monsterDetail.hide();
         doneSignal.dispatch();        
