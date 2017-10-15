@@ -382,8 +382,8 @@ Hud.prototype.scenarioEventStep = function (doneSignal) {
                     StartDialogGroup(game, scenarioEvent.action.dialogGroupId, doneSignal)
 
                 // The action is a reaveal
-                } else if (scenarioEvent.action.type == "revealList" && scenarioEvent.action.revealGroupId != null) {
-                    StartRevealGroup(game, scenarioEvent.action.revealListId, doneSignal);
+                } else if (scenarioEvent.action.type == "startReveal" && scenarioEvent.action.revealGroupId != null) {
+                    StartRevealGroup(game, scenarioEvent.action.revealGroupId, doneSignal);
                 }
 
                 break;

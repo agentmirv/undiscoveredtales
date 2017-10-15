@@ -29,32 +29,31 @@ function MakeProcessActions(game) {
                                 token.fadeOut();
                             }
                         }
-                    } else if (action.type == "continueReveal") {
-                        //=========================================================
-                        // Continue Reveal
-                        ContinueRevealGroup(game, buttonData.revealGroup)
-                    } else if (action.type == "scene") {
-                        //=========================================================
-                        // Scene (Not used anymore)
-                        MakeScene(game, action.sceneId)
-                    } else if (action.type == "dialog") {
-                        //=========================================================
-                        // Continue Dialog
-                        ContinueDialogGroup(game, action.dialogId, buttonData.dialogGroup)
                     } else if (action.type == "startReveal") {
                         //=========================================================
                         // Continue Reveal
                         StartRevealGroup(game, action.revealGroupId)
+                    } else if (action.type == "continueReveal") {
+                        //=========================================================
+                        // Continue Reveal
+                        ContinueRevealGroup(game, buttonData.revealGroup)
+                    } else if (action.type == "dialog") {
+                        //=========================================================
+                        // Continue Dialog
+                        ContinueDialogGroup(game, action.dialogId, buttonData.dialogGroup)
                     } else if (action.type == "hud") {
                         //=========================================================
-                        // Start Player Phase
-                        if(action.command == "startPlayerPhase") {
+                        // Hud Commands                        
+                        if (action.command == "startPlayerPhase") {
+                            // Start Player Phase
                             game.hud.startPlayerPhase();
-                        }
-                    } else if (action.type == "scenarioEventEnd") {
-                        //=========================================================
-                        // Start Player Phase
-                        buttonData.dialogGroup.doneSignal.dispatch();
+                        } else if (action.command == "scenarioEventEnd") {
+                            // Scenario Event End
+                            buttonData.dialogGroup.doneSignal.dispatch();
+                        } else if (action.command == "makeMonster") {
+                            // Make Monster
+                            game.hud.makeMonster(action.monsterId);
+                        }  
                     }  
                 }
             }
