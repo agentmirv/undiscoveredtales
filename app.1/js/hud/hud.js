@@ -11,8 +11,8 @@ function Hud(game) {
 
     //=========================================================
     // Dark Background
-    var darkBackground = new DarkBackground(game);
-    this.addChild(darkBackground);
+    this.darkBackground = new DarkBackground(game);
+    this.addChild(this.darkBackground);
     
     //=========================================================
     // Monster Tray
@@ -30,7 +30,7 @@ function Hud(game) {
     endPhaseButton.alignIn(game.stageViewRect, Phaser.BOTTOM_RIGHT, 0, 0);
     endPhaseButton.onClick.add(function () {
         this.monsterTray.hide();
-        darkBackground.hide();
+        this.darkBackground.hide();
         this.monsterDetail.hide();
         var phaseDialog = MakePhaseDialog(game, this.phase);
         phaseDialog.onConfirm.addOnce(function () {
@@ -53,11 +53,11 @@ function Hud(game) {
         if (this.phase == "player" || this.step == "horror") {
             if (this.monsterTray.isOpen) {
                 this.monsterTray.hide();
-                darkBackground.hide();
+                this.darkBackground.hide();
                 this.monsterDetail.hide();
             } else {
                 this.monsterTray.show();
-                darkBackground.show();
+                this.darkBackground.show();
             }
         }
     }, this);
@@ -176,7 +176,11 @@ function Hud(game) {
         this.step = "monster";
         // Create Dialog(s) and wire up
         // If no monsters, then call this.monsterStepEnd.dispatch();
-        this.monsterStepEnd.dispatch();
+        if(this.monsterInstances.length > 0) {
+            this.monsterStep(doneSignal);
+        } else {
+            this.monsterStepEnd.dispatch();
+        }
     }, this);
     
     this.monsterStepEnd.add(function () {
@@ -360,18 +364,37 @@ Hud.prototype.scenarioEventStep = function (doneSignal) {
 }
 
 //=========================================================
+// Make Monster
 Hud.prototype.makeMonster = function (id) {
     var monsterInstance = new Monster(this.game, id);
-    
-    // Set Detail Sprite (Place in Monster Detail)
-    this.monsterDetail.setDetail(monsterInstance);
-    
-    // Set Tray Sprite (Place in Monster Tray)
-    this.monsterTray.putMonster(monsterInstance, this.monsterInstances.length);
-
     this.monsterInstances.push(monsterInstance);
 }
 
+Hud.prototype.monsterStep = function (doneSignal) {
+    // Select next monster
+    this.monsterIndex++;
+    
+    if (this.monsterInstances.length >= this.monsterIndex) {
+        // Get Next Monster
+        var monsterInstance = this.monsterInstances[this.monsterIndex];
+        // Set Detail Sprite (Place in Monster Detail)
+        this.monsterDetail.setDetail(monsterInstance);
+        // Set Tray Sprite (Place in Monster Tray)
+        this.monsterTray.putMonster(monsterInstance, this.monsterIndex);
+        
+        this.monsterTray.show();
+        this.darkBackground.show();
+        this.monsterDetail.show();
+    } else {
+        this.monsterTray.show();
+        this.darkBackground.hide();
+        this.monsterDetail.hide();
+        doneSignal.dispatch();        
+    }
+}
+
+//=========================================================
+// TODO Discard Monster
 Hud.prototype.discardMonster = function () {
     // Remove from List
     var currentMonster = this.monsterInstances[this.monsterIndex];
