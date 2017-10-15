@@ -1,5 +1,6 @@
-function MakeMonsterAttackDialog(game, attackData) {
-    var dialogInstance = new MonsterAttackDialog(game, attackData);
+//=========================================================
+function MakeMonsterAttackDialog(game, attackData, nextSignal) {
+    var dialogInstance = new MonsterAttackDialog(game, attackData, nextSignal);
 
     game.stage.addChild(dialogInstance);
     dialogInstance.open();
@@ -7,10 +8,10 @@ function MakeMonsterAttackDialog(game, attackData) {
     return dialogInstance;
 }
 
-function MonsterAttackDialog(game, attackData) {
+//=========================================================
+function MonsterAttackDialog(game, attackData, nextSignal) {
     BaseDialog.call(this, game);
-    this.onNext = new Phaser.Signal();
-    
+
     var dialogRect = new Phaser.Rectangle(96 * 3, 16, game.stageViewRect.width - 96 * 3, game.stageViewRect.height);
 
     // Text
@@ -22,7 +23,13 @@ function MonsterAttackDialog(game, attackData) {
     attackButton.alignTo(moveTextDialog, Phaser.BOTTOM_CENTER, 0, 28)
     attackButton.buttonInput.events.onInputUp.add(function () {
         this.onClose.addOnce(function () {
-            this.onNext.dispatch();
+            if (attackData.attack.hasOwnProperty("text")) {
+                var dialogInstance = new MonsterDialog(game, attackData.attack.text, nextSignal);
+                game.stage.addChild(dialogInstance);
+                dialogInstance.open();
+            } else {
+                nextSignal.dispatch();
+            }
         }, this);
         this.close();
     }, this);
@@ -32,7 +39,13 @@ function MonsterAttackDialog(game, attackData) {
     nonAttackButton.alignTo(attackButton, Phaser.BOTTOM_CENTER, 0, 28)
     nonAttackButton.buttonInput.events.onInputUp.add(function () {
         this.onClose.addOnce(function () {
-            this.onNext.dispatch();
+            if (attackData.nonAttack.hasOwnProperty("text")) {
+                var dialogInstance = new MonsterDialog(game, attackData.nonAttack.text, nextSignal);
+                game.stage.addChild(dialogInstance);
+                dialogInstance.open();
+            } else {
+                nextSignal.dispatch();
+            }
         }, this);
         this.close();
     }, this);
@@ -41,3 +54,36 @@ function MonsterAttackDialog(game, attackData) {
 
 MonsterAttackDialog.prototype = Object.create(BaseDialog.prototype);
 MonsterAttackDialog.prototype.constructor = MonsterAttackDialog;
+
+//=========================================================
+function MakeMonsterDialog(game, dialogData, dialogGroup) {
+    //var dialogInstance = new MonsterDialog(game, dialogData, dialogGroup);
+
+    //game.stage.addChild(dialogInstance);
+    //dialogInstance.open();
+}
+
+//=========================================================
+function MonsterDialog(game, text, nextSignal) { 
+    BaseDialog.call(this, game);
+
+    var dialogRect = new Phaser.Rectangle(96 * 3, 16, game.stageViewRect.width - 96 * 3, game.stageViewRect.height);
+
+    // Text
+    var moveTextDialog = new DialogMessageMonster(game, text, 600);
+    moveTextDialog.alignIn(dialogRect, Phaser.TOP_CENTER, 0, 0);
+    this.addChild(moveTextDialog);
+
+    var continueButton = new DialogButtonMedium(game, "Continue", 520);
+    continueButton.alignTo(moveTextDialog, Phaser.BOTTOM_CENTER, 0, 28)
+    continueButton.buttonInput.events.onInputUp.add(function () {
+        this.onClose.addOnce(function () {
+            nextSignal.dispatch();
+        }, this);
+        this.close();
+    }, this);
+    this.addChild(continueButton);
+}
+
+MonsterDialog.prototype = Object.create(BaseDialog.prototype);
+MonsterDialog.prototype.constructor = MonsterDialog;

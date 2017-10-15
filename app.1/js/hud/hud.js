@@ -217,6 +217,9 @@ function Hud(game) {
         console.log("horrorStepBegin");
         this.step = "horror";
         if(this.monsterInstances.length > 0) {
+            // TODO: Fix the tweens functions so that they complete before moving on.
+            //this.monsterTray.show();
+            //this.darkBackground.show();
             var horrorDialog = MakeHorrorDialog(game);
         } else {
             this.horrorStepEnd.dispatch();
@@ -418,15 +421,19 @@ Hud.prototype.makeMonster = function (id) {
     
     // Wire up Monster Selection Signal
     monsterInstance.onSelected.add(function () {
-        if (this.monsterSelected == null) {
-            this.monsterSelected = monsterInstance;
-            this.monsterSelected.showDetail();
-            this.monsterDetail.show();
-        } else if (this.monsterSelected == monsterInstance) {
-            this.monsterSelected.hideDetail();
-            this.monsterSelected = null;
-            this.monsterDetail.hide();
-        } 
+        if (this.phase == "player") {
+            if (this.monsterSelected == null) {
+                this.monsterSelected = monsterInstance;
+                this.monsterSelected.showDetail();
+                this.monsterDetail.show();
+            } else if (this.monsterSelected == monsterInstance) {
+                this.monsterSelected.hideDetail();
+                this.monsterSelected = null;
+                this.monsterDetail.hide();
+            } 
+        } else {
+            // Horror Check Dialogs
+        }
     }, this);
     
     // Wire up Monster Discard Signal
@@ -462,6 +469,7 @@ Hud.prototype.monsterStep = function (doneSignal) {
             this.monsterInstances[this.monsterIndex - 1].hideDetail();
         }
 
+        // TODO The Innsmouth Mob does not always have an attack, while still being in the monster tray
         // Get Random Attack
         if (!this.monsterSelected.source.hasOwnProperty("attackDeck") || this.monsterSelected.source.attackDeck.length == 0)
         {
@@ -471,8 +479,9 @@ Hud.prototype.monsterStep = function (doneSignal) {
         var attackData = this.monsterSelected.source.attackDeck.pop();
 
         // Display monster attack dialog
-        var dialog = new MakeMonsterAttackDialog(this.game, attackData);
-        dialog.onNext.addOnce(function () {
+        var nextSignal = new Phaser.Signal();
+        var dialog = new MakeMonsterAttackDialog(this.game, attackData, nextSignal);
+        nextSignal.addOnce(function () {
             this.monsterStep(doneSignal);
         }, this);
         
