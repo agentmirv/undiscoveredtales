@@ -11,8 +11,6 @@ function MakeRandomEventDialog(game, dialogData, dialogGroup) {
 function RandomEventDialog(game, dialogData, dialogGroup) {
     BaseDialog.call(this, game);
 
-    var data = null;
-
     var eventText = dialogData.text;
 
     if (dialogGroup.hasOwnProperty("investigator") && dialogGroup.investigator != null) {

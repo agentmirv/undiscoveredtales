@@ -16,6 +16,9 @@ function ContinueRevealGroup(game, revealGroup) {
     if (revealGroup.dialogs.length > 0) {
         var revealDialogData = revealGroup.dialogs.shift();
         MakeRevealDialogData(game, revealDialogData, revealGroup);
+    } else if (revealGroup.hasOwnProperty("doneSignal") && revealGroup.doneSignal != null) {       
+        // No more Reveal Dialogs, the Reveal is done
+        revealGroup.doneSignal.dispatch();
     }
 }
 

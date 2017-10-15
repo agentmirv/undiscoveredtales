@@ -194,11 +194,10 @@ function Hud(game) {
         this.step = "monster";
         if(this.monsterInstances.length > 0) {
             var doneSignal = new Phaser.Signal();
-            // TODO
-            this.monsterStep(doneSignal);
             doneSignal.addOnce(function () {
                 this.monsterStepEnd.dispatch();
             }, this);
+            this.monsterStep(doneSignal);
         } else {
             this.monsterStepEnd.dispatch();
         }
@@ -214,7 +213,6 @@ function Hud(game) {
     this.horrorStepBegin.add(function () {
         console.log("horrorStepBegin");
         this.step = "horror";
-        // TODO
         if(this.monsterInstances.length > 0) {
             var horrorDialog = MakeHorrorDialog(game);
         } else {
@@ -387,13 +385,9 @@ Hud.prototype.scenarioEventStep = function (doneSignal) {
             if (conditionResult) {
                 scenarioEvent.resolved = true
                 triggeredScenarioEvent = true
-                
-                // The action is a dialog
-                if (scenarioEvent.action.type == "dialog") {
-                    StartDialogGroup(game, scenarioEvent.action.dialogGroupId, doneSignal)
 
-                // The action is a reaveal
-                } else if (scenarioEvent.action.type == "startReveal" && scenarioEvent.action.revealGroupId != null) {
+                // Only supporting reveals now, since we know when those are completed
+                if (scenarioEvent.action.type == "startReveal" && scenarioEvent.action.revealGroupId != null) {
                     StartRevealGroup(game, scenarioEvent.action.revealGroupId, doneSignal);
                 }
 

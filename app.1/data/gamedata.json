@@ -230,7 +230,7 @@
   "scenarioEvents": [
     {
       "id": "box-lobby-beast",
-      "action": { "type": "dialog", "dialogGroupId": "dialog-scenario-event-box-lobby" },
+      "action": { "type": "startReveal", "revealGroupId": "dialog-scenario-event-box-lobby" },
       "conditions": [
         {
           "type": "globalVar",
@@ -250,258 +250,6 @@
           "operator": "equals",
           "value": "beast"
         }
-      ]
-    }
-  ],
-  "dialogs": [
-    {
-      "id": "dialog-hud-fire-event",
-      "text": "The fire spreads out of control. Place Fire in a space adjacent to a space containing Fire."
-    },
-    {
-      "id": "dialog-hud-endphase-player",
-      "text": "End the Player Phase?",
-      "buttonType": "cancel-action",
-      "buttons": [
-        { "text": "Confirm",
-          "actions": [ {"type": "scene", "sceneId": "scene-enemy"} ]
-        }
-      ]
-    },
-    {
-      "id": "dialog-hud-endphase-enemy",
-      "text": "End the Enemy Phase?",
-      "buttonType": "cancel-action",
-      "buttons": [
-        { "text": "Confirm",
-          "actions": [ {"type": "scene", "sceneId": "scene-player"} ]
-        }
-      ]
-    },
-    {
-      "id": "dialog-box-lobby",
-      "imageKey": "search-image",
-      "text": "A heavy wooden box lies on the table. The lid can be opened by moving an ornate latch.",
-      "buttonType": "cancel-action",
-      "buttons": [
-        { "text": "@ Search",
-          "actions": [ {"type": "dialog", "dialogId": "dialog-box-lobby-skilltest"} ]
-        }
-      ]
-    },
-    {
-      "id": "dialog-box-lobby-tried",
-      "imageKey": "search-image",
-      "text": "You want to search the damned box, but you feel the cursed latch mocking you.",
-      "buttonType": "cancel-action",
-      "buttons": [
-        { "text": "@ Search",
-          "actions": [ {"type": "dialog", "dialogId": "dialog-box-lobby-skilltest"} ]
-        }
-      ]
-    },
-    {
-      "id": "dialog-box-lobby-skilltest",
-      "imageKey": "search-image",
-      "text": "The unholy design of the latch depicts a humanoid form with beast-like appendages. You steel yourself for designs of an immoral calculus. (Test Will) ",
-      "buttonType": "skilltest",
-      "skillTarget": 2,
-      "buttons": [
-        { "id": "success",
-          "actions": [
-            {"type": "setGlobal", "globalId": "box-lobby", "value": "searched" },
-            {"type": "dialog", "dialogId": "dialog-box-lobby-skilltest-success"}
-            ]
-        },
-        { "id": "fail",
-          "actions": [
-            {"type": "setGlobal", "globalId": "box-lobby", "value": "tried" },
-            {"type": "dialog", "dialogId": "dialog-box-lobby-skilltest-fail"}
-            ]
-        }
-      ]
-    },
-    {
-      "id": "dialog-box-lobby-skilltest-success",
-      "imageKey": "search-image",
-      "text": "You unfasten the latch with a subtle twist, revealing a newspaper clipping inside the box. The article describes the discovery of human remains in the Malahath River. The paper is two weeks old, according to the date. Gain 1 Clue. Then discard this Search token.",
-      "buttonType": "continue",
-      "buttons": [
-        { "text": "Continue",
-          "actions": [ {"type": "removeTokens", "tokenIds": ["token-box-lobby"] } ]
-        }
-      ]
-    },
-    {
-      "id": "dialog-box-lobby-skilltest-fail",
-      "imageKey": "search-image",
-      "text": "Your hands shake as you attempt to handle the latch. The image of a man-beast stalking you from the shadows clouds your mind. Feeling confounded, you set the box back down.",
-      "buttonType": "continue",
-      "buttons": [ ]
-    },
-    {
-      "id": "dialog-door1-lobby",
-      "imageKey": "explore-image",
-      "text": "This door leads deeper into the mansion.",
-      "buttonType": "cancel-action",
-      "buttons": [
-        { "text": "@ Explore",
-          "actions": [ {"type": "revealList", "revealListId": "reveal-halls" } ]
-        }
-      ]
-    },
-    {
-      "id": "dialog-door2-lobby",
-      "imageKey": "explore-image",
-      "text": "This door leads deeper into the mansion.",
-      "buttonType": "cancel-action",
-      "buttons": [
-        { "text": "@ Explore",
-          "actions": [ {"type": "revealList", "revealListId": "reveal-halls" } ]
-        }
-      ]
-    },
-    {
-      "id": "dialog-door3-lobby",
-      "imageKey": "explore-image",
-      "text": "This door leads to a room at the front of the house. The handle is ice cold.",
-      "buttonType": "cancel-action",
-      "buttons": [
-        { "text": "@ Explore",
-          "actions": [ {"type": "revealList", "revealListId": "reveal-study" } ]
-        }
-      ]
-    },
-    {
-      "id": "dialog-fireplace-study",
-      "imageKey": "search-image",
-      "text": "You see something glint under the pile of ash and blackened wood.",
-      "buttonType": "cancel-action",
-      "buttons": [
-        { "text": "@ Search",
-          "actions": [ {"type": "dialog", "dialogId": "dialog-fireplace-study-searched" } ]
-        }
-      ]
-    },
-    {
-      "id": "dialog-fireplace-study-searched",
-      "imageKey": "cultsigil-image",
-      "text": "As you sift through the ash, your hands and shirt become covered in soot. But your hard work pays off. Gain the Cult Sigil Unique Item and 1 Clue. Then discard this Search token.",
-      "buttonType": "continue",
-      "buttons": [
-        { "text": "Continue",
-          "actions": [ {"type": "removeTokens", "tokenIds": ["token-fireplace-study"] } ]
-        }
-      ]
-    },
-    {
-      "id": "dialog-bird-hall",
-      "imageKey": "bird-image",
-      "text": "There is a toppled bowl on the floor, engraved with the name \"Maxwell\". As you approach, the bird’s crest expands, giving the appearance of a tall white crown.",
-      "buttonType": "custom",
-      "buttons": [
-        { "text": "@ \"Hello\"", "actions": [ {"type": "dialog", "dialogId": "dialog-bird-hall-hello" } ] },
-        { "text": "@ Say nothing", "actions": [ {"type": "dialog", "dialogId": "dialog-bird-hall-snub" } ] },
-        { "text": "Ignore the bird." }
-      ]
-    },
-    {
-      "id": "dialog-bird-hall-hello",
-      "imageKey": "bird-image",
-      "text": "The bird responds in a loud, raspy voice, \"Hello Max.\" The bird tilts his head at you. After a moment, he finally prompts you. \"Best or Beast?\" The bird Max waits for you to answer.",
-      "buttonType": "custom",
-      "buttons": [
-        { "text": "@ \"Best\"", "actions": [ {"type": "dialog", "dialogId": "dialog-bird-hall-best" } ] },
-        { "text": "@ \"Beast\"", "actions": [ {"type": "dialog", "dialogId": "dialog-bird-hall-beast" } ] }
-      ]
-    },
-    {
-      "id": "dialog-bird-hall-snub",
-      "imageKey": "bird-image",
-      "text": "The bird stares at you for a moment and then it turns its back. You feel you have offended the bird in some way.",
-      "buttonType": "custom",
-      "buttons": [
-        { "text": "@ \"Pardon my manners, my name is …\"", "actions": [ {"type": "dialog", "dialogId": "dialog-bird-hall-snub-recover" } ] },
-        { "text": "Ignore the bird.", "actions": [ {"type": "dialog", "dialogId": "dialog-bird-hall-snub-ignored" } ] }
-      ]
-    },
-    {
-      "id": "dialog-bird-hall-snub-recover",
-      "imageKey": "bird-image",
-      "text": "The bird squawks interrupting you, \"... Max! Hello Max.\" The bird beats its wings loudly. After a moment, he stops and prompts you. \"Beast or Best?\" The bird Max waits for you to answer.",
-      "buttonType": "custom",
-      "buttons": [
-        { "text": "@ \"Beast\"", "actions": [ {"type": "dialog", "dialogId": "dialog-bird-hall-beast" } ] },
-        { "text": "@ \"Best\"", "actions": [ {"type": "dialog", "dialogId": "dialog-bird-hall-best" } ] }
-      ]
-    },
-    {
-      "id": "dialog-bird-hall-snub-ignored",
-      "imageKey": "bird-image",
-      "text": "The bird claws at you and takes off to the east. Drop 1 random item and suffer 1 facedown Damage (Agility negates). Max hovers for a moment and disappears into a tiny square opening in the ceiling above the door to the east bedroom. You hear the bird squawk loudly and then go silent.",
-      "buttonType": "continue",
-      "buttons": [
-        {
-          "actions": [
-            {"type": "setGlobal", "globalId": "max-question", "value": "beast" },
-            {"type": "removeTokens", "tokenIds": ["token-bird-hall"] }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "dialog-bird-hall-beast",
-      "imageKey": "bird-image",
-      "text": "The bird flutters his wings and takes off to the east. He hovers for a moment and disappears into a tiny square opening in the ceiling above the door to the east bedroom. You hear the bird squawk loudly and then go silent.",
-      "buttonType": "continue",
-      "buttons": [
-        {
-          "actions": [
-            {"type": "setGlobal", "globalId": "max-question", "value": "beast" },
-            {"type": "removeTokens", "tokenIds": ["token-bird-hall"] }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "dialog-bird-hall-best",
-      "imageKey": "bird-image",
-      "text": "The bird flutters his wings and takes off to the west. He hovers for a moment and disappears into a tiny square opening in the ceiling above the door to the west bedroom. You hear the bird murmur, almost sounding like language, then go silent.",
-      "buttonType": "continue",
-      "buttons": [
-        { "actions": [ {"type": "removeTokens", "tokenIds": ["token-bird-hall"] } ] }
-      ]
-    },
-    {
-      "id": "dialog-door-east-bedroom",
-      "imageKey": "explore-image",
-      "text": "A rising sun is carved into the door to the east bedroom. There is no handle on this door.",
-      "buttonType": "continue",
-      "buttons": [ ]
-    },
-    {
-      "id": "dialog-door-east-bedroom-broken",
-      "imageKey": "explore-image",
-      "text": "The door to the east bedroom is smashed and hanging by a single hinge.",
-      "buttonType": "cancel-action",
-      "buttons": [
-        { "text": "@ Explore"
-        }
-      ]
-    },
-    {
-      "id": "dialog-door-west-bedroom",
-      "imageKey": "explore-image",
-      "text": "A setting sun is carved into the door of the west bedroom. There is no handle on this door.",
-      "buttonType": "continue",
-      "buttons": [ ]
-    },
-    {
-      "id": "dialog-scenario-event-box-lobby",
-      "text": "A shadow of dread darkens your mind. You feel beastly claws reach from the shadows. Each investigator suffers 2 facedown Horror (Will negates).",
-      "buttonType": "continue",
-      "buttons": [
-        { "actions": [ {"type": "scenarioEvent" } ] }
       ]
     }
   ],
@@ -713,68 +461,6 @@
       "name": "Deep One 2",
       "baseHitPoints": "5",
       "imageKey": "deep-one-image-2"
-    }
-  ],
-  "monsterAttacks": [
-    {
-        "id": "deep-one-1",
-        "monster": "deep-one",
-        "moveText": "The Deep One moves 2 spaces toward the nearest investigator. Then it attacks the investigator in its space who has suffered the least Damage.",
-        "attackButtonText": "The monster attacks.",
-        "attackText": "The deep one sinks its horrible teeth into your shoulder (Strength; 2). If you pass, you resist the pain and break free from its grasp. If you fail, the creature's savage tearing throws you off-balance; suffer 2 facedown Damage and become Dazed.",
-        "nonAttackButtonText": "No investigators in the space.",
-        "nonAttackText": "The deep one whistles a disonnant melody that sets your teeth on edge."
-    },
-    {
-        "id": "deep-one-2",
-        "monster": "deep-one",
-        "moveText": "The Deep One moves 2 spaces toward the nearest investigator. Then it attacks the investigator in its space who has suffered the least Damage.",
-        "attackButtonText": "The monster attacks.",
-        "attackText": "Leaping with frog-like agility, the deep one manages to get around, behind, and above you before attacking with sharp talons spread. Suffer 2 damage (Strength - 1 negates).",
-        "nonAttackButtonText": "No investigators in the space.",
-        "nonAttackText": "The deep one sniffs at the air."
-    },
-    {
-        "id": "deep-one-3",
-        "monster": "deep-one",
-        "moveText": "The Deep One moves 2 spaces toward the nearest investigator. Then it attacks the investigator in its space who has suffered the least Damage.",
-        "attackButtonText": "The monster attacks.",
-        "attackText": "The deep one's gills flare at the scent of blood. As it charges, its horrible mouth distends to reveal row upon row of shark-like teeth (Agility; 2). If you pass, you use the beast's momentum to throw it to the ground; the monster suffers 1 damage. If you fail, you feel its jagged teeth tear at your flesh; suffer 3 Damage.",
-        "nonAttackButtonText": "No investigators in the space."
-    }
-  ],
-  "horrorChecks": [
-    {
-      "id": "deep-one-1",
-      "monster": "deep-one",
-      "text": "You hear a horrible scrunching sound, and realize the deep one is gnawing on a worm-ridden human arm. Suffer 1 Horror."
-    },
-    {
-      "id": "deep-one-2",
-      "monster": "deep-one",
-      "text": "The deep one's movements and mannerisms are subtly, terribly human. Suffer 2 Horror (Will + 1 negates)."
-    },
-    {
-      "id": "deep-one-3",
-      "monster": "deep-one",
-      "text": "The deep one's gurgling seems to trigger something deep within your primitive mind. Suffer 1 facedown Horror. A rush of primal fear washes over you (Will; 2). If you pass, you take a few deep breaths and maintain control. If you fail, old and painful terrors bubble to the surface; flip 2 Horror faceup."
-    }
-  ],
-  "evadeChecks": [
-    {
-      "id": "deep-one-1",
-      "monster": "deep-one",
-      "text": "The deep one grabs you by the leg and throws you into the air (Agility; 2)! If you pass, you manage to just barely land on your feet with jarring force. If you fail, you hit the ground roughly; suffer 1 facedown Damage and forfeit your action."
-    },
-    {
-      "id": "deep-one-2",
-      "monster": "deep-one",
-      "text": "The creature's limbs seem unnaturally long and flexible as it moves to block your progress (Agility; 3). If you pass, you are able to slip by. If you fail, the deep one's repulsive arms wrap around you; forfeit your action."
-    },
-    {
-      "id": "deep-one-3",
-      "monster": "deep-one",
-      "text": "A hideous, gurgling click sounds from the creature's distended mouth whenever you make the slightest move. The deep one's filmy eyes rotate to follow you. Suffer 2 facedown Horror (Will + 1 negates). If you suffer 1 or more Horror, you find the creature's attention too unsettling to move; forfeit your action."
     }
   ],
   "attacks" :[
@@ -1161,19 +847,7 @@
           "buttons": [ ]
         }        
       ]
-    }, 
-    {
-      "id": "dialog-scenario-event-box-lobby",
-      "dialogs": [
-        {
-          "text": "A shadow of dread darkens your mind. You feel beastly claws reach from the shadows. Each investigator suffers 2 facedown Horror (Will negates).",
-          "type": "statement",
-          "buttons": [
-            { "actions": [ {"type": "hud", "command": "scenarioEventEnd" } ] }
-          ]
-        }
-      ]
-    }
+    } 
   ],
   "revealGroups": [
       {
@@ -1282,7 +956,17 @@
             "actions": [{ "type": "hud", "command": "makeMonster", "monsterId": "deep-one" }]
           }          
         ]
-      }      
+      },
+      {
+        "id": "dialog-scenario-event-box-lobby",
+        "dialogs": [
+          {
+            "text": "A shadow of dread darkens your mind. You feel beastly claws reach from the shadows. Each investigator suffers 2 facedown Horror (Will negates).",
+            "type": "statement",
+            "actions": []
+          }
+        ]
+      }
     ],
   "randomEventGroups": [
     {
