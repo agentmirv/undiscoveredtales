@@ -337,10 +337,21 @@ Hud.prototype.randomEventStep = function (doneSignal) {
         if (drawRandomEvent.hasOwnProperty("target") && 
             drawRandomEvent.target == "mapTile" && 
             drawRandomEvent.hasOwnProperty("mapTile")) {
+            // Check if the target MapTile is revealed
             if (visibleMapTileIds.indexOf(drawRandomEvent.mapTile) >= 0) {
                 randomEventData = drawRandomEvent;
                 randomEventData.doneSignal = doneSignal;
             }
+        } else if (drawRandomEvent.hasOwnProperty("target") && drawRandomEvent.target == "investigator") {
+            // Get random investigator
+            var mathRandom = Math.random();
+            var randomIndex = Math.floor(mathRandom * this.game.gamedata.investigators.length);
+            var investigator = this.game.gamedata.investigators[randomIndex];
+
+            randomEventData = drawRandomEvent;
+            randomEventData.investigator = investigator;
+            randomEventData.doneSignal = doneSignal;
+            
         } else {
             randomEventData = drawRandomEvent;
             randomEventData.doneSignal = doneSignal;

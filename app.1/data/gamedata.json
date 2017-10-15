@@ -1315,19 +1315,19 @@
     },
     {
       "id": "random-event-the-pain",
+      "target": "investigator",
       "dialogs": [
         {
-          "target": "investigator",
           "text": "<name> feels an iching in <f:her><m:his> hands. The itching turns to burning, feeling heat upon heat, upon heat. <name> screams as <f:her><m:his> fingernails fall out (Will; 2). If <f:she><m:he> passes, <f:she><m:he> realizes that <f:her><m:his> hands are fine. If <f:she><m:he> fails, <f:she><m:he> panics and becomes transfixed, convinced that <f:her><m:his> hands are melting; <f:she><m:he> suffers 1 Horror and becomes Restrained."
         }
       ]
     },
     {
       "id": "random-event-hungry",
+      "target": "investigator",
       "dialogs": [
         {
-        "target": "investigator",
-        "text": "<name> had skipped dinner and now feels light headed. <name> becomes Dazed."
+          "text": "<name> had skipped dinner and now feels light headed. <name> becomes Dazed."
         }
       ]
     },

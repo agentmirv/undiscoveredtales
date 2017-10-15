@@ -15,17 +15,12 @@ function RandomEventDialog(game, dialogData, dialogGroup) {
 
     var eventText = dialogData.text;
 
-    if (dialogData.hasOwnProperty("target") && dialogData.target == "investigator") {
-        // Get random investigator
-        var mathRandom = Math.random();
-        var randomIndex = Math.floor(mathRandom * game.gamedata.investigators.length);
-        var randomInvestigatorData = game.gamedata.investigators[randomIndex];
-
+    if (dialogGroup.hasOwnProperty("investigator") && dialogGroup.investigator != null) {
         // Replace investigator name
-        eventText = eventText.replace(/<name>/g, randomInvestigatorData.name);
+        eventText = eventText.replace(/<name>/g, dialogGroup.investigator.name);
 
         // Replace investigator pronoun
-        var reInvestigatorPronoun = new RegExp("<" + randomInvestigatorData.pronoun + ":(.+?)>", "g");
+        var reInvestigatorPronoun = new RegExp("<" + dialogGroup.investigator.pronoun + ":(.+?)>", "g");
         eventText = eventText.replace(reInvestigatorPronoun, "$1");
 
         // Remove remaining pronoun
