@@ -81,16 +81,16 @@ var GameState = {
         game.hud = hud;
         game.stage.addChild(hud);
         
-        //game.hud.phase = "enemy";
+        game.hud.phase = "player";
         //hud.monsterTray.show();
         //hud.monsterDetail.show();
         
         //=================================================
         // Game Start
         //=================================================
-        StartRevealGroup(game, game.gamedata.playerStart.firstReveal)
+        //StartRevealGroup(game, game.gamedata.playerStart.firstReveal)
         
-        //hud.makeMonster("deep-one")
+        hud.makeMonster("deep-one")
         //var test = new Phaser.Signal();
         //hud.monsterStep(test);
         

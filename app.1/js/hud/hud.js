@@ -8,6 +8,7 @@ function Hud(game) {
     this.randomEventDeck = [];
     this.monsterInstances = [];
     this.monsterIndex = -1;
+    this.monsterSelected = null;
 
     //=========================================================
     // Dark Background
@@ -22,6 +23,18 @@ function Hud(game) {
     //=========================================================
     // Monster Detail
     this.monsterDetail = new MonsterDetail(game);
+    this.monsterDetail.onAdd.add(function () {
+        console.log("onAdd");
+    }, this);
+    this.monsterDetail.onSubtract.add(function () {
+        console.log("onSubtract");
+    }, this);
+    this.monsterDetail.onAttack.add(function () {
+        console.log("onAttack");
+    }, this);
+    this.monsterDetail.onEvade.add(function () {
+        console.log("onEvade");
+    }, this);
     this.addChild(this.monsterDetail);
 
     //=========================================================
@@ -120,7 +133,6 @@ function Hud(game) {
     this.fireStepBegin.add(function () {
         console.log("fireStepBegin");
         this.step = "fire";
-        // Create Dialog and wire up
         var done = new Phaser.Signal();
         done.addOnce(function () {
             this.fireStepEnd.dispatch();
@@ -138,7 +150,6 @@ function Hud(game) {
     this.randomEventStepBegin.add(function () {
         console.log("randomEventStepBegin");
         this.step = "randomEvent";
-        // Create Dialog(s) and wire up
         var doneSignal = new Phaser.Signal();
         doneSignal.addOnce(function () {
             this.randomEventStepEnd.dispatch();
@@ -156,7 +167,6 @@ function Hud(game) {
     this.scenarioEventStepBegin.add(function () {
         console.log("scenarioEventStepBegin");
         this.step = "scenarioEvent";
-        // Create Dialog(s) and wire up
         var doneSignal = new Phaser.Signal();
         doneSignal.addOnce(function () {
             this.scenarioEventStepEnd.dispatch();
@@ -174,8 +184,6 @@ function Hud(game) {
     this.monsterStepBegin.add(function () {
         console.log("monsterStepBegin");
         this.step = "monster";
-        // Create Dialog(s) and wire up
-        // If no monsters, then call this.monsterStepEnd.dispatch();
         if(this.monsterInstances.length > 0) {
             this.monsterStep(doneSignal);
         } else {
@@ -367,24 +375,44 @@ Hud.prototype.scenarioEventStep = function (doneSignal) {
 // Make Monster
 Hud.prototype.makeMonster = function (id) {
     var monsterInstance = new Monster(this.game, id);
+    // Set Tray Sprite (Place in Monster Tray)
+    this.monsterTray.putMonster(monsterInstance, this.monsterInstances.length);
+    // Set Detail Sprite (Place in Monster Detail)
+    this.monsterDetail.setDetail(monsterInstance);
+    // Add Monster to instance list
     this.monsterInstances.push(monsterInstance);
+    
+    // Wire up Monster Selection Signal
+    monsterInstance.onSelected.add(function () {
+        // TODO Show monsterInstance detail sprite, hide all others
+        if (this.monsterSelected == null) {
+            this.monsterSelected = monsterInstance;
+            this.monsterSelected.showDetail();
+            this.monsterDetail.show();
+        } else if (this.monsterSelected == monsterInstance) {
+            this.monsterSelected.hideDetail();
+            this.monsterSelected = null;
+            this.monsterDetail.hide();
+        } 
+    }, this);
 }
 
+//=========================================================
+// Monster Step
 Hud.prototype.monsterStep = function (doneSignal) {
     // Select next monster
     this.monsterIndex++;
     
     if (this.monsterInstances.length >= this.monsterIndex) {
         // Get Next Monster
-        var monsterInstance = this.monsterInstances[this.monsterIndex];
-        // Set Detail Sprite (Place in Monster Detail)
-        this.monsterDetail.setDetail(monsterInstance);
-        // Set Tray Sprite (Place in Monster Tray)
-        this.monsterTray.putMonster(monsterInstance, this.monsterIndex);
-        
+        this.monsterSelected = this.monsterInstances[this.monsterIndex];
+        // TODO Show monsterInstance detail sprite, hide all others        
         this.monsterTray.show();
         this.darkBackground.show();
         this.monsterDetail.show();
+        
+        // TODO Monster Attack Dialog
+        // When this is done, what happens, call monsterStep again?
     } else {
         this.monsterTray.show();
         this.darkBackground.hide();
@@ -394,17 +422,16 @@ Hud.prototype.monsterStep = function (doneSignal) {
 }
 
 //=========================================================
-// TODO Discard Monster
+// Discard Monster
 Hud.prototype.discardMonster = function () {
     // Remove from List
-    var currentMonster = this.monsterInstances[this.monsterIndex];
-    this.monsterInstances = this.monsterInstances.filter(function (value) { return value != currentMonster })
+    this.monsterInstances = this.monsterInstances.filter(function (value) { return value != this.monsterSelected })
 
     // Reposition remaining monsters in tray
     for (var i = 0; i < this.monsterInstances.length; i++) {
-        this.monsterInstances[i].alignInTray(i); // TODO move alignInTray to hud
+        this.monsterTray.putMonster(this.monsterInstances[i], i);
     }
 
-    game.hud.currentMonsterInstance.discard()
-    game.hud.currentMonsterInstance = null
+    this.monsterSelected.discard()
+    this.monsterSelected = null
 }

@@ -95,13 +95,17 @@ MonsterTray.prototype.putMonster = function (monsterInstance, position) {
     var xOffset = position * 96;
     monsterInstance.traySprite.alignIn(this.monsterTrayBgImage, Phaser.BOTTOM_LEFT, -xOffset, 0);
     this.addChild(monsterInstance.traySprite)
-    console.log("tray", monsterInstance.traySprite.x, monsterInstance.traySprite.y);
 }
 
 
 //=========================================================
 function MonsterDetail(game) {
     Phaser.Group.call(this, game);
+
+    this.onAdd = new Phaser.Signal();
+    this.onSubtract = new Phaser.Signal();
+    this.onAttack = new Phaser.Signal();
+    this.onEvade = new Phaser.Signal();
 
     this.open = false;
     var textStyle = { font: "24px Times New Romans", fill: "#ffffff", align: "center" };
@@ -151,7 +155,9 @@ function MonsterDetail(game) {
     subtractButton.width = subtractBox.width;
     subtractButton.height = subtractBox.height;
     subtractButton.inputEnabled = true;
-    //subtractButton.events.onInputUp.add(this.monsterSubtractClicked, this);
+    subtractButton.events.onInputUp.add(function () {
+        this.onSubtract.dispatch();
+    }, this);
     this.addChild(subtractButton);
 
     // Add number
@@ -163,12 +169,14 @@ function MonsterDetail(game) {
     addText.alignIn(addNumber, Phaser.CENTER, 0, 3);
     this.addChild(addText);
 
-    var addButtom = game.make.sprite(addNumber.x, addNumber.y, 'pixelTransparent');
-    addButtom.width = addNumber.width;
-    addButtom.height = addNumber.height;
-    addButtom.inputEnabled = true;
-    //addButtom.events.onInputUp.add(this.monsterAddClicked, this);
-    this.addChild(addButtom);
+    var addButton = game.make.sprite(addNumber.x, addNumber.y, 'pixelTransparent');
+    addButton.width = addNumber.width;
+    addButton.height = addNumber.height;
+    addButton.inputEnabled = true;
+    addButton.events.onInputUp.add(function () {
+        this.onAdd.dispatch();
+    }, this);
+    this.addChild(addButton);
 
     // Attack
     var dialogAttack = new DialogButtonThin(game, "Attack", 200);
@@ -179,7 +187,9 @@ function MonsterDetail(game) {
     attackButton.width = dialogAttack.width;
     attackButton.height = dialogAttack.height;
     attackButton.inputEnabled = true;
-    //attackButton.events.onInputUp.add(this.monsterAttackClicked, this);
+    attackButton.events.onInputUp.add(function () {
+        this.onAttack.dispatch();
+    }, this);
     this.addChild(attackButton);
 
     // Evade
@@ -191,7 +201,9 @@ function MonsterDetail(game) {
     evadeButton.width = dialogEvade.width;
     evadeButton.height = dialogEvade.height;
     evadeButton.inputEnabled = true;
-    //evadeButton.events.onInputUp.add(this.monsterEvadeClicked, this);
+    evadeButton.events.onInputUp.add(function () {
+        this.onEvade.dispatch();
+    }, this);
     this.addChild(evadeButton);
 
     this.x -= 96 * 4
@@ -217,6 +229,5 @@ MonsterDetail.prototype.hide = function () {
 MonsterDetail.prototype.setDetail = function (monsterInstance) {
     monsterInstance.detailSprite.alignIn(this, Phaser.CENTER, 96 * 4, -72);
     this.addChild(monsterInstance.detailSprite);
-    console.log("detail", monsterInstance.detailSprite.x, monsterInstance.detailSprite.y);
 }
 

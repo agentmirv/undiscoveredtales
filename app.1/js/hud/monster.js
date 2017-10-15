@@ -1,5 +1,6 @@
 function Monster(game, id) {
     var data = game.gamedata.monsters.find(function (item) { return item.id == id });
+    this.onSelected = new Phaser.Signal();
 
     // Monster Instance
     this.id = data.id
@@ -17,11 +18,10 @@ function Monster(game, id) {
 
     // Set Tray Sprite (Place in Monster Tray)
     this.traySprite = game.make.sprite(0, 0, ImageHelper.getImage(game, this.imageKey));
-    //this.alignInTray(game.gamedataInstances.monsters.length)
     this.traySprite.inputEnabled = true;
     this.traySprite.events.onInputUp.add(function () {
-        // dispatch signal?
-    }, this);
+        this.onSelected.dispatch();
+     }, this);
 
     // Set Tray Sprite Hit Points
     this._trayHPBox = new OutlineBox(game, 32, 32);
@@ -33,8 +33,12 @@ function Monster(game, id) {
     this._trayHPText = game.make.text(0, 0, "0", textStyle);
     this._trayHPText.alignIn(this._trayHPBox, Phaser.CENTER, 0, 3);
     this.traySprite.addChild(this._trayHPText);
+}
 
-    //game.hudInstance._monsterTray.addChild(this.traySprite)
+Monster.prototype.showDetail = function () {
+    this.detailSprite.revive()
+}
 
-    //game.gamedataInstances.monsters.push(this);
+Monster.prototype.hideDetail = function () {
+    this.detailSprite.kill()
 }
