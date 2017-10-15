@@ -253,48 +253,6 @@
       ]
     }
   ],
-  "randomEvents": [
-    {
-      "id": "random-event-lobby-pictures",
-      "text": "Now you realize what was bothering you about this room. This event affects each investigator in the Lobby.",
-      "resolveText": "The pictures! Each investigator can be seen in the background of one of the pictures. Each investigator suffers 1 facedown Horror.",
-      "target": "mapTile",
-      "mapTile": "maptile-lobby",
-      "buttonType": "random-event-conditional"
-    },
-    {
-      "id": "random-event-study-cold",
-      "text": "The unnatural cold turns to a biting, freezing blast. This event affects each investigator in the Study.",
-      "resolveText": "A blast of sub-zero air begins to freeze your exposed flesh. Each investigator suffers 1 facedown Damage.",
-      "target": "mapTile",
-      "mapTile": "maptile-study",
-      "buttonType": "random-event-conditional"
-    },
-    {
-      "id": "random-event-self-doubt",
-      "text": "You obsess over a previous converstation with a team member. This event affects the investigator with the least Influence.",
-      "resolveText": "Working with a team is not your strength; you feel slighted by your last converstation with the team (Influence; 1). If you pass, you gain some insight on yourself and become Focused. If you fail, you let your obsession cloud your insight; lose 1 Clue.",
-      "buttonType": "random-event-attribute"
-    },
-    {
-      "id": "random-event-no-effect-1",
-      "text": "A gust of wind rattles the windows for a moment. No immediate effect."
-    },
-    {
-      "id": "random-event-no-effect-2",
-      "text": "Loud knocks sound from a room beyond. Loose beams shift as the house settles. No immediate effect."
-    },
-    {
-      "id": "random-event-the-pain",
-      "text": "<name> feels an iching in <f:her><m:his> hands. The itching turns to burning, feeling heat upon heat, upon heat. <name> screams as <f:her><m:his> fingernails fall out (Will; 2). If <f:she><m:he> passes, <f:she><m:he> realizes that <f:her><m:his> hands are fine. If <f:she><m:he> fails, <f:she><m:he> panics and becomes transfixed, convinced that <f:her><m:his> hands are melting; <f:she><m:he> suffers 1 Horror and becomes Restrained.",
-      "target": "investigator"
-    },
-    {
-      "id": "random-event-hungry",
-      "text": "<name> had skipped dinner and now feels light headed. <name> becomes Dazed.",
-      "target": "investigator"
-    }
-  ],
   "dialogs": [
     {
       "id": "dialog-hud-fire-event",
@@ -1351,8 +1309,53 @@
           "type": "resolve"
         },
         {
-          "id": "resolve",
           "text": "Working with a team is not your strength; you feel slighted by your last converstation with the team (Influence; 1). If you pass, you gain some insight on yourself and become Focused. If you fail, you let your obsession cloud your insight; lose 1 Clue."
+        }
+      ]
+    },
+    {
+      "id": "random-event-the-pain",
+      "dialogs": [
+        {
+          "target": "investigator",
+          "text": "<name> feels an iching in <f:her><m:his> hands. The itching turns to burning, feeling heat upon heat, upon heat. <name> screams as <f:her><m:his> fingernails fall out (Will; 2). If <f:she><m:he> passes, <f:she><m:he> realizes that <f:her><m:his> hands are fine. If <f:she><m:he> fails, <f:she><m:he> panics and becomes transfixed, convinced that <f:her><m:his> hands are melting; <f:she><m:he> suffers 1 Horror and becomes Restrained."
+        }
+      ]
+    },
+    {
+      "id": "random-event-hungry",
+      "dialogs": [
+        {
+        "target": "investigator",
+        "text": "<name> had skipped dinner and now feels light headed. <name> becomes Dazed."
+        }
+      ]
+    },
+    {
+      "id": "random-event-lobby-pictures",
+      "dialogs": [
+        {
+          "target": "mapTile",
+          "mapTile": "maptile-lobby",
+          "text": "Now you realize what was bothering you about this room. This event affects each investigator in the Lobby.",
+          "type": "resolve"
+        },
+        {
+          "text": "The pictures! Each investigator can be seen in the background of one of the pictures. Each investigator suffers 1 facedown Horror."
+        }
+      ]
+    },
+    {
+      "id": "random-event-study-cold",
+      "dialogs": [
+        {
+          "target": "mapTile",
+          "mapTile": "maptile-study",
+          "text": "The unnatural cold turns to a biting, freezing blast. This event affects each investigator in the Study.",
+          "type": "resolve"
+        },
+        {
+          "text": "A blast of sub-zero air begins to freeze your exposed flesh. Each investigator suffers 1 facedown Damage."
         }
       ]
     }
