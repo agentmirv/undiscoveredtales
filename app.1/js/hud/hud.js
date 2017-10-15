@@ -25,9 +25,13 @@ function Hud(game) {
     this.monsterDetail = new MonsterDetail(game);
     this.monsterDetail.onAdd.add(function () {
         console.log("onAdd");
+        this.monsterSelected.addDamage();
+        this.monsterDetail.setDamage(this.monsterSelected);
     }, this);
     this.monsterDetail.onSubtract.add(function () {
         console.log("onSubtract");
+        this.monsterSelected.subtractDamage();
+        this.monsterDetail.setDamage(this.monsterSelected);
     }, this);
     this.monsterDetail.onAttack.add(function () {
         console.log("onAttack");
@@ -384,7 +388,6 @@ Hud.prototype.makeMonster = function (id) {
     
     // Wire up Monster Selection Signal
     monsterInstance.onSelected.add(function () {
-        // TODO Show monsterInstance detail sprite, hide all others
         if (this.monsterSelected == null) {
             this.monsterSelected = monsterInstance;
             this.monsterSelected.showDetail();
@@ -395,6 +398,22 @@ Hud.prototype.makeMonster = function (id) {
             this.monsterDetail.hide();
         } 
     }, this);
+    
+    // Wire up Monster Discard Signal
+    monsterInstance.onDiscard.add(function () {
+        console.log("onDiscard");
+        /*
+        // hide monster attack dialog (if present)
+        game.hudInstance.hideMonsterAttackDialog()
+        // hide player attack dialog (if present)
+        game.hudInstance.hidePlayerAttackDialog()
+        // hide player evade dialog (if present)
+        game.hudInstance.hidePlayerEvadeDialog()
+        // create discard monster dialog
+        MakeMonsterDiscardDialog(game)
+        */
+    }, this);
+    
 }
 
 //=========================================================

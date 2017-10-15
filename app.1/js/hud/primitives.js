@@ -116,35 +116,35 @@ function MonsterDetail(game) {
     this.addChild(background);
 
     // Hit Points
-    var hitPointBox = new OutlineBox(game, 50, 50);
-    hitPointBox.alignIn(background, Phaser.TOP_LEFT, -10, -10);
-    this.addChild(hitPointBox);
+    this.hitPointBox = new OutlineBox(game, 50, 50);
+    this.hitPointBox.alignIn(background, Phaser.TOP_LEFT, -10, -10);
+    this.addChild(this.hitPointBox);
 
-    var hitPointText = game.make.text(0, 0, "0", textStyle);
-    hitPointText.alignIn(hitPointBox, Phaser.CENTER, 0, 3);
-    this.addChild(hitPointText);
+    this.hitPointText = game.make.text(0, 0, "0", textStyle);
+    this.hitPointText.alignIn(this.hitPointBox, Phaser.CENTER, 0, 3);
+    this.addChild(this.hitPointText);
 
     // Name
-    var nameBox = new OutlineBox(game, 200, 32);
-    nameBox.alignIn(background, Phaser.CENTER, 0, 0);
-    this.addChild(nameBox);
+    this.nameBox = new OutlineBox(game, 200, 32);
+    this.nameBox.alignIn(background, Phaser.CENTER, 0, 0);
+    this.addChild(this.nameBox);
 
-    var nameText = game.make.text(0, 0, "Name", textStyle);
-    nameText.alignIn(nameBox, Phaser.CENTER, 0, 3);
-    this.addChild(nameText);
+    this.nameText = game.make.text(0, 0, "Name", textStyle);
+    this.nameText.alignIn(this.nameBox, Phaser.CENTER, 0, 3);
+    this.addChild(this.nameText);
 
     // Damage
-    var damageBox = new OutlineBox(game, 50, 50);
-    damageBox.alignTo(nameBox, Phaser.BOTTOM_CENTER, 0, 10);
-    this.addChild(damageBox);
+    this.damageBox = new OutlineBox(game, 50, 50);
+    this.damageBox.alignTo(this.nameBox, Phaser.BOTTOM_CENTER, 0, 10);
+    this.addChild(this.damageBox);
 
-    var damageText = game.make.text(0, 0, "0", textStyle);
-    damageText.alignIn(damageBox, Phaser.CENTER, 0, 3);
-    this.addChild(damageText);
+    this.damageText = game.make.text(0, 0, "0", textStyle);
+    this.damageText.alignIn(this.damageBox, Phaser.CENTER, 0, 3);
+    this.addChild(this.damageText);
 
     // Subtract number
     var subtractBox = new OutlineBox(game, 50, 50);
-    subtractBox.alignTo(nameBox, Phaser.BOTTOM_CENTER, -64, 10);
+    subtractBox.alignTo(this.nameBox, Phaser.BOTTOM_CENTER, -64, 10);
     this.addChild(subtractBox);
 
     var subtractText = game.make.text(0, 0, "-", textStyle);
@@ -162,7 +162,7 @@ function MonsterDetail(game) {
 
     // Add number
     var addNumber = new OutlineBox(game, 50, 50);
-    addNumber.alignTo(nameBox, Phaser.BOTTOM_CENTER, 64, 10);
+    addNumber.alignTo(this.nameBox, Phaser.BOTTOM_CENTER, 64, 10);
     this.addChild(addNumber);
 
     var addText = game.make.text(0, 0, "+", textStyle);
@@ -180,7 +180,7 @@ function MonsterDetail(game) {
 
     // Attack
     var dialogAttack = new DialogButtonThin(game, "Attack", 200);
-    dialogAttack.alignTo(nameBox, Phaser.BOTTOM_CENTER, 0, 82);
+    dialogAttack.alignTo(this.nameBox, Phaser.BOTTOM_CENTER, 0, 82);
     this.addChild(dialogAttack);
 
     var attackButton = game.make.sprite(dialogAttack.x, dialogAttack.y, 'pixelTransparent');
@@ -194,7 +194,7 @@ function MonsterDetail(game) {
 
     // Evade
     var dialogEvade = new DialogButtonThin(game, "Evade", 200);
-    dialogEvade.alignTo(nameBox, Phaser.BOTTOM_CENTER, 0, 130);
+    dialogEvade.alignTo(this.nameBox, Phaser.BOTTOM_CENTER, 0, 130);
     this.addChild(dialogEvade);
 
     var evadeButton = game.make.sprite(dialogEvade.x, dialogEvade.y, 'pixelTransparent');
@@ -227,7 +227,28 @@ MonsterDetail.prototype.hide = function () {
 }
 
 MonsterDetail.prototype.setDetail = function (monsterInstance) {
+    // Sprite
     monsterInstance.detailSprite.alignIn(this, Phaser.CENTER, 96 * 4, -72);
     this.addChild(monsterInstance.detailSprite);
+    
+    // Name
+    this.nameText.setText(monsterInstance.name);
+    this.nameText.alignIn(this.nameBox, Phaser.CENTER, 0, 3);
+    this.nameText.x = Math.floor(this.nameText.x);
+    this.nameText.y = Math.floor(this.nameText.y);
+    
+    // Hit Points    
+    this.hitPointText.setText(monsterInstance.hitPoints);
+    this.hitPointText.alignIn(this.hitPointBox, Phaser.CENTER, 0, 3);
+
+    // Damage
+    this.damageText.setText(monsterInstance.damage);
+    this.damageText.alignIn(this.damageBox, Phaser.CENTER, 0, 3);
+}
+
+MonsterDetail.prototype.setDamage = function (monsterInstance) {
+    this.damageText.setText(monsterInstance.damage)
+    this.damageText.alignIn(this.damageBox, Phaser.CENTER, 0, 3)
+    this.damageText.x = Math.floor(this.damageText.x)
 }
 

@@ -1,6 +1,7 @@
 function Monster(game, id) {
     var data = game.gamedata.monsters.find(function (item) { return item.id == id });
     this.onSelected = new Phaser.Signal();
+    this.onDiscard = new Phaser.Signal();
 
     // Monster Instance
     this.id = data.id
@@ -41,4 +42,26 @@ Monster.prototype.showDetail = function () {
 
 Monster.prototype.hideDetail = function () {
     this.detailSprite.kill()
+}
+
+Monster.prototype.addDamage = function () {
+    this.damage++;
+    this.updateDamage();
+    if (this.damage == this.hitPoints) {
+        this.onDiscard.dispatch();
+    }
+}
+
+Monster.prototype.subtractDamage = function () {
+    if (this.damage > 0) {
+        this.damage--;
+        this.updateDamage();
+    }
+}
+
+Monster.prototype.updateDamage = function () {
+    this._trayHPText.setText(this.damage)
+    this._trayHPText.alignIn(this._trayHPBox, Phaser.CENTER, 0, 3)
+    this._trayHPText.x = Math.floor(this._trayHPText.x)
+    this._trayHPText.y = Math.floor(this._trayHPText.y)
 }
