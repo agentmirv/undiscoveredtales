@@ -4,7 +4,7 @@ function DarkBackground(game) {
     
     this.width = game.stageViewRect.width;
     this.height = game.stageViewRect.height;
-    this.alpha = 0.9
+    this.alpha = 0.9;
     this.inputEnabled = true;
     this.kill();
 }
@@ -57,6 +57,16 @@ function HudButton(game, greenImageId, redImageId) {
 
 HudButton.prototype = Object.create(Phaser.Group.prototype);
 HudButton.prototype.constructor = HudButton;
+
+HudButton.prototype.playerPhase = function () {
+    this.greenbg.revive();
+    this.redbg.kill();
+}
+
+HudButton.prototype.enemyPhase = function () {
+    this.greenbg.kill();
+    this.redbg.revive();
+}
 
 //=========================================================
 function MonsterTray(game) {

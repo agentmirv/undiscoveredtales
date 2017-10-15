@@ -24,49 +24,53 @@ function Hud(game) {
     // Monster Detail
     this.monsterDetail = new MonsterDetail(game);
     this.monsterDetail.onAdd.add(function () {
-        console.log("onAdd");
         this.monsterSelected.addDamage();
         this.monsterDetail.setDamage(this.monsterSelected);
     }, this);
     this.monsterDetail.onSubtract.add(function () {
-        console.log("onSubtract");
         this.monsterSelected.subtractDamage();
         this.monsterDetail.setDamage(this.monsterSelected);
     }, this);
     this.monsterDetail.onAttack.add(function () {
         console.log("onAttack");
+        // TODO
     }, this);
     this.monsterDetail.onEvade.add(function () {
         console.log("onEvade");
+        // TODO
     }, this);
     this.addChild(this.monsterDetail);
 
     //=========================================================
     // End Phase Button
-    var endPhaseButton = new HudButton(game, "endPhase-image-player", "endPhase-image-enemy");
-    endPhaseButton.alignIn(game.stageViewRect, Phaser.BOTTOM_RIGHT, 0, 0);
-    endPhaseButton.onClick.add(function () {
+    this.endPhaseButton = new HudButton(game, "endPhase-image-player", "endPhase-image-enemy");
+    this.endPhaseButton.alignIn(game.stageViewRect, Phaser.BOTTOM_RIGHT, 0, 0);
+    this.endPhaseButton.onClick.add(function () {
         this.monsterTray.hide();
         this.darkBackground.hide();
         this.monsterDetail.hide();
         var phaseDialog = MakePhaseDialog(game, this.phase);
         phaseDialog.onConfirm.addOnce(function () {
-            this.playerPhaseEnd.dispatch();
+            if (this.phase == "player") {
+                this.playerPhaseEnd.dispatch();
+            } else {
+                this.horrorStepEnd.dispatch();
+            }
         }, this);
     }, this);
-    this.addChild(endPhaseButton);
+    this.addChild(this.endPhaseButton);
 
     //=========================================================
     // Inventory Button
-    var inventoryButton = new HudButton(game, "inventory-image-player", "inventory-image-enemy");
-    inventoryButton.alignIn(game.stageViewRect, Phaser.BOTTOM_LEFT, -192, 0);
-    this.addChild(inventoryButton);
+    this.inventoryButton = new HudButton(game, "inventory-image-player", "inventory-image-enemy");
+    this.inventoryButton.alignIn(game.stageViewRect, Phaser.BOTTOM_LEFT, -192, 0);
+    this.addChild(this.inventoryButton);
 
     //=========================================================
     // Monster Button
-    var monsterButton = new HudButton(game, "monster-image-player", "monster-image-enemy");
-    monsterButton.alignIn(game.stageViewRect, Phaser.BOTTOM_LEFT, -96, 0);
-    monsterButton.onClick.add(function () {
+    this.monsterButton = new HudButton(game, "monster-image-player", "monster-image-enemy");
+    this.monsterButton.alignIn(game.stageViewRect, Phaser.BOTTOM_LEFT, -96, 0);
+    this.monsterButton.onClick.add(function () {
         if (this.phase == "player" || this.step == "horror") {
             if (this.monsterTray.isOpen) {
                 this.monsterTray.hide();
@@ -78,16 +82,16 @@ function Hud(game) {
             }
         }
     }, this);
-    this.addChild(monsterButton);
+    this.addChild(this.monsterButton);
 
     //=========================================================
     // Menu Button
-    var menuButton = new HudButton(game, "menu-image-player", "menu-image-enemy");
-    menuButton.alignIn(game.stageViewRect, Phaser.BOTTOM_LEFT, 0, 0);
-    menuButton.onClick.add(function () {
+    this.menuButton = new HudButton(game, "menu-image-player", "menu-image-enemy");
+    this.menuButton.alignIn(game.stageViewRect, Phaser.BOTTOM_LEFT, 0, 0);
+    this.menuButton.onClick.add(function () {
         // TODO
     }, this);
-    this.addChild(menuButton);
+    this.addChild(this.menuButton);
 
     //=========================================================
     // Player Phase Steps
@@ -189,7 +193,12 @@ function Hud(game) {
         console.log("monsterStepBegin");
         this.step = "monster";
         if(this.monsterInstances.length > 0) {
+            var doneSignal = new Phaser.Signal();
+            // TODO
             this.monsterStep(doneSignal);
+            doneSignal.addOnce(function () {
+                this.monsterStepEnd.dispatch();
+            }, this);
         } else {
             this.monsterStepEnd.dispatch();
         }
@@ -205,9 +214,12 @@ function Hud(game) {
     this.horrorStepBegin.add(function () {
         console.log("horrorStepBegin");
         this.step = "horror";
-        // Create Dialog(s) and wire up
-        // If no monsters, then call this.horrorStepEnd.dispatch();
-        this.horrorStepEnd.dispatch();
+        // TODO
+        if(this.monsterInstances.length > 0) {
+            var horrorDialog = MakeHorrorDialog(game);
+        } else {
+            this.horrorStepEnd.dispatch();
+        }
     }, this);
     
     this.horrorStepEnd.add(function () {
@@ -248,7 +260,17 @@ Hud.prototype.togglePhase = function() {
     }, this);
 
     scene.onFull.addOnce(function () {
-        // switch the color of the main buttons
+        if (this.phase == "player") {
+            this.menuButton.playerPhase();
+            this.monsterButton.playerPhase();
+            this.inventoryButton.playerPhase();
+            this.endPhaseButton.playerPhase();
+        } else {
+            this.menuButton.enemyPhase();
+            this.monsterButton.enemyPhase();
+            this.inventoryButton.enemyPhase();
+            this.endPhaseButton.enemyPhase();
+        }
     }, this);
     
     scene.onComplete.addOnce(function () {
@@ -402,6 +424,7 @@ Hud.prototype.makeMonster = function (id) {
     // Wire up Monster Discard Signal
     monsterInstance.onDiscard.add(function () {
         console.log("onDiscard");
+        // TODO
         /*
         // hide monster attack dialog (if present)
         game.hudInstance.hideMonsterAttackDialog()
@@ -409,6 +432,7 @@ Hud.prototype.makeMonster = function (id) {
         game.hudInstance.hidePlayerAttackDialog()
         // hide player evade dialog (if present)
         game.hudInstance.hidePlayerEvadeDialog()
+        
         // create discard monster dialog
         MakeMonsterDiscardDialog(game)
         */
