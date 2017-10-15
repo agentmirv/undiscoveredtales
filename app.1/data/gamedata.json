@@ -1333,10 +1333,10 @@
     },
     {
       "id": "random-event-lobby-pictures",
+      "target": "mapTile",
+      "mapTile": "maptile-lobby",
       "dialogs": [
         {
-          "target": "mapTile",
-          "mapTile": "maptile-lobby",
           "text": "Now you realize what was bothering you about this room. This event affects each investigator in the Lobby.",
           "type": "resolve"
         },
@@ -1347,10 +1347,10 @@
     },
     {
       "id": "random-event-study-cold",
+      "target": "mapTile",
+      "mapTile": "maptile-study",
       "dialogs": [
         {
-          "target": "mapTile",
-          "mapTile": "maptile-study",
           "text": "The unnatural cold turns to a biting, freezing blast. This event affects each investigator in the Study.",
           "type": "resolve"
         },
