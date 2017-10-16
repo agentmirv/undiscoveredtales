@@ -16,13 +16,13 @@ DarkBackground.prototype.show = function () {
     if (!this.visible) {
         this.alpha = 0.9;
         this.revive();
-        var fadeTween = this.game.add.tween(this).from({ alpha: 0 }, 140, Phaser.Easing.Linear.None, true, 0, 0, false);
+        var fadeTween = this.game.add.tween(this).from({ alpha: 0 }, 125, Phaser.Easing.Linear.None, true, 0, 0, false);
     }
 }
 
 DarkBackground.prototype.hide = function () {
     if (this.visible) {
-        var fadeTween = this.game.add.tween(this).to({ alpha: 0 }, 140, Phaser.Easing.Linear.None, true, 0, 0, false);
+        var fadeTween = this.game.add.tween(this).to({ alpha: 0 }, 125, Phaser.Easing.Linear.None, true, 0, 0, false);
         fadeTween.onComplete.addOnce(function () {
             this.alpha = 0;
             this.kill();
@@ -241,14 +241,14 @@ MonsterDetail.prototype.constructor = MonsterDetail;
 MonsterDetail.prototype.show = function () {
     if (!this.open) {
         this.open = true;
-        var slideTween = this.game.add.tween(this).to({ x: this.xOpen }, 140, Phaser.Easing.Linear.None, true, 0, 0, false);
+        var slideTween = this.game.add.tween(this).to({ x: this.xOpen }, 125, Phaser.Easing.Linear.None, true, 0, 0, false);
     }
 }
 
 MonsterDetail.prototype.hide = function () {
     if (this.open) {
         this.open = false;
-        var slideTween = this.game.add.tween(this).to({ x: this.xClose }, 140, Phaser.Easing.Linear.None, true, 0, 0, false);
+        var slideTween = this.game.add.tween(this).to({ x: this.xClose }, 125, Phaser.Easing.Linear.None, true, 0, 0, false);
     }
 }
 
