@@ -46,17 +46,20 @@ function Hud(game) {
     this.endPhaseButton = new HudButton(game, "endPhase-image-player", "endPhase-image-enemy");
     this.endPhaseButton.alignIn(game.stageViewRect, Phaser.BOTTOM_RIGHT, 0, 0);
     this.endPhaseButton.onClick.add(function () {
-        this.monsterTray.hide();
+        var monsterTrayDoneSignal = new Phaser.Signal();
+        monsterTrayDoneSignal.addOnce(function () {
+            var phaseDialog = MakePhaseDialog(game, this.phase);
+            phaseDialog.onConfirm.addOnce(function () {
+                if (this.phase == "player") {
+                    this.playerPhaseEnd.dispatch();
+                } else {
+                    this.horrorStepEnd.dispatch();
+                }
+            }, this);
+        }, this);
+        this.monsterTray.hide(monsterTrayDoneSignal);
         this.darkBackground.hide();
         this.monsterDetail.hide();
-        var phaseDialog = MakePhaseDialog(game, this.phase);
-        phaseDialog.onConfirm.addOnce(function () {
-            if (this.phase == "player") {
-                this.playerPhaseEnd.dispatch();
-            } else {
-                this.horrorStepEnd.dispatch();
-            }
-        }, this);
     }, this);
     this.addChild(this.endPhaseButton);
 
@@ -70,14 +73,20 @@ function Hud(game) {
     // Monster Button
     this.monsterButton = new HudButton(game, "monster-image-player", "monster-image-enemy");
     this.monsterButton.alignIn(game.stageViewRect, Phaser.BOTTOM_LEFT, -96, 0);
+    var monsterButtonPressed = false;
     this.monsterButton.onClick.add(function () {
-        if (this.phase == "player" || this.step == "horror") {
+        if ((this.phase == "player" || this.step == "horror") && !monsterButtonPressed) {
+            monsterButtonPressed = true;
+            var monsterTrayDoneSignal = new Phaser.Signal();
+            monsterTrayDoneSignal.addOnce(function () {
+                monsterButtonPressed = false;
+            }, this);
             if (this.monsterTray.isOpen) {
-                this.monsterTray.hide();
+                this.monsterTray.hide(monsterTrayDoneSignal);
                 this.darkBackground.hide();
                 this.monsterDetail.hide();
             } else {
-                this.monsterTray.show();
+                this.monsterTray.show(monsterTrayDoneSignal);
                 this.darkBackground.show();
             }
         }
@@ -193,14 +202,17 @@ function Hud(game) {
         console.log("monsterStepBegin");
         this.step = "monster";
         if(this.monsterInstances.length > 0) {
-            this.monsterTray.show();
+            var monsterTrayDoneSignal = new Phaser.Signal();
+            monsterTrayDoneSignal.addOnce(function () {
+                var doneSignal = new Phaser.Signal();
+                doneSignal.addOnce(function () {
+                    this.monsterStepEnd.dispatch();
+                }, this);
+                this.monsterStep(doneSignal);
+            }, this);
+            this.monsterTray.show(monsterTrayDoneSignal);
             this.darkBackground.show();
             this.monsterDetail.show();
-            var doneSignal = new Phaser.Signal();
-            doneSignal.addOnce(function () {
-                this.monsterStepEnd.dispatch();
-            }, this);
-            this.monsterStep(doneSignal);
         } else {
             this.monsterStepEnd.dispatch();
         }
@@ -218,9 +230,12 @@ function Hud(game) {
         this.step = "horror";
         if(this.monsterInstances.length > 0) {
             // TODO: Fix the tweens functions so that they complete before moving on.
-            //this.monsterTray.show();
-            //this.darkBackground.show();
-            var horrorDialog = MakeHorrorDialog(game);
+            var monsterTrayDoneSignal = new Phaser.Signal();
+            monsterTrayDoneSignal.addOnce(function () {
+                var horrorDialog = MakeHorrorDialog(game);
+            }, this);
+            this.monsterTray.show(monsterTrayDoneSignal);
+            this.darkBackground.show();
         } else {
             this.horrorStepEnd.dispatch();
         }
@@ -487,10 +502,13 @@ Hud.prototype.monsterStep = function (doneSignal) {
         
     } else {
         this.monsterIndex = -1;
-        this.monsterTray.hide();
+        var monsterTrayDoneSignal = new Phaser.Signal();
+        monsterTrayDoneSignal.addOnce(function () {
+            doneSignal.dispatch();        
+        }, this);
+        this.monsterTray.hide(monsterTrayDoneSignal);
         this.darkBackground.hide();
         this.monsterDetail.hide();
-        doneSignal.dispatch();        
     }
 }
 
