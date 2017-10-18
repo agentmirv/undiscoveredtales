@@ -38,11 +38,11 @@ function Hud(game) {
         if (this.phase == "player") {
             // TODO
             console.log("onAttack");
+            MakePlayerAttackDialog(game);
         }
     }, this);
     this.monsterDetail.onEvade.add(function () {
         if (this.phase == "player") {
-            // TODO
             if (!this.monsterSelected.source.hasOwnProperty("evadeDeck") || this.monsterSelected.source.evadeDeck.length == 0)
             {
                 this.monsterSelected.source.evadeDeck = Helper.shuffle(this.monsterSelected.source.evades.slice(0));
