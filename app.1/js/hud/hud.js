@@ -18,6 +18,9 @@ function Hud(game) {
     //=========================================================
     // Monster Tray
     this.monsterTray = new MonsterTray(game);
+    this.monsterTray.onClose.add(function () {
+        this.monsterSelected = null;
+    }, this);
     this.addChild(this.monsterTray);
 
     //=========================================================
@@ -229,6 +232,7 @@ function Hud(game) {
         console.log("horrorStepBegin");
         this.step = "horror";
         if(this.monsterInstances.length > 0) {
+            // TODO: Fix the tweens functions so that they complete before moving on.
             var monsterTrayDoneSignal = new Phaser.Signal();
             monsterTrayDoneSignal.addOnce(function () {
                 var horrorDialog = MakeHorrorDialog(game);
@@ -447,7 +451,6 @@ Hud.prototype.makeMonster = function (id) {
             } 
         } else {
             // Horror Check Dialogs
-            var horroCheckConfirm = MakeHorrorCheckConfirmDialog(game);
         }
     }, this);
     
@@ -495,7 +498,6 @@ Hud.prototype.monsterStep = function (doneSignal) {
 
         // Display monster attack dialog
         var nextSignal = new Phaser.Signal();
-        // TODO: Why is this a new?
         var dialog = new MakeMonsterAttackDialog(this.game, attackData, nextSignal);
         nextSignal.addOnce(function () {
             this.monsterStep(doneSignal);

@@ -73,6 +73,8 @@ function MonsterTray(game) {
     Phaser.Group.call(this, game);
 
     this.isOpen = false;
+    this.onOpen = new Phaser.Signal();
+    this.onClose = new Phaser.Signal();
     
     // Monster Tray
     this.monsterTrayBgImage = game.make.tileSprite(0, 0, 96 * 8, 96, "hudButton")
@@ -95,6 +97,7 @@ MonsterTray.prototype.show = function (doneSignal) {
         this.isOpen = true
         var slideTween = this.game.add.tween(this).to({ y: this.yOpen }, 200, Phaser.Easing.Linear.None, true, 0, 0, false);
         slideTween.onComplete.add(function () {
+            this.onOpen.dispatch();
             doneSignal.dispatch();
         }, this);
     } else {
@@ -107,6 +110,7 @@ MonsterTray.prototype.hide = function (doneSignal) {
         this.isOpen = false
         var slideTween = this.game.add.tween(this).to({ y: this.yClose }, 200, Phaser.Easing.Linear.None, true, 0, 0, false);
         slideTween.onComplete.add(function () {
+            this.onClose.dispatch();
             doneSignal.dispatch();
         }, this);
     } else {
