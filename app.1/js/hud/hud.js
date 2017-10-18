@@ -451,6 +451,16 @@ Hud.prototype.makeMonster = function (id) {
             } 
         } else {
             // Horror Check Dialogs
+            var horrorCheckDialog = MakeHorrorCheckConfirmDialog(game);
+            horrorCheckDialog.onConfirm.addOnce(function () {
+                this.monsterSelected = monsterInstance;
+                if (!this.monsterSelected.source.hasOwnProperty("horrorDeck") || this.monsterSelected.source.horrorDeck.length == 0)
+                {
+                    this.monsterSelected.source.horrorDeck = Helper.shuffle(this.monsterSelected.source.horrors.slice(0))
+                }
+                var horrorData = this.monsterSelected.source.horrorDeck.pop();
+                MakeHorrorCheckDialog(this.game, horrorData.text);
+            }, this);
         }
     }, this);
     

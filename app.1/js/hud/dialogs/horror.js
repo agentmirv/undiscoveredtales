@@ -87,3 +87,36 @@ function HorrorCheckConfirmDialog(game) {
 
 HorrorCheckConfirmDialog.prototype = Object.create(BaseDialog.prototype);
 HorrorCheckConfirmDialog.prototype.constructor = HorrorCheckConfirmDialog;
+
+//=========================================================
+function MakeHorrorCheckDialog(game, text) {
+    var dialogInstance = new HorrorCheckDialog(game, text);
+
+    game.stage.addChild(dialogInstance);
+    dialogInstance.open();
+}
+
+//=========================================================
+function HorrorCheckDialog(game, text) { 
+    BaseDialog.call(this, game);
+
+    // Modal
+    var modalBackground = new DialogModalBackground(game);
+    this.addChild(modalBackground);
+
+    // Message
+    var dialogMessage = new DialogMessage(game, text, null);
+    dialogMessage.alignIn(game.stageViewRect, Phaser.CENTER, 0, -game.presentationOffsetY)
+    this.addChild(dialogMessage);
+
+     // Button for [Continue]
+    var dialogContinue = new DialogButtonThin(game, "Continue", 180);
+    dialogContinue.alignTo(dialogMessage, Phaser.BOTTOM_CENTER, 0, 10)
+    dialogContinue.buttonInput.events.onInputUp.add(function () {
+        this.close();
+    }, this);
+    this.addChild(dialogContinue);
+}
+
+HorrorCheckDialog.prototype = Object.create(BaseDialog.prototype);
+HorrorCheckDialog.prototype.constructor = HorrorCheckDialog;
