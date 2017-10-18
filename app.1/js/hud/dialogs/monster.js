@@ -57,6 +57,7 @@ MonsterAttackDialog.prototype.constructor = MonsterAttackDialog;
 
 //=========================================================
 function MakeMonsterDialog(game, dialogData, dialogGroup) {
+    // TODO: This is called from a reveal, like the Innsmouth Mob reveal.
     //var dialogInstance = new MonsterDialog(game, dialogData, dialogGroup);
 
     //game.stage.addChild(dialogInstance);

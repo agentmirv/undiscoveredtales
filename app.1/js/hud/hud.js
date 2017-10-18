@@ -35,12 +35,21 @@ function Hud(game) {
         this.monsterDetail.setDamage(this.monsterSelected);
     }, this);
     this.monsterDetail.onAttack.add(function () {
-        console.log("onAttack");
-        // TODO
+        if (this.phase == "player") {
+            // TODO
+            console.log("onAttack");
+        }
     }, this);
     this.monsterDetail.onEvade.add(function () {
-        console.log("onEvade");
-        // TODO
+        if (this.phase == "player") {
+            // TODO
+            if (!this.monsterSelected.source.hasOwnProperty("evadeDeck") || this.monsterSelected.source.evadeDeck.length == 0)
+            {
+                this.monsterSelected.source.evadeDeck = Helper.shuffle(this.monsterSelected.source.evades.slice(0));
+            }
+            var evadeData = this.monsterSelected.source.evadeDeck.pop();
+            var evadeDialog = MakeEvadeConfirmDialog(game, evadeData);
+        }
     }, this);
     this.addChild(this.monsterDetail);
 
@@ -456,7 +465,7 @@ Hud.prototype.makeMonster = function (id) {
                 this.monsterSelected = monsterInstance;
                 if (!this.monsterSelected.source.hasOwnProperty("horrorDeck") || this.monsterSelected.source.horrorDeck.length == 0)
                 {
-                    this.monsterSelected.source.horrorDeck = Helper.shuffle(this.monsterSelected.source.horrors.slice(0))
+                    this.monsterSelected.source.horrorDeck = Helper.shuffle(this.monsterSelected.source.horrors.slice(0));
                 }
                 var horrorData = this.monsterSelected.source.horrorDeck.pop();
                 MakeHorrorCheckDialog(this.game, horrorData.text);
@@ -508,7 +517,7 @@ Hud.prototype.monsterStep = function (doneSignal) {
 
         // Display monster attack dialog
         var nextSignal = new Phaser.Signal();
-        var dialog = new MakeMonsterAttackDialog(this.game, attackData, nextSignal);
+        var dialog = MakeMonsterAttackDialog(this.game, attackData, nextSignal);
         nextSignal.addOnce(function () {
             this.monsterStep(doneSignal);
         }, this);
