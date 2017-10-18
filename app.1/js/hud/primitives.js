@@ -14,17 +14,17 @@ DarkBackground.prototype.constructor = DarkBackground;
 
 DarkBackground.prototype.show = function () {
     if (!this.visible) {
-        this.alpha = 0.9;
         this.revive();
+        this.alpha = 0.9;
         var fadeTween = this.game.add.tween(this).from({ alpha: 0 }, 125, Phaser.Easing.Linear.None, true, 0, 0, false);
     }
 }
 
 DarkBackground.prototype.hide = function () {
     if (this.visible) {
-        var fadeTween = this.game.add.tween(this).to({ alpha: 0 }, 125, Phaser.Easing.Linear.None, true, 0, 0, false);
+        this.alpha = 0;
+        var fadeTween = this.game.add.tween(this).from({ alpha: 0.9 }, 125, Phaser.Easing.Linear.None, true, 0, 0, false);
         fadeTween.onComplete.addOnce(function () {
-            this.alpha = 0;
             this.kill();
         }, this);
     }
@@ -93,7 +93,7 @@ MonsterTray.prototype.constructor = MonsterTray;
 MonsterTray.prototype.show = function (doneSignal) {
     if (!this.isOpen) {
         this.isOpen = true
-        var slideTween = this.game.add.tween(this).to({ y: this.yOpen }, 150, Phaser.Easing.Linear.None, true, 0, 0, false);
+        var slideTween = this.game.add.tween(this).to({ y: this.yOpen }, 200, Phaser.Easing.Linear.None, true, 0, 0, false);
         slideTween.onComplete.add(function () {
             doneSignal.dispatch();
         }, this);
@@ -105,7 +105,7 @@ MonsterTray.prototype.show = function (doneSignal) {
 MonsterTray.prototype.hide = function (doneSignal) {
     if (this.isOpen) {
         this.isOpen = false
-        var slideTween = this.game.add.tween(this).to({ y: this.yClose }, 150, Phaser.Easing.Linear.None, true, 0, 0, false);
+        var slideTween = this.game.add.tween(this).to({ y: this.yClose }, 200, Phaser.Easing.Linear.None, true, 0, 0, false);
         slideTween.onComplete.add(function () {
             doneSignal.dispatch();
         }, this);
