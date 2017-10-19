@@ -49,12 +49,12 @@ function EvadeDialog(game, text) {
     var dialogRect = new Phaser.Rectangle(96 * 3, 16, game.stageViewRect.width - 96 * 3, game.stageViewRect.height);
 
     // Text
-    var moveTextDialog = new DialogMessageMonster(game, text, 600);
-    moveTextDialog.alignIn(dialogRect, Phaser.TOP_CENTER, 0, 0);
-    this.addChild(moveTextDialog);
+    var textDialog = new DialogMessageMonster(game, text, 600);
+    textDialog.alignIn(dialogRect, Phaser.TOP_CENTER, 0, 0);
+    this.addChild(textDialog);
 
     var continueButton = new DialogButtonMedium(game, "Continue", 520);
-    continueButton.alignTo(moveTextDialog, Phaser.BOTTOM_CENTER, 0, 28)
+    continueButton.alignTo(textDialog, Phaser.BOTTOM_CENTER, 0, 28)
     continueButton.buttonInput.events.onInputUp.add(function () {
         this.close();
     }, this);

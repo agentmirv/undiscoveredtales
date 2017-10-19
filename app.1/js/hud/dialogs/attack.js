@@ -38,7 +38,18 @@ function PlayerAttackDialog(game) {
         attackButton.buttonInput.events.onInputUp.addOnce(function (button, pointer) {
             this.onClose.addOnce(function () {
                 // TODO
-                console.log("Weapon: ", button.weaponType);
+                if (button.weaponType != null) {
+                    var deckName = button.weaponType + "-deck"
+                    if (!this.game.hud.attacks.hasOwnProperty(deckName) || this.game.hud.attacks[deckName].length == 0)
+                    {
+                        var attacks = game.gamedata.attacks.filter(function (item) { return item.type == button.weaponType });
+                        this.game.hud.attacks[deckName] = Helper.shuffle(attacks.slice(0));
+                    }
+                    var attackData = this.game.hud.attacks[deckName].pop();
+                    var dialogInstance = new AttackDialog(game, attackData.text);
+                    game.stage.addChild(dialogInstance);
+                    dialogInstance.open();
+                }
             }, this);
             this.close();
         }, this);
@@ -48,3 +59,25 @@ function PlayerAttackDialog(game) {
 
 PlayerAttackDialog.prototype = Object.create(BaseDialog.prototype);
 PlayerAttackDialog.prototype.constructor = PlayerAttackDialog;
+
+//=========================================================
+function AttackDialog(game, text) { 
+    BaseDialog.call(this, game);
+
+    var dialogRect = new Phaser.Rectangle(96 * 3, 16, game.stageViewRect.width - 96 * 3, game.stageViewRect.height);
+
+    // Text
+    var textDialog = new DialogMessageMonster(game, text, 600);
+    textDialog.alignIn(dialogRect, Phaser.TOP_CENTER, 0, 0);
+    this.addChild(textDialog);
+
+    var continueButton = new DialogButtonMedium(game, "Continue", 520);
+    continueButton.alignTo(textDialog, Phaser.BOTTOM_CENTER, 0, 28)
+    continueButton.buttonInput.events.onInputUp.add(function () {
+        this.close();
+    }, this);
+    this.addChild(continueButton);
+}
+
+AttackDialog.prototype = Object.create(BaseDialog.prototype);
+AttackDialog.prototype.constructor = AttackDialog;

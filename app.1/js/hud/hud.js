@@ -9,6 +9,7 @@ function Hud(game) {
     this.monsterInstances = [];
     this.monsterIndex = -1;
     this.monsterSelected = null;
+    this.attacks = {};
 
     //=========================================================
     // Dark Background
