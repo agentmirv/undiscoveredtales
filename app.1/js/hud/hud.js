@@ -14,7 +14,8 @@ function Hud(game) {
     this.discardDialogLayer = game.make.group();
     this.evadeActive = false;
     this.attackActive = false;
-
+    this.discardActive = false;
+    
     //=========================================================
     // Dark Background
     this.darkBackground = new DarkBackground(game);
@@ -32,17 +33,20 @@ function Hud(game) {
     // Monster Detail
     this.monsterDetail = new MonsterDetail(game);
     this.monsterDetail.onAdd.add(function () {
-        this.monsterSelected.addDamage();
-        this.monsterDetail.setDamage(this.monsterSelected);
+        if (!this.discardActive) {
+            this.monsterSelected.addDamage();
+            this.monsterDetail.setDamage(this.monsterSelected);
+        }
     }, this);
     this.monsterDetail.onSubtract.add(function () {
-        this.monsterSelected.subtractDamage();
-        this.monsterDetail.setDamage(this.monsterSelected);
+        if (!this.discardActive) {
+            this.monsterSelected.subtractDamage();
+            this.monsterDetail.setDamage(this.monsterSelected);
+        }
     }, this);
     this.monsterDetail.onAttack.add(function () {
         if (this.phase == "player" && !this.attackActive) {
             this.attackActive = true;
-            // TODO: Discard Dialog hides this dialog (pass phaser group in?)
             var doneSignal = new Phaser.Signal();
             doneSignal.addOnce(function () {
                 this.attackActive =  false;
@@ -58,7 +62,6 @@ function Hud(game) {
                 this.monsterSelected.source.evadeDeck = Helper.shuffle(this.monsterSelected.source.evades.slice(0));
             }
             var evadeData = this.monsterSelected.source.evadeDeck.pop();
-            // TODO: Discard Dialog hides this dialog (pass phaser group in?)
             var doneSignal = new Phaser.Signal();
             doneSignal.addOnce(function () {
                 this.evadeActive =  false;
@@ -494,20 +497,22 @@ Hud.prototype.makeMonster = function (id) {
     
     // Wire up Monster Discard Signal
     monsterInstance.onDiscard.add(function () {
-        console.log("onDiscard");
-        // TODO
-        /*
-        // hide monster attack dialog (if present)
-        game.hudInstance.hideMonsterAttackDialog()
-        // hide player attack dialog (if present)
-        game.hudInstance.hidePlayerAttackDialog()
-        // hide player evade dialog (if present)
-        game.hudInstance.hidePlayerEvadeDialog()
-        
-        // create discard monster dialog
-        MakeMonsterDiscardDialog(game)
-        */
+        this.discardActive = true;
         this.monsterDialogLayer.visible = false;
+        
+        var dialogInstance = MakeDiscardDialog(game, this.monsterSelected, this.discardDialogLayer);
+        dialogInstance.onConfirm.addOnce(function () {
+            this.discardMonster();
+            this.monsterDetail.hide();
+            this.discardActive = false;
+            this.monsterDialogLayer.visible = true;
+        }, this);
+        dialogInstance.onCancel.addOnce(function () {
+            this.monsterSelected.subtractDamage();
+            this.monsterDetail.setDamage(this.monsterSelected);
+            this.discardActive = false;
+            this.monsterDialogLayer.visible = true;
+        }, this);
     }, this);
     
 }
@@ -535,7 +540,6 @@ Hud.prototype.monsterStep = function (doneSignal) {
         var attackData = this.monsterSelected.source.attackDeck.pop();
 
         // Display monster attack dialog
-        // TODO: Discard Dialog hides this dialog (pass phaser group in?)
         var nextSignal = new Phaser.Signal();
         var dialog = MakeMonsterAttackDialog(this.game, attackData, nextSignal, this.monsterDialogLayer);
         nextSignal.addOnce(function () {

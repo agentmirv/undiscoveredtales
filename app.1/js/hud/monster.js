@@ -65,3 +65,8 @@ Monster.prototype.updateDamage = function () {
     this._trayHPText.x = Math.floor(this._trayHPText.x)
     this._trayHPText.y = Math.floor(this._trayHPText.y)
 }
+
+Monster.prototype.discard = function () {
+    this.traySprite.destroy(true)
+    this.detailSprite.destroy(true)
+}

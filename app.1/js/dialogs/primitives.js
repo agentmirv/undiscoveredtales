@@ -221,6 +221,12 @@ BaseDialog.prototype.close = function () {
     }, this);
 }
 
+BaseDialog.prototype.closeImmediately = function () {
+    this.onClose.dispatch();
+    this.game.player.cutSceneCamera = false;
+    this.destroy(true);
+}
+
 BaseDialog.prototype.processActions = function (buttonData) {
     return function () { 
         this.onClose.addOnce(function () {
