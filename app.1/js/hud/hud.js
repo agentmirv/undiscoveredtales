@@ -37,13 +37,15 @@ function Hud(game) {
     }, this);
     this.monsterDetail.onAttack.add(function () {
         if (this.phase == "player") {
-            // TODO
-            console.log("onAttack");
-            MakePlayerAttackDialog(game);
+            // TODO: only one attack at a time, pass a doneSignal to reset a flag
+            // TODO: Discard Dialog hides this dialog
+            var attackDialog = MakePlayerAttackDialog(game);
         }
     }, this);
     this.monsterDetail.onEvade.add(function () {
         if (this.phase == "player") {
+            // TODO: only one evade at a time, pass a doneSignal to reset a flag
+            // TODO: Discard Dialog hides this dialog
             if (!this.monsterSelected.source.hasOwnProperty("evadeDeck") || this.monsterSelected.source.evadeDeck.length == 0)
             {
                 this.monsterSelected.source.evadeDeck = Helper.shuffle(this.monsterSelected.source.evades.slice(0));
@@ -517,6 +519,7 @@ Hud.prototype.monsterStep = function (doneSignal) {
         var attackData = this.monsterSelected.source.attackDeck.pop();
 
         // Display monster attack dialog
+        // TODO: Discard Dialog hides this dialog
         var nextSignal = new Phaser.Signal();
         var dialog = MakeMonsterAttackDialog(this.game, attackData, nextSignal);
         nextSignal.addOnce(function () {
