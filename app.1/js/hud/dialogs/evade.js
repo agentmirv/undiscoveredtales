@@ -1,15 +1,15 @@
 //=========================================================
-function MakeEvadeConfirmDialog(game, evadeData) {
-    var dialogInstance = new EvadeConfirmDialog(game, evadeData);
+function MakeEvadeConfirmDialog(game, evadeData, doneSignal, dialogLayer) {
+    var dialogInstance = new EvadeConfirmDialog(game, evadeData, doneSignal, dialogLayer);
 
-    game.stage.addChild(dialogInstance);
+    dialogLayer.addChild(dialogInstance);
     dialogInstance.open();
     
     return dialogInstance;
 }
 
 //=========================================================
-function EvadeConfirmDialog(game, evadeData) {
+function EvadeConfirmDialog(game, evadeData, doneSignal, dialogLayer) {
     BaseDialog.call(this, game);
 
     var dialogRect = new Phaser.Rectangle(96 * 3, 16, game.stageViewRect.width - 96 * 3, game.stageViewRect.height);
@@ -24,8 +24,11 @@ function EvadeConfirmDialog(game, evadeData) {
     confirmButton.buttonInput.events.onInputUp.add(function () {
         this.onClose.addOnce(function () {
             var dialogInstance = new EvadeDialog(game, evadeData.text);
-            game.stage.addChild(dialogInstance);
+            dialogLayer.addChild(dialogInstance);
             dialogInstance.open();
+            dialogInstance.onClose.addOnce(function () {
+                doneSignal.dispatch();
+            }, this);
         }, this);
         this.close();
     }, this);
@@ -34,6 +37,9 @@ function EvadeConfirmDialog(game, evadeData) {
     var cancelButton = new DialogButtonMedium(game, "Cancel", 520);
     cancelButton.alignTo(confirmButton, Phaser.BOTTOM_CENTER, 0, 28)
     cancelButton.buttonInput.events.onInputUp.add(function () {
+        this.onClose.addOnce(function () {
+            doneSignal.dispatch();
+        }, this);
         this.close();
     }, this);
     this.addChild(cancelButton);

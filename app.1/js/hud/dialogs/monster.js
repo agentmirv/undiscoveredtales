@@ -1,15 +1,16 @@
 //=========================================================
-function MakeMonsterAttackDialog(game, attackData, nextSignal) {
+function MakeMonsterAttackDialog(game, attackData, nextSignal, dialogLayer) {
     var dialogInstance = new MonsterAttackDialog(game, attackData, nextSignal);
 
-    game.stage.addChild(dialogInstance);
+    //game.stage.addChild(dialogInstance);
+    dialogLayer.addChild(dialogInstance);
     dialogInstance.open();
     
     return dialogInstance;
 }
 
 //=========================================================
-function MonsterAttackDialog(game, attackData, nextSignal) {
+function MonsterAttackDialog(game, attackData, nextSignal, dialogLayer) {
     BaseDialog.call(this, game);
 
     var dialogRect = new Phaser.Rectangle(96 * 3, 16, game.stageViewRect.width - 96 * 3, game.stageViewRect.height);
@@ -25,7 +26,8 @@ function MonsterAttackDialog(game, attackData, nextSignal) {
         this.onClose.addOnce(function () {
             if (attackData.attack.hasOwnProperty("text")) {
                 var dialogInstance = new MonsterDialog(game, attackData.attack.text, nextSignal);
-                game.stage.addChild(dialogInstance);
+                //game.stage.addChild(dialogInstance);
+                dialogLayer.addChild(dialogInstance);
                 dialogInstance.open();
             } else {
                 nextSignal.dispatch();
@@ -41,7 +43,8 @@ function MonsterAttackDialog(game, attackData, nextSignal) {
         this.onClose.addOnce(function () {
             if (attackData.nonAttack.hasOwnProperty("text")) {
                 var dialogInstance = new MonsterDialog(game, attackData.nonAttack.text, nextSignal);
-                game.stage.addChild(dialogInstance);
+                //game.stage.addChild(dialogInstance);
+                dialogLayer.addChild(dialogInstance);
                 dialogInstance.open();
             } else {
                 nextSignal.dispatch();

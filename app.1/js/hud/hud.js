@@ -10,6 +10,10 @@ function Hud(game) {
     this.monsterIndex = -1;
     this.monsterSelected = null;
     this.attacks = {};
+    this.monsterDialogLayer = game.make.group();
+    this.discardDialogLayer = game.make.group();
+    this.evadeActive = false;
+    this.attackActive = false;
 
     //=========================================================
     // Dark Background
@@ -36,22 +40,30 @@ function Hud(game) {
         this.monsterDetail.setDamage(this.monsterSelected);
     }, this);
     this.monsterDetail.onAttack.add(function () {
-        if (this.phase == "player") {
-            // TODO: only one attack at a time, pass a doneSignal to reset a flag
-            // TODO: Discard Dialog hides this dialog
-            var attackDialog = MakePlayerAttackDialog(game);
+        if (this.phase == "player" && !this.attackActive) {
+            this.attackActive = true;
+            // TODO: Discard Dialog hides this dialog (pass phaser group in?)
+            var doneSignal = new Phaser.Signal();
+            doneSignal.addOnce(function () {
+                this.attackActive =  false;
+            }, this);
+            MakePlayerAttackDialog(game, doneSignal, this.monsterDialogLayer);
         }
     }, this);
     this.monsterDetail.onEvade.add(function () {
-        if (this.phase == "player") {
-            // TODO: only one evade at a time, pass a doneSignal to reset a flag
-            // TODO: Discard Dialog hides this dialog
+        if (this.phase == "player" && !this.evadeActive) {
+            this.evadeActive = true;
             if (!this.monsterSelected.source.hasOwnProperty("evadeDeck") || this.monsterSelected.source.evadeDeck.length == 0)
             {
                 this.monsterSelected.source.evadeDeck = Helper.shuffle(this.monsterSelected.source.evades.slice(0));
             }
             var evadeData = this.monsterSelected.source.evadeDeck.pop();
-            var evadeDialog = MakeEvadeConfirmDialog(game, evadeData);
+            // TODO: Discard Dialog hides this dialog (pass phaser group in?)
+            var doneSignal = new Phaser.Signal();
+            doneSignal.addOnce(function () {
+                this.evadeActive =  false;
+            }, this);
+            MakeEvadeConfirmDialog(game, evadeData, doneSignal, this.monsterDialogLayer);
         }
     }, this);
     this.addChild(this.monsterDetail);
@@ -82,6 +94,9 @@ function Hud(game) {
     // Inventory Button
     this.inventoryButton = new HudButton(game, "inventory-image-player", "inventory-image-enemy");
     this.inventoryButton.alignIn(game.stageViewRect, Phaser.BOTTOM_LEFT, -192, 0);
+    this.inventoryButton.onClick.add(function () {
+        // TODO
+    }, this);
     this.addChild(this.inventoryButton);
 
     //=========================================================
@@ -118,6 +133,11 @@ function Hud(game) {
     this.addChild(this.menuButton);
 
     //=========================================================
+    // Dialog Layers
+    this.addChild(this.monsterDialogLayer);
+    this.addChild(this.discardDialogLayer);
+
+    //=========================================================
     // Player Phase Steps
     this.playerPhaseBegin = new Phaser.Signal();
     this.playerPhaseEnd = new Phaser.Signal();
@@ -146,7 +166,6 @@ function Hud(game) {
 
     this.playerPhaseEnd.add(function () {
         console.log("playerPhaseEnd");
-        // Create Scene and wire up
         var scene = this.togglePhase();
         scene.onComplete.addOnce(function () {
             this.enemyPhaseBegin.dispatch();
@@ -244,7 +263,6 @@ function Hud(game) {
         console.log("horrorStepBegin");
         this.step = "horror";
         if(this.monsterInstances.length > 0) {
-            // TODO: Fix the tweens functions so that they complete before moving on.
             var monsterTrayDoneSignal = new Phaser.Signal();
             monsterTrayDoneSignal.addOnce(function () {
                 var horrorDialog = MakeHorrorDialog(game);
@@ -265,7 +283,6 @@ function Hud(game) {
     // Enemy Phase End
     this.enemyPhaseEnd.add(function() {
         console.log("enemyPhaseEnd");
-        // Create Scene and wire up
         var scene = this.togglePhase();
         scene.onComplete.addOnce(function () {
             this.playerPhaseBegin.dispatch();
@@ -329,7 +346,6 @@ Hud.prototype.startPlayerPhase = function () {
 // Fire Step
 Hud.prototype.fireStep = function (doneSignal) {
     if (this.isFireActive) {
-        // Create Dialog and Wire up
         var fireDialog = MakeFireDialog(game);
         
         fireDialog.onExtinguished.addOnce(function () {
@@ -491,6 +507,7 @@ Hud.prototype.makeMonster = function (id) {
         // create discard monster dialog
         MakeMonsterDiscardDialog(game)
         */
+        this.monsterDialogLayer.visible = false;
     }, this);
     
 }
@@ -515,13 +532,12 @@ Hud.prototype.monsterStep = function (doneSignal) {
         {
             this.monsterSelected.source.attackDeck = Helper.shuffle(this.monsterSelected.source.attacks.slice(0))
         }
-        
         var attackData = this.monsterSelected.source.attackDeck.pop();
 
         // Display monster attack dialog
-        // TODO: Discard Dialog hides this dialog
+        // TODO: Discard Dialog hides this dialog (pass phaser group in?)
         var nextSignal = new Phaser.Signal();
-        var dialog = MakeMonsterAttackDialog(this.game, attackData, nextSignal);
+        var dialog = MakeMonsterAttackDialog(this.game, attackData, nextSignal, this.monsterDialogLayer);
         nextSignal.addOnce(function () {
             this.monsterStep(doneSignal);
         }, this);
@@ -542,13 +558,13 @@ Hud.prototype.monsterStep = function (doneSignal) {
 // Discard Monster
 Hud.prototype.discardMonster = function () {
     // Remove from List
-    this.monsterInstances = this.monsterInstances.filter(function (value) { return value != this.monsterSelected })
+    this.monsterInstances = this.monsterInstances.filter(function (value) { return value != this.monsterSelected });
 
     // Reposition remaining monsters in tray
     for (var i = 0; i < this.monsterInstances.length; i++) {
         this.monsterTray.putMonster(this.monsterInstances[i], i);
     }
 
-    this.monsterSelected.discard()
-    this.monsterSelected = null
+    this.monsterSelected.discard();
+    this.monsterSelected = null;
 }

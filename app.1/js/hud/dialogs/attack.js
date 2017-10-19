@@ -1,15 +1,15 @@
 //=========================================================
-function MakePlayerAttackDialog(game) {
-    var dialogInstance = new PlayerAttackDialog(game)
+function MakePlayerAttackDialog(game, doneSignal, dialogLayer) {
+    var dialogInstance = new PlayerAttackDialog(game, doneSignal, dialogLayer)
 
-    game.stage.addChild(dialogInstance);
+    dialogLayer.addChild(dialogInstance);
     dialogInstance.open();
     
     return dialogInstance;
 }
 
 //=========================================================
-function PlayerAttackDialog(game) {
+function PlayerAttackDialog(game, doneSignal, dialogLayer) {
     BaseDialog.call(this, game);
     var dialogRect = new Phaser.Rectangle(96 * 3, 16, game.stageViewRect.width - 96 * 3, game.stageViewRect.height)
 
@@ -37,7 +37,7 @@ function PlayerAttackDialog(game) {
         attackButton.alignTo(textDialog, Phaser.BOTTOM_CENTER, 0, 28 + (65 * i));
         attackButton.buttonInput.events.onInputUp.addOnce(function (button, pointer) {
             this.onClose.addOnce(function () {
-                // TODO
+                // TODO: Weapon -> Monster Type matrix?
                 if (button.weaponType != null) {
                     var deckName = button.weaponType + "-deck"
                     if (!this.game.hud.attacks.hasOwnProperty(deckName) || this.game.hud.attacks[deckName].length == 0)
@@ -47,8 +47,13 @@ function PlayerAttackDialog(game) {
                     }
                     var attackData = this.game.hud.attacks[deckName].pop();
                     var dialogInstance = new AttackDialog(game, attackData.text);
-                    game.stage.addChild(dialogInstance);
+                    dialogLayer.addChild(dialogInstance);
                     dialogInstance.open();
+                    dialogInstance.onClose.addOnce(function () {
+                        doneSignal.dispatch();
+                    }, this);
+                } else {
+                    doneSignal.dispatch();
                 }
             }, this);
             this.close();
