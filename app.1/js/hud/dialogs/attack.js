@@ -20,23 +20,25 @@ function PlayerAttackDialog(game) {
     textDialog.alignIn(dialogRect, Phaser.TOP_CENTER, 0, 0);
     this.addChild(textDialog);
 
-    var weaponButtonData = [
-        { text: "@ Attack with a Heavy Weapon", weapon: "heavy-weapon" },
-        { text: "@ Attack with a Bladed Weapon", weapon: "bladed-weapon" },
-        { text: "@ Attack with a Firearm", weapon: "firearm" },
-        { text: "@ Attack with a Spell", weapon: "spell" },
-        { text: "@ Attack with a Unarmed", weapon: "unarmed" },
-        { text: "Cancel", weapon: null }
+    var weaponList = [
+        { text: "@ Attack with a Heavy Weapon", type: "heavy-weapon" },
+        { text: "@ Attack with a Bladed Weapon", type: "bladed-weapon" },
+        { text: "@ Attack with a Firearm", type: "firearm" },
+        { text: "@ Attack with a Spell", type: "spell" },
+        { text: "@ Attack with a Unarmed", type: "unarmed" },
+        { text: "Cancel", type: null }
     ]
 
-    for (var i = 0; i < weaponButtonData.length; i++) {
-        weaponData = weaponButtonData[i];
-
-        var attackButton = new DialogButtonMedium(game, weaponData.text, 520);
+    for (var i = 0; i < weaponList.length; i++) {
+        var weaponText = weaponList[i].text;
+        var weaponType = weaponList[i].type;
+        var attackButton = new DialogButtonMedium(game, weaponText, 520);
+        attackButton.buttonInput.weaponType = weaponType;
         attackButton.alignTo(textDialog, Phaser.BOTTOM_CENTER, 0, 28 + (65 * i));
-        attackButton.buttonInput.events.onInputUp.add(function () {
+        attackButton.buttonInput.events.onInputUp.addOnce(function (button, pointer) {
             this.onClose.addOnce(function () {
                 // TODO
+                console.log("Weapon: ", button.weaponType);
             }, this);
             this.close();
         }, this);

@@ -80,23 +80,14 @@ var GameState = {
         var hud = new Hud(game);
         game.hud = hud;
         game.stage.addChild(hud);
-        
-        //game.hud.phase = "player";
-        //hud.monsterTray.show();
-        //hud.monsterDetail.show();
-        
+
         //=================================================
         // Game Start
         //=================================================
-        StartRevealGroup(game, game.gamedata.playerStart.firstReveal)
-        
-        //hud.makeMonster("deep-one")
-        //var test = new Phaser.Signal();
-        //hud.monsterStep(test);
-        
-        //var tokenInstance = MakeToken(game, "token-box-lobby");
-        //game.world.addChild(tokenInstance)
-        
+        //StartRevealGroup(game, game.gamedata.playerStart.firstReveal)
+
+        game.hud.phase = "player";
+        hud.makeMonster("deep-one")
     },
 
     update: function () {
