@@ -74,9 +74,6 @@ var GameState = {
 
         //=================================================
         // Add HUD
-        //var hudInstance = new HudGroup(game)
-        //game.stage.addChild(hudInstance)
-        //game.hudInstance = hudInstance;
         var hud = new Hud(game);
         game.hud = hud;
         game.stage.addChild(hud);

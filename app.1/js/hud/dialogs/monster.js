@@ -1,8 +1,7 @@
 //=========================================================
 function MakeMonsterAttackDialog(game, attackData, nextSignal, dialogLayer) {
-    var dialogInstance = new MonsterAttackDialog(game, attackData, nextSignal);
+    var dialogInstance = new MonsterAttackDialog(game, attackData, nextSignal, dialogLayer);
 
-    //game.stage.addChild(dialogInstance);
     dialogLayer.addChild(dialogInstance);
     dialogInstance.open();
     
@@ -26,7 +25,6 @@ function MonsterAttackDialog(game, attackData, nextSignal, dialogLayer) {
         this.onClose.addOnce(function () {
             if (attackData.attack.hasOwnProperty("text")) {
                 var dialogInstance = new MonsterDialog(game, attackData.attack.text, nextSignal);
-                //game.stage.addChild(dialogInstance);
                 dialogLayer.addChild(dialogInstance);
                 dialogInstance.open();
             } else {
@@ -43,7 +41,6 @@ function MonsterAttackDialog(game, attackData, nextSignal, dialogLayer) {
         this.onClose.addOnce(function () {
             if (attackData.nonAttack.hasOwnProperty("text")) {
                 var dialogInstance = new MonsterDialog(game, attackData.nonAttack.text, nextSignal);
-                //game.stage.addChild(dialogInstance);
                 dialogLayer.addChild(dialogInstance);
                 dialogInstance.open();
             } else {

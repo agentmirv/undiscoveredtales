@@ -536,6 +536,7 @@ Hud.prototype.monsterStep = function (doneSignal) {
         // Get Next Monster
         this.monsterSelected = this.monsterInstances[this.monsterIndex];
         this.monsterSelected.showDetail();
+        this.monsterDetail.setDetailText(this.monsterSelected);
         if (this.monsterIndex > 0) {
             this.monsterInstances[this.monsterIndex - 1].hideDetail();
         }
