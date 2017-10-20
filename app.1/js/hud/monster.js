@@ -6,6 +6,7 @@ function Monster(game, id) {
     // Monster Instance
     this.id = data.id
     this.source = game.gamedata.monsterSource.find(function (item) { return item.id == data.sourceId });
+    this.trayIndex = -1;
 
     // Monster Source
     this.name = data.name || this.source.name;
@@ -16,12 +17,13 @@ function Monster(game, id) {
 
     // Set Detail Sprite (Place in Monster Detail)
     this.detailSprite = game.make.sprite(0, 0, ImageHelper.getImage(game, this.imageKey));
+    this.detailSprite.kill();
 
     // Set Tray Sprite (Place in Monster Tray)
     this.traySprite = game.make.sprite(0, 0, ImageHelper.getImage(game, this.imageKey));
     this.traySprite.inputEnabled = true;
     this.traySprite.events.onInputUp.add(function () {
-        this.onSelected.dispatch();
+        this.onSelected.dispatch(this);
      }, this);
 
     // Set Tray Sprite Hit Points
@@ -37,11 +39,11 @@ function Monster(game, id) {
 }
 
 Monster.prototype.showDetail = function () {
-    this.detailSprite.revive()
+    this.detailSprite.revive();
 }
 
 Monster.prototype.hideDetail = function () {
-    this.detailSprite.kill()
+    this.detailSprite.kill();
 }
 
 Monster.prototype.addDamage = function () {
@@ -60,13 +62,13 @@ Monster.prototype.subtractDamage = function () {
 }
 
 Monster.prototype.updateDamage = function () {
-    this._trayHPText.setText(this.damage)
-    this._trayHPText.alignIn(this._trayHPBox, Phaser.CENTER, 0, 3)
-    this._trayHPText.x = Math.floor(this._trayHPText.x)
-    this._trayHPText.y = Math.floor(this._trayHPText.y)
+    this._trayHPText.setText(this.damage);
+    this._trayHPText.alignIn(this._trayHPBox, Phaser.CENTER, 0, 3);
+    this._trayHPText.x = Math.floor(this._trayHPText.x);
+    this._trayHPText.y = Math.floor(this._trayHPText.y);
 }
 
 Monster.prototype.discard = function () {
-    this.traySprite.destroy(true)
-    this.detailSprite.destroy(true)
+    this.traySprite.destroy(true);
+    this.detailSprite.destroy(true);
 }

@@ -256,11 +256,13 @@ MonsterDetail.prototype.hide = function () {
     }
 }
 
-MonsterDetail.prototype.setDetail = function (monsterInstance) {
+MonsterDetail.prototype.setDetailImage = function (monsterInstance) {
     // Sprite
     monsterInstance.detailSprite.alignIn(this, Phaser.CENTER, 96 * 4, -72);
     this.addChild(monsterInstance.detailSprite);
-    
+}
+
+MonsterDetail.prototype.setDetailText = function (monsterInstance) {
     // Name
     this.nameText.setText(monsterInstance.name);
     this.nameText.alignIn(this.nameBox, Phaser.CENTER, 0, 3);

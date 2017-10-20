@@ -464,27 +464,36 @@ Hud.prototype.makeMonster = function (id) {
     // Set Tray Sprite (Place in Monster Tray)
     this.monsterTray.putMonster(monsterInstance, this.monsterInstances.length);
     // Set Detail Sprite (Place in Monster Detail)
-    this.monsterDetail.setDetail(monsterInstance);
+    this.monsterDetail.setDetailImage(monsterInstance);
+    this.monsterDetail.setDetailText(monsterInstance);
     // Add Monster to instance list
     this.monsterInstances.push(monsterInstance);
     
     // Wire up Monster Selection Signal
-    monsterInstance.onSelected.add(function () {
+    monsterInstance.onSelected.add(function (monster) {
+        console.log(monster);
         if (this.phase == "player") {
             if (this.monsterSelected == null) {
-                this.monsterSelected = monsterInstance;
+                this.monsterSelected = monster;
                 this.monsterSelected.showDetail();
+                this.monsterDetail.setDetailText(monster);
                 this.monsterDetail.show();
-            } else if (this.monsterSelected == monsterInstance) {
+            } else if (this.monsterSelected == monster) {
                 this.monsterSelected.hideDetail();
                 this.monsterSelected = null;
                 this.monsterDetail.hide();
-            } 
+            } else {
+                this.monsterSelected.hideDetail();
+                this.monsterSelected = monster;
+                this.monsterSelected.showDetail();
+                this.monsterSelected.showDetail();
+                this.monsterDetail.setDetailText(monster);
+            }
         } else {
             // Horror Check Dialogs
             var horrorCheckDialog = MakeHorrorCheckConfirmDialog(game);
             horrorCheckDialog.onConfirm.addOnce(function () {
-                this.monsterSelected = monsterInstance;
+                this.monsterSelected = monster;
                 if (!this.monsterSelected.source.hasOwnProperty("horrorDeck") || this.monsterSelected.source.horrorDeck.length == 0)
                 {
                     this.monsterSelected.source.horrorDeck = Helper.shuffle(this.monsterSelected.source.horrors.slice(0));

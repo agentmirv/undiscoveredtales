@@ -87,7 +87,8 @@ var GameState = {
         //StartRevealGroup(game, game.gamedata.playerStart.firstReveal)
 
         game.hud.phase = "player";
-        hud.makeMonster("deep-one")
+        hud.makeMonster("deep-one");
+        hud.makeMonster("deep-one-2");
     },
 
     update: function () {
