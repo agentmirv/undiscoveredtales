@@ -81,11 +81,11 @@ var GameState = {
         //=================================================
         // Game Start
         //=================================================
-        //StartRevealGroup(game, game.gamedata.playerStart.firstReveal)
+        StartRevealGroup(game, game.gamedata.playerStart.firstReveal)
 
-        game.hud.phase = "player";
-        hud.makeMonster("deep-one");
-        hud.makeMonster("deep-one-2");
+        //game.hud.phase = "player";
+        //hud.makeMonster("deep-one");
+        //hud.makeMonster("deep-one-2");
     },
 
     update: function () {
