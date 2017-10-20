@@ -461,6 +461,7 @@ Hud.prototype.scenarioEventStep = function (doneSignal) {
 // Make Monster
 Hud.prototype.makeMonster = function (id) {
     var monsterInstance = new Monster(this.game, id);
+    monsterInstance.trayIndex = this.monsterInstances.length;
     // Set Tray Sprite (Place in Monster Tray)
     this.monsterTray.putMonster(monsterInstance, this.monsterInstances.length);
     // Set Detail Sprite (Place in Monster Detail)
@@ -471,7 +472,6 @@ Hud.prototype.makeMonster = function (id) {
     
     // Wire up Monster Selection Signal
     monsterInstance.onSelected.add(function (monster) {
-        console.log(monster);
         if (this.phase == "player") {
             if (this.monsterSelected == null) {
                 this.monsterSelected = monster;
@@ -571,7 +571,8 @@ Hud.prototype.monsterStep = function (doneSignal) {
 // Discard Monster
 Hud.prototype.discardMonster = function () {
     // Remove from List
-    this.monsterInstances = this.monsterInstances.filter(function (value) { return value != this.monsterSelected });
+    var trayIndex = this.monsterSelected.trayIndex;
+    this.monsterInstances = this.monsterInstances.filter(function (value) { return value.trayIndex != trayIndex; });
 
     // Reposition remaining monsters in tray
     for (var i = 0; i < this.monsterInstances.length; i++) {
