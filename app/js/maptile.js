@@ -37,11 +37,11 @@ function MapTile(game, mapTileData) {
 
     // Set Sprite Angle
     sprite.angle = this.data.angle;
-
+    
     this.addChild(sprite);
+    game.gamedataInstances.mapTiles.push(this);
     
     // Remove Door Tokens when the connecting rooms are revealed
-    game.gamedataInstances.mapTiles.push(this);
     this.removeDoorTokens();
 }
 

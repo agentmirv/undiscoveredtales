@@ -98,7 +98,7 @@ function Hud(game) {
     this.inventoryButton = new HudButton(game, "inventory-image-player", "inventory-image-enemy");
     this.inventoryButton.alignIn(game.stageViewRect, Phaser.BOTTOM_LEFT, -192, 0);
     this.inventoryButton.onClick.add(function () {
-        // TODO
+        // TODO: Inventory Button
     }, this);
     this.addChild(this.inventoryButton);
 
@@ -131,7 +131,7 @@ function Hud(game) {
     this.menuButton = new HudButton(game, "menu-image-player", "menu-image-enemy");
     this.menuButton.alignIn(game.stageViewRect, Phaser.BOTTOM_LEFT, 0, 0);
     this.menuButton.onClick.add(function () {
-        // TODO
+        // TODO: Menu Button
     }, this);
     this.addChild(this.menuButton);
 

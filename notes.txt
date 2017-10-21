@@ -746,7 +746,21 @@ Forgot I had this notes.txt.
 Thinking of somehow using Tiled to assist in creating the mapTiles and mapTokens data.
 
 ===========================================================
+2017 October 21, Saturday 7:19 AM ~~~
 ===========================================================
+TODOS:
+* Monster discard can perform an action, like the Hunting Horror in the kitchen of Cycle of Eternity.
+* Monsters can exceed the tray length, drag to show more
+* Weapon -> Monster Type matrix / Attack Tags?
+* Monster dialog can be called from a reveal.
+* Skill test dialog can be called from a reveal.
+* Any dialog can be called from a reveal?
+* Certain scenario events can suppress the random event.
+* Monsters don't always have an attack dialog (Innsmouth Mob).
+* Inventory button.
+* Menu button.
+* Fix cutsceneCamera behavior.
+
 ===========================================================
 ===========================================================
 ===========================================================
