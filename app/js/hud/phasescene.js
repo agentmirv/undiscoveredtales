@@ -14,10 +14,10 @@ function PlayerPhaseScene(game) {
     playerPhaseBgImage.tint = "0x044500";
     this.addChild(playerPhaseBgImage);
 
-    var text = "Player Phase"
+    var text = "Player Phase";
     var textStyle = { font: "85px Times New Romans", fill: "#ffffff", fontStyle: "italic" };
     var messageText = game.make.text(0, 0, text, textStyle);
-    messageText.autoRound = true
+    messageText.autoRound = true;
     messageText.alignIn(game.stageViewRect, Phaser.CENTER)
     this.addChild(messageText);
 
@@ -32,14 +32,11 @@ function PlayerPhaseScene(game) {
     var fadeOutTween = game.add.tween(this).to({ alpha: 0 }, 500, Phaser.Easing.Linear.None, false, 700, 0, false);
     fadeOutTween.onComplete.addOnce(function () {
         this.onComplete.dispatch();
-        //this.game.player.cutSceneCamera = false;
         this.destroy(true);
     }, this);
 
     var slideTween = game.add.tween(messageText).from({ x: messageText.x + 150 }, 2000, Phaser.Easing.Quadratic.Out, true, 400, 0, false);
-    slideTween.chain(fadeOutTween)
-
-    //game.cutSceneCamera = true
+    slideTween.chain(fadeOutTween);
 }
 
 PlayerPhaseScene.prototype = Object.create(Phaser.Group.prototype);
@@ -61,10 +58,10 @@ function EnemyPhaseScene(game) {
     playerPhaseBgImage.tint = "0x450000";
     this.addChild(playerPhaseBgImage);
 
-    var text = "Enemy Phase"
+    var text = "Enemy Phase";
     var textStyle = { font: "85px Times New Romans", fill: "#ffffff", fontStyle: "italic" };
     var messageText = game.make.text(0, 0, text, textStyle);
-    messageText.autoRound = true
+    messageText.autoRound = true;
     messageText.alignIn(game.stageViewRect, Phaser.CENTER)
     this.addChild(messageText);
 
@@ -79,14 +76,11 @@ function EnemyPhaseScene(game) {
     var fadeOutTween = game.add.tween(this).to({ alpha: 0 }, 500, Phaser.Easing.Linear.None, false, 700, 0, false);
     fadeOutTween.onComplete.addOnce(function () {
         this.onComplete.dispatch();
-        //this.game.player.cutSceneCamera = false;
         this.destroy(true);
     }, this);
 
     var slideTween = game.add.tween(messageText).from({ x: messageText.x + 150 }, 2000, Phaser.Easing.Quadratic.Out, true, 400, 0, false);
-    slideTween.chain(fadeOutTween)
-
-    //game.cutSceneCamera = true
+    slideTween.chain(fadeOutTween);
 }
 
 EnemyPhaseScene.prototype = Object.create(Phaser.Group.prototype);

@@ -1,10 +1,12 @@
+// TODO: Monster discard can perform an action, like the Hunting Horror in the kitchen of Cycle of Eternity
+//=========================================================
 function Monster(game, id) {
     var data = game.gamedata.monsters.find(function (item) { return item.id == id });
     this.onSelected = new Phaser.Signal();
     this.onDiscard = new Phaser.Signal();
 
     // Monster Instance
-    this.id = data.id
+    this.id = data.id;
     this.source = game.gamedata.monsterSource.find(function (item) { return item.id == data.sourceId });
     this.trayIndex = -1;
 

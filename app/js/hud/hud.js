@@ -238,7 +238,7 @@ function Hud(game) {
     this.monsterStepBegin.add(function () {
         console.log("monsterStepBegin");
         this.step = "monster";
-        if(this.monsterInstances.length > 0) {
+        if (this.monsterInstances.length > 0) {
             var monsterTrayDoneSignal = new Phaser.Signal();
             monsterTrayDoneSignal.addOnce(function () {
                 var doneSignal = new Phaser.Signal();
@@ -265,7 +265,7 @@ function Hud(game) {
     this.horrorStepBegin.add(function () {
         console.log("horrorStepBegin");
         this.step = "horror";
-        if(this.monsterInstances.length > 0) {
+        if (this.monsterInstances.length > 0) {
             var monsterTrayDoneSignal = new Phaser.Signal();
             monsterTrayDoneSignal.addOnce(function () {
                 var horrorDialog = MakeHorrorDialog(game);
@@ -473,6 +473,7 @@ Hud.prototype.makeMonster = function (id) {
     // Wire up Monster Selection Signal
     monsterInstance.onSelected.add(function (monster) {
         if (this.phase == "player") {
+            // Show / Hide Monster Detail
             if (this.monsterSelected == null) {
                 this.monsterSelected = monster;
                 this.monsterSelected.showDetail();
@@ -483,14 +484,16 @@ Hud.prototype.makeMonster = function (id) {
                 this.monsterSelected = null;
                 this.monsterDetail.hide();
             } else {
+                // Hide old monster
                 this.monsterSelected.hideDetail();
+                // Select new monster
                 this.monsterSelected = monster;
                 this.monsterSelected.showDetail();
                 this.monsterSelected.showDetail();
                 this.monsterDetail.setDetailText(monster);
             }
         } else {
-            // Horror Check Dialogs
+            // Make Horror Check 
             var horrorCheckDialog = MakeHorrorCheckConfirmDialog(game);
             horrorCheckDialog.onConfirm.addOnce(function () {
                 this.monsterSelected = monster;
@@ -510,12 +513,14 @@ Hud.prototype.makeMonster = function (id) {
         this.monsterDialogLayer.visible = false;
         
         var dialogInstance = MakeDiscardDialog(game, this.monsterSelected, this.discardDialogLayer);
+        
         dialogInstance.onConfirm.addOnce(function () {
             this.discardMonster();
             this.monsterDetail.hide();
             this.discardActive = false;
             this.monsterDialogLayer.visible = true;
         }, this);
+        
         dialogInstance.onCancel.addOnce(function () {
             this.monsterSelected.subtractDamage();
             this.monsterDetail.setDamage(this.monsterSelected);
@@ -537,11 +542,13 @@ Hud.prototype.monsterStep = function (doneSignal) {
         this.monsterSelected = this.monsterInstances[this.monsterIndex];
         this.monsterSelected.showDetail();
         this.monsterDetail.setDetailText(this.monsterSelected);
+        // Hide Last Monster
         if (this.monsterIndex > 0) {
             this.monsterInstances[this.monsterIndex - 1].hideDetail();
         }
 
         // TODO The Innsmouth Mob does not always have an attack, while still being in the monster tray
+        
         // Get Random Attack
         if (!this.monsterSelected.source.hasOwnProperty("attackDeck") || this.monsterSelected.source.attackDeck.length == 0)
         {
@@ -557,6 +564,7 @@ Hud.prototype.monsterStep = function (doneSignal) {
         }, this);
         
     } else {
+        // No more Monsters to process, move on
         this.monsterIndex = -1;
         var monsterTrayDoneSignal = new Phaser.Signal();
         monsterTrayDoneSignal.addOnce(function () {

@@ -92,7 +92,7 @@ function SkillTestDialog(game, dialogData, dialogGroup) {
             this.processActions(data).call(this);
         } else { 
             data.actions = dialogData.failActions;
-            this.processActions(data).call(this);;
+            this.processActions(data).call(this);
         }
     }, this);
     this.addChild(confirmButton);

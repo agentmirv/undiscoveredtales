@@ -68,6 +68,7 @@ HudButton.prototype.enemyPhase = function () {
     this.redbg.revive();
 }
 
+// TODO: Monsters can exceed the tray length, drag to show more
 //=========================================================
 function MonsterTray(game) {
     Phaser.Group.call(this, game);
@@ -77,9 +78,9 @@ function MonsterTray(game) {
     this.onClose = new Phaser.Signal();
     
     // Monster Tray
-    this.monsterTrayBgImage = game.make.tileSprite(0, 0, 96 * 8, 96, "hudButton")
+    this.monsterTrayBgImage = game.make.tileSprite(0, 0, 96 * 8, 96, "hudButton");
     this.monsterTrayBgImage.alignIn(game.stageViewRect, Phaser.BOTTOM_LEFT, -96 * 3.7, 0)
-    this.monsterTrayBgImage.tint = "0x044500"
+    this.monsterTrayBgImage.tint = "0x044500";
     
     this.addChild(this.monsterTrayBgImage);
     
@@ -94,7 +95,7 @@ MonsterTray.prototype.constructor = MonsterTray;
 
 MonsterTray.prototype.show = function (doneSignal) {
     if (!this.isOpen) {
-        this.isOpen = true
+        this.isOpen = true;
         var slideTween = this.game.add.tween(this).to({ y: this.yOpen }, 200, Phaser.Easing.Linear.None, true, 0, 0, false);
         slideTween.onComplete.add(function () {
             this.onOpen.dispatch();
@@ -107,7 +108,7 @@ MonsterTray.prototype.show = function (doneSignal) {
 
 MonsterTray.prototype.hide = function (doneSignal) {
     if (this.isOpen) {
-        this.isOpen = false
+        this.isOpen = false;
         var slideTween = this.game.add.tween(this).to({ y: this.yClose }, 200, Phaser.Easing.Linear.None, true, 0, 0, false);
         slideTween.onComplete.add(function () {
             this.onClose.dispatch();
@@ -121,7 +122,7 @@ MonsterTray.prototype.hide = function (doneSignal) {
 MonsterTray.prototype.putMonster = function (monsterInstance, position) {
     var xOffset = position * 96;
     monsterInstance.traySprite.alignIn(this.monsterTrayBgImage, Phaser.BOTTOM_LEFT, -xOffset, 0);
-    this.addChild(monsterInstance.traySprite)
+    this.addChild(monsterInstance.traySprite);
 }
 
 

@@ -1,4 +1,49 @@
 //=========================================================
+function BaseDialog(game) {
+    Phaser.Group.call(this, game);
+    this.onOpen = new Phaser.Signal();
+    this.onClose = new Phaser.Signal();
+    this._processActions = MakeProcessActions(game);
+}
+
+BaseDialog.prototype = Object.create(Phaser.Group.prototype);
+BaseDialog.prototype.constructor = BaseDialog;
+
+BaseDialog.prototype.open = function () {
+    var fadeInTween = this.game.add.tween(this).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+
+    fadeInTween.onComplete.addOnce(function () {
+        this.onOpen.dispatch();
+    }, this);
+
+}
+
+BaseDialog.prototype.close = function () {
+    var fadeOutTween = this.game.add.tween(this).to({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
+
+    fadeOutTween.onComplete.addOnce(function () {
+        this.onClose.dispatch();
+        this.game.player.cutSceneCamera = false;
+        this.destroy(true);
+    }, this);
+}
+
+BaseDialog.prototype.closeImmediately = function () {
+    this.onClose.dispatch();
+    this.game.player.cutSceneCamera = false;
+    this.destroy(true);
+}
+
+BaseDialog.prototype.processActions = function (buttonData) {
+    return function () { 
+        this.onClose.addOnce(function () {
+            this._processActions(buttonData);
+        }, this);
+        this.close();
+    }
+}
+
+//=========================================================
 function MakeProcessActions(game) {
     return function (buttonData) {
         if (buttonData) {
@@ -31,7 +76,7 @@ function MakeProcessActions(game) {
                         }
                     } else if (action.type == "startReveal") {
                         //=========================================================
-                        // Continue Reveal
+                        // Start Reveal
                         StartRevealGroup(game, action.revealGroupId)
                     } else if (action.type == "continueReveal") {
                         //=========================================================
@@ -58,52 +103,5 @@ function MakeProcessActions(game) {
                 }
             }
         }
-    }
-}
-
-//=========================================================
-function StartDialogGroup(game, id, doneSignal) {
-    var dialogGroup = game.gamedata.dialogGroups.find(function (item) { return item.id == id });
-    
-    if(doneSignal !== undefined) {
-        dialogGroup.doneSignal = doneSignal;
-    }
-    
-    // Examine conditions on the dialogs
-    // Select the dialog based on conditions
-    // Or select the first one
-    var dialogData = dialogGroup.dialogs[0];
-    if (dialogGroup.startConditions != null && Array.isArray(dialogGroup.startConditions)) {
-        for (var i = 0; i < dialogGroup.startConditions.length; i++) {
-            var condition = dialogGroup.startConditions[i];
-            var globalVar = game.gamedata.globalVars.find(function (item) { return item.id == condition.globalId })
-            if (globalVar != null && globalVar.value == condition.value) {
-                dialogData = dialogGroup.dialogs.find(function (item) { return item.id == condition.dialogId });
-            }
-        }
-    } 
-    
-    ProcessDialogType(game, dialogData, dialogGroup);
-}
-
-function ContinueDialogGroup(game, dialogId, dialogGroup) {
-    var dialogData = dialogGroup.dialogs.find(function (item) { return item.id == dialogId });
-    ProcessDialogType(game, dialogData, dialogGroup);
-}
-
-function ProcessDialogType(game, dialogData, dialogGroup) {
-    switch(dialogData.type) {
-        case "action":
-            MakeActionDialog(game, dialogData, dialogGroup);
-            break;
-        case "statement":
-            MakeStatementDialog(game, dialogData, dialogGroup);
-            break;
-        case "skilltest":
-            MakeSkillTestDialog(game, dialogData, dialogGroup);
-            break;
-        case "custom":
-            MakeCustomDialog(game, dialogData, dialogGroup);
-            break;
     }
 }

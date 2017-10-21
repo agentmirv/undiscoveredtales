@@ -24,10 +24,10 @@ function FireDialog(game) {
 
     // Message
     var dialogMessage = new DialogMessage(game, text, null);
-    dialogMessage.alignIn(game.stageViewRect, Phaser.CENTER, 0, -game.presentationOffsetY)
+    dialogMessage.alignIn(game.stageViewRect, Phaser.CENTER, 0, -game.presentationOffsetY);
     this.addChild(dialogMessage);
 
-    // Buttons for [Cancel] [Confirm]
+    // Buttons for [Fire Extinguished] [Fire Spreads]
     var dialogCancel = new DialogButtonThin(game, "Fire Extinguished", 280);
     dialogCancel.alignTo(dialogMessage, Phaser.BOTTOM_LEFT, -10, 10);
     dialogCancel.buttonInput.events.onInputUp.add(function () {
@@ -39,7 +39,7 @@ function FireDialog(game) {
     this.addChild(dialogCancel);
 
     var dialogConfirm = new DialogButtonThin(game, "Fire Spreads", 280);
-    dialogConfirm.alignTo(dialogMessage, Phaser.BOTTOM_RIGHT, -10, 10)
+    dialogConfirm.alignTo(dialogMessage, Phaser.BOTTOM_RIGHT, -10, 10);
     dialogConfirm.buttonInput.events.onInputUp.add(function () {
         this.onClose.addOnce(function () {
             this.onSpreads.dispatch();

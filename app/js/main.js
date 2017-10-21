@@ -10,62 +10,24 @@ var GameState = {
         //=================================================
         // Initialize game data
         game.gamedata = game.cache.getJSON('gamedata');
-        game.gamedataInstances = {};
-        game.gamedataInstances.mapTiles = []
-        game.gamedataInstances.mapTokens = [] 
-        game.gamedataInstances.monsters = []
-        game.customStates = []; // This is used in skill test dialogs
-        game.revealList = {};
-        game.revealList.dialogs = [];
-        game.hud = {};
-        game.hud.activePhase = "player";
-        game.hud.activeStep = "";
-        game.hud.fireSet = false;
-        game.hud.randomEventDeck = []
-        game.hud.randomMonsterAttackDeck = []
-        game.hud.randomMonsterHorrorCheckDeck = []
-        game.hud.randomAttackHeavyWeapon = []
-        game.hud.randomAttackBladedWeapon = []
-        game.hud.randomAttackFirearm = []
-        game.hud.randomAttackSpell = []
-        game.hud.randomAttackUnarmed = []
-        game.hud.showEnemyPhaseBG = false
-        game.hud.monsterTrayOpen = false
-        game.hud.monsterTrayDetail = false
-        game.hud.currentMonsterIndex = -1
-        game.hud.currentMonsterInstance = null
-        game.hudInstance = {};
+        game.gamedataInstances = {
+            "mapTiles": [],
+            "mapTokens": []
+        };
 
         ImageHelper.create(game)
-
-        //=================================================
-        // Make attack decks
-        game.hud.randomAttackHeavyWeapon = game.gamedata.attacks.filter(function (item) { return item.type == "heavy-weapon" })
-        game.hud.randomAttackBladedWeapon = game.gamedata.attacks.filter(function (item) { return item.type == "bladed-weapon" })
-        game.hud.randomAttackFirearm = game.gamedata.attacks.filter(function (item) { return item.type == "firearm" })
-        game.hud.randomAttackSpell = game.gamedata.attacks.filter(function (item) { return item.type == "spell" })
-        game.hud.randomAttackUnarmed = game.gamedata.attacks.filter(function (item) { return item.type == "unarmed" })
-
-        game.hud.randomAttackHeavyWeapon = Helper.shuffle(game.hud.randomAttackHeavyWeapon)
-        game.hud.randomAttackBladedWeapon = Helper.shuffle(game.hud.randomAttackBladedWeapon)
-        game.hud.randomAttackFirearm = Helper.shuffle(game.hud.randomAttackFirearm)
-        game.hud.randomAttackSpell = Helper.shuffle(game.hud.randomAttackSpell)
-        game.hud.randomAttackUnarmed = Helper.shuffle(game.hud.randomAttackUnarmed)
 
         //=================================================
         // Initialize Stuff
         game.physics.startSystem(Phaser.Physics.P2JS);
         game.world.setBounds(0, 0, 2560, 2560);
-        game.camera.bounds = null // leave this until the world dimensions are determined via the map tile coordinates and dimensions
-        game.camera.focusOnXY(game.gamedata.playerStart.x, game.gamedata.playerStart.y)
-        game.stageViewRect = new Phaser.Rectangle(0, 0, game.camera.view.width, game.camera.view.height)
-        game.presentationOffsetY = 48
+        game.camera.bounds = null; // leave this until the world dimensions are determined via the map tile coordinates and dimensions
+        game.camera.focusOnXY(game.gamedata.playerStart.x, game.gamedata.playerStart.y);
+        game.stageViewRect = new Phaser.Rectangle(0, 0, game.camera.view.width, game.camera.view.height);
+        game.presentationOffsetY = 48;
         cursors = game.input.keyboard.createCursorKeys();
 
         game.player = new PlayerSprite(game, game.gamedata.playerStart.x, game.gamedata.playerStart.y);
-        //player = game.add.sprite(game.gamedata.playerStart.x, game.gamedata.playerStart.y, 'pixelTransparent');
-        //game.physics.p2.enable(player);
-        //game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.8, 0.8);
 
         game.add.tileSprite(0, 0, 2560, 2560, 'background');
 
@@ -141,10 +103,6 @@ var GameState = {
 function Helper() {
     // do nothing
 }
-
-//Helper.getImage = function (imageKey) {
-//    return game.cache.getBitmapData(imageKey)
-//}
 
 // Fisher-Yates Shuffle
 // https://bost.ocks.org/mike/shuffle/

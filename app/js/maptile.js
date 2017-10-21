@@ -1,12 +1,12 @@
 //=========================================================
 function MakeMapTile(game, id) {
     var mapTileData = game.gamedata.mapTiles.find(function (item) { return item.id == id });
-    var mapTileInstance = null
+    var mapTileInstance = null;
 
     if (game.gamedataInstances.mapTiles.some(function (item) { return item.id == id })) {
         // This handles the case where a room needs revealed that is inside a tile
         // that is already revealed. The camera still needs to center on the existing tile.
-        mapTileInstance = game.gamedataInstances.mapTiles.find(function (item) { return item.id == id })
+        mapTileInstance = game.gamedataInstances.mapTiles.find(function (item) { return item.id == id });
         
     } else {
         mapTileInstance = new MapTile(game, mapTileData);
@@ -22,17 +22,17 @@ function MapTile(game, mapTileData) {
     Phaser.Group.call(this, game);
 
     this.data = mapTileData;
-    this.id = this.data.id
-    this.isRevealed = false
+    this.id = this.data.id;
+    this.isRevealed = false;
     var sprite = game.make.sprite(this.data.x, this.data.y, ImageHelper.getImage(game, this.data.imageKey))
 
     // Set Sprite Anchor
     if (this.data.angle == 90) {
-        sprite.anchor.setTo(0, 1)
+        sprite.anchor.setTo(0, 1);
     } else if (this.data.angle == 180) {
-        sprite.anchor.setTo(1, 1)
+        sprite.anchor.setTo(1, 1);
     } else if (this.data.angle == 270) {
-        sprite.anchor.setTo(1, 0)
+        sprite.anchor.setTo(1, 0);
     }
 
     // Set Sprite Angle
@@ -63,13 +63,13 @@ MapTile.prototype.removeDoorTokens = function () {
                 // If the mapTile has the entryToken and the mapTile is not instanced, then don't remove the token
                 if (!this.game.gamedataInstances.mapTiles.some(function (item) { return item.id == mapTileDataCheck.id })) {
                     // If it is not in, then it is not revealed
-                    removeToken = false
+                    removeToken = false;
                 }
             }
         }
 
         if (removeToken) {
-            var instance = this.game.gamedataInstances.mapTokens.find(function (item) { return item.id == tokenId })
+            var instance = this.game.gamedataInstances.mapTokens.find(function (item) { return item.id == tokenId });
             if (instance != null) {
                 instance.fadeOut();
             }

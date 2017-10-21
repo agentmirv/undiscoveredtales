@@ -12,6 +12,7 @@ function StartRevealGroup(game, id, doneSignal) {
     }
 }
 
+//=========================================================
 function ContinueRevealGroup(game, revealGroup) {
     if (revealGroup.dialogs.length > 0) {
         var revealDialogData = revealGroup.dialogs.shift();
@@ -24,7 +25,6 @@ function ContinueRevealGroup(game, revealGroup) {
 
 //=========================================================
 function MakeRevealDialogData(game, revealDialogData, revealGroup) {
-    var revealDialogData = revealDialogData;
     var movePlayer = new Phaser.Point()
     var imageKey = null;
 
@@ -35,34 +35,34 @@ function MakeRevealDialogData(game, revealDialogData, revealGroup) {
             var mapTileId = revealDialogData.mapTiles[i];
             var mapTileInstance = MakeMapTile(game, mapTileId);
             
-            calculateCenter.x += mapTileInstance.centerX
-            calculateCenter.y += mapTileInstance.centerY
+            calculateCenter.x += mapTileInstance.centerX;
+            calculateCenter.y += mapTileInstance.centerY;
         }
 
         imageKey = null;
-        movePlayer.x = Math.floor(calculateCenter.x / revealDialogData.mapTiles.length)
-        movePlayer.y = Math.floor(calculateCenter.y / revealDialogData.mapTiles.length) + game.presentationOffsetY
+        movePlayer.x = Math.floor(calculateCenter.x / revealDialogData.mapTiles.length);
+        movePlayer.y = Math.floor(calculateCenter.y / revealDialogData.mapTiles.length) + game.presentationOffsetY;
 
     } else if (revealDialogData.addSingleToken != null) {
         // Show image at the top of the Dialog
         var tokenInstance = MakeToken(game, revealDialogData.addSingleToken);
 
         imageKey = tokenInstance.imageKey;
-        movePlayer.x = tokenInstance.x + 48
-        movePlayer.y = tokenInstance.y + 208 + game.presentationOffsetY
+        movePlayer.x = tokenInstance.x + 48;
+        movePlayer.y = tokenInstance.y + 208 + game.presentationOffsetY;
 
     } else if (revealDialogData.showSingleToken != null) {
         // Show image at the top of the Dialog
-        var tokenInstance = game.gamedataInstances.mapTokens.find(function (item) { return item.id == revealDialogData.showSingleToken })
+        var tokenInstance = game.gamedataInstances.mapTokens.find(function (item) { return item.id == revealDialogData.showSingleToken });
 
         imageKey = tokenInstance.imageKey;
-        movePlayer.x = tokenInstance.x + 48
-        movePlayer.y = tokenInstance.y + 208 + game.presentationOffsetY
+        movePlayer.x = tokenInstance.x + 48;
+        movePlayer.y = tokenInstance.y + 208 + game.presentationOffsetY;
 
     } else {
         imageKey = null;
-        movePlayer.x = game.player.body.x
-        movePlayer.y = game.player.body.y
+        movePlayer.x = game.player.body.x;
+        movePlayer.y = game.player.body.y;
     }
 
     var playerMove = this.game.player.Move(movePlayer);

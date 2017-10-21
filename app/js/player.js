@@ -1,5 +1,5 @@
 /* global Phaser */
-
+//=========================================================
 function PlayerSprite(game, x, y) {
     Phaser.Sprite.call(this, game, x, y, 'pixelTransparent');
     game.world.addChild(this);
@@ -15,6 +15,7 @@ PlayerSprite.prototype.Move = function (destinationPoint) {
     return new PlayerMove(this, destinationPoint);
 }
 
+//=========================================================
 function PlayerMove(player, destinationPoint) {
     this._player = player;
     this._destinationPoint = destinationPoint;
@@ -34,8 +35,8 @@ PlayerMove.prototype.Start = function () {
             1200, Phaser.Easing.Quadratic.Out, true, 0, 0, false);
             
         moveTween.onStart.addOnce(function () {
-            this.onStart.dispatch();
             this._player.cutSceneCamera = true;
+            this.onStart.dispatch();
         }, this);
         
         moveTween.onComplete.addOnce(function () {

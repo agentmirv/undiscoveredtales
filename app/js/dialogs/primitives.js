@@ -192,51 +192,6 @@ DialogMessage.prototype = Object.create(Phaser.Group.prototype);
 DialogMessage.prototype.constructor = DialogMessage;
 
 //=========================================================
-function BaseDialog(game) {
-    Phaser.Group.call(this, game);
-    this.onOpen = new Phaser.Signal();
-    this.onClose = new Phaser.Signal();
-    this._processActions = MakeProcessActions(game);
-}
-
-BaseDialog.prototype = Object.create(Phaser.Group.prototype);
-BaseDialog.prototype.constructor = BaseDialog;
-
-BaseDialog.prototype.open = function () {
-    var fadeInTween = this.game.add.tween(this).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
-
-    fadeInTween.onComplete.addOnce(function () {
-        this.onOpen.dispatch();
-    }, this);
-
-}
-
-BaseDialog.prototype.close = function () {
-    var fadeOutTween = this.game.add.tween(this).to({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
-
-    fadeOutTween.onComplete.addOnce(function () {
-        this.onClose.dispatch();
-        this.game.player.cutSceneCamera = false;
-        this.destroy(true);
-    }, this);
-}
-
-BaseDialog.prototype.closeImmediately = function () {
-    this.onClose.dispatch();
-    this.game.player.cutSceneCamera = false;
-    this.destroy(true);
-}
-
-BaseDialog.prototype.processActions = function (buttonData) {
-    return function () { 
-        this.onClose.addOnce(function () {
-            this._processActions(buttonData);
-        }, this);
-        this.close();
-    }
-}
-
-//=========================================================
 function DialogModalBackground(game) {
     Phaser.Sprite.call(this, game, game.stageViewRect.x, game.stageViewRect.y, 'pixelTransparent');
     

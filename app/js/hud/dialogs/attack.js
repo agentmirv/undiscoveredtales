@@ -13,7 +13,7 @@ function PlayerAttackDialog(game, doneSignal, dialogLayer) {
     BaseDialog.call(this, game);
     var dialogRect = new Phaser.Rectangle(96 * 3, 16, game.stageViewRect.width - 96 * 3, game.stageViewRect.height)
 
-    var text = "What type of weapon will you attack with?"
+    var text = "What type of weapon will you attack with?";
 
     // Weapon Select Text
     var textDialog = new DialogMessageMonster(game, text, 600);
@@ -27,25 +27,29 @@ function PlayerAttackDialog(game, doneSignal, dialogLayer) {
         { text: "@ Attack with a Spell", type: "spell" },
         { text: "@ Attack with a Unarmed", type: "unarmed" },
         { text: "Cancel", type: null }
-    ]
+    ];
 
     for (var i = 0; i < weaponList.length; i++) {
         var weaponText = weaponList[i].text;
         var weaponType = weaponList[i].type;
+        
         var attackButton = new DialogButtonMedium(game, weaponText, 520);
-        attackButton.buttonInput.weaponType = weaponType;
         attackButton.alignTo(textDialog, Phaser.BOTTOM_CENTER, 0, 28 + (65 * i));
+        
+        attackButton.buttonInput.weaponType = weaponType;
         attackButton.buttonInput.events.onInputUp.addOnce(function (button, pointer) {
             this.onClose.addOnce(function () {
-                // TODO: Weapon -> Monster Type matrix?
+                // TODO: Weapon -> Monster Type matrix / Attack Tags?
                 if (button.weaponType != null) {
-                    var deckName = button.weaponType + "-deck"
+                    // Player selected an Attack
+                    var deckName = button.weaponType + "-deck";
                     if (!this.game.hud.attacks.hasOwnProperty(deckName) || this.game.hud.attacks[deckName].length == 0)
                     {
                         var attacks = game.gamedata.attacks.filter(function (item) { return item.type == button.weaponType });
                         this.game.hud.attacks[deckName] = Helper.shuffle(attacks.slice(0));
                     }
                     var attackData = this.game.hud.attacks[deckName].pop();
+                    
                     var dialogInstance = new AttackDialog(game, attackData.text);
                     dialogLayer.addChild(dialogInstance);
                     dialogInstance.open();
@@ -53,6 +57,7 @@ function PlayerAttackDialog(game, doneSignal, dialogLayer) {
                         doneSignal.dispatch();
                     }, this);
                 } else {
+                    // Player selected Cancel
                     doneSignal.dispatch();
                 }
             }, this);

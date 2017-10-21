@@ -2,12 +2,12 @@ function ImageHelper () {
 }
 
 ImageHelper.preload = function(game) {
-    //game.load.image('background', 'assets/images/debug-grid-1920x1920.png')
-    game.load.image('background', 'assets/images/tilebackground.png')
-    game.load.image('pixelWhite', 'assets/images/FFFFFF-1.png')
-    game.load.image('pixelBlack', 'assets/images/000000-1.png')
-    game.load.image('pixelOrange', 'assets/images/FF4D00-1.png')
-    game.load.image('pixelTransparent', 'assets/images/1x1.png')
+    //game.load.image('background', 'assets/images/debug-grid-1920x1920.png');
+    game.load.image('background', 'assets/images/tilebackground.png');
+    game.load.image('pixelWhite', 'assets/images/FFFFFF-1.png');
+    game.load.image('pixelBlack', 'assets/images/000000-1.png');
+    game.load.image('pixelOrange', 'assets/images/FF4D00-1.png');
+    game.load.image('pixelTransparent', 'assets/images/1x1.png');
     game.load.image('circleToken', 'assets/images/CircleToken.png');
     game.load.image('squareToken', 'assets/images/SquareToken.png');
     game.load.image('investigator', 'assets/images/run.png');
@@ -35,7 +35,7 @@ ImageHelper.create = function (game) {
     //=================================================
     // Hud images
     //var hudBmd = game.make.bitmapData(96, 96)
-    var endHudBgImage = game.make.image(0, 0, "hudButton")
+    var endHudBgImage = game.make.image(0, 0, "hudButton");
 
     // End Phase
     ImageHelper.addMainButtonBMD(game, endHudBgImage, "arrow", "endPhase-image-player", "endPhase-image-enemy");
@@ -52,17 +52,17 @@ ImageHelper.create = function (game) {
     //=================================================
     // ImageTokens BitmapData
     for (var i = 0; i < game.gamedata.imageTokens.length; i++) {
-        var gridWidth = 96
-        var imageTokenData = game.gamedata.imageTokens[i]
-        var tokenBmd = game.make.bitmapData(gridWidth, gridWidth)
+        var gridWidth = 96;
+        var imageTokenData = game.gamedata.imageTokens[i];
+        var tokenBmd = game.make.bitmapData(gridWidth, gridWidth);
 
         if (imageTokenData.backgroundImageKey != null) {
             if (imageTokenData.backgroundImageAngle == null) {
-                var backgroundImage = game.make.image(0, 0, imageTokenData.backgroundImageKey)
+                var backgroundImage = game.make.image(0, 0, imageTokenData.backgroundImageKey);
                 if (imageTokenData.backgroundColor != null) {
-                    backgroundImage.tint = imageTokenData.backgroundColor
+                    backgroundImage.tint = imageTokenData.backgroundColor;
                 }
-                tokenBmd.copy(backgroundImage)
+                tokenBmd.copy(backgroundImage);
             } else {
                 var degToRad = imageTokenData.backgroundImageAngle * (Math.PI / 180);
                 if (imageTokenData.backgroundImageAngle == 90) {
@@ -78,36 +78,36 @@ ImageHelper.create = function (game) {
         }
 
         if (imageTokenData.primaryImageKey != null) {
-            var primaryImage = game.make.image(0, 0, imageTokenData.primaryImageKey)
+            var primaryImage = game.make.image(0, 0, imageTokenData.primaryImageKey);
 
             if (imageTokenData.imageShadowColor != null) {
-                primaryImage.tint = imageTokenData.imageShadowColor
-                tokenBmd.copy(primaryImage, 0, 0, 64, 64, 16 + 2, 16 + 2)
+                primaryImage.tint = imageTokenData.imageShadowColor;
+                tokenBmd.copy(primaryImage, 0, 0, 64, 64, 16 + 2, 16 + 2);
             }
 
             if (imageTokenData.imagePrimaryColor != null) {
-                primaryImage.tint = imageTokenData.imagePrimaryColor
+                primaryImage.tint = imageTokenData.imagePrimaryColor;
             }
 
-            tokenBmd.copy(primaryImage, 0, 0, 64, 64, 16, 16)
+            tokenBmd.copy(primaryImage, 0, 0, 64, 64, 16, 16);
         }
 
         if (imageTokenData.maskImageKey != null) {
-            var maskImage = game.make.image(0, 0, imageTokenData.maskImageKey)
+            var maskImage = game.make.image(0, 0, imageTokenData.maskImageKey);
             if (imageTokenData.maskColor != null) {
-                maskImage.tint = imageTokenData.maskColor
+                maskImage.tint = imageTokenData.maskColor;
             }
-            tokenBmd.copy(maskImage)
+            tokenBmd.copy(maskImage);
         }
 
-        game.cache.addBitmapData(imageTokenData.imageKey, tokenBmd)
+        game.cache.addBitmapData(imageTokenData.imageKey, tokenBmd);
     }
 
     //=================================================
     // ImageTiles bitmapData
     for (var k = 0; k < game.gamedata.imageTiles.length; k++) {
         var gridWidth = 96;
-        var imageTileData = game.gamedata.imageTiles[k]
+        var imageTileData = game.gamedata.imageTiles[k];
         var bmdWidth = imageTileData.width * gridWidth;
         var bmdHeight = imageTileData.height * gridWidth;
         var mapTileBmd = game.make.bitmapData(bmdWidth, bmdHeight);
@@ -119,17 +119,17 @@ ImageHelper.create = function (game) {
                 var localX = i * gridWidth;
                 var localY = j * gridWidth;
                 var wallIndex = i + j * 6;
-                var sprite = game.make.tileSprite(localX, localY, gridWidth, gridWidth, imageTileData.spritesheet, imageTileData.walls[wallIndex])
+                var sprite = game.make.tileSprite(localX, localY, gridWidth, gridWidth, imageTileData.spritesheet, imageTileData.walls[wallIndex]);
                 mapTileBmd.copy(sprite);
             }
         }
 
-        game.cache.addBitmapData(imageTileData.imageKey, mapTileBmd)
+        game.cache.addBitmapData(imageTileData.imageKey, mapTileBmd);
     }
 }
 
 ImageHelper.getImage = function (game, imageKey) {
-    return game.cache.getBitmapData(imageKey)
+    return game.cache.getBitmapData(imageKey);
 }
 
 ImageHelper.addMainButtonBMD = function (game, endHudBgImage, iconImageId, greenImgId, redImgId) {
