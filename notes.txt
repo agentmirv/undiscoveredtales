@@ -762,7 +762,29 @@ TODOS:
 * Fix cutsceneCamera behavior.
 
 ===========================================================
+Tiled
+https://github.com/bjorn/tiled
+
+JSON Schema Based Editor
+https://github.com/jdorn/json-editor
+
 ===========================================================
+I guess I would need to create a tileset that represented each map tile in the base game.
+And another tileset would be created with the map tokens.
+Use a tile layer to draw the map, and an object layer to represent the map tiles.
+Use another tile layer to draw the tokens, and another object layer to represent the map tiles.
+Should probably try to get this working to see how feasible it is.
+What about the mapTile background colors?
+What about specifying the entryTokenIds, can this be done in Tiled?
+
+How do I author a tileset?
+I have a TileWalls png in Piskel. 
+I'll need another png that can handle interior corners.
+Also, I should try writing the map tile name to the screen.
+
+Pyxel Edit
+http://pyxeledit.com/
+
 ===========================================================
 ===========================================================
 ===========================================================
