@@ -563,7 +563,12 @@
           "text": "The bird flutters his wings and takes off to the west. He hovers for a moment and disappears into a tiny square opening in the ceiling above the door to the west bedroom. You hear the bird murmur, almost sounding like language, then go silent.",
           "type": "statement",
           "buttons": [
-            { "actions": [ {"type": "removeTokens", "tokenIds": ["token-bird-hall"] } ] }
+            {
+              "actions": [
+                {"type": "setGlobal", "globalId": "max-question", "value": "beast" },
+                { "type": "removeTokens", "tokenIds": [ "token-bird-hall" ] }
+              ]
+            }
           ]
         }        
       ]
