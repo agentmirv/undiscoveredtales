@@ -786,7 +786,18 @@ Pyxel Edit
 http://pyxeledit.com/
 
 ===========================================================
+2017 October, Sunday 3:26 PM
 ===========================================================
+Trying to use app-drawer-layout with a app-header-layout / app-header.
+The problem is that I get a scrollbar on the right, but I don't want one.
+Not sure how to fix this.
+
+Tried something like this, but still saw the scrollbar:
+document.getElementById("main").style.overflow = "hidden"; 
+
+Full-height app layouts: A CSS trick to make it easier
+http://blog.stevensanderson.com/2011/10/05/full-height-app-layouts-a-css-trick-to-make-it-easier/
+
 ===========================================================
 ===========================================================
 ===========================================================
