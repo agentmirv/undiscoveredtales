@@ -798,6 +798,14 @@ document.getElementById("main").style.overflow = "hidden";
 Full-height app layouts: A CSS trick to make it easier
 http://blog.stevensanderson.com/2011/10/05/full-height-app-layouts-a-css-trick-to-make-it-easier/
 
+Flexbox Full Page Web App Layout 
+http://geon.github.io/programming/2016/02/24/flexbox-full-page-web-app-layout
+
+A Complete Guide to Flexbox
+https://css-tricks.com/snippets/css/a-guide-to-flexbox/
+
+Apparently, body overflow: hidden; does the trick...
+
 ===========================================================
 ===========================================================
 ===========================================================

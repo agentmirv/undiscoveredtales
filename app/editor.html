@@ -49,6 +49,7 @@
                 line-height: 1.5;
                 min-height: 100vh;
                 background-color: #eeeeee;
+                overflow: hidden;
             }
 
             .drawer-list {
@@ -67,7 +68,11 @@
                 color: black;
                 font-weight: bold;
             }
-            
+
+            app-toolbar {
+                background-color: #4285f4;
+                color: #fff;
+            }
         </style>
     </custom-style>
        
@@ -78,13 +83,21 @@
         <app-drawer slot="drawer">
             <app-toolbar>Menu</app-toolbar>
             <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-                <a name="view1" href="[[rootPath]]view1">View One</a>
-                <a name="view2" href="[[rootPath]]view2">View Two</a>
-                <a name="view3" href="[[rootPath]]view3">View Three</a>
+                <a name="view1" href="#">Tiles</a>
+                <a name="view2" href="#">Tokens</a>
+                <a name="view3" href="#">Preview</a>
             </iron-selector>                      
         </app-drawer>
-        <div id="phaser-app"></div>
+
+        <app-header-layout>
+            <app-header slot="header">
+                <app-toolbar>
+                    <div main-title>Editor</div>
+                </app-toolbar>
+            </app-header>
+            <div id="phaser-app"></div>
+        </app-header-layout>
     </app-drawer-layout>
-    
+   
 </body>
 </html>
