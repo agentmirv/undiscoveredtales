@@ -136,6 +136,6 @@ Helper.shuffle = function (array) {
 
 //=========================================================
 // JavaScript source code
-var game = new Phaser.Game('100%', '100%', Phaser.AUTO, 'phaser-app')
-game.state.add('GameState', GameState)
-game.state.start('GameState')
+var game = new Phaser.Game('100%', '100%', Phaser.AUTO, 'phaser-app');
+game.state.add('GameState', GameState);
+game.state.start('GameState');
