@@ -7,7 +7,7 @@
 <dom-module id="editor-app">
     <template>
         <style>
-            :host{
+            :host {
                 display: block;
                 --almost-black: #141720;
                 --dark-grey: #232733;
@@ -22,44 +22,68 @@
 
             app-header {
                 background-color: var(--almost-black);
-                color: white;                
+                color: white;
+                height: 60px;
+                width: 100%;
+                position: fixed;
+                z-index: 100;
             }
 
-            paper-tabs {
-                background-color: var(--dark-grey);
-                color: white;                                
-            }
-
-            app-header-layout {
+            app-toolbar {
                 display: flex;
+                justify-content: space-between;
+            }
+
+            .app-body {
+                box-sizing: border-box;
+                display: flex;
+                flex-direction: row;
+                padding-top: 60px;
+                height: 100vh;
+            }
+
+            .main-view {
+                position: relative;
+                height: 100%;
+                width: 100%;
+                overflow: auto;
+                display: flex;
+                flex-grow: 1;
                 flex-direction: column;
             }
 
-            iron-pages {
+            iron-pages  {
                 height: 100%;
+                overflow: auto;
             }
+
+            .heavy {
+                font-weight: 900;
+                letter-spacing: 2px;
+            }
+
         </style>
 
-        <app-header-layout>
-            <app-header slot="header" fixed>
-                <app-toolbar class="toolbar">
-                    <div main-title>Editor</div>
-                </app-toolbar>
-            </app-header>
+        <app-header fixed>
+            <app-toolbar>
+                <span class="heavy">Editor</span>
+            </app-toolbar>
+        </app-header>
 
-            <paper-tabs selected="{{index}}" scrollable>
-                <paper-tab>Preview</paper-tab>
-                <paper-tab>Tiles</paper-tab>
-                <paper-tab>Tokens</paper-tab>
-            </paper-tabs>
-
-            <iron-pages selected={{index}} selected-attribute="visible">
-                <div style="background-color:aqua; height: 100%">Preview</div>
-                <div>Tiles</div>
-                <div>Tokens</div>
-            </iron-pages>
-            <app-header>Test</app-header>            
-        </app-header-layout>
+        <div class="app-body">
+            <div class="main-view">
+                <paper-tabs selected="{{index}}" scrollable>
+                    <paper-tab>Preview</paper-tab>
+                    <paper-tab>Tiles</paper-tab>
+                    <paper-tab>Tokens</paper-tab>
+                </paper-tabs>
+                <iron-pages selected={{index}} selected-attribute="visible">
+                    <div id="gameDiv" style="background-color:black; height: 100%"></div> 
+                    <div style="background-color:burlywood; height: 100%">Tiles</div>
+                    <div style="background-color:darkseagreen; height:100%">Tokens</div>
+                </iron-pages>
+            </div>
+        </div>
         
     </template>
     <script>
@@ -74,7 +98,10 @@
                 // When possible, use afterNextRender to defer non-critical
                 // work until after first paint.
                 Polymer.RenderStatus.afterNextRender(this, function() {
-                    //
+                    var gameDiv = this.$.gameDiv;
+                    this.game = new Phaser.Game('100%', '100%', Phaser.CANVAS, gameDiv);
+                    this.game.state.add('GameState', GameState);
+                    this.game.state.start('GameState');
                 });
 
                 this.index = 0;

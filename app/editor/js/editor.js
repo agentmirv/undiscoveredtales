@@ -4,7 +4,7 @@ var GameState = {
         this.game.canvas.oncontextmenu = function (e) { e.preventDefault(); }
         this.scale.scaleMode = Phaser.ScaleManager.RESIZE;
         this.scale.setResizeCallback(function(scale, parentBounds) {
-            //console.log("parentBounds:", parentBounds);
+            console.log("parentBounds:", parentBounds);
             //console.log(this.game.parent.getBoundingClientRect())
             console.log(this.game.width, this.game.height);
             // if(this.game.height == 0){
