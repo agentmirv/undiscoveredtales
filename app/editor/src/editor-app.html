@@ -1,0 +1,78 @@
+<link rel="import" href="/editor/bower_components/polymer/polymer.html">
+<link rel="import" href="/editor/bower_components/app-layout/app-layout.html">
+<link rel="import" href="/editor/bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="/editor/bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="/editor/src/game-view.html">
+
+<dom-module id="editor-app">
+    <template>
+        <style>
+            :host{
+                display: block;
+                --almost-black: #141720;
+                --dark-grey: #232733;
+                --medium-grey: #2f3545;
+                --light-grey: #383f52;
+                --highlight-pink: #e91e63;
+                --highlight-blue: #2196f3;
+                --input-border-color: #596c7a;                
+                --paper-tabs-selection-bar-color: var(--highlight-pink);
+                --paper-tab-ink: var(--input-border-color);
+            }
+
+            app-header {
+                background-color: var(--almost-black);
+                color: white;                
+            }
+
+            paper-tabs {
+                background-color: var(--dark-grey);
+                color: white;                                
+            }
+        </style>
+
+        <app-header-layout>
+            <app-header slot="header" fixed>
+                <app-toolbar class="toolbar">
+                    <div main-title>Editor</div>
+                </app-toolbar>
+            </app-header>
+
+            <paper-tabs selected="{{index}}" scrollable>
+                <paper-tab>Preview</paper-tab>
+                <paper-tab>Tiles</paper-tab>
+                <paper-tab>Tokens</paper-tab>
+            </paper-tabs>
+
+            <iron-pages selected={{index}}>
+                <div style="height: 100%; width:100%">
+                    <game-view></game-view>
+                </div>
+                <div>Tiles</div>
+                <div>Tokens</div>
+            </iron-pages>
+            
+        </app-header-layout>
+        
+    </template>
+    <script>
+        class EditorApp extends Polymer.Element {
+            static get is() {
+                return 'editor-app'; 
+            }
+
+            ready() {
+                super.ready();
+                
+                // When possible, use afterNextRender to defer non-critical
+                // work until after first paint.
+                Polymer.RenderStatus.afterNextRender(this, function() {
+                    //
+                });
+
+                this.index = 0;
+            }            
+        }
+        window.customElements.define(EditorApp.is, EditorApp);
+    </script>
+</dom-module>

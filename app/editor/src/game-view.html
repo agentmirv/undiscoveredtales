@@ -1,0 +1,31 @@
+<link rel="import" href="/editor/bower_components/polymer/polymer.html">
+
+<dom-module id="game-view">
+    <template>
+        <style>
+        </style>
+        <div id="phaserapp"></div>
+    </template>
+    <script>
+        class GameView extends Polymer.Element {
+            static get is() {
+                return 'game-view'; 
+            }
+
+            ready() {
+                super.ready();
+                console.log('game-view: ready');
+
+                // When possible, use afterNextRender to defer non-critical
+                // work until after first paint.
+                Polymer.RenderStatus.afterNextRender(this, function() {
+                    var target = this.$.phaserapp;
+                    this.game = new Phaser.Game('100%', '100%', Phaser.AUTO, target);
+                    this.game.state.add('GameState', GameState);
+                    this.game.state.start('GameState');
+                });
+            }
+        }
+        window.customElements.define(GameView.is, GameView);
+    </script>
+</dom-module>
