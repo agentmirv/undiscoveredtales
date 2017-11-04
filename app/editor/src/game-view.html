@@ -3,7 +3,18 @@
 <dom-module id="game-view">
     <template>
         <style>
+            :host {
+                display:block;
+            }
+
+            #gameDiv {
+                display:block;
+                box-sizing: border-box;
+                width: 100%;
+                height: 100%;
+            }
         </style>
+        <div>enablestep: {{enablestep}}</h1>
         <div id="gameDiv"></div>
     </template>
     <script>
@@ -14,17 +25,36 @@
 
             ready() {
                 super.ready();
-                console.log('game-view: ready');
+                //console.log('game-view: ready');
 
                 // When possible, use afterNextRender to defer non-critical
                 // work until after first paint.
                 Polymer.RenderStatus.afterNextRender(this, function() {
                     var gameDiv = this.$.gameDiv;
-
-                    this.game = new Phaser.Game('100%', '100%', Phaser.AUTO, gameDiv);
+                    this.game = new Phaser.Game('100%', '100%', Phaser.CANVAS, gameDiv);
                     this.game.state.add('GameState', GameState);
                     this.game.state.start('GameState');
                 });
+            }
+
+            static get properties() {
+                return {
+                    enablestep: {
+                        type: Boolean,
+                        notify: true,
+                        reflectToAttribute: true,
+                        observer: '_enablestepChanged'
+                    }
+                }
+            }
+
+            _enablestepChanged(newValue, oldValue) {
+                //console.log('game-view: _enablestepChanged', newValue, oldValue);
+                // if(newValue) {
+                //     this.game.enableStep();
+                // } else {
+                //     this.game.disableStep();
+                // }
             }
         }
         window.customElements.define(GameView.is, GameView);

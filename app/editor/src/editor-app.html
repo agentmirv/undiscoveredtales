@@ -29,6 +29,15 @@
                 background-color: var(--dark-grey);
                 color: white;                                
             }
+
+            app-header-layout {
+                display: flex;
+                flex-direction: column;
+            }
+
+            iron-pages {
+                height: 100%;
+            }
         </style>
 
         <app-header-layout>
@@ -44,14 +53,12 @@
                 <paper-tab>Tokens</paper-tab>
             </paper-tabs>
 
-            <iron-pages selected={{index}}>
-                <div style="height: 100%; width:100%">
-                    <game-view></game-view>
-                </div>
+            <iron-pages selected={{index}} selected-attribute="visible">
+                <div style="background-color:aqua; height: 100%">Preview</div>
                 <div>Tiles</div>
                 <div>Tokens</div>
             </iron-pages>
-            
+            <app-header>Test</app-header>            
         </app-header-layout>
         
     </template>
@@ -71,7 +78,31 @@
                 });
 
                 this.index = 0;
-            }            
+            }
+
+            static get properties() {
+                return {
+                    index: {
+                        type: Number,
+                        observer: '_pageChanged'
+                    },
+                    enablestep: {
+                        type: Boolean,
+                        notify: true,
+                        observer: '_enablestepChanged'
+                    }
+                }
+            }
+
+            _pageChanged(newValue, oldValue) {
+                //console.log('editor-app: _pageChanged', newValue, oldValue);
+                this.enablestep = (oldValue == 0);
+            }
+
+            _enablestepChanged(newValue, oldValue) {
+                //console.log('editor-app: _enablestepChanged', newValue, oldValue);
+            }
+
         }
         window.customElements.define(EditorApp.is, EditorApp);
     </script>
