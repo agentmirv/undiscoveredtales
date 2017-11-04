@@ -1,8 +1,7 @@
 var GameState = {
     init: function () {
         this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-        // this.scale.pageAlignVertically = true;
-        // this.scale.pageAlignHorizonally = true;
+        this.game.canvas.oncontextmenu = function (e) { e.preventDefault(); }
     },
 
     resize: function (width, height) {
@@ -62,7 +61,7 @@ var GameState = {
             var playerVelocity = 400;
             this.game.player.body.setZeroVelocity();
 
-            if (this.game.input.activePointer.isDown) {
+            if (this.game.input.activePointer.rightButton.isDown) {
                 if (this.game.origDragPoint) {
                     // move the camera by the amount the mouse has moved since last update	
                     this.game.player.body.x += this.game.origDragPoint.x - this.game.input.activePointer.position.x;
