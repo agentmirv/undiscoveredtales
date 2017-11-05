@@ -28,6 +28,7 @@
       "x": 960,
       "y": 960,
       "imageKey": "maptile-lobby-image",
+      "floorColor": "0xbbb5af",      
       "angle": 0,
       "entryTokenIds": [
         "token-door1-lobby",
@@ -40,6 +41,7 @@
       "x": 1536,
       "y": 1248,
       "imageKey": "maptile-study-image",
+      "floorColor": "0x836544",
       "angle": 0,
       "entryTokenIds": [
         "token-door3-lobby"
@@ -50,6 +52,7 @@
       "x": 960,
       "y": 672,
       "imageKey": "maptile-hall-end-image",
+      "floorColor": "0x7c8fac",
       "angle": 0,
       "entryTokenIds": [
         "token-door1-lobby",
@@ -61,6 +64,7 @@
       "x": 672,
       "y": 672,
       "imageKey": "maptile-hall-corner-1-image",
+      "floorColor": "0x743232",
       "angle": 270,
       "entryTokenIds": [
         "token-door1-lobby",
@@ -881,51 +885,47 @@
       "imageKey": "maptile-lobby-image",
       "width": 6,
       "height": 6,
-      "spritesheet": "tileWallsSheet",
-      "floorColor": "#bbb5af",
+      "spritesheet": "tileWallsSheet2",
       "walls": [
-        0, 4, 1, 1, 4, 2,
-        4, 4, 4, 4, 4, 4,
-        3, 4, 4, 4, 4, 5,
-        3, 4, 4, 4, 4, 5,
-        4, 4, 4, 4, 4, 4,
-        6, 7, 7, 7, 7, 8
+        0, 6, 2, 2, 6, 1,
+        6, 6, 6, 6, 6, 6,
+        9, 6, 6, 6, 6, 3,
+        9, 6, 6, 6, 6, 3,
+        6, 6, 6, 6, 6, 6,
+        7,10,10,10,10, 8
       ]
     },
     {
       "imageKey": "maptile-study-image",
       "width": 6,
       "height": 3,
-      "spritesheet": "tileWallsSheet",
-      "floorColor": "#836544",
+      "spritesheet": "tileWallsSheet2",
       "walls": [
-        0, 1, 1, 1, 1, 2,
-        4, 4, 4, 4, 4, 5,
-        6, 7, 7, 7, 4, 8
+        0, 2, 2, 2, 2, 1,
+        6, 6, 6, 6, 6, 3,
+        7,10,10,10, 6, 8
       ]
     },
     {
       "imageKey": "maptile-hall-end-image",
       "width": 6,
       "height": 3,
-      "floorColor": "#7c8fac",
-      "spritesheet": "tileWallsSheet",
+      "spritesheet": "tileWallsSheet2",
       "walls": [
-        1, 1, 1, 1, 4, 2,
-        4, 4, 4, 4, 4, 4,
-        7, 4, 7, 7, 7, 8
+        2, 2, 2, 2, 6, 1,
+        6, 6, 6, 6, 6, 6,
+       10, 6,10,10,10, 8
       ]
     },
     {
       "imageKey": "maptile-hall-corner-1-image",
       "width": 6,
       "height": 3,
-      "floorColor": "#743232",
-      "spritesheet": "tileWallsSheet",
+      "spritesheet": "tileWallsSheet2",
       "walls": [
-        1, 1, 4, 1, 1, 2,
-        4, 4, 4, 4, 4, 4,
-        7, 4, 7, 4, 4, 5
+        2, 2, 6, 2, 2, 1,
+        6, 6, 6, 6, 6, 6,
+       10, 6,10,11, 6, 3
       ]
     }
   ],

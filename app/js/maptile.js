@@ -25,19 +25,26 @@ function MapTile(game, mapTileData) {
     this.id = this.data.id;
     this.isRevealed = false;
     var sprite = game.make.sprite(this.data.x, this.data.y, ImageHelper.getImage(game, this.data.imageKey))
+    var bgSprite = game.make.tileSprite(sprite.x, sprite.y, sprite.width, sprite.height, 'pixelWhite');
+    bgSprite.tint = parseInt(this.data.floorColor);
 
     // Set Sprite Anchor
     if (this.data.angle == 90) {
         sprite.anchor.setTo(0, 1);
+        bgSprite.anchor.setTo(0, 1);
     } else if (this.data.angle == 180) {
         sprite.anchor.setTo(1, 1);
+        bgSprite.anchor.setTo(1, 1);
     } else if (this.data.angle == 270) {
         sprite.anchor.setTo(1, 0);
+        bgSprite.anchor.setTo(1, 0);
     }
 
     // Set Sprite Angle
     sprite.angle = this.data.angle;
-    
+    bgSprite.angle = this.data.angle;
+
+    this.addChild(bgSprite);
     this.addChild(sprite);
     game.gamedataInstances.mapTiles.push(this);
     
