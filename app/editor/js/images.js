@@ -28,6 +28,7 @@ ImageHelper.preload = function(game) {
     game.load.image('light-backpack', '../assets/images/light-backpack.png');
     game.load.image('bookmarklet', '../assets/images/bookmarklet.png');
     game.load.spritesheet('tileWallsSheet', '../assets/images/TileWalls.png', 96, 96);
+    game.load.spritesheet('tileWallsSheet2', '../assets/images/TileWalls2.png', 96, 96);
     game.load.json('gamedata', '../data/gamedata.json');
 }
 

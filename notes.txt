@@ -786,7 +786,7 @@ Pyxel Edit
 http://pyxeledit.com/
 
 ===========================================================
-2017 October, Sunday 3:26 PM
+2017 October, Sunday 3:26 PM ~~~
 ===========================================================
 Trying to use app-drawer-layout with a app-header-layout / app-header.
 The problem is that I get a scrollbar on the right, but I don't want one.
@@ -807,7 +807,7 @@ https://css-tricks.com/snippets/css/a-guide-to-flexbox/
 Apparently, body overflow: hidden; does the trick...
 
 ===========================================================
-2017 November, Tuesday 8:55 PM
+2017 November, Tuesday 8:55 PM ~~~
 ===========================================================
 GIMP Batch Mode
 https://www.gimp.org/tutorials/Basic_Batch/
@@ -888,7 +888,7 @@ Further information
 If you want to write your own scripts for batch processing, we suggest you use the Procedure Browser as found in the Help menu. It gives you a detailed list of all commands.
 
 ===========================================================
-2017 November, Friday 10:07 PM
+2017 November, Friday 10:07 PM ~~~
 ===========================================================
 Compositing And Blending In CSS
 https://www.sarasoueidan.com/blog/compositing-and-blending-in-css/
@@ -906,7 +906,15 @@ https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function/rotate
 4) Get the image data array from the game and generate dom.
 
 ===========================================================
+2017 November, Saturday 2:07 PM ~~~
 ===========================================================
+Polymer 1: dom-repeat and how to get item data
+https://medium.com/@tylergraf/polymer-1-dom-repeat-and-how-to-get-item-data-51879b4c73cd
+
+Data binding helper elements
+Template repeater (dom-repeat)
+https://www.polymer-project.org/2.0/docs/devguide/templates
+
 ===========================================================
 ===========================================================
 ===========================================================

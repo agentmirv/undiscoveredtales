@@ -1,27 +1,19 @@
 var GameState = {
-    fixheight: 0,
+
     init: function () {
         this.game.canvas.oncontextmenu = function (e) { e.preventDefault(); }
         this.scale.scaleMode = Phaser.ScaleManager.RESIZE;
-        this.scale.setResizeCallback(function(scale, parentBounds) {
-            console.log("parentBounds:", parentBounds);
-            //console.log(this.game.parent.getBoundingClientRect())
-            console.log(this.game.width, this.game.height);
-            // if(this.game.height == 0){
-            //     this.game.height = this.fixheight;
-            // }
-        }, this);
-        console.log(this.game.width, this.game.height);
-        this.fixheight = this.game.height;
     },
 
     resize: function (width, height) {
-        console.log("resize: ", width, height);
+        //console.log("resize: ", width, height);
     },
 
     preload: function () {
         ImageHelper.preload(this.game);
     },
+
+    tokens: [],
 
     create: function () {
         //=================================================
@@ -48,42 +40,26 @@ var GameState = {
 
         this.game.add.tileSprite(0, 0, 2560, 2560, 'backgroundDebug');
 
-        // game.mapTileLayer = game.add.group();
-        // game.tokenLayer = game.add.group();
-
         //=================================================
-        // Add HUD
-        // var hud = new Hud(game);
-        // game.hud = hud;
-        // game.stage.addChild(hud);
-
-        //=================================================
-        // Game Start
-        //=================================================
-        //StartRevealGroup(game, game.gamedata.playerStart.firstReveal)
-
-        //game.hud.phase = "player";
-        //hud.makeMonster("deep-one");
-        //hud.makeMonster("deep-one-2");
+        this.tokens = this.game.gamedata.imageTokens;
+        this.host._gameCreateDone();
     },
 
     update: function () {
-        //if (!game.player.cutSceneCamera && game.hud.phase == "player") {
-            var playerVelocity = 400;
-            this.game.player.body.setZeroVelocity();
+        var playerVelocity = 400;
+        this.game.player.body.setZeroVelocity();
 
-            if (this.game.input.activePointer.rightButton.isDown) {
-                if (this.game.origDragPoint) {
-                    // move the camera by the amount the mouse has moved since last update	
-                    this.game.player.body.x += this.game.origDragPoint.x - this.game.input.activePointer.position.x;
-                    this.game.player.body.y += this.game.origDragPoint.y - this.game.input.activePointer.position.y;
-                }
-                // set new drag origin to current position	
-                this.game.origDragPoint = this.game.input.activePointer.position.clone();
-            } else {
-                this.game.origDragPoint = null;
+        if (this.game.input.activePointer.rightButton.isDown) {
+            if (this.game.origDragPoint) {
+                // move the camera by the amount the mouse has moved since last update	
+                this.game.player.body.x += this.game.origDragPoint.x - this.game.input.activePointer.position.x;
+                this.game.player.body.y += this.game.origDragPoint.y - this.game.input.activePointer.position.y;
             }
-        //}
+            // set new drag origin to current position	
+            this.game.origDragPoint = this.game.input.activePointer.position.clone();
+        } else {
+            this.game.origDragPoint = null;
+        }
     },
 
     render: function () {
@@ -105,8 +81,3 @@ var GameState = {
 //TODO Polyfill for array.find?
 //TODO Polyfill for array.filter?
 
-//=========================================================
-// JavaScript source code
-// var game = new Phaser.Game('100%', '100%', Phaser.AUTO, 'phaser-app');
-// game.state.add('GameState', GameState);
-// game.state.start('GameState');

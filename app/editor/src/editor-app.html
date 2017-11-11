@@ -94,8 +94,15 @@
                 </paper-tabs>
                 <iron-pages selected={{index}} selected-attribute="visible">
                     <div id="gameDiv" style="background-color:black; height: 100%"></div> 
-                    <div style="background-color:burlywood; height: 100%">Tiles</div>
-                    <div style="background-color:darkseagreen; height:100%">Tokens</div>
+                    <div style="background-color:burlywood; height: 100%">
+                        <div>Tiles</div>
+                    </div>
+                    <div style="background-color:darkseagreen; height:100%">
+                        <div>Tokens</div>
+                        <template is="dom-repeat" items="{{tokens}}">
+                            <li># [[index]], [[item.imageKey]]</li>
+                        </template>
+                    </div>
                 </iron-pages>
             </div>
             <div class="drawer, helptext">
@@ -120,6 +127,8 @@
                     this.game = new Phaser.Game('100%', '100%', Phaser.CANVAS, gameDiv);
                     this.game.state.add('GameState', GameState);
                     this.game.state.start('GameState');
+                    //GameState.createDone = this._gameCreateDone;
+                    GameState.host = this;
                 });
 
                 this.index = 0;
@@ -135,6 +144,9 @@
                         type: Boolean,
                         notify: true,
                         observer: '_enablestepChanged'
+                    },
+                    tokens: {
+                        type: Array
                     }
                 }
             }
@@ -148,6 +160,10 @@
                 //console.log('editor-app: _enablestepChanged', newValue, oldValue);
             }
 
+            _gameCreateDone() {
+                console.log("editor-app: _gameCreateDone");
+                this.set('tokens', GameState.tokens);
+            }
         }
         window.customElements.define(EditorApp.is, EditorApp);
     </script>
