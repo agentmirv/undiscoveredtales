@@ -786,6 +786,110 @@ Pyxel Edit
 http://pyxeledit.com/
 
 ===========================================================
+2017 November, Tuesday 8:55 PM
+===========================================================
+GIMP Batch Mode
+https://www.gimp.org/tutorials/Basic_Batch/
+
+(define 
+    (simple-unsharp-mask filename radius amount threshold)
+    (let* 
+        (
+            (image 
+                (car 
+                    (gimp-file-load RUN-NONINTERACTIVE filename filename)
+                )
+            )
+            (drawable 
+                (car 
+                    (gimp-image-get-active-layer image)
+                )
+            )
+        )
+        (plug-in-unsharp-mask RUN-NONINTERACTIVE image drawable radius amount threshold)
+        (gimp-file-save RUN-NONINTERACTIVE image drawable filename filename)
+        (gimp-image-delete image)
+    )
+)
+
+gimp -i -b '(simple-unsharp-mask "foo.png" 5.0 0.5 0)' -b '(gimp-quit 0)'     
+
+===========================================================
+(define 
+    (batch-unsharp-mask pattern radius amount threshold)
+    (let* 
+        (
+            (filelist 
+                (cadr 
+                    (file-glob pattern 1)
+                )
+            )
+        )
+        (while 
+            (not 
+                (null? filelist)
+            )
+            (let* 
+                (
+                    (filename 
+                        (car filelist)
+                    )
+                    (image 
+                        (car 
+                            (gimp-file-load RUN-NONINTERACTIVE filename filename)
+                        )
+                    )
+                    (drawable 
+                        (car 
+                            (gimp-image-get-active-layer image)
+                        )
+                    )
+                )
+                (plug-in-unsharp-mask RUN-NONINTERACTIVE image drawable radius amount threshold)
+                (gimp-file-save RUN-NONINTERACTIVE image drawable filename filename)
+                (gimp-image-delete image)
+            )
+            (set! filelist 
+                (cdr filelist)
+            )
+        )
+    )
+)
+
+gimp -i -b '(batch-unsharp-mask "*.png" 5.0 0.5 0)' -b '(gimp-quit 0)'
+
+===========================================================
+NEW GIMP 2.8.2 & Repository w/ How To Install Script-fu in 2017
+https://www.youtube.com/watch?v=vSqqs3FkZ0I
+
+===========================================================
+Further information
+If you want to write your own scripts for batch processing, we suggest you use the Procedure Browser as found in the Help menu. It gives you a detailed list of all commands.
+
+===========================================================
+2017 November, Friday 10:07 PM
+===========================================================
+Compositing And Blending In CSS
+https://www.sarasoueidan.com/blog/compositing-and-blending-in-css/
+
+CSS Image Tint
+https://codepen.io/jr/pen/rliKq
+
+rotate()
+https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function/rotate
+
+===========================================================
+1) Convert the tile image data to a single map tile image.
+2) Leave the token image the same.
+3) Figure out how to do the same bitmap data operations in css.
+4) Get the image data array from the game and generate dom.
+
+===========================================================
+===========================================================
+===========================================================
+===========================================================
+===========================================================
+===========================================================
 ===========================================================
 ===========================================================
 ===========================================================
