@@ -916,6 +916,20 @@ Template repeater (dom-repeat)
 https://www.polymer-project.org/2.0/docs/devguide/templates
 
 ===========================================================
+2017 November, Saturday 9:29 PM ~~~
+===========================================================
+phaser.io pre-loading data and then pre-loading images
+https://stackoverflow.com/questions/25458928/phaser-io-pre-loading-data-and-then-pre-loading-images
+http://examples.phaser.io/_site/view_full.html?d=loader&f=load+events.js&t=load%20events
+
+===========================================================
+2017 November, Sunday 7:35 AM ~~~
+===========================================================
+Using States in Phaser.JS Javascript Game Development 
+http://perplexingtech.weebly.com/game-dev-blog/using-states-in-phaserjs-javascript-game-developement
+
+===========================================================
+===========================================================
 ===========================================================
 ===========================================================
 ===========================================================

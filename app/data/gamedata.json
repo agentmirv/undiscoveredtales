@@ -935,6 +935,11 @@
       "primaryImageKey": "deepOne",
       "backgroundImageKey": "squareBackground",
       "maskImageKey": "monsterMask",
+
+      "primaryImageSrc": "assets/images/toad-teeth.png",
+      "backgroundImageSrc": "assets/images/SquareBackground.png",
+      "maskImageSrc": "assets/images/MonsterMask.png",
+
       "imagePrimaryColor": "0xFFFFFF",
       "imageShadowColor": "0xc300ff",
       "backgroundColor": "0x28511c",
@@ -945,6 +950,11 @@
       "primaryImageKey": "deepOne",
       "backgroundImageKey": "squareBackground",
       "maskImageKey": "monsterMask",
+
+      "primaryImageSrc": "assets/images/toad-teeth.png",
+      "backgroundImageSrc": "assets/images/SquareBackground.png",
+      "maskImageSrc": "assets/images/MonsterMask.png",
+
       "imagePrimaryColor": "0xFFFFFF",
       "imageShadowColor": "0xFF0000",
       "backgroundColor": "0x28511c",
@@ -954,6 +964,10 @@
       "imageKey": "explore-image",
       "primaryImageKey": "explore",
       "backgroundImageKey": "circleToken",
+
+      "primaryImageSrc": "assets/images/lantern-flame.png",
+      "backgroundImageSrc": "assets/images/CircleToken.png",
+
       "imagePrimaryColor": "0xFF0000",
       "imageShadowColor": "0x770000"
     },
@@ -961,6 +975,10 @@
       "imageKey": "search-image",
       "primaryImageKey": "search",
       "backgroundImageKey": "circleToken",
+
+      "primaryImageSrc": "assets/images/uncertainty.png",
+      "backgroundImageSrc": "assets/images/CircleToken.png",
+
       "imagePrimaryColor": "0xFFFF00",
       "imageShadowColor": "0xAAAA00"
     },
@@ -968,6 +986,10 @@
       "imageKey": "investigators-image",
       "primaryImageKey": "investigator",
       "backgroundImageKey": "circleToken",
+
+      "primaryImageSrc": "assets/images/run.png",
+      "backgroundImageSrc": "assets/images/CircleToken.png",
+
       "imagePrimaryColor": "0xFFFFFF",
       "imageShadowColor": "0x000000"
     },
@@ -975,6 +997,10 @@
       "imageKey": "cultsigil-image",
       "primaryImageKey": "pentacle",
       "backgroundImageKey": "squareToken",
+
+      "primaryImageSrc": "assets/images/pentacle.png",
+      "backgroundImageSrc": "assets/images/SquareToken.png",
+
       "imagePrimaryColor": "0xFF0000",
       "imageShadowColor": "0xFFFF00"
     },
@@ -982,6 +1008,10 @@
       "imageKey": "bird-image",
       "primaryImageKey": "bird",
       "backgroundImageKey": "circleToken",
+
+      "primaryImageSrc": "assets/images/raven.png",
+      "backgroundImageSrc": "assets/images/CircleToken.png",
+      
       "imagePrimaryColor": "0xFFFFFF",
       "imageShadowColor": "0x7400ff"
     },
@@ -993,16 +1023,25 @@
     {
       "imageKey": "wall-east-image",
       "backgroundImageKey": "wall",
+
+      "backgroundImageSrc": "assets/images/WallTokenN.png",
+      
       "backgroundImageAngle": 90
     },
     {
       "imageKey": "wall-west-image",
       "backgroundImageKey": "wall",
+
+      "backgroundImageSrc": "assets/images/WallTokenN.png",
+      
       "backgroundImageAngle": 270
     },
     {
       "imageKey": "wall-south-image",
       "backgroundImageKey": "wall",
+
+      "backgroundImageSrc": "assets/images/WallTokenN.png",
+      
       "backgroundImageAngle": 180
     }
   ]

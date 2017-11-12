@@ -1,49 +1,166 @@
-// JavaScript source code
-var game = new Phaser.Game(1280, 720, Phaser.AUTO, 'phaser-app')
+//=========================================================
+//TODO Polyfill for array.find?
+//TODO Polyfill for array.filter?
 
-var GameState = {
+var loadDataState = {
     preload: function () {
-        ImageHelper.preload(game)
+        this.game.load.json('gamedata', 'data/gamedata.json');        
+    },
+
+    create: function () {
+        this.game.state.start('loadImages');
+    }
+}
+
+var loadImagesState = {
+    preload: function () {
+        this.game.gamedata = this.game.cache.getJSON('gamedata');
+        var imageDictionary = {};
+
+        for (var i = 0; i < this.game.gamedata.imageTokens.length; i++) {
+            var imageToken = this.game.gamedata.imageTokens[i];
+            if (imageToken.hasOwnProperty("primaryImageSrc")) {
+                if (!imageDictionary.hasOwnProperty(imageToken.primaryImageSrc)) {
+                    imageDictionary[imageToken.primaryImageSrc] = imageToken.primaryImageSrc;
+                }
+            }
+
+            if (imageToken.hasOwnProperty("backgroundImageSrc")) {
+                if (!imageDictionary.hasOwnProperty(imageToken.backgroundImageSrc)) {
+                    imageDictionary[imageToken.backgroundImageSrc] = imageToken.backgroundImageSrc;
+                }
+            }
+
+            if (imageToken.hasOwnProperty("maskImageSrc")) {
+                if (!imageDictionary.hasOwnProperty(imageToken.maskImageSrc)) {
+                    imageDictionary[imageToken.maskImageSrc] = imageToken.maskImageSrc;
+                }
+            }            
+        }
+
+        for(var key in imageDictionary) {
+            var imgSrc = imageDictionary[key];
+                game.load.image(key, imgSrc);
+          }
+    },
+
+    create: function () {
+        this.game.state.start('buildImages');
+    }
+}
+
+var buildImagesState = {
+    preload: function () {
+        //=================================================
+        // ImageTokens BitmapData
+        for (var i = 0; i < this.game.gamedata.imageTokens.length; i++) {
+            var gridWidth = 96;
+            var imageTokenData = this.game.gamedata.imageTokens[i];
+            var tokenBmd = this.game.make.bitmapData(gridWidth, gridWidth);
+
+            // Background Image
+            if (imageTokenData.backgroundImageSrc != null) {
+                if (imageTokenData.backgroundImageAngle == null) {
+                    // Make Image From Cache reference string
+                    var backgroundImage = this.game.make.image(0, 0, imageTokenData.backgroundImageSrc);
+                    if (imageTokenData.backgroundColor != null) {
+                        backgroundImage.tint = imageTokenData.backgroundColor;
+                    }
+                    tokenBmd.copy(backgroundImage);
+                } else {
+                    var degToRad = imageTokenData.backgroundImageAngle * (Math.PI / 180);
+                    if (imageTokenData.backgroundImageAngle == 90) {
+                        tokenBmd.copy(imageTokenData.backgroundImageSrc, null, null, null, null, null, null, null, null, degToRad, 0, 1);
+                    } else if (imageTokenData.backgroundImageAngle == 270) {
+                        tokenBmd.copy(imageTokenData.backgroundImageSrc, null, null, null, null, null, null, null, null, degToRad, 1, 0);
+                    } else if (imageTokenData.backgroundImageAngle == 180) {
+                        tokenBmd.copy(imageTokenData.backgroundImageSrc, null, null, null, null, null, null, null, null, degToRad, 1, 1);
+                    } else {
+                        tokenBmd.copy(imageTokenData.backgroundImageSrc);
+                    }
+                }
+            }
+
+            // Primary Image
+            if (imageTokenData.primaryImageSrc != null) {
+                // Make Image From Cache reference string
+                var primaryImage = this.game.make.image(0, 0, imageTokenData.primaryImageSrc);
+
+                if (imageTokenData.imageShadowColor != null) {
+                    primaryImage.tint = imageTokenData.imageShadowColor;
+                    tokenBmd.copy(primaryImage, 0, 0, 64, 64, 16 + 2, 16 + 2);
+                }
+
+                if (imageTokenData.imagePrimaryColor != null) {
+                    primaryImage.tint = imageTokenData.imagePrimaryColor;
+                }
+
+                tokenBmd.copy(primaryImage, 0, 0, 64, 64, 16, 16);
+            }
+
+            // Mask Image
+            if (imageTokenData.maskImageSrc != null) {
+                // Make Image From Cache reference string
+                var maskImage = this.game.make.image(0, 0, imageTokenData.maskImageSrc);
+                if (imageTokenData.maskColor != null) {
+                    maskImage.tint = imageTokenData.maskColor;
+                }
+                tokenBmd.copy(maskImage);
+            }
+
+            this.game.cache.addBitmapData(imageTokenData.imageKey, tokenBmd);
+        }
+    },
+
+    create: function () {
+        this.game.state.start('main');
+    }
+}
+
+//=========================================================
+var mainState = {
+    preload: function () {
+        ImageHelper.preload(this.game)
     },
 
     create: function () {
         //=================================================
         // Initialize game data
-        game.gamedata = game.cache.getJSON('gamedata');
-        game.gamedataInstances = {
+        this.game.gamedata = this.game.cache.getJSON('gamedata');
+        this.game.gamedataInstances = {
             "mapTiles": [],
             "mapTokens": []
         };
 
-        ImageHelper.create(game)
+        ImageHelper.create(this.game)
 
         //=================================================
         // Initialize Stuff
-        game.physics.startSystem(Phaser.Physics.P2JS);
-        game.world.setBounds(0, 0, 2560, 2560);
-        game.camera.bounds = null; // leave this until the world dimensions are determined via the map tile coordinates and dimensions
-        game.camera.focusOnXY(game.gamedata.playerStart.x, game.gamedata.playerStart.y);
-        game.stageViewRect = new Phaser.Rectangle(0, 0, game.camera.view.width, game.camera.view.height);
-        game.presentationOffsetY = 48;
-        cursors = game.input.keyboard.createCursorKeys();
+        this.game.physics.startSystem(Phaser.Physics.P2JS);
+        this.game.world.setBounds(0, 0, 2560, 2560);
+        this.game.camera.bounds = null; // leave this until the world dimensions are determined via the map tile coordinates and dimensions
+        this.game.camera.focusOnXY(this.game.gamedata.playerStart.x, this.game.gamedata.playerStart.y);
+        this.game.stageViewRect = new Phaser.Rectangle(0, 0, this.game.camera.view.width, this.game.camera.view.height);
+        this.game.presentationOffsetY = 48;
+        cursors = this.game.input.keyboard.createCursorKeys();
 
-        game.player = new PlayerSprite(game, game.gamedata.playerStart.x, game.gamedata.playerStart.y);
+        this.game.player = new PlayerSprite(this.game, this.game.gamedata.playerStart.x, this.game.gamedata.playerStart.y);
 
-        game.add.tileSprite(0, 0, 2560, 2560, 'background');
+        this.game.add.tileSprite(0, 0, 2560, 2560, 'background');
 
-        game.mapTileLayer = game.add.group();
-        game.tokenLayer = game.add.group();
+        this.game.mapTileLayer = this.game.add.group();
+        this.game.tokenLayer = this.game.add.group();
 
         //=================================================
         // Add HUD
-        var hud = new Hud(game);
-        game.hud = hud;
-        game.stage.addChild(hud);
+        var hud = new Hud(this.game);
+        this.game.hud = hud;
+        this.game.stage.addChild(hud);
 
         //=================================================
         // Game Start
         //=================================================
-        StartRevealGroup(game, game.gamedata.playerStart.firstReveal)
+        StartRevealGroup(this.game, this.game.gamedata.playerStart.firstReveal)
 
         //game.hud.phase = "player";
         //hud.makeMonster("deep-one");
@@ -51,34 +168,34 @@ var GameState = {
     },
 
     update: function () {
-        if (!game.player.cutSceneCamera && game.hud.phase == "player") {
+        if (!this.game.player.cutSceneCamera && this.game.hud.phase == "player") {
             var playerVelocity = 400;
-            game.player.body.setZeroVelocity();
+            this.game.player.body.setZeroVelocity();
 
             if (cursors.up.isDown) {
-                game.player.body.moveUp(playerVelocity)
+                this.game.player.body.moveUp(playerVelocity)
             }
             else if (cursors.down.isDown) {
-                game.player.body.moveDown(playerVelocity);
+                this.game.player.body.moveDown(playerVelocity);
             }
 
             if (cursors.left.isDown) {
-                game.player.body.velocity.x = -playerVelocity;
+                this.game.player.body.velocity.x = -playerVelocity;
             }
             else if (cursors.right.isDown) {
-                game.player.body.moveRight(playerVelocity);
+                this.game.player.body.moveRight(playerVelocity);
             }
 
-            if (game.input.activePointer.isDown) {
-                if (game.origDragPoint) {
+            if (this.game.input.activePointer.isDown) {
+                if (this.game.origDragPoint) {
                     // move the camera by the amount the mouse has moved since last update	
-                    game.player.body.x += game.origDragPoint.x - game.input.activePointer.position.x;
-                    game.player.body.y += game.origDragPoint.y - game.input.activePointer.position.y;
+                    this.game.player.body.x += this.game.origDragPoint.x - this.game.input.activePointer.position.x;
+                    this.game.player.body.y += this.game.origDragPoint.y - this.game.input.activePointer.position.y;
                 }
                 // set new drag origin to current position	
-                game.origDragPoint = game.input.activePointer.position.clone();
+                this.game.origDragPoint = this.game.input.activePointer.position.clone();
             } else {
-                game.origDragPoint = null;
+                this.game.origDragPoint = null;
             }
         }
     },
@@ -100,33 +217,10 @@ var GameState = {
 }
 
 //=========================================================
-function Helper() {
-    // do nothing
-}
-
-// Fisher-Yates Shuffle
-// https://bost.ocks.org/mike/shuffle/
-Helper.shuffle = function (array) {
-    var m = array.length, t, i;
-
-    // While there remain elements to shuffle
-    while (m) {
-
-        // Pick a remaining element
-        i = Math.floor(Math.random() * m--);
-
-        // And swap it with the current element.
-        t = array[m];
-        array[m] = array[i];
-        array[i] = t;
-    }
-
-    return array;
-}
-
-//TODO Polyfill for array.find?
-//TODO Polyfill for array.filter?
-
-//=========================================================
-game.state.add('GameState', GameState)
-game.state.start('GameState')
+var game = new Phaser.Game(1280, 720, Phaser.AUTO, 'phaser-app');
+game.state.add('loadData', loadDataState);
+game.state.add('loadImages', loadImagesState);
+game.state.add('buildImages', buildImagesState);
+game.state.add('main', mainState);
+//game.state.start('main');
+game.state.start('loadData');
