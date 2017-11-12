@@ -2,6 +2,7 @@
 <link rel="import" href="/editor/bower_components/app-layout/app-layout.html">
 <link rel="import" href="/editor/bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="/editor/bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="/editor/bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="/editor/src/game-view.html">
 
 <dom-module id="editor-app">
@@ -77,6 +78,29 @@
                 box-sizing: border-box;
                 padding: 20px;
             }
+
+            .grid {
+                @apply --layout-horizontal;
+                @apply --layout-wrap;
+                @apply --layout-justified;
+                margin: 0 10px 32px 10px;
+                padding: 0;
+                list-style: none;
+            }
+
+            .grid li {
+                -webkit-flex: 1 1;
+                flex: 1 1;
+                -webkit-flex-basis: 33%;
+                flex-basis: 33%;
+                max-width: 33%;
+            }
+
+            .grid a {
+                display:block;
+                text-decoration: none;
+            }
+
         </style>
 
         <app-header fixed>
@@ -101,11 +125,11 @@
                     </div>
 
                     <div style="background-color:darkseagreen; height:100%">
-                        <div>Tokens</div>
-                        <template is="dom-repeat" items="{{tokens}}">
-                            <li>[[item.imageKey]]</li>
-                            <img src="/[[item.backgroundImageSrc]]">
-                        </template>
+                        <ul class="grid">
+                            <template is="dom-repeat" items="{{tokens}}">
+                                <li><a href="#"><img src="/[[item.backgroundImageSrc]]"></a></li>
+                            </template>
+                        </ul>                        
                     </div>
 
                 </iron-pages>
