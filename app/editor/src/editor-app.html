@@ -103,10 +103,11 @@
                     <div style="background-color:darkseagreen; height:100%">
                         <div>Tokens</div>
                         <template is="dom-repeat" items="{{tokens}}">
-                            <li># [[index]], [[item.primaryImageSrc]]</li>
+                            <li>[[item.imageKey]]</li>
+                            <img src="/[[item.backgroundImageSrc]]">
                         </template>
                     </div>
-                    
+
                 </iron-pages>
             </div>
             <div class="drawer, helptext">

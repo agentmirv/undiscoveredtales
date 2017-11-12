@@ -987,7 +987,7 @@
     },
     {
       "imageKey": "wall-north-image",
-      "backgroundImageKey": "wall",
+      "backgroundImageSrc": "assets/images/WallTokenN.png",
       "backgroundImageAngle": 0
     },
     {
