@@ -93,16 +93,20 @@
                     <paper-tab>Tokens</paper-tab>
                 </paper-tabs>
                 <iron-pages selected={{index}} selected-attribute="visible">
+
                     <div id="gameDiv" style="background-color:black; height: 100%"></div> 
+
                     <div style="background-color:burlywood; height: 100%">
                         <div>Tiles</div>
                     </div>
+
                     <div style="background-color:darkseagreen; height:100%">
                         <div>Tokens</div>
                         <template is="dom-repeat" items="{{tokens}}">
-                            <li># [[index]], [[item.imageKey]]</li>
+                            <li># [[index]], [[item.primaryImageSrc]]</li>
                         </template>
                     </div>
+                    
                 </iron-pages>
             </div>
             <div class="drawer, helptext">
@@ -125,10 +129,12 @@
                 Polymer.RenderStatus.afterNextRender(this, function() {
                     var gameDiv = this.$.gameDiv;
                     this.game = new Phaser.Game('100%', '100%', Phaser.CANVAS, gameDiv);
-                    this.game.state.add('GameState', GameState);
-                    this.game.state.start('GameState');
-                    //GameState.createDone = this._gameCreateDone;
-                    GameState.host = this;
+                    this.game.state.add('loadData', loadDataState);
+                    this.game.state.add('loadImages', loadImagesState);
+                    this.game.state.add('buildImages', buildImagesState);
+                    this.game.state.add('main', mainState);
+                    this.game.state.start('loadData');
+                    mainState.host = this;
                 });
 
                 this.index = 0;
@@ -162,7 +168,7 @@
 
             _gameCreateDone() {
                 console.log("editor-app: _gameCreateDone");
-                this.set('tokens', GameState.tokens);
+                this.set('tokens', mainState.tokens);
             }
         }
         window.customElements.define(EditorApp.is, EditorApp);

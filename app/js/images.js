@@ -20,8 +20,8 @@ ImageHelper.preload = function(game) {
 
 ImageHelper.create = function (game) {
     //=================================================
-    // Hud images
-    //var hudBmd = game.make.bitmapData(96, 96)
+    // Hud Button images
+
     var endHudBgImage = game.make.image(0, 0, "hudButton");
     var hudButtonImages = [
         { iconImageId: "arrow", greenImgId: "endPhase-image-player", redImgId: "endPhase-image-enemy" },
@@ -47,18 +47,6 @@ ImageHelper.create = function (game) {
         hudBmd.copy(iconImage, 0, 0, 64, 64, 16, 16);
         game.cache.addBitmapData(hudButtonImage.redImgId, hudBmd);    
     }
-
-    // // End Phase
-    // ImageHelper.addMainButtonBMD(game, endHudBgImage, "arrow", "endPhase-image-player", "endPhase-image-enemy");
-    
-    // // Inventory
-    // ImageHelper.addMainButtonBMD(game, endHudBgImage, "light-backpack", "inventory-image-player", "inventory-image-enemy");
-
-    // // Monster
-    // ImageHelper.addMainButtonBMD(game, endHudBgImage, "interlaced-tentacles", "monster-image-player", "monster-image-enemy");
-
-    // // Menu
-    // ImageHelper.addMainButtonBMD(game, endHudBgImage, "bookmarklet", "menu-image-player", "menu-image-enemy");
 
     //=================================================
     // ImageTiles bitmapData
@@ -86,20 +74,3 @@ ImageHelper.create = function (game) {
 ImageHelper.getImage = function (game, imageKey) {
     return game.cache.getBitmapData(imageKey);
 }
-
-// ImageHelper.addMainButtonBMD = function (game, endHudBgImage, iconImageId, greenImgId, redImgId) {
-//     var iconImage = game.make.image(0, 0, iconImageId);
-//     var hudBmd = game.make.bitmapData(96, 96);
-//     iconImage.tint = "0xFFFFFF";
-//     endHudBgImage.tint = "0x044500";
-//     hudBmd.copy(endHudBgImage, 0, 0, 92, 92, 2, 2);
-//     hudBmd.copy(iconImage, 0, 0, 64, 64, 16, 16);
-//     game.cache.addBitmapData(greenImgId, hudBmd);
-
-//     hudBmd = game.make.bitmapData(96, 96);
-//     endHudBgImage.tint = "0x450000";
-//     hudBmd.copy(endHudBgImage, 0, 0, 92, 92, 2, 2);
-//     hudBmd.copy(iconImage, 0, 0, 64, 64, 16, 16);
-//     game.cache.addBitmapData(redImgId, hudBmd);
-// }
-

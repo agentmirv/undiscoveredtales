@@ -40,7 +40,7 @@ var loadImagesState = {
 
         for(var key in imageDictionary) {
             var imgSrc = imageDictionary[key];
-                game.load.image(key, imgSrc);
+                this.game.load.image(key, imgSrc);
           }
     },
 

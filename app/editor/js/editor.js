@@ -1,4 +1,125 @@
-var GameState = {
+//=========================================================
+//TODO Polyfill for array.find?
+//TODO Polyfill for array.filter?
+
+var loadDataState = {
+    preload: function () {
+        this.game.load.json('gamedata', '/data/gamedata.json');        
+    },
+
+    create: function () {
+        this.game.state.start('loadImages');
+    }
+}
+
+var loadImagesState = {
+    preload: function () {
+        this.game.gamedata = this.game.cache.getJSON('gamedata');
+        var imageDictionary = {};
+
+        for (var i = 0; i < this.game.gamedata.imageTokens.length; i++) {
+            var imageToken = this.game.gamedata.imageTokens[i];
+            if (imageToken.hasOwnProperty("primaryImageSrc")) {
+                if (!imageDictionary.hasOwnProperty(imageToken.primaryImageSrc)) {
+                    imageDictionary[imageToken.primaryImageSrc] = imageToken.primaryImageSrc;
+                }
+            }
+
+            if (imageToken.hasOwnProperty("backgroundImageSrc")) {
+                if (!imageDictionary.hasOwnProperty(imageToken.backgroundImageSrc)) {
+                    imageDictionary[imageToken.backgroundImageSrc] = imageToken.backgroundImageSrc;
+                }
+            }
+
+            if (imageToken.hasOwnProperty("maskImageSrc")) {
+                if (!imageDictionary.hasOwnProperty(imageToken.maskImageSrc)) {
+                    imageDictionary[imageToken.maskImageSrc] = imageToken.maskImageSrc;
+                }
+            }            
+        }
+
+        this.game.load.baseURL = "/";
+
+        for(var key in imageDictionary) {
+            var imgSrc = imageDictionary[key];
+                this.game.load.image(key, imgSrc);
+          }
+    },
+
+    create: function () {
+        this.game.state.start('buildImages');
+    }
+}
+
+var buildImagesState = {
+    preload: function () {
+        //=================================================
+        // ImageTokens BitmapData
+        for (var i = 0; i < this.game.gamedata.imageTokens.length; i++) {
+            var gridWidth = 96;
+            var imageTokenData = this.game.gamedata.imageTokens[i];
+            var tokenBmd = this.game.make.bitmapData(gridWidth, gridWidth);
+
+            // Background Image
+            if (imageTokenData.backgroundImageSrc != null) {
+                if (imageTokenData.backgroundImageAngle == null) {
+                    // Make Image From Cache reference string
+                    var backgroundImage = this.game.make.image(0, 0, imageTokenData.backgroundImageSrc);
+                    if (imageTokenData.backgroundColor != null) {
+                        backgroundImage.tint = imageTokenData.backgroundColor;
+                    }
+                    tokenBmd.copy(backgroundImage);
+                } else {
+                    var degToRad = imageTokenData.backgroundImageAngle * (Math.PI / 180);
+                    if (imageTokenData.backgroundImageAngle == 90) {
+                        tokenBmd.copy(imageTokenData.backgroundImageSrc, null, null, null, null, null, null, null, null, degToRad, 0, 1);
+                    } else if (imageTokenData.backgroundImageAngle == 270) {
+                        tokenBmd.copy(imageTokenData.backgroundImageSrc, null, null, null, null, null, null, null, null, degToRad, 1, 0);
+                    } else if (imageTokenData.backgroundImageAngle == 180) {
+                        tokenBmd.copy(imageTokenData.backgroundImageSrc, null, null, null, null, null, null, null, null, degToRad, 1, 1);
+                    } else {
+                        tokenBmd.copy(imageTokenData.backgroundImageSrc);
+                    }
+                }
+            }
+
+            // Primary Image
+            if (imageTokenData.primaryImageSrc != null) {
+                // Make Image From Cache reference string
+                var primaryImage = this.game.make.image(0, 0, imageTokenData.primaryImageSrc);
+
+                if (imageTokenData.imageShadowColor != null) {
+                    primaryImage.tint = imageTokenData.imageShadowColor;
+                    tokenBmd.copy(primaryImage, 0, 0, 64, 64, 16 + 2, 16 + 2);
+                }
+
+                if (imageTokenData.imagePrimaryColor != null) {
+                    primaryImage.tint = imageTokenData.imagePrimaryColor;
+                }
+
+                tokenBmd.copy(primaryImage, 0, 0, 64, 64, 16, 16);
+            }
+
+            // Mask Image
+            if (imageTokenData.maskImageSrc != null) {
+                // Make Image From Cache reference string
+                var maskImage = this.game.make.image(0, 0, imageTokenData.maskImageSrc);
+                if (imageTokenData.maskColor != null) {
+                    maskImage.tint = imageTokenData.maskColor;
+                }
+                tokenBmd.copy(maskImage);
+            }
+
+            this.game.cache.addBitmapData(imageTokenData.imageKey, tokenBmd);
+        }
+    },
+
+    create: function () {
+        this.game.state.start('main');
+    }
+}
+
+var mainState = {
 
     init: function () {
         this.game.canvas.oncontextmenu = function (e) { e.preventDefault(); }
@@ -77,7 +198,3 @@ var GameState = {
         //game.debug.geom(targetRectSmall, "#00FF00", false)
     }
 }
-
-//TODO Polyfill for array.find?
-//TODO Polyfill for array.filter?
-
