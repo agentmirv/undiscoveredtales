@@ -222,5 +222,5 @@ game.state.add('loadData', loadDataState);
 game.state.add('loadImages', loadImagesState);
 game.state.add('buildImages', buildImagesState);
 game.state.add('main', mainState);
-//game.state.start('main');
+
 game.state.start('loadData');
