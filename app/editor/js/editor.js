@@ -4,7 +4,7 @@
 
 var loadDataState = {
     preload: function () {
-        this.game.load.json('gamedata', '/data/gamedata.json');        
+        this.game.load.json('gamedata', '../data/gamedata.json');        
     },
 
     create: function () {
