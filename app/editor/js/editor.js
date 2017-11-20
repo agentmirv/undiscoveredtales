@@ -38,7 +38,7 @@ var loadImagesState = {
             }            
         }
 
-        this.game.load.baseURL = "/";
+        this.game.load.baseURL = "../";
 
         for(var key in imageDictionary) {
             var imgSrc = imageDictionary[key];
