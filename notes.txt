@@ -929,7 +929,13 @@ Using States in Phaser.JS Javascript Game Development
 http://perplexingtech.weebly.com/game-dev-blog/using-states-in-phaserjs-javascript-game-developement
 
 ===========================================================
+2017 November 24, Friday 10:53 AM ~~~
 ===========================================================
+Cloud9 isn't keeping my node, bower and polymer installations?
+nvm install node
+npm install -g bower
+npm install -g polymer-cli
+
 ===========================================================
 ===========================================================
 ===========================================================
