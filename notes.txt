@@ -937,8 +937,19 @@ npm install -g bower
 npm install -g polymer-cli
 
 ===========================================================
+2017 November 25, Saturday 1:35 PM ~~~
 ===========================================================
+Node version not persisting
+https://community.c9.io/t/node-version-not-persisting/15081
+* Try running nvm ls to see all installed node versions and then nvm use <versionnumber> to activate the version you want.
+
 ===========================================================
+https://github.com/aubort/polymer-element-on-c9
+
+polymer serve --hostname "0.0.0.0"
+
+https://undiscoveredtales-agentmirv.c9users.io:8081/app/editor/
+
 ===========================================================
 ===========================================================
 ===========================================================

@@ -19,6 +19,7 @@
                 --input-border-color: #596c7a;                
                 --paper-tabs-selection-bar-color: var(--highlight-pink);
                 --paper-tab-ink: var(--input-border-color);
+                --app-drawer-width: 350px;
             }
 
             app-header {
@@ -111,31 +112,23 @@
 
         <div class="app-body">
             <div class="main-view">
+                <div id="gameDiv" style="background-color:black; height: 100%"></div> 
+            </div>
+            <div class="drawer, helptext">
                 <paper-tabs selected="{{index}}" scrollable>
-                    <paper-tab>Preview</paper-tab>
-                    <paper-tab>Tiles</paper-tab>
                     <paper-tab>Tokens</paper-tab>
+                    <paper-tab>Tiles</paper-tab>
                 </paper-tabs>
-                <iron-pages selected={{index}} selected-attribute="visible">
-
-                    <div id="gameDiv" style="background-color:black; height: 100%"></div> 
-
-                    <div style="background-color:burlywood; height: 100%">
-                        <div>Tiles</div>
-                    </div>
-
-                    <div style="background-color:darkseagreen; height:100%">
+                <iron-pages selected="{{index}}" selected-attribute="visible">
+                    <div>
                         <ul class="grid">
                             <template is="dom-repeat" items="{{tokens}}">
                                 <li><a href="#"><img src="../[[item.primaryImageSrc]]"></a></li>
                             </template>
-                        </ul>                        
+                        </ul>
                     </div>
-
+                    <div>Tiles</div>
                 </iron-pages>
-            </div>
-            <div class="drawer, helptext">
-                Right Click in Preview to scroll map.
             </div>
         </div>
         
