@@ -17,6 +17,17 @@ var loadImagesState = {
         this.game.gamedata = this.game.cache.getJSON('gamedata');
         var imageDictionary = {};
 
+        // Tiles
+        for (var i = 0; i < this.game.gamedata.imageTiles.length; i++) {
+            var imageTile = this.game.gamedata.imageTiles[i];
+            if (imageTile.hasOwnProperty("imageSrc")) {
+                if (!imageDictionary.hasOwnProperty(imageTile.imageSrc)) {
+                    imageDictionary[imageTile.imageSrc] = imageTile.imageSrc;
+                }
+            }
+        }
+
+        // Tokens
         for (var i = 0; i < this.game.gamedata.imageTokens.length; i++) {
             var imageToken = this.game.gamedata.imageTokens[i];
             if (imageToken.hasOwnProperty("primaryImageSrc")) {
@@ -39,8 +50,8 @@ var loadImagesState = {
         }
 
         for(var key in imageDictionary) {
-            var imgSrc = imageDictionary[key];
-                this.game.load.image(key, imgSrc);
+            var imageSrc = imageDictionary[key];
+            this.game.load.image(key, imageSrc);
           }
     },
 
@@ -51,6 +62,16 @@ var loadImagesState = {
 
 var buildImagesState = {
     preload: function () {
+        //=================================================
+        // ImageTiles bitmapData
+        for (var k = 0; k < game.gamedata.imageTiles.length; k++) {
+            var imageTileData = game.gamedata.imageTiles[k];
+            var image = this.game.make.image(0, 0, imageTileData.imageSrc);
+            var mapTileBmd = game.make.bitmapData(image.width, image.height);
+            mapTileBmd.copy(image);
+            game.cache.addBitmapData(imageTileData.imageKey, mapTileBmd);
+        }
+        
         //=================================================
         // ImageTokens BitmapData
         for (var i = 0; i < this.game.gamedata.imageTokens.length; i++) {

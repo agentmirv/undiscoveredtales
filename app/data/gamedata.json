@@ -883,6 +883,7 @@
   "imageTiles": [
     {
       "imageKey": "maptile-lobby-image",
+      "imageSrc": "assets/images/lobby.png",
       "width": 6,
       "height": 6,
       "spritesheet": "tileWallsSheet2",
@@ -897,6 +898,7 @@
     },
     {
       "imageKey": "maptile-study-image",
+      "imageSrc": "assets/images/study.png",
       "width": 6,
       "height": 3,
       "spritesheet": "tileWallsSheet2",
@@ -908,6 +910,7 @@
     },
     {
       "imageKey": "maptile-hall-end-image",
+      "imageSrc": "assets/images/hall-end.png",
       "width": 6,
       "height": 3,
       "spritesheet": "tileWallsSheet2",
@@ -919,6 +922,7 @@
     },
     {
       "imageKey": "maptile-hall-corner-1-image",
+      "imageSrc": "assets/images/hall-corner-1.png",
       "width": 6,
       "height": 3,
       "spritesheet": "tileWallsSheet2",
