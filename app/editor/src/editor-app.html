@@ -127,7 +127,13 @@
                             </template>
                         </ul>
                     </div>
-                    <div>Tiles</div>
+                    <div>
+                        <ul class="grid">
+                            <template is="dom-repeat" items="{{tiles}}">
+                                <li><a href="#"><img src="../[[item.imageSrc]]" width="200px"></a></li>
+                            </template>
+                        </ul>                        
+                    </div>
                 </iron-pages>
             </div>
         </div>
@@ -171,6 +177,9 @@
                     },
                     tokens: {
                         type: Array
+                    },
+                    tiles: {
+                        type: Array
                     }
                 }
             }
@@ -187,6 +196,7 @@
             _gameCreateDone() {
                 console.log("editor-app: _gameCreateDone");
                 this.set('tokens', mainState.tokens);
+                this.set('tiles', mainState.tiles);
             }
         }
         window.customElements.define(EditorApp.is, EditorApp);

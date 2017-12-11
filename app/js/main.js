@@ -64,12 +64,12 @@ var buildImagesState = {
     preload: function () {
         //=================================================
         // ImageTiles bitmapData
-        for (var k = 0; k < game.gamedata.imageTiles.length; k++) {
-            var imageTileData = game.gamedata.imageTiles[k];
+        for (var k = 0; k < this.game.gamedata.imageTiles.length; k++) {
+            var imageTileData = this.game.gamedata.imageTiles[k];
             var image = this.game.make.image(0, 0, imageTileData.imageSrc);
-            var mapTileBmd = game.make.bitmapData(image.width, image.height);
+            var mapTileBmd = this.game.make.bitmapData(image.width, image.height);
             mapTileBmd.copy(image);
-            game.cache.addBitmapData(imageTileData.imageKey, mapTileBmd);
+            this.game.cache.addBitmapData(imageTileData.imageKey, mapTileBmd);
         }
         
         //=================================================
