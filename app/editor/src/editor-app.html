@@ -45,8 +45,8 @@
             }
 
             .drawer {
-                min-width: 270px;
-                width: 270px;
+                min-width: 400px;
+                width: 400px;
                 height: 100%;
                 overflow: hidden;
                 background: var(--medium-grey);
@@ -89,12 +89,20 @@
                 list-style: none;
             }
 
-            .grid li {
+            .grid .tokens {
                 -webkit-flex: 1 1;
                 flex: 1 1;
                 -webkit-flex-basis: 33%;
                 flex-basis: 33%;
                 max-width: 33%;
+            }
+
+            .grid .tiles {
+                -webkit-flex: 1 1;
+                flex: 1 1;
+                -webkit-flex-basis: 50%;
+                flex-basis: 50%;
+                max-width: 50%;
             }
 
             .grid a {
@@ -114,7 +122,7 @@
             <div class="main-view">
                 <div id="gameDiv" style="background-color:black; height: 100%"></div> 
             </div>
-            <div class="drawer, helptext">
+            <div class="drawer helptext">
                 <paper-tabs selected="{{index}}" scrollable>
                     <paper-tab>Tokens</paper-tab>
                     <paper-tab>Tiles</paper-tab>
@@ -123,14 +131,14 @@
                     <div>
                         <ul class="grid">
                             <template is="dom-repeat" items="{{tokens}}">
-                                <li><a href="#"><img src="../[[item.primaryImageSrc]]"></a></li>
+                                <li class="tokens"><a href="#"><img src="../[[item.primaryImageSrc]]"></a></li>
                             </template>
                         </ul>
                     </div>
                     <div>
                         <ul class="grid">
                             <template is="dom-repeat" items="{{tiles}}">
-                                <li><a href="#"><img src="../[[item.imageSrc]]" width="200px"></a></li>
+                                <li class="tiles"><a href="#"><img src="../[[item.imageSrc]]" width="150px"></a></li>
                             </template>
                         </ul>                        
                     </div>
