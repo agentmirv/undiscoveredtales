@@ -84,7 +84,7 @@
                 @apply --layout-horizontal;
                 @apply --layout-wrap;
                 @apply --layout-justified;
-                margin: 0 10px 32px 10px;
+                margin: 10px 10px 32px 10px;
                 padding: 0;
                 list-style: none;
             }
@@ -109,6 +109,20 @@
                 display:block;
                 text-decoration: none;
             }
+            
+            .tiles img {
+                background-color: white;
+            }
+            
+            .tiles .label {
+                margin-bottom: 20px;
+                font-size: 10pt;
+            }
+
+            .tokens .label {
+                margin-bottom: 20px;
+                font-size: 10pt;
+            }
 
         </style>
 
@@ -131,14 +145,20 @@
                     <div>
                         <ul class="grid">
                             <template is="dom-repeat" items="{{tokens}}">
-                                <li class="tokens"><a href="#"><img src="../[[item.primaryImageSrc]]"></a></li>
+                                <li class="tokens">
+                                    <a href="#"><img src="../[[item.primaryImageSrc]]"></a>
+                                    <div class="label">[[item.imageKey]]</div>
+                                </li>
                             </template>
                         </ul>
                     </div>
                     <div>
                         <ul class="grid">
                             <template is="dom-repeat" items="{{tiles}}">
-                                <li class="tiles"><a href="#"><img src="../[[item.imageSrc]]" width="150px"></a></li>
+                                <li class="tiles">
+                                    <a href="#"><img src="../[[item.imageSrc]]" width="150px"></a>
+                                    <div class="label">[[item.imageKey]]</div>
+                                </li>
                             </template>
                         </ul>                        
                     </div>
