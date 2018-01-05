@@ -883,54 +883,19 @@
   "imageTiles": [
     {
       "imageKey": "lobby",
-      "imageSrc": "assets/images/lobby.png",
-      "width": 6,
-      "height": 6,
-      "spritesheet": "tileWallsSheet2",
-      "walls": [
-        0, 6, 2, 2, 6, 1,
-        6, 6, 6, 6, 6, 6,
-        9, 6, 6, 6, 6, 3,
-        9, 6, 6, 6, 6, 3,
-        6, 6, 6, 6, 6, 6,
-        7,10,10,10,10, 8
-      ]
+      "imageSrc": "assets/images/lobby.png"
     },
     {
       "imageKey": "study",
-      "imageSrc": "assets/images/study.png",
-      "width": 6,
-      "height": 3,
-      "spritesheet": "tileWallsSheet2",
-      "walls": [
-        0, 2, 2, 2, 2, 1,
-        6, 6, 6, 6, 6, 3,
-        7,10,10,10, 6, 8
-      ]
+      "imageSrc": "assets/images/study.png"
     },
     {
       "imageKey": "hall-end",
-      "imageSrc": "assets/images/hall-end.png",
-      "width": 6,
-      "height": 3,
-      "spritesheet": "tileWallsSheet2",
-      "walls": [
-        2, 2, 2, 2, 6, 1,
-        6, 6, 6, 6, 6, 6,
-       10, 6,10,10,10, 8
-      ]
+      "imageSrc": "assets/images/hall-end.png"
     },
     {
       "imageKey": "hall-corner-1",
-      "imageSrc": "assets/images/hall-corner-1.png",
-      "width": 6,
-      "height": 3,
-      "spritesheet": "tileWallsSheet2",
-      "walls": [
-        2, 2, 6, 2, 2, 1,
-        6, 6, 6, 6, 6, 6,
-       10, 6,10,11, 6, 3
-      ]
+      "imageSrc": "assets/images/hall-corner-1.png"
     }
   ],
   "imageTokens": [

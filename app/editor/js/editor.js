@@ -121,10 +121,9 @@ var mainState = {
         this.game.stageViewRect = new Phaser.Rectangle(0, 0, this.game.camera.view.width, this.game.camera.view.height);
         this.game.presentationOffsetY = 48;
         this.cursors = this.game.input.keyboard.createCursorKeys();
+        this.game.add.tileSprite(0, 0, 2560, 2560, 'backgroundDebug');
 
         this.game.player = new PlayerSprite(this.game, this.game.gamedata.playerStart.x, this.game.gamedata.playerStart.y);
-
-        this.game.add.tileSprite(0, 0, 2560, 2560, 'backgroundDebug');
 
         //=================================================
         this.tokens = this.game.gamedata.imageTokens;
