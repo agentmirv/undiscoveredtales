@@ -30,23 +30,11 @@ var loadImagesState = {
         // Tokens
         for (var i = 0; i < this.game.gamedata.imageTokens.length; i++) {
             var imageToken = this.game.gamedata.imageTokens[i];
-            if (imageToken.hasOwnProperty("primaryImageSrc")) {
-                if (!imageDictionary.hasOwnProperty(imageToken.primaryImageSrc)) {
-                    imageDictionary[imageToken.primaryImageSrc] = imageToken.primaryImageSrc;
+            if (imageToken.hasOwnProperty("src")) {
+                if (!imageDictionary.hasOwnProperty(imageToken.src)) {
+                    imageDictionary[imageToken.src] = imageToken.src;
                 }
             }
-
-            if (imageToken.hasOwnProperty("backgroundImageSrc")) {
-                if (!imageDictionary.hasOwnProperty(imageToken.backgroundImageSrc)) {
-                    imageDictionary[imageToken.backgroundImageSrc] = imageToken.backgroundImageSrc;
-                }
-            }
-
-            if (imageToken.hasOwnProperty("maskImageSrc")) {
-                if (!imageDictionary.hasOwnProperty(imageToken.maskImageSrc)) {
-                    imageDictionary[imageToken.maskImageSrc] = imageToken.maskImageSrc;
-                }
-            }            
         }
 
         for(var key in imageDictionary) {
@@ -79,54 +67,10 @@ var buildImagesState = {
             var imageTokenData = this.game.gamedata.imageTokens[i];
             var tokenBmd = this.game.make.bitmapData(gridWidth, gridWidth);
 
-            // Background Image
-            if (imageTokenData.backgroundImageSrc != null) {
-                if (imageTokenData.backgroundImageAngle == null) {
-                    // Make Image From Cache reference string
-                    var backgroundImage = this.game.make.image(0, 0, imageTokenData.backgroundImageSrc);
-                    if (imageTokenData.backgroundColor != null) {
-                        backgroundImage.tint = imageTokenData.backgroundColor;
-                    }
-                    tokenBmd.copy(backgroundImage);
-                } else {
-                    var degToRad = imageTokenData.backgroundImageAngle * (Math.PI / 180);
-                    if (imageTokenData.backgroundImageAngle == 90) {
-                        tokenBmd.copy(imageTokenData.backgroundImageSrc, null, null, null, null, null, null, null, null, degToRad, 0, 1);
-                    } else if (imageTokenData.backgroundImageAngle == 270) {
-                        tokenBmd.copy(imageTokenData.backgroundImageSrc, null, null, null, null, null, null, null, null, degToRad, 1, 0);
-                    } else if (imageTokenData.backgroundImageAngle == 180) {
-                        tokenBmd.copy(imageTokenData.backgroundImageSrc, null, null, null, null, null, null, null, null, degToRad, 1, 1);
-                    } else {
-                        tokenBmd.copy(imageTokenData.backgroundImageSrc);
-                    }
-                }
-            }
-
-            // Primary Image
-            if (imageTokenData.primaryImageSrc != null) {
+            if (imageTokenData.src != null) {
                 // Make Image From Cache reference string
-                var primaryImage = this.game.make.image(0, 0, imageTokenData.primaryImageSrc);
-
-                if (imageTokenData.imageShadowColor != null) {
-                    primaryImage.tint = imageTokenData.imageShadowColor;
-                    tokenBmd.copy(primaryImage, 0, 0, 64, 64, 16 + 2, 16 + 2);
-                }
-
-                if (imageTokenData.imagePrimaryColor != null) {
-                    primaryImage.tint = imageTokenData.imagePrimaryColor;
-                }
-
-                tokenBmd.copy(primaryImage, 0, 0, 64, 64, 16, 16);
-            }
-
-            // Mask Image
-            if (imageTokenData.maskImageSrc != null) {
-                // Make Image From Cache reference string
-                var maskImage = this.game.make.image(0, 0, imageTokenData.maskImageSrc);
-                if (imageTokenData.maskColor != null) {
-                    maskImage.tint = imageTokenData.maskColor;
-                }
-                tokenBmd.copy(maskImage);
+                var primaryImage = this.game.make.image(0, 0, imageTokenData.src);
+                tokenBmd.copy(primaryImage, 0, 0, primaryImage.width, primaryImage.height, 0, 0, 96, 96);
             }
 
             this.game.cache.addBitmapData(imageTokenData.imageKey, tokenBmd);
