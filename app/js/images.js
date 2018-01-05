@@ -47,28 +47,6 @@ ImageHelper.create = function (game) {
         hudBmd.copy(iconImage, 0, 0, 64, 64, 16, 16);
         game.cache.addBitmapData(hudButtonImage.redImgId, hudBmd);    
     }
-
-    //=================================================
-    // ImageTiles bitmapData
-    // for (var k = 0; k < game.gamedata.imageTiles.length; k++) {
-    //     var gridWidth = 96;
-    //     var imageTileData = game.gamedata.imageTiles[k];
-    //     var bmdWidth = imageTileData.width * gridWidth;
-    //     var bmdHeight = imageTileData.height * gridWidth;
-    //     var mapTileBmd = game.make.bitmapData(bmdWidth, bmdHeight);
-
-    //     for (var j = 0; j < imageTileData.height; j++) {
-    //         for (var i = 0; i < imageTileData.width; i++) {
-    //             var localX = i * gridWidth;
-    //             var localY = j * gridWidth;
-    //             var wallIndex = i + j * 6;
-    //             var sprite = game.make.tileSprite(localX, localY, gridWidth, gridWidth, imageTileData.spritesheet, imageTileData.walls[wallIndex]);
-    //             mapTileBmd.copy(sprite);
-    //         }
-    //     }
-
-    //     game.cache.addBitmapData(imageTileData.imageKey, mapTileBmd);
-    // }
 }
 
 ImageHelper.getImage = function (game, imageKey) {
