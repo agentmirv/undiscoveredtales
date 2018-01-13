@@ -156,7 +156,7 @@
                         <ul class="grid">
                             <template is="dom-repeat" items="{{tiles}}">
                                 <li class="tiles">
-                                    <a href="#"><img src="../[[item.imageSrc]]" width="150px"></a>
+                                    <a href="#" on-click="handleTileClick" data-item$="[[item]]"><img src="../[[item.imageSrc]]" width="150px"></a>
                                     <div class="label">[[item.imageKey]]</div>
                                 </li>
                             </template>
@@ -190,6 +190,11 @@
                 });
 
                 this.index = 0;
+            }
+
+            handleTileClick(event) {
+                console.log(event.model.index);
+                console.log(mainState.tiles[event.model.index].imageKey);
             }
 
             static get properties() {

@@ -951,7 +951,17 @@ polymer serve --hostname "0.0.0.0"
 https://undiscoveredtales-agentmirv.c9users.io:8081/app/editor/
 
 ===========================================================
+2018 January 12, Friday 7:19 pm ~~~
 ===========================================================
+Handle and fire events
+https://www.polymer-project.org/2.0/docs/devguide/events
+
+Polymer 1.0: Is there a way to pass an argument to a Polymer function from an attribute?
+https://stackoverflow.com/questions/31441401/polymer-1-0-is-there-a-way-to-pass-an-argument-to-a-polymer-function-from-an-at
+
+How to pass parameters in Polymer 2.0 on-tap function?
+https://stackoverflow.com/questions/43505067/how-to-pass-parameters-in-polymer-2-0-on-tap-function
+
 ===========================================================
 ===========================================================
 ===========================================================

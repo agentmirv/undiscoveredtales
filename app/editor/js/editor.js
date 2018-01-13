@@ -135,6 +135,21 @@ var mainState = {
         var playerVelocity = 400;
         this.game.player.body.setZeroVelocity();
 
+        if (this.cursors.up.isDown) {
+            this.game.player.body.moveUp(playerVelocity)
+        }
+        else if (this.cursors.down.isDown) {
+            this.game.player.body.moveDown(playerVelocity);
+        }
+
+        if (this.cursors.left.isDown) {
+            this.game.player.body.velocity.x = -playerVelocity;
+        }
+        else if (this.cursors.right.isDown) {
+            this.game.player.body.moveRight(playerVelocity);
+        }
+
+        /*
         if (this.game.input.activePointer.rightButton.isDown) {
             if (this.game.origDragPoint) {
                 // move the camera by the amount the mouse has moved since last update	
@@ -146,6 +161,7 @@ var mainState = {
         } else {
             this.game.origDragPoint = null;
         }
+        */
     },
 
     render: function () {
@@ -161,5 +177,20 @@ var mainState = {
         //game.debug.geom(targetRectLarge, "#00FF00", false)
         //var targetRectSmall = new Phaser.Rectangle(player.body.x - 10, player.body.y - 10, 20, 20)
         //game.debug.geom(targetRectSmall, "#00FF00", false)
+    },
+    
+    test: function() {
+        //960
+        var newTileData = {
+            "id": "maptile-lobby",
+            "x": this.game.player.x,
+            "y": this.game.player.y,
+            "imageKey": "lobby",
+            "floorColor": "0xbbb5af",      
+            "angle": 0,
+            "entryTokenIds": []
+        }
+        
+        var newTile = new MapTile(this.game, newTileData);
     }
 }
