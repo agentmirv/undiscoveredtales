@@ -194,8 +194,8 @@ var mainState = {
     
     addTile: function(imageKey) {
         var newTileData = {
-            "x": this.game.player.x,
-            "y": this.game.player.y,
+            "x": 0,
+            "y": 0,
             "imageKey": imageKey,
             "id": imageKey,
             "angle": 0,
@@ -203,6 +203,8 @@ var mainState = {
         }
         
         var mapTileInstance = new MapTile(this.game, newTileData);
+        mapTileInstance.x = this.game.player.x - Math.floor(mapTileInstance.width / 2); 
+        mapTileInstance.y = this.game.player.y - Math.floor(mapTileInstance.height / 2);
         this.game.mapTileLayer.addChild(mapTileInstance);
         var fadeInTween = this.game.add.tween(mapTileInstance).from({ alpha: 0 }, 600, Phaser.Easing.Linear.None, true, 0, 0, false);
 
