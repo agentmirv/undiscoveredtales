@@ -883,19 +883,23 @@
   "imageTiles": [
     {
       "imageKey": "lobby",
-      "imageSrc": "assets/images/lobby.png"
+      "imageSrc": "assets/images/lobby.png",
+      "floorColor": "0xbbb5af"
     },
     {
       "imageKey": "study",
-      "imageSrc": "assets/images/study.png"
+      "imageSrc": "assets/images/study.png",
+      "floorColor": "0x836544"
     },
     {
       "imageKey": "hall-end",
-      "imageSrc": "assets/images/hall-end.png"
+      "imageSrc": "assets/images/hall-end.png",
+      "floorColor": "0x7c8fac"
     },
     {
       "imageKey": "hall-corner-1",
-      "imageSrc": "assets/images/hall-corner-1.png"
+      "imageSrc": "assets/images/hall-corner-1.png",
+      "floorColor": "0x743232"
     }
   ],
   "imageTokens": [

@@ -41,8 +41,10 @@ var loadImagesState = {
 
         for(var key in imageDictionary) {
             var imgSrc = imageDictionary[key];
-                this.game.load.image(key, imgSrc);
-          }
+            this.game.load.image(key, imgSrc);
+        }
+        
+        this.game.load.image('pixelWhite', 'assets/images/FFFFFF-1.png');
     },
 
     create: function () {
@@ -58,6 +60,14 @@ var buildImagesState = {
             var imageTileData = this.game.gamedata.imageTiles[k];
             var image = this.game.make.image(0, 0, imageTileData.imageSrc);
             var mapTileBmd = this.game.make.bitmapData(image.width, image.height);
+            
+            var backgroundImage = this.game.make.image(0, 0, 'pixelWhite');
+            if (imageTileData.floorColor != null) {
+                backgroundImage.tint = imageTileData.floorColor;
+                console.log(imageTileData.floorColor);
+            }
+            mapTileBmd.copy(backgroundImage, 0, 0, 1, 1, 0, 0, image.width, image.height);
+            
             mapTileBmd.copy(image);
             this.game.cache.addBitmapData(imageTileData.imageKey, mapTileBmd);
         }
@@ -125,6 +135,9 @@ var mainState = {
 
         this.game.player = new PlayerSprite(this.game, this.game.gamedata.playerStart.x, this.game.gamedata.playerStart.y);
 
+        this.game.mapTileLayer = this.game.add.group();
+        this.game.tokenLayer = this.game.add.group();
+
         //=================================================
         this.tokens = this.game.gamedata.imageTokens;
         this.tiles = this.game.gamedata.imageTiles;
@@ -185,11 +198,17 @@ var mainState = {
             "y": this.game.player.y,
             "imageKey": imageKey,
             "id": imageKey,
-            "floorColor": "0xbbb5af",      
             "angle": 0,
             "entryTokenIds": []
         }
         
-        var newTile = new MapTile(this.game, newTileData);
+        var mapTileInstance = new MapTile(this.game, newTileData);
+        this.game.mapTileLayer.addChild(mapTileInstance);
+        var fadeInTween = this.game.add.tween(mapTileInstance).from({ alpha: 0 }, 600, Phaser.Easing.Linear.None, true, 0, 0, false);
+
+        mapTileInstance.inputEnabled = true;
+        mapTileInstance.input.enableDrag();
+        //newTile.events.onDragStart.add(onDragStart, this);
+        //newTile.events.onDragStop.add(onDragStop, this);
     }
 }

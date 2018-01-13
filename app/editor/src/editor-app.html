@@ -193,7 +193,8 @@
             }
 
             handleTileClick(event) {
-                mainState.addTile(mainState.tiles[event.model.index].imageKey);
+                var tileData = mainState.tiles[event.model.index].imageKey;
+                mainState.addTile(tileData);
             }
 
             static get properties() {

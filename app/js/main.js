@@ -40,7 +40,9 @@ var loadImagesState = {
         for(var key in imageDictionary) {
             var imageSrc = imageDictionary[key];
             this.game.load.image(key, imageSrc);
-          }
+        }
+        
+        this.game.load.image('pixelWhite', 'assets/images/FFFFFF-1.png');
     },
 
     create: function () {
@@ -56,6 +58,14 @@ var buildImagesState = {
             var imageTileData = this.game.gamedata.imageTiles[k];
             var image = this.game.make.image(0, 0, imageTileData.imageSrc);
             var mapTileBmd = this.game.make.bitmapData(image.width, image.height);
+            
+            var backgroundImage = this.game.make.image(0, 0, 'pixelWhite');
+            if (imageTileData.floorColor != null) {
+                backgroundImage.tint = imageTileData.floorColor;
+                console.log(imageTileData.floorColor);
+            }
+            mapTileBmd.copy(backgroundImage, 0, 0, 1, 1, 0, 0, image.width, image.height);
+            
             mapTileBmd.copy(image);
             this.game.cache.addBitmapData(imageTileData.imageKey, mapTileBmd);
         }

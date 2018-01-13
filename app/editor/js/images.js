@@ -5,7 +5,7 @@ ImageHelper.preload = function(game) {
     game.load.baseURL = "../";
     game.load.image('backgroundDebug', 'assets/images/debug-grid-1920x1920.png');
     game.load.image('background', 'assets/images/tilebackground.png');
-    game.load.image('pixelWhite', 'assets/images/FFFFFF-1.png');
+    //game.load.image('pixelWhite', 'assets/images/FFFFFF-1.png');
     game.load.image('pixelBlack', 'assets/images/000000-1.png');
     game.load.image('pixelOrange', 'assets/images/FF4D00-1.png');
     game.load.image('pixelTransparent', 'assets/images/1x1.png');

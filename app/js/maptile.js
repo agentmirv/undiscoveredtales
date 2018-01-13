@@ -19,12 +19,15 @@ function MakeMapTile(game, id) {
 
 //=========================================================
 function MapTile(game, mapTileData) {
-    Phaser.Group.call(this, game);
+    //Phaser.Group.call(this, game);
+    Phaser.Sprite.call(this, game, mapTileData.x, mapTileData.y, ImageHelper.getImage(game, mapTileData.imageKey));
 
     this.data = mapTileData;
     this.id = this.data.id;
     this.isRevealed = false;
-    var sprite = game.make.sprite(this.data.x, this.data.y, ImageHelper.getImage(game, this.data.imageKey))
+    //var sprite = game.make.sprite(this.data.x, this.data.y, ImageHelper.getImage(game, this.data.imageKey));
+    
+    /*
     var bgSprite = game.make.tileSprite(sprite.x, sprite.y, sprite.width, sprite.height, 'pixelWhite');
     bgSprite.tint = parseInt(this.data.floorColor);
 
@@ -39,20 +42,22 @@ function MapTile(game, mapTileData) {
         sprite.anchor.setTo(1, 0);
         bgSprite.anchor.setTo(1, 0);
     }
-
+    */
+    
     // Set Sprite Angle
-    sprite.angle = this.data.angle;
-    bgSprite.angle = this.data.angle;
+    this.angle = this.data.angle;
+    //bgSprite.angle = this.data.angle;
 
-    this.addChild(bgSprite);
-    this.addChild(sprite);
+    //this.addChild(bgSprite);
+    //this.addChild(sprite);
     game.gamedataInstances.mapTiles.push(this);
     
     // Remove Door Tokens when the connecting rooms are revealed
     this.removeDoorTokens();
 }
 
-MapTile.prototype = Object.create(Phaser.Group.prototype);
+//MapTile.prototype = Object.create(Phaser.Group.prototype);
+MapTile.prototype = Object.create(Phaser.Sprite.prototype);
 MapTile.prototype.constructor = MapTile;
 
 MapTile.prototype.removeDoorTokens = function () {
