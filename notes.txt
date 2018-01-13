@@ -962,6 +962,12 @@ https://stackoverflow.com/questions/31441401/polymer-1-0-is-there-a-way-to-pass-
 How to pass parameters in Polymer 2.0 on-tap function?
 https://stackoverflow.com/questions/43505067/how-to-pass-parameters-in-polymer-2-0-on-tap-function
 
+Random Colors in JavaScript
+https://www.kirupa.com/html5/random_colors_js.htm
+
+How to Generate Random Colors Programmatically
+https://martin.ankerl.com/2009/12/09/how-to-create-random-colors-programmatically/
+
 ===========================================================
 ===========================================================
 ===========================================================

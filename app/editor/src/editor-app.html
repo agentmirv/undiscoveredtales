@@ -193,8 +193,7 @@
             }
 
             handleTileClick(event) {
-                console.log(event.model.index);
-                console.log(mainState.tiles[event.model.index].imageKey);
+                mainState.addTile(mainState.tiles[event.model.index].imageKey);
             }
 
             static get properties() {

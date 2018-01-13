@@ -179,13 +179,12 @@ var mainState = {
         //game.debug.geom(targetRectSmall, "#00FF00", false)
     },
     
-    test: function() {
-        //960
+    addTile: function(imageKey) {
         var newTileData = {
-            "id": "maptile-lobby",
             "x": this.game.player.x,
             "y": this.game.player.y,
-            "imageKey": "lobby",
+            "imageKey": imageKey,
+            "id": imageKey,
             "floorColor": "0xbbb5af",      
             "angle": 0,
             "entryTokenIds": []
