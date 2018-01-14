@@ -110,10 +110,7 @@
                 text-decoration: none;
             }
             
-            .tiles img {
-                background-color: tan;
-            }
-            
+
             .tiles .label {
                 margin-bottom: 20px;
                 font-size: 10pt;
@@ -156,7 +153,9 @@
                         <ul class="grid">
                             <template is="dom-repeat" items="{{tiles}}">
                                 <li class="tiles">
-                                    <a href="#" on-click="handleTileClick" data-item$="[[item]]"><img src="../[[item.imageSrc]]" width="150px"></a>
+                                    <a href="#" on-click="handleTileClick" data-item$="[[item]]">
+                                        <img src="../[[item.imageSrc]]" width="150px" style="background-color: [[item.floorColor]]">
+                                    </a>
                                     <div class="label">[[item.imageKey]]</div>
                                 </li>
                             </template>

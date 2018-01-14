@@ -61,7 +61,8 @@ var buildImagesState = {
             
             var backgroundImage = this.game.make.image(0, 0, 'pixelWhite');
             if (imageTileData.floorColor != null) {
-                backgroundImage.tint = imageTileData.floorColor;
+                var floorColor = imageTileData.floorColor.replace("#", "0x");
+                backgroundImage.tint = floorColor;
             }
             mapTileBmd.copy(backgroundImage, 0, 0, 1, 1, 0, 0, image.width, image.height);
             
