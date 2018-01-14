@@ -974,8 +974,19 @@ https://martin.ankerl.com/2009/12/09/how-to-create-random-colors-programmaticall
 Drag Event Parameters
 https://phaser.io/examples/v2/input/drag-event-parameters
 
+Snap On Drag
+https://phaser.io/examples/v2/input/snap-on-drag
+
 ===========================================================
+2018 January 14, Sunday 8:31 am ~~~
 ===========================================================
+Phaser.Component.InputEnabled
+https://phaser.io/docs/2.6.2/Phaser.Component.InputEnabled.html
+
+If you want to temporarily disable input for a Game Object, then it's better to set
+input.enabled = false, as it won't reset any of the Input Handlers internal properties.
+You can then toggle this back on as needed.
+
 ===========================================================
 ===========================================================
 ===========================================================
