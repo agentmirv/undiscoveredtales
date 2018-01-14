@@ -210,6 +210,7 @@ var mainState = {
 
         mapTileInstance.inputEnabled = true;
         mapTileInstance.input.enableDrag();
+        mapTileInstance.input.enableSnap(96, 96, true, true);
         //newTile.events.onDragStart.add(onDragStart, this);
         //newTile.events.onDragStop.add(onDragStop, this);
     }
