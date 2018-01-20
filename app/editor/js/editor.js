@@ -171,13 +171,11 @@ var mainState = {
         var pointer = this.input.activePointer;
         if (pointer.rightButton.isDown) {
             if(pointer.targetObject != null){
-                if(this.input.mouse.wheelDelta == Phaser.Mouse.WHEEL_UP) {
-                    pointer.targetObject.sprite.angle -= 90;
-                    console.log(pointer.targetObject.sprite.angle);
-                } 
                 if(this.input.mouse.wheelDelta == Phaser.Mouse.WHEEL_DOWN) {
-                    pointer.targetObject.sprite.angle += 90;
-                    console.log(pointer.targetObject.sprite.angle);
+                    pointer.targetObject.sprite.rotateClockwise();
+                } 
+                if(this.input.mouse.wheelDelta == Phaser.Mouse.WHEEL_UP) {
+                    pointer.targetObject.sprite.rotateCounterClockwise();
                 }     
             }
         }
@@ -240,12 +238,14 @@ var mainState = {
             "entryTokenIds": []
         }
         
+        // Set x, y based on center of view and grid-snapped.
         var mapTileInstance = new MapTile(this.game, newTileData);
         var newX = this.game.player.x - Math.floor(mapTileInstance.width / 2); 
         var newY = this.game.player.y - Math.floor(mapTileInstance.height / 2);
         mapTileInstance.x = newX - (newX % 96);
         mapTileInstance.y = newY - (newY % 96);
 
+        // Set anchor so that the rotation will end up grid-snapped
         if (mapTileInstance.width > mapTileInstance.height) {
             mapTileInstance.anchor.set(0.5, 1);
         } else if (mapTileInstance.width > mapTileInstance.height) {
@@ -254,10 +254,43 @@ var mainState = {
             mapTileInstance.anchor.set(0.5, 0.5);
         }
 
+        // For drag controls
+        mapTileInstance.inputEnabled = true;
+        mapTileInstance.input.enableSnap(96, 96, true, true);
+
         this.game.mapTileLayer.addChild(mapTileInstance);
         var fadeInTween = this.game.add.tween(mapTileInstance).from({ alpha: 0 }, 600, Phaser.Easing.Linear.None, true, 0, 0, false);
 
-        mapTileInstance.inputEnabled = true;
-        mapTileInstance.input.enableSnap(96, 96, true, true);
+        // Probably should move this into a derived class or something?
+        mapTileInstance.rotating = false;
+        mapTileInstance.rotateClockwise = function () {
+            if (!this.rotating) {
+                var newAngle = this.angle + 90;
+                var rotateTween = this.game.add.tween(this).to({ angle: newAngle }, 100, Phaser.Easing.Linear.None, true);
+
+                rotateTween.onStart.addOnce(function () {
+                    this.rotating = true;
+                }, this);
+                
+                rotateTween.onComplete.addOnce(function () {
+                    this.rotating = false;
+                }, this);
+            }
+        }
+
+        mapTileInstance.rotateCounterClockwise = function () {
+            if (!this.rotating) {
+                var newAngle = this.angle - 90;
+                var rotateTween = this.game.add.tween(this).to({ angle: newAngle }, 100, Phaser.Easing.Linear.None, true);
+
+                rotateTween.onStart.addOnce(function () {
+                    this.rotating = true;
+                }, this);
+                
+                rotateTween.onComplete.addOnce(function () {
+                    this.rotating = false;
+                }, this);
+            }
+        }
     }
 }
