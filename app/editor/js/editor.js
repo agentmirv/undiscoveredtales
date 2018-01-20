@@ -148,6 +148,7 @@ var mainState = {
         this.game.input.activePointer.leftButton.onUp.add(this.onLeftMouseButtonUp);
         this.game.input.activePointer.rightButton.onDown.add(this.onRightMouseButtonDown);
         this.game.input.activePointer.rightButton.onUp.add(this.onRightMouseButtonUp);
+        this.game.input.mouse.mouseWheelCallback = this.mouseWheelCallback;
     },
 
     onLeftMouseButtonUp: function(button) {
@@ -156,13 +157,29 @@ var mainState = {
 
     onRightMouseButtonDown: function (button) {
         if(button.parent.targetObject != null){
-            button.parent.targetObject.enableDrag();
+            button.parent.targetObject.enableDrag(false, true);
         }
     },
 
     onRightMouseButtonUp: function (button) {
         if(button.parent.targetObject != null){
             button.parent.targetObject.disableDrag();
+        }
+    },
+
+    mouseWheelCallback: function(event) {
+        var pointer = this.input.activePointer;
+        if (pointer.rightButton.isDown) {
+            if(pointer.targetObject != null){
+                if(this.input.mouse.wheelDelta == Phaser.Mouse.WHEEL_UP) {
+                    pointer.targetObject.sprite.angle -= 90;
+                    console.log(pointer.targetObject.sprite.angle);
+                } 
+                if(this.input.mouse.wheelDelta == Phaser.Mouse.WHEEL_DOWN) {
+                    pointer.targetObject.sprite.angle += 90;
+                    console.log(pointer.targetObject.sprite.angle);
+                }     
+            }
         }
     },
 
@@ -194,8 +211,6 @@ var mainState = {
             }
             // set new drag origin to current position	
             this.game.origDragPoint = this.game.input.activePointer.position.clone();
-        //} else {
-        //    this.game.origDragPoint = null;
         }
         
     },
@@ -226,8 +241,19 @@ var mainState = {
         }
         
         var mapTileInstance = new MapTile(this.game, newTileData);
-        mapTileInstance.x = this.game.player.x - Math.floor(mapTileInstance.width / 2); 
-        mapTileInstance.y = this.game.player.y - Math.floor(mapTileInstance.height / 2);
+        var newX = this.game.player.x - Math.floor(mapTileInstance.width / 2); 
+        var newY = this.game.player.y - Math.floor(mapTileInstance.height / 2);
+        mapTileInstance.x = newX - (newX % 96);
+        mapTileInstance.y = newY - (newY % 96);
+
+        if (mapTileInstance.width > mapTileInstance.height) {
+            mapTileInstance.anchor.set(0.5, 1);
+        } else if (mapTileInstance.width > mapTileInstance.height) {
+            mapTileInstance.anchor.set(1, 0.5);
+        } else {
+            mapTileInstance.anchor.set(0.5, 0.5);
+        }
+
         this.game.mapTileLayer.addChild(mapTileInstance);
         var fadeInTween = this.game.add.tween(mapTileInstance).from({ alpha: 0 }, 600, Phaser.Easing.Linear.None, true, 0, 0, false);
 
