@@ -138,13 +138,32 @@ var mainState = {
         this.game.mapTileLayer = this.game.add.group();
         this.game.tokenLayer = this.game.add.group();
 
-        this.game.singlePointerIsMoving = false;
-        this.game.doublePointerIsMoving = false;
-
         //=================================================
         this.tokens = this.game.gamedata.imageTokens;
         this.tiles = this.game.gamedata.imageTiles;
         this.host._gameCreateDone();
+
+        //=================================================
+        this.game.origDragPoint = null;
+        this.game.input.activePointer.leftButton.onUp.add(this.onLeftMouseButtonUp);
+        this.game.input.activePointer.rightButton.onDown.add(this.onRightMouseButtonDown);
+        this.game.input.activePointer.rightButton.onUp.add(this.onRightMouseButtonUp);
+    },
+
+    onLeftMouseButtonUp: function(button) {
+        button.game.origDragPoint = null;
+    },
+
+    onRightMouseButtonDown: function (button) {
+        if(button.parent.targetObject != null){
+            button.parent.targetObject.enableDrag();
+        }
+    },
+
+    onRightMouseButtonUp: function (button) {
+        if(button.parent.targetObject != null){
+            button.parent.targetObject.disableDrag();
+        }
     },
 
     update: function () {
@@ -168,7 +187,6 @@ var mainState = {
         */
         
         if (this.game.input.activePointer.leftButton.isDown) {
-            /*
             if (this.game.origDragPoint) {
                 // move the camera by the amount the mouse has moved since last update	
                 this.game.player.body.x += this.game.origDragPoint.x - this.game.input.activePointer.position.x;
@@ -176,27 +194,8 @@ var mainState = {
             }
             // set new drag origin to current position	
             this.game.origDragPoint = this.game.input.activePointer.position.clone();
-            */
-            
-            if (this.game.origDragPoint == null) {
-                this.game.origDragPoint = this.game.input.activePointer.position.clone();
-            }
-            
-            if (!this.game.origDragPoint.equals(this.game.input.activePointer.position.clone())) {
-                if (this.game.input.activePointer.rightButton.isDown && !this.game.singlePointerIsMoving) {
-                    // Select Tile
-                    this.game.doublePointerIsMoving = true;
-                    console.log('doublePointerIsMoving');
-                } else if (!this.game.doublePointerIsMoving) {
-                    // Move Camera
-                    this.game.singlePointerIsMoving = true;
-                    console.log('singlePointerIsMoving');
-                }
-            }
-        } else {
-            this.game.origDragPoint = null;
-            this.game.singlePointerIsMoving = false;
-            this.game.doublePointerIsMoving = false;
+        //} else {
+        //    this.game.origDragPoint = null;
         }
         
     },
@@ -233,7 +232,6 @@ var mainState = {
         var fadeInTween = this.game.add.tween(mapTileInstance).from({ alpha: 0 }, 600, Phaser.Easing.Linear.None, true, 0, 0, false);
 
         mapTileInstance.inputEnabled = true;
-        //mapTileInstance.input.enableDrag();
         mapTileInstance.input.enableSnap(96, 96, true, true);
     }
 }

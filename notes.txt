@@ -988,7 +988,19 @@ input.enabled = false, as it won't reset any of the Input Handlers internal prop
 You can then toggle this back on as needed.
 
 ===========================================================
+2018 January 19, Friday 10:13 pm ~~~
 ===========================================================
+Drag w/ mouse right-button only (better)
+https://codepen.io/samme/pen/MJwzaB
+
+Class: Phaser.DeviceButton - 2.6.2
+https://phaser.io/docs/2.6.2/Phaser.DeviceButton.html
+
+Class: Phaser.Pointer - 2.6.2
+https://phaser.io/docs/2.6.2/Phaser.Pointer.html#targetObject
+
+
+
 ===========================================================
 ===========================================================
 ===========================================================
