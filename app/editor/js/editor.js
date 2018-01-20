@@ -145,24 +145,45 @@ var mainState = {
 
         //=================================================
         this.game.origDragPoint = null;
+        //this.game.input.activePointer.leftButton.onDown.add(this.onLeftMouseButtonDown);
         this.game.input.activePointer.leftButton.onUp.add(this.onLeftMouseButtonUp);
         this.game.input.activePointer.rightButton.onDown.add(this.onRightMouseButtonDown);
         this.game.input.activePointer.rightButton.onUp.add(this.onRightMouseButtonUp);
         this.game.input.mouse.mouseWheelCallback = this.mouseWheelCallback;
     },
 
+    /*
+    onLeftMouseButtonDown: function (button) {
+        if (button.parent.rightButton.isDown) {
+            if (button.parent.targetObject != null) {
+                //button.parent.targetObject.enableDrag(false, true);
+                console.log('delete', button.parent.targetObject.sprite);
+            }    
+        }
+    },
+    */
+
     onLeftMouseButtonUp: function(button) {
         button.game.origDragPoint = null;
+        if (button.parent.targetObject != null && button.parent.targetObject.sprite != null && button.parent.targetObject.sprite instanceof MapTile) {
+            button.parent.targetObject.sprite.deleteCancel();
+        }
     },
 
     onRightMouseButtonDown: function (button) {
-        if(button.parent.targetObject != null){
-            button.parent.targetObject.enableDrag(false, true);
+        if (button.parent.leftButton.isDown) {
+            if (button.parent.targetObject != null && button.parent.targetObject.sprite != null && button.parent.targetObject.sprite instanceof MapTile) {
+                button.parent.targetObject.sprite.delete();
+            }    
+        } else {
+            if (button.parent.targetObject != null) {
+                button.parent.targetObject.enableDrag(false, true);
+            }
         }
     },
 
     onRightMouseButtonUp: function (button) {
-        if(button.parent.targetObject != null){
+        if (button.parent.targetObject != null && button.parent.targetObject.sprite != null && button.parent.targetObject.sprite instanceof MapTile) {
             button.parent.targetObject.disableDrag();
         }
     },
@@ -266,7 +287,7 @@ var mainState = {
         mapTileInstance.rotateClockwise = function () {
             if (!this.rotating) {
                 var newAngle = this.angle + 90;
-                var rotateTween = this.game.add.tween(this).to({ angle: newAngle }, 100, Phaser.Easing.Linear.None, true);
+                var rotateTween = this.game.add.tween(this).to({ angle: newAngle }, 200, Phaser.Easing.Linear.None, true);
 
                 rotateTween.onStart.addOnce(function () {
                     this.rotating = true;
@@ -281,7 +302,7 @@ var mainState = {
         mapTileInstance.rotateCounterClockwise = function () {
             if (!this.rotating) {
                 var newAngle = this.angle - 90;
-                var rotateTween = this.game.add.tween(this).to({ angle: newAngle }, 100, Phaser.Easing.Linear.None, true);
+                var rotateTween = this.game.add.tween(this).to({ angle: newAngle }, 200, Phaser.Easing.Linear.None, true);
 
                 rotateTween.onStart.addOnce(function () {
                     this.rotating = true;
@@ -291,6 +312,55 @@ var mainState = {
                     this.rotating = false;
                 }, this);
             }
+        }
+
+        mapTileInstance.deleting = false;
+        mapTileInstance.deleteConfirm = false;
+        mapTileInstance.delete = function () {
+            if (!this.deleting) {
+                if (!this.deleteConfirm) {
+                    var alphaTween = this.game.add.tween(this).to({ alpha: 0.6 }, 300, Phaser.Easing.Linear.None, true);
+
+                    alphaTween.onStart.addOnce(function () {
+                        this.deleting = true;
+                    }, this);
+                    
+                    alphaTween.onComplete.addOnce(function () {
+                        this.deleting = false;
+                    }, this);
+                    
+                    this.deleteConfirm = true;
+                } else {
+                    var alphaTween = this.game.add.tween(this).to({ alpha: 0 }, 300, Phaser.Easing.Linear.None, true);
+
+                    alphaTween.onStart.addOnce(function () {
+                        this.deleting = true;
+                    }, this);
+                    
+                    alphaTween.onComplete.addOnce(function () {
+                        this.deleting = false;
+                        this.destroy(true);
+                    }, this);
+                }
+            }
+        },
+
+        mapTileInstance.deleteCancel = function () {
+            if (!this.deleting) {
+                if (this.deleteConfirm) {
+                    var alphaTween = this.game.add.tween(this).to({ alpha: 1 }, 300, Phaser.Easing.Linear.None, true);
+
+                    alphaTween.onStart.addOnce(function () {
+                        this.deleting = true;
+                    }, this);
+                    
+                    alphaTween.onComplete.addOnce(function () {
+                        this.deleting = false;
+                    }, this);
+                    
+                    this.deleteConfirm = false;
+                } 
+            }            
         }
     }
 }
