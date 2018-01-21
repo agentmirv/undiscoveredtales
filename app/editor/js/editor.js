@@ -145,6 +145,7 @@ var mainState = {
 
         //=================================================
         this.game.origDragPoint = null;
+        this.game.deleteInstance = null;
         //this.game.input.activePointer.leftButton.onDown.add(this.onLeftMouseButtonDown);
         this.game.input.activePointer.leftButton.onUp.add(this.onLeftMouseButtonUp);
         this.game.input.activePointer.rightButton.onDown.add(this.onRightMouseButtonDown);
@@ -165,16 +166,24 @@ var mainState = {
 
     onLeftMouseButtonUp: function(button) {
         button.game.origDragPoint = null;
+        if (button.game.deleteInstance != null) {
+            button.game.deleteInstance.deleteCancel();
+        }
+        /*
         if (button.parent.targetObject != null && button.parent.targetObject.sprite != null && button.parent.targetObject.sprite instanceof MapTile) {
             button.parent.targetObject.sprite.deleteCancel();
         }
+        */
     },
 
     onRightMouseButtonDown: function (button) {
         if (button.parent.leftButton.isDown) {
-            if (button.parent.targetObject != null && button.parent.targetObject.sprite != null && button.parent.targetObject.sprite instanceof MapTile) {
-                button.parent.targetObject.sprite.delete();
-            }    
+            if (button.game.deleteInstance == null && button.parent.targetObject != null && button.parent.targetObject.sprite != null && button.parent.targetObject.sprite instanceof MapTile) {
+                button.game.deleteInstance = button.parent.targetObject.sprite;
+                button.game.deleteInstance.delete();
+            } else if (button.game.deleteInstance != null) {
+                button.game.deleteInstance.delete();
+            }
         } else {
             if (button.parent.targetObject != null) {
                 button.parent.targetObject.enableDrag(false, true);
@@ -338,12 +347,13 @@ var mainState = {
                     }, this);
                     
                     alphaTween.onComplete.addOnce(function () {
+                        this.game.deleteInstance = null;
                         this.deleting = false;
                         this.destroy(true);
                     }, this);
                 }
             }
-        },
+        }
 
         mapTileInstance.deleteCancel = function () {
             if (!this.deleting) {
