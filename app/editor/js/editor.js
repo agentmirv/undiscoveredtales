@@ -168,6 +168,7 @@ var mainState = {
         button.game.origDragPoint = null;
         if (button.game.deleteInstance != null) {
             button.game.deleteInstance.deleteCancel();
+            button.game.deleteInstance = null;
         }
         /*
         if (button.parent.targetObject != null && button.parent.targetObject.sprite != null && button.parent.targetObject.sprite instanceof MapTile) {
@@ -178,7 +179,7 @@ var mainState = {
 
     onRightMouseButtonDown: function (button) {
         if (button.parent.leftButton.isDown) {
-            if (button.game.deleteInstance == null && button.parent.targetObject != null && button.parent.targetObject.sprite != null && button.parent.targetObject.sprite instanceof MapTile) {
+            if (button.game.deleteInstance == null && button.parent.targetObject != null && button.parent.targetObject.sprite != null && (button.parent.targetObject.sprite instanceof MapTile || button.parent.targetObject.sprite instanceof TokenSprite)) {
                 button.game.deleteInstance = button.parent.targetObject.sprite;
                 button.game.deleteInstance.delete();
             } else if (button.game.deleteInstance != null) {
@@ -192,7 +193,7 @@ var mainState = {
     },
 
     onRightMouseButtonUp: function (button) {
-        if (button.parent.targetObject != null && button.parent.targetObject.sprite != null && button.parent.targetObject.sprite instanceof MapTile) {
+        if (button.parent.targetObject != null && button.parent.targetObject.sprite != null && (button.parent.targetObject.sprite instanceof MapTile || button.parent.targetObject.sprite instanceof TokenSprite)) {
             button.parent.targetObject.disableDrag();
         }
     },
