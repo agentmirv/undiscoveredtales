@@ -270,32 +270,40 @@ var mainState = {
         }
 
         var newInstance = new MapTile(this.game, newTileData);
-        newInstance.inputEnabled = true;
-        newInstance.input.enableSnap(96, 96, true, true);        
         this.game.mapTileLayer.addChild(newInstance);
 
         this.makePlaceable(newInstance);
+
+        // For drag controls
+        newInstance.inputEnabled = true;
+        newInstance.input.enableSnap(96, 96, true, true);        
+        
+        // Set x, y based on center of view and grid-snapped.        
+        newInstance.x = this.game.player.x - (this.game.player.x % 96);
+        newInstance.y = this.game.player.y - (this.game.player.y % 96);
     },
 
     addToken: function (imageKey) {
         var id = "";
+        var spriteOffset = 48;
         
         var newInstance = new TokenSprite(this.game, id, 0, 0, imageKey, null, true);
-        newInstance.inputEnabled = true;
-        newInstance.input.enableSnap(96, 96, true, true, 48, 48);
         this.game.tokenLayer.addChild(newInstance);
 
         this.makePlaceable(newInstance);
-        newInstance.x += 48;
-        newInstance.y += 48;
+
+        // For drag controls
+        newInstance.inputEnabled = true;
+        newInstance.input.enableSnap(spriteOffset, spriteOffset, true, true, spriteOffset, spriteOffset);
+        
+        // Set x, y based on center of view and grid-snapped.
+        newInstance.x = this.game.player.x - (this.game.player.x % spriteOffset);
+        newInstance.y = this.game.player.y - (this.game.player.y % spriteOffset);
     },
 
     makePlaceable: function (newInstance) {        
-        // Set x, y based on center of view and grid-snapped.
-        var newX = this.game.player.x - Math.floor(newInstance.width / 2); 
-        var newY = this.game.player.y - Math.floor(newInstance.height / 2);
-        newInstance.x = newX - (newX % 96);
-        newInstance.y = newY - (newY % 96);
+        newInstance.x = this.game.player.x;
+        newInstance.y = this.game.player.y;
 
         // Set anchor so that the rotation will end up grid-snapped
         if (newInstance.width > newInstance.height) {
@@ -305,10 +313,6 @@ var mainState = {
         } else {
             newInstance.anchor.set(0.5, 0.5);
         }
-
-        // For drag controls
-        // newInstance.inputEnabled = true;
-        // newInstance.input.enableSnap(96, 96, true, true);
 
         //this.game.mapTileLayer.addChild(newInstance);
         var fadeInTween = this.game.add.tween(newInstance).from({ alpha: 0 }, 600, Phaser.Easing.Linear.None, true, 0, 0, false);
