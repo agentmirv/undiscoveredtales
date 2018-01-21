@@ -143,7 +143,9 @@
                         <ul class="grid">
                             <template is="dom-repeat" items="{{tokens}}">
                                 <li class="tokens">
-                                    <a href="#"><img src="../[[item.src]]" width="64" height="64"></a>
+                                    <a href="#" on-click="handleTokenClick" data-item$="[[item]]">
+                                        <img src="../[[item.src]]" width="64" height="64">
+                                    </a>
                                     <div class="label">[[item.imageKey]]</div>
                                 </li>
                             </template>
@@ -191,9 +193,14 @@
                 this.index = 0;
             }
 
-            handleTileClick(event) {
+            handleTileClick (event) {
                 var tileData = mainState.tiles[event.model.index].imageKey;
                 mainState.addTile(tileData);
+            }
+
+            handleTokenClick (event) {
+                var tokenData = mainState.tokens[event.model.index].imageKey;
+                mainState.addToken(tokenData);
             }
 
             static get properties() {

@@ -258,7 +258,7 @@ var mainState = {
         //game.debug.geom(targetRectSmall, "#00FF00", false)
     },
     
-    addTile: function(imageKey) {
+    addTile: function (imageKey) {
         var newTileData = {
             "x": 0,
             "y": 0,
@@ -267,33 +267,54 @@ var mainState = {
             "angle": 0,
             "entryTokenIds": []
         }
+
+        var newInstance = new MapTile(this.game, newTileData);
+        newInstance.inputEnabled = true;
+        newInstance.input.enableSnap(96, 96, true, true);        
+        this.game.mapTileLayer.addChild(newInstance);
+
+        this.makePlaceable(newInstance);
+    },
+
+    addToken: function (imageKey) {
+        var id = "";
         
+        var newInstance = new TokenSprite(this.game, id, 0, 0, imageKey, null, true);
+        newInstance.inputEnabled = true;
+        newInstance.input.enableSnap(96, 96, true, true, 48, 48);
+        this.game.tokenLayer.addChild(newInstance);
+
+        this.makePlaceable(newInstance);
+        newInstance.x += 48;
+        newInstance.y += 48;
+    },
+
+    makePlaceable: function (newInstance) {        
         // Set x, y based on center of view and grid-snapped.
-        var mapTileInstance = new MapTile(this.game, newTileData);
-        var newX = this.game.player.x - Math.floor(mapTileInstance.width / 2); 
-        var newY = this.game.player.y - Math.floor(mapTileInstance.height / 2);
-        mapTileInstance.x = newX - (newX % 96);
-        mapTileInstance.y = newY - (newY % 96);
+        var newX = this.game.player.x - Math.floor(newInstance.width / 2); 
+        var newY = this.game.player.y - Math.floor(newInstance.height / 2);
+        newInstance.x = newX - (newX % 96);
+        newInstance.y = newY - (newY % 96);
 
         // Set anchor so that the rotation will end up grid-snapped
-        if (mapTileInstance.width > mapTileInstance.height) {
-            mapTileInstance.anchor.set(0.5, 1);
-        } else if (mapTileInstance.width > mapTileInstance.height) {
-            mapTileInstance.anchor.set(1, 0.5);
+        if (newInstance.width > newInstance.height) {
+            newInstance.anchor.set(0.5, 1);
+        } else if (newInstance.width > newInstance.height) {
+            newInstance.anchor.set(1, 0.5);
         } else {
-            mapTileInstance.anchor.set(0.5, 0.5);
+            newInstance.anchor.set(0.5, 0.5);
         }
 
         // For drag controls
-        mapTileInstance.inputEnabled = true;
-        mapTileInstance.input.enableSnap(96, 96, true, true);
+        // newInstance.inputEnabled = true;
+        // newInstance.input.enableSnap(96, 96, true, true);
 
-        this.game.mapTileLayer.addChild(mapTileInstance);
-        var fadeInTween = this.game.add.tween(mapTileInstance).from({ alpha: 0 }, 600, Phaser.Easing.Linear.None, true, 0, 0, false);
+        //this.game.mapTileLayer.addChild(newInstance);
+        var fadeInTween = this.game.add.tween(newInstance).from({ alpha: 0 }, 600, Phaser.Easing.Linear.None, true, 0, 0, false);
 
         // Probably should move this into a derived class or something?
-        mapTileInstance.rotating = false;
-        mapTileInstance.rotateClockwise = function () {
+        newInstance.rotating = false;
+        newInstance.rotateClockwise = function () {
             if (!this.rotating) {
                 var newAngle = this.angle + 90;
                 var rotateTween = this.game.add.tween(this).to({ angle: newAngle }, 200, Phaser.Easing.Linear.None, true);
@@ -308,7 +329,7 @@ var mainState = {
             }
         }
 
-        mapTileInstance.rotateCounterClockwise = function () {
+        newInstance.rotateCounterClockwise = function () {
             if (!this.rotating) {
                 var newAngle = this.angle - 90;
                 var rotateTween = this.game.add.tween(this).to({ angle: newAngle }, 200, Phaser.Easing.Linear.None, true);
@@ -323,9 +344,9 @@ var mainState = {
             }
         }
 
-        mapTileInstance.deleting = false;
-        mapTileInstance.deleteConfirm = false;
-        mapTileInstance.delete = function () {
+        newInstance.deleting = false;
+        newInstance.deleteConfirm = false;
+        newInstance.delete = function () {
             if (!this.deleting) {
                 if (!this.deleteConfirm) {
                     var alphaTween = this.game.add.tween(this).to({ alpha: 0.6 }, 300, Phaser.Easing.Linear.None, true);
@@ -355,7 +376,7 @@ var mainState = {
             }
         }
 
-        mapTileInstance.deleteCancel = function () {
+        newInstance.deleteCancel = function () {
             if (!this.deleting) {
                 if (this.deleteConfirm) {
                     var alphaTween = this.game.add.tween(this).to({ alpha: 1 }, 300, Phaser.Easing.Linear.None, true);
