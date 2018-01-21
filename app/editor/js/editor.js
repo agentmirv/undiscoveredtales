@@ -354,7 +354,7 @@ var mainState = {
         newInstance.delete = function () {
             if (!this.deleting) {
                 if (!this.deleteConfirm) {
-                    var alphaTween = this.game.add.tween(this).to({ alpha: 0.6 }, 300, Phaser.Easing.Linear.None, true);
+                    var alphaTween = this.game.add.tween(this).to({ alpha: 0.6 }, 200, Phaser.Easing.Linear.None, true);
 
                     alphaTween.onStart.addOnce(function () {
                         this.deleting = true;
@@ -366,7 +366,7 @@ var mainState = {
                     
                     this.deleteConfirm = true;
                 } else {
-                    var alphaTween = this.game.add.tween(this).to({ alpha: 0 }, 300, Phaser.Easing.Linear.None, true);
+                    var alphaTween = this.game.add.tween(this).to({ alpha: 0 }, 200, Phaser.Easing.Linear.None, true);
 
                     alphaTween.onStart.addOnce(function () {
                         this.deleting = true;
@@ -384,7 +384,7 @@ var mainState = {
         newInstance.deleteCancel = function () {
             if (!this.deleting) {
                 if (this.deleteConfirm) {
-                    var alphaTween = this.game.add.tween(this).to({ alpha: 1 }, 300, Phaser.Easing.Linear.None, true);
+                    var alphaTween = this.game.add.tween(this).to({ alpha: 1 }, 200, Phaser.Easing.Linear.None, true);
 
                     alphaTween.onStart.addOnce(function () {
                         this.deleting = true;
