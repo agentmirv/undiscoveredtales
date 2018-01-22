@@ -286,9 +286,13 @@ var mainState = {
             startOffsetX = Math.floor(newInstance.width / 2);
         } 
 
-        // Set x, y based on center of view and grid-snapped.        
-        newInstance.x = this.game.player.x + startOffsetX - (this.game.player.x % 96);
-        newInstance.y = this.game.player.y + startOffsetY - (this.game.player.y % 96);
+        // Set x, y based on center of view and grid-snapped.
+        var remainderX = (this.game.player.x % 96);
+        var remainderY = (this.game.player.y % 96);
+        var startSnapX = remainderX < 48 ? this.game.player.x - remainderX : this.game.player.x + (96 - remainderX); 
+        var startSnapY = remainderY < 48 ? this.game.player.y - remainderY : this.game.player.y + (96 - remainderY); 
+        newInstance.x = startSnapX + startOffsetX;
+        newInstance.y = startSnapY + startOffsetY;
     },
 
     addToken: function (imageKey) {
