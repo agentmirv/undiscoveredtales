@@ -278,9 +278,17 @@ var mainState = {
         newInstance.inputEnabled = true;
         newInstance.input.enableSnap(96, 96, true, true);        
         
+        var startOffsetX = 0;
+        var startOffsetY = 0
+        if (newInstance.width > newInstance.height) {
+            startOffsetY = Math.floor(newInstance.height / 2);
+        } else if (newInstance.width > newInstance.height) {
+            startOffsetX = Math.floor(newInstance.width / 2);
+        } 
+
         // Set x, y based on center of view and grid-snapped.        
-        newInstance.x = this.game.player.x - (this.game.player.x % 96);
-        newInstance.y = this.game.player.y - (this.game.player.y % 96);
+        newInstance.x = this.game.player.x + startOffsetX - (this.game.player.x % 96);
+        newInstance.y = this.game.player.y + startOffsetY - (this.game.player.y % 96);
     },
 
     addToken: function (imageKey) {
