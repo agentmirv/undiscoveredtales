@@ -999,10 +999,13 @@ https://phaser.io/docs/2.6.2/Phaser.DeviceButton.html
 Class: Phaser.Pointer - 2.6.2
 https://phaser.io/docs/2.6.2/Phaser.Pointer.html#targetObject
 
-
-
 ===========================================================
+2018 January 23, Tuesday 7:56 pm ~~~
 ===========================================================
+Need to add angle property to mapTokens like mapTiles.
+Then I can make all walls the north wall image.
+The tokens will also need an auto-generated id.
+
 ===========================================================
 ===========================================================
 ===========================================================
