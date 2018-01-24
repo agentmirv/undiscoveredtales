@@ -146,23 +146,11 @@ var mainState = {
         //=================================================
         this.game.origDragPoint = null;
         this.game.deleteInstance = null;
-        //this.game.input.activePointer.leftButton.onDown.add(this.onLeftMouseButtonDown);
         this.game.input.activePointer.leftButton.onUp.add(this.onLeftMouseButtonUp);
         this.game.input.activePointer.rightButton.onDown.add(this.onRightMouseButtonDown);
         this.game.input.activePointer.rightButton.onUp.add(this.onRightMouseButtonUp);
         this.game.input.mouse.mouseWheelCallback = this.mouseWheelCallback;
     },
-
-    /*
-    onLeftMouseButtonDown: function (button) {
-        if (button.parent.rightButton.isDown) {
-            if (button.parent.targetObject != null) {
-                //button.parent.targetObject.enableDrag(false, true);
-                console.log('delete', button.parent.targetObject.sprite);
-            }    
-        }
-    },
-    */
 
     onLeftMouseButtonUp: function(button) {
         button.game.origDragPoint = null;
@@ -170,16 +158,11 @@ var mainState = {
             button.game.deleteInstance.deleteCancel();
             button.game.deleteInstance = null;
         }
-        /*
-        if (button.parent.targetObject != null && button.parent.targetObject.sprite != null && button.parent.targetObject.sprite instanceof MapTile) {
-            button.parent.targetObject.sprite.deleteCancel();
-        }
-        */
     },
 
     onRightMouseButtonDown: function (button) {
         if (button.parent.leftButton.isDown) {
-            if (button.game.deleteInstance == null && button.parent.targetObject != null && button.parent.targetObject.sprite != null && (button.parent.targetObject.sprite instanceof MapTile || button.parent.targetObject.sprite instanceof TokenSprite)) {
+            if (button.game.deleteInstance == null && button.parent.targetObject != null && button.parent.targetObject.sprite != null && (button.parent.targetObject.sprite instanceof Tile || button.parent.targetObject.sprite instanceof Token)) {
                 button.game.deleteInstance = button.parent.targetObject.sprite;
                 button.game.deleteInstance.delete();
             } else if (button.game.deleteInstance != null) {
@@ -193,7 +176,7 @@ var mainState = {
     },
 
     onRightMouseButtonUp: function (button) {
-        if (button.parent.targetObject != null && button.parent.targetObject.sprite != null && (button.parent.targetObject.sprite instanceof MapTile || button.parent.targetObject.sprite instanceof TokenSprite)) {
+        if (button.parent.targetObject != null && button.parent.targetObject.sprite != null && (button.parent.targetObject.sprite instanceof Tile || button.parent.targetObject.sprite instanceof Token)) {
             button.parent.targetObject.disableDrag();
         }
     },
@@ -260,155 +243,14 @@ var mainState = {
     },
     
     addTile: function (imageKey) {
-        var newTileData = {
-            "x": 0,
-            "y": 0,
-            "imageKey": imageKey,
-            "id": imageKey,
-            "angle": 0,
-            "entryTokenIds": []
-        }
-
-        var newInstance = new MapTile(this.game, newTileData);
+        var newInstance = new Tile(this.game, imageKey);
         this.game.mapTileLayer.addChild(newInstance);
-
-        this.makePlaceable(newInstance);
-
-        // For drag controls
-        newInstance.inputEnabled = true;
-        newInstance.input.enableSnap(96, 96, true, true);        
-        
-        var startOffsetX = 0;
-        var startOffsetY = 0
-        if (newInstance.width > newInstance.height) {
-            startOffsetY = Math.floor(newInstance.height / 2);
-        } else if (newInstance.width > newInstance.height) {
-            startOffsetX = Math.floor(newInstance.width / 2);
-        } 
-
-        // Set x, y based on center of view and grid-snapped.
-        var remainderX = (this.game.player.x % 96);
-        var remainderY = (this.game.player.y % 96);
-        var startSnapX = remainderX < 48 ? this.game.player.x - remainderX : this.game.player.x + (96 - remainderX); 
-        var startSnapY = remainderY < 48 ? this.game.player.y - remainderY : this.game.player.y + (96 - remainderY); 
-        newInstance.x = startSnapX + startOffsetX;
-        newInstance.y = startSnapY + startOffsetY;
+        var fadeInTween = this.game.add.tween(newInstance).from({ alpha: 0 }, 600, Phaser.Easing.Linear.None, true, 0, 0, false);
     },
 
     addToken: function (imageKey) {
-        var id = "";
-        var spriteOffset = 48;
-        
-        var newInstance = new TokenSprite(this.game, id, 0, 0, imageKey, null, true);
+        var newInstance = new Token(this.game, imageKey);
         this.game.tokenLayer.addChild(newInstance);
-
-        this.makePlaceable(newInstance);
-
-        // For drag controls
-        newInstance.inputEnabled = true;
-        newInstance.input.enableSnap(spriteOffset, spriteOffset, true, true, spriteOffset, spriteOffset);
-        
-        // Set x, y based on center of view and grid-snapped.
-        newInstance.x = this.game.player.x - (this.game.player.x % spriteOffset);
-        newInstance.y = this.game.player.y - (this.game.player.y % spriteOffset);
-    },
-
-    makePlaceable: function (newInstance) {        
-        newInstance.x = this.game.player.x;
-        newInstance.y = this.game.player.y;
-
-        // Set anchor so that the rotation will end up grid-snapped
-        if (newInstance.width > newInstance.height) {
-            newInstance.anchor.set(0.5, 1);
-        } else if (newInstance.width > newInstance.height) {
-            newInstance.anchor.set(1, 0.5);
-        } else {
-            newInstance.anchor.set(0.5, 0.5);
-        }
-
-        //this.game.mapTileLayer.addChild(newInstance);
         var fadeInTween = this.game.add.tween(newInstance).from({ alpha: 0 }, 600, Phaser.Easing.Linear.None, true, 0, 0, false);
-
-        // Probably should move this into a derived class or something?
-        newInstance.rotating = false;
-        newInstance.rotateClockwise = function () {
-            if (!this.rotating) {
-                var newAngle = this.angle + 90;
-                var rotateTween = this.game.add.tween(this).to({ angle: newAngle }, 200, Phaser.Easing.Linear.None, true);
-
-                rotateTween.onStart.addOnce(function () {
-                    this.rotating = true;
-                }, this);
-                
-                rotateTween.onComplete.addOnce(function () {
-                    this.rotating = false;
-                }, this);
-            }
-        }
-
-        newInstance.rotateCounterClockwise = function () {
-            if (!this.rotating) {
-                var newAngle = this.angle - 90;
-                var rotateTween = this.game.add.tween(this).to({ angle: newAngle }, 200, Phaser.Easing.Linear.None, true);
-
-                rotateTween.onStart.addOnce(function () {
-                    this.rotating = true;
-                }, this);
-                
-                rotateTween.onComplete.addOnce(function () {
-                    this.rotating = false;
-                }, this);
-            }
-        }
-
-        newInstance.deleting = false;
-        newInstance.deleteConfirm = false;
-        newInstance.delete = function () {
-            if (!this.deleting) {
-                if (!this.deleteConfirm) {
-                    var alphaTween = this.game.add.tween(this).to({ alpha: 0.6 }, 200, Phaser.Easing.Linear.None, true);
-
-                    alphaTween.onStart.addOnce(function () {
-                        this.deleting = true;
-                    }, this);
-                    
-                    alphaTween.onComplete.addOnce(function () {
-                        this.deleting = false;
-                    }, this);
-                    
-                    this.deleteConfirm = true;
-                } else {
-                    var alphaTween = this.game.add.tween(this).to({ alpha: 0 }, 200, Phaser.Easing.Linear.None, true);
-
-                    alphaTween.onStart.addOnce(function () {
-                        this.deleting = true;
-                    }, this);
-                    
-                    alphaTween.onComplete.addOnce(function () {
-                        this.game.deleteInstance = null;
-                        this.deleting = false;
-                        this.destroy(true);
-                    }, this);
-                }
-            }
-        }
-
-        newInstance.deleteCancel = function () {
-            if (!this.deleting) {
-                if (this.deleteConfirm) {
-                    var alphaTween = this.game.add.tween(this).to({ alpha: 1 }, 200, Phaser.Easing.Linear.None, true);
-
-                    alphaTween.onStart.addOnce(function () {
-                        this.deleting = true;
-                    }, this);
-                    
-                    alphaTween.onComplete.addOnce(function () {
-                        this.deleting = false;
-                    }, this);
-                    
-                    this.deleteConfirm = false;
-                } 
-            }            
-        }
     }
 }

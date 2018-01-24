@@ -135,22 +135,10 @@
             </div>
             <div class="drawer helptext">
                 <paper-tabs selected="{{index}}" scrollable>
-                    <paper-tab>Tokens</paper-tab>
                     <paper-tab>Tiles</paper-tab>
+                    <paper-tab>Tokens</paper-tab>
                 </paper-tabs>
                 <iron-pages selected="{{index}}" selected-attribute="visible">
-                    <div>
-                        <ul class="grid">
-                            <template is="dom-repeat" items="{{tokens}}">
-                                <li class="tokens">
-                                    <a href="#" on-click="handleTokenClick" data-item$="[[item]]">
-                                        <img src="../[[item.src]]" width="64" height="64">
-                                    </a>
-                                    <div class="label">[[item.imageKey]]</div>
-                                </li>
-                            </template>
-                        </ul>
-                    </div>
                     <div>
                         <ul class="grid">
                             <template is="dom-repeat" items="{{tiles}}">
@@ -162,6 +150,18 @@
                                 </li>
                             </template>
                         </ul>                        
+                    </div>
+                    <div>
+                        <ul class="grid">
+                            <template is="dom-repeat" items="{{tokens}}">
+                                <li class="tokens">
+                                    <a href="#" on-click="handleTokenClick" data-item$="[[item]]">
+                                        <img src="../[[item.src]]" width="64" height="64">
+                                    </a>
+                                    <div class="label">[[item.imageKey]]</div>
+                                </li>
+                            </template>
+                        </ul>
                     </div>
                 </iron-pages>
             </div>
