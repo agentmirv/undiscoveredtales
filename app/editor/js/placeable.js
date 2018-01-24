@@ -80,7 +80,7 @@ Placeable.prototype.delete = function () {
     }
 }
 
-Placeable.deleteCancel = function () {
+Placeable.prototype.deleteCancel = function () {
     if (!this.deleting) {
         if (this.deleteConfirm) {
             var alphaTween = this.game.add.tween(this).to({ alpha: 1 }, 200, Phaser.Easing.Linear.None, true);
