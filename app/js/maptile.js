@@ -26,12 +26,21 @@ function MapTile(game, mapTileData) {
     this.isRevealed = false;
 
     // Set Sprite Anchor
+    /*
     if (this.data.angle == 90) {
         this.anchor.setTo(0, 1);
     } else if (this.data.angle == 180) {
         this.anchor.setTo(1, 1);
     } else if (this.data.angle == 270) {
         this.anchor.setTo(1, 0);
+    }*/
+    
+    if (this.width > this.height) {
+        this.anchor.set(0.5, 1);
+    } else if (this.width > this.height) {
+        this.anchor.set(1, 0.5);
+    } else {
+        this.anchor.set(0.5, 0.5);
     }
     
     // Set Sprite Angle
