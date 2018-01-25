@@ -31,6 +31,8 @@ function TokenSprite(game, id, x, y, imageKey, dialogGroupId, addToWorld) {
     this.dialogGroupId = dialogGroupId;
     this.addToWorld = addToWorld;
 
+    this.anchor.setTo(0.5, 0.5);
+
     if (this.dialogGroupId != null) {
         this.inputEnabled = true;
         this.events.onInputUp.add(this.tokenClicked, this);

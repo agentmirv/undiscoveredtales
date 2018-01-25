@@ -1007,7 +1007,11 @@ Then I can make all walls the north wall image.
 The tokens will also need an auto-generated id.
 
 ===========================================================
+2018 January 24, Wednesday 7:59 pm ~~~
 ===========================================================
+In the regular app, the tiles and tokens are positioned on the anchor being at 0,0.
+In the editor, the anchor is based on the width and height.
+
 ===========================================================
 ===========================================================
 ===========================================================

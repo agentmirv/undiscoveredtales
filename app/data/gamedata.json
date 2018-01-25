@@ -75,98 +75,91 @@
   "mapTokens":[
     {
       "id":"token-wall1-lobby",
-      "x":1344,
-      "y":960,
+      "x":1392,
+      "y":1008,
       "imageKey": "wall-north",
       "addToWorld": true
     },
     {
       "id":"token-wall2-lobby",
-      "x":1440,
-      "y":1056,
+      "x":1488,
+      "y":1104,
       "imageKey": "wall-east",
       "addToWorld": true
     },
     {
       "id":"token-wall3-lobby",
-      "x":960,
-      "y":1344,
+      "x":1008,
+      "y":1392,
       "imageKey": "wall-west",
       "addToWorld": true
     },
     {
       "id":"token-wall-study",
-      "x":1920,
-      "y":1440,
+      "x":1968,
+      "y":1488,
       "imageKey": "wall-south",
       "addToWorld": true
     },
     {
       "id":"token-investigators-lobby",
-      "x":1200,
-      "y":1384,
+      "x":1248,
+      "y":1432,
       "imageKey": "investigators",
       "addToWorld": false
     },
     {
       "id":"token-box-lobby",
-      "x":1200,
-      "y":1200,
+      "x":1248,
+      "y":1248,
       "imageKey":"search",
       "dialogGroupId": "box-lobby",
       "addToWorld": true
     },
     {
       "id":"token-door1-lobby",
-      "x":1056,
-      "y":912,
+      "x":1104,
+      "y":960,
       "imageKey":"explore",
       "dialogGroupId":"dialog-door1-lobby",
       "addToWorld": true
     },
     {
       "id":"token-door2-lobby",
-      "x":912,
-      "y":1056,
+      "x":960,
+      "y":1104,
       "imageKey":"explore",
       "dialogGroupId":"dialog-door2-lobby",
       "addToWorld": true
     },
     {
       "id":"token-door3-lobby",
-      "x":1488,
-      "y":1344,
+      "x":1536,
+      "y":1392,
       "imageKey":"explore",
       "dialogGroupId":"dialog-door3-lobby",
       "addToWorld": true
     },
     {
-      "id":"token-wall-study",
-      "x":1920,
-      "y":1440,
-      "imageKey": "wall-south",
-      "addToWorld": true
-    },
-    {
       "id":"token-fireplace-study",
-      "x":1728,
-      "y":1440,
+      "x":1776,
+      "y":1488,
       "imageKey":"search",
       "dialogGroupId":"dialog-fireplace-study",
       "addToWorld": true
     },
     {
       "id":"token-bird-hall",
-      "x":768,
-      "y":768,
+      "x":816,
+      "y":816,
       "imageKey":"bird",
       "dialogGroupId":"dialog-bird-hall",
       "addToWorld": true
     },
     {
       "id":"token-door-east-bedroom",
-      "x":1488,
-      "y":768,
+      "x":1536,
+      "y":816,
       "imageKey":"explore",
       "dialogGroupId":"dialog-door-east-bedroom",
       "clickConditions": [
@@ -185,30 +178,30 @@
     },
     {
       "id":"token-door-west-bedroom",
-      "x":624,
-      "y":960,
+      "x":672,
+      "y":1008,
       "imageKey":"explore",
       "dialogGroupId":"dialog-door-west-bedroom",
       "addToWorld": true
     },
     {
       "id":"token-wall1-hall",
-      "x":768,
-      "y":672,
+      "x":816,
+      "y":720,
       "imageKey": "wall-north",
       "addToWorld": true
     },
     {
       "id":"token-wall2-hall",
-      "x":1344,
-      "y":672,
+      "x":1392,
+      "y":720,
       "imageKey": "wall-north",
       "addToWorld": true
     },
     {
       "id":"token-deep-one-beast",
-      "x":1344,
-      "y":768,
+      "x":1392,
+      "y":816,
       "imageKey": "deep-one",
       "addToWorld": false
     }
@@ -250,7 +243,7 @@
           },
           {
             "text": "You hear a faint rustling behind this door. Place an Explore token.",
-            "addSingleToken" : [ "token-door3-lobby" ]
+            "addSingleToken" : "token-door3-lobby"
           },
           {
             "text": "Two other doors lead from this room. Place Explore tokens.",
@@ -275,7 +268,7 @@
           {
             "id": "reveal-study-dialog-fireplace",
             "text": "Cold drafts blow in from the disused fireplace. Place a Search token.",
-            "addSingleToken" : [ "token-fireplace-study" ]
+            "addSingleToken" : "token-fireplace-study" 
           },
           {
             "id": "reveal-study-explored",
@@ -299,17 +292,17 @@
           {
             "id": "reveal-halls-dialog-bird",
             "text": "A white cockatoo is perched atop the edge of an upended table. Its feathers are dusty and unkempt. You wonder if this is the only living thing in the house. In the quiet, the bird watches you with its black beady eyes. Place an Interact token.",
-            "addSingleToken" : [ "token-bird-hall" ]
+            "addSingleToken" : "token-bird-hall"
           },
           {
             "id": "reveal-halls-dialog-door-east",
             "text": "This door leads to the east bedroom.",
-            "addSingleToken" : [ "token-door-east-bedroom" ]
+            "addSingleToken" : "token-door-east-bedroom"
           },
           {
             "id": "reveal-halls-dialog-door-west",
             "text": "This door leads to the west bedroom.",
-            "addSingleToken" : [ "token-door-west-bedroom" ]
+            "addSingleToken" : "token-door-west-bedroom"
           },
           {
             "id": "reveal-halls-explored",
@@ -324,13 +317,13 @@
           {
             "id": "reveal-halls-dialog-door-east-broken",
             "text": "You hear a low guttural roar. The door rattles as something smashes it violently from the other side, then the door crashes open.",
-            "showSingleToken" : [ "token-door-east-bedroom" ],
+            "showSingleToken" : "token-door-east-bedroom",
             "actions": [{"type": "setGlobal", "globalId": "door-east-bedroom", "value": "broken" }]
           },
           {
             "id": "reveal-halls-deep-one-beast",
             "text": "A hideous beast shambles through the broken door. It sniffs the air and begins to hunt. Spawn a Deep One in the Hall End.",
-            "addSingleToken" : [ "token-deep-one-beast" ],
+            "addSingleToken" : "token-deep-one-beast",
             "actions": [{ "type": "hud", "command": "makeMonster", "monsterId": "deep-one" }]
           }          
         ]

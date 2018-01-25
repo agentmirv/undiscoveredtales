@@ -48,16 +48,16 @@ function MakeRevealDialogData(game, revealDialogData, revealGroup) {
         var tokenInstance = MakeToken(game, revealDialogData.addSingleToken);
 
         imageKey = tokenInstance.imageKey;
-        movePlayer.x = tokenInstance.x + 48;
-        movePlayer.y = tokenInstance.y + 208 + game.presentationOffsetY;
+        movePlayer.x = tokenInstance.x;
+        movePlayer.y = tokenInstance.y + 160 + game.presentationOffsetY;
 
     } else if (revealDialogData.showSingleToken != null) {
         // Show image at the top of the Dialog
         var tokenInstance = game.gamedataInstances.mapTokens.find(function (item) { return item.id == revealDialogData.showSingleToken });
 
         imageKey = tokenInstance.imageKey;
-        movePlayer.x = tokenInstance.x + 48;
-        movePlayer.y = tokenInstance.y + 208 + game.presentationOffsetY;
+        movePlayer.x = tokenInstance.x;
+        movePlayer.y = tokenInstance.y + 160 + game.presentationOffsetY;
 
     } else {
         imageKey = null;
