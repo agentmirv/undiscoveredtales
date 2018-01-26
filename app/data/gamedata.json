@@ -78,27 +78,31 @@
       "x":1392,
       "y":1008,
       "imageKey": "wall-north",
+      "angle":0,
       "addToWorld": true
     },
     {
       "id":"token-wall2-lobby",
       "x":1488,
       "y":1104,
-      "imageKey": "wall-east",
+      "imageKey": "wall-north",
+      "angle":90,
       "addToWorld": true
     },
     {
       "id":"token-wall3-lobby",
       "x":1008,
       "y":1392,
-      "imageKey": "wall-west",
+      "imageKey": "wall-north",
+      "angle":270,
       "addToWorld": true
     },
     {
       "id":"token-wall-study",
       "x":1968,
       "y":1488,
-      "imageKey": "wall-south",
+      "imageKey": "wall-north",
+      "angle":180,
       "addToWorld": true
     },
     {
@@ -106,6 +110,7 @@
       "x":1248,
       "y":1432,
       "imageKey": "investigators",
+      "angle":0,
       "addToWorld": false
     },
     {
@@ -113,6 +118,7 @@
       "x":1248,
       "y":1248,
       "imageKey":"search",
+      "angle":0,
       "dialogGroupId": "box-lobby",
       "addToWorld": true
     },
@@ -121,6 +127,7 @@
       "x":1104,
       "y":960,
       "imageKey":"explore",
+      "angle":0,
       "dialogGroupId":"dialog-door1-lobby",
       "addToWorld": true
     },
@@ -128,6 +135,7 @@
       "id":"token-door2-lobby",
       "x":960,
       "y":1104,
+      "angle":0,
       "imageKey":"explore",
       "dialogGroupId":"dialog-door2-lobby",
       "addToWorld": true
@@ -137,6 +145,7 @@
       "x":1536,
       "y":1392,
       "imageKey":"explore",
+      "angle":0,
       "dialogGroupId":"dialog-door3-lobby",
       "addToWorld": true
     },
@@ -145,6 +154,7 @@
       "x":1776,
       "y":1488,
       "imageKey":"search",
+      "angle":0,
       "dialogGroupId":"dialog-fireplace-study",
       "addToWorld": true
     },
@@ -153,6 +163,7 @@
       "x":816,
       "y":816,
       "imageKey":"bird",
+      "angle":0,
       "dialogGroupId":"dialog-bird-hall",
       "addToWorld": true
     },
@@ -161,6 +172,7 @@
       "x":1536,
       "y":816,
       "imageKey":"explore",
+      "angle":0,
       "dialogGroupId":"dialog-door-east-bedroom",
       "clickConditions": [
         {
@@ -181,6 +193,7 @@
       "x":672,
       "y":1008,
       "imageKey":"explore",
+      "angle":0,
       "dialogGroupId":"dialog-door-west-bedroom",
       "addToWorld": true
     },
@@ -189,6 +202,7 @@
       "x":816,
       "y":720,
       "imageKey": "wall-north",
+      "angle":0,
       "addToWorld": true
     },
     {
@@ -196,6 +210,7 @@
       "x":1392,
       "y":720,
       "imageKey": "wall-north",
+      "angle":0,
       "addToWorld": true
     },
     {
@@ -203,6 +218,7 @@
       "x":1392,
       "y":816,
       "imageKey": "deep-one",
+      "angle":0,
       "addToWorld": false
     }
   ],
@@ -729,7 +745,7 @@
       "sourceId": "deep-one",
       "name": "Deep One 2",
       "baseHitPoints": "5",
-      "imageKey": "deep-one-2"
+      "imageKey": "deep-one"
     }
   ],
   "monsterSource": [
@@ -901,10 +917,6 @@
       "src": "assets/images/tokens/toad-teeth.png"
     },
     {
-      "imageKey": "deep-one-2",
-      "src": "assets/images/tokens/toad-teeth.png"
-    },
-    {
       "imageKey": "explore",
       "src": "assets/images/tokens/lantern-flame.png"
     },
@@ -927,18 +939,6 @@
     {
       "imageKey": "wall-north",
       "src": "assets/images/tokens/WallTokenN.png"
-    },
-    {
-      "imageKey": "wall-east",
-      "src": "assets/images/tokens/WallTokenE.png"
-    },
-    {
-      "imageKey": "wall-west",
-      "src": "assets/images/tokens/WallTokenW.png"
-    },
-    {
-      "imageKey": "wall-south",
-      "src": "assets/images/tokens/WallTokenS.png"
     }
   ]
 }
