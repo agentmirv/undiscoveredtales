@@ -1019,6 +1019,9 @@ Look into an optional tile name which can be placed in any of the corners, to ki
 This will give an indication of the orientation of the tile.
 The player start should be an invisible token, with a reference to the first reveal?
 
+The investigators, cultsigil and deep-one aren't physical tokens.
+Maybe these should have the square back, and physical tokens have the circle back?
+
 ===========================================================
 ===========================================================
 ===========================================================

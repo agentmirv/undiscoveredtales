@@ -921,8 +921,8 @@
   ],
   "imageTokens": [
     {
-      "imageKey": "deep-one",
-      "src": "assets/images/tokens/toad-teeth.png"
+      "imageKey": "wall-north",
+      "src": "assets/images/tokens/WallTokenN.png"
     },
     {
       "imageKey": "explore",
@@ -933,20 +933,20 @@
       "src": "assets/images/tokens/uncertainty.png"
     },
     {
-      "imageKey": "investigators",
-      "src": "assets/images/tokens/run.png"
-    },
-    {
-      "imageKey": "cultsigil",
-      "src": "assets/images/tokens/pentacle.png"
-    },
-    {
       "imageKey": "bird",
       "src": "assets/images/tokens/raven.png"
     },
     {
-      "imageKey": "wall-north",
-      "src": "assets/images/tokens/WallTokenN.png"
+      "imageKey": "investigators",
+      "src": "assets/images/tokens/run.png"
+    },
+    {
+      "imageKey": "deep-one",
+      "src": "assets/images/tokens/toad-teeth.png"
+    },
+    {
+      "imageKey": "cultsigil",
+      "src": "assets/images/tokens/pentacle.png"
     }
   ]
 }
