@@ -29,7 +29,7 @@
       "y": 1248,
       "imageKey": "lobby",
       "floorColor": "0xbbb5af",      
-      "angle": 0,
+      "angle": 180,
       "entryTokenIds": [
         "token-door1-lobby",
         "token-door2-lobby",
@@ -892,23 +892,31 @@
   "imageTiles": [
     {
       "imageKey": "lobby",
-      "imageSrc": "assets/images/lobby.png",
-      "floorColor": "#bbb5af"
+      "imageSrc": "assets/images/tiles/lobby.png",
+      "floorColor": "#bbb5af",
+      "name": "Lobby",
+      "namePosition": "NW"
     },
     {
       "imageKey": "study",
-      "imageSrc": "assets/images/study.png",
-      "floorColor": "#836544"
+      "imageSrc": "assets/images/tiles/study.png",
+      "floorColor": "#836544",
+      "name": "Study",
+      "namePosition": "NW"
     },
     {
       "imageKey": "hall-end",
-      "imageSrc": "assets/images/hall-end.png",
-      "floorColor": "#7c8fac"
+      "imageSrc": "assets/images/tiles/hall-end.png",
+      "floorColor": "#7c8fac",
+      "name": "Hall End",
+      "namePosition": "NW"
     },
     {
       "imageKey": "hall-corner-1",
-      "imageSrc": "assets/images/hall-corner-1.png",
-      "floorColor": "#743232"
+      "imageSrc": "assets/images/tiles/hall-corner-1.png",
+      "floorColor": "#743232",
+      "name": "Hall Corner 1",
+      "namePosition": "NE"
     }
   ],
   "imageTokens": [

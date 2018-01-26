@@ -131,9 +131,8 @@ var mainState = {
         this.game.stageViewRect = new Phaser.Rectangle(0, 0, this.game.camera.view.width, this.game.camera.view.height);
         this.game.presentationOffsetY = 48;
         this.cursors = this.game.input.keyboard.createCursorKeys();
-        this.game.add.tileSprite(0, 0, 2560, 2560, 'backgroundDebug');
-
         this.game.player = new PlayerSprite(this.game, this.game.gamedata.playerStart.x, this.game.gamedata.playerStart.y);
+        this.game.add.tileSprite(0, 0, 2560, 2560, 'backgroundDebug');
 
         this.game.mapTileLayer = this.game.add.group();
         this.game.tokenLayer = this.game.add.group();
@@ -242,14 +241,14 @@ var mainState = {
         //game.debug.geom(targetRectSmall, "#00FF00", false)
     },
     
-    addTile: function (imageKey) {
-        var newInstance = new Tile(this.game, imageKey);
+    addTile: function (data) {
+        var newInstance = new Tile(this.game, data.imageKey);
         this.game.mapTileLayer.addChild(newInstance);
         var fadeInTween = this.game.add.tween(newInstance).from({ alpha: 0 }, 600, Phaser.Easing.Linear.None, true, 0, 0, false);
     },
 
-    addToken: function (imageKey) {
-        var newInstance = new Token(this.game, imageKey);
+    addToken: function (data) {
+        var newInstance = new Token(this.game, data.imageKey);
         this.game.tokenLayer.addChild(newInstance);
         var fadeInTween = this.game.add.tween(newInstance).from({ alpha: 0 }, 600, Phaser.Easing.Linear.None, true, 0, 0, false);
     }

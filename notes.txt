@@ -1013,7 +1013,12 @@ In the regular app, the tiles and tokens are positioned on the anchor being at 0
 In the editor, the anchor is based on the width and height.
 
 ===========================================================
+2018 January 25, Thursday 8:10 pm ~~~
 ===========================================================
+Look into an optional tile name which can be placed in any of the corners, to kind of match the real tiles.
+This will give an indication of the orientation of the tile.
+The player start should be an invisible token, with a reference to the first reveal?
+
 ===========================================================
 ===========================================================
 ===========================================================

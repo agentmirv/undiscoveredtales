@@ -194,12 +194,12 @@
             }
 
             handleTileClick (event) {
-                var tileData = mainState.tiles[event.model.index].imageKey;
+                var tileData = mainState.tiles[event.model.index];
                 mainState.addTile(tileData);
             }
 
             handleTokenClick (event) {
-                var tokenData = mainState.tokens[event.model.index].imageKey;
+                var tokenData = mainState.tokens[event.model.index];
                 mainState.addToken(tokenData);
             }
 

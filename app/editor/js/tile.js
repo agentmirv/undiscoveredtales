@@ -20,6 +20,8 @@ function Tile(game, imageKey) {
     var startSnapY = remainderY < 48 ? this.game.player.y - remainderY : this.game.player.y + (96 - remainderY); 
     this.x = startSnapX + startOffsetX;
     this.y = startSnapY + startOffsetY;
+
+    // Add Name
 }
 
 Tile.prototype = Object.create(Placeable.prototype);
