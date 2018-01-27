@@ -1023,7 +1023,10 @@ The investigators, cultsigil and deep-one aren't physical tokens.
 Maybe these should have the square back, and physical tokens have the circle back?
 
 ===========================================================
+2018 January 27, Saturday 12:19 pm ~~~
 ===========================================================
+Look at the rotation flag, it might not be protecting from updating the angle during an already started tween.
+
 ===========================================================
 ===========================================================
 ===========================================================

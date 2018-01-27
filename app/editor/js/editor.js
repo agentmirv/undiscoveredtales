@@ -242,13 +242,13 @@ var mainState = {
     },
     
     addTile: function (data) {
-        var newInstance = new Tile(this.game, data.imageKey);
+        var newInstance = new Tile(this.game, data);
         this.game.mapTileLayer.addChild(newInstance);
         var fadeInTween = this.game.add.tween(newInstance).from({ alpha: 0 }, 600, Phaser.Easing.Linear.None, true, 0, 0, false);
     },
 
     addToken: function (data) {
-        var newInstance = new Token(this.game, data.imageKey);
+        var newInstance = new Token(this.game, data);
         this.game.tokenLayer.addChild(newInstance);
         var fadeInTween = this.game.add.tween(newInstance).from({ alpha: 0 }, 600, Phaser.Easing.Linear.None, true, 0, 0, false);
     }

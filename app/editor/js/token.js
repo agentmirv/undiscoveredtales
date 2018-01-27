@@ -1,6 +1,6 @@
 //=========================================================
-function Token(game, imageKey) {
-    Placeable.call(this, game, imageKey);
+function Token(game, data) {
+    Placeable.call(this, game, data.imageKey);
 
     var spriteOffset = 48;
 
