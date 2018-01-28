@@ -22,13 +22,10 @@ Placeable.prototype.constructor = Placeable;
 
 Placeable.prototype.rotateClockwise = function () {
     if (!this.rotating) {
+        this.rotating = true;
         var newAngle = this.angle + 90;
         var rotateTween = this.game.add.tween(this).to({ angle: newAngle }, 200, Phaser.Easing.Linear.None, true);
 
-        rotateTween.onStart.addOnce(function () {
-            this.rotating = true;
-        }, this);
-        
         rotateTween.onComplete.addOnce(function () {
             this.rotating = false;
         }, this);
@@ -37,13 +34,10 @@ Placeable.prototype.rotateClockwise = function () {
 
 Placeable.prototype.rotateCounterClockwise = function () {
     if (!this.rotating) {
+        this.rotating = true;
         var newAngle = this.angle - 90;
         var rotateTween = this.game.add.tween(this).to({ angle: newAngle }, 200, Phaser.Easing.Linear.None, true);
 
-        rotateTween.onStart.addOnce(function () {
-            this.rotating = true;
-        }, this);
-        
         rotateTween.onComplete.addOnce(function () {
             this.rotating = false;
         }, this);
