@@ -1035,7 +1035,20 @@ If a tile is added/already added, use the polymer toast as notification.
 If a tile/token is deleted, use the polymer toast as notification.
 
 ===========================================================
+2018 February 6, Tuesday 7:32 pm ~~~
 ===========================================================
+Make placeables selectable.
+Left click on placeable to select.
+Left click outside of selected placeable to deselect.
+Right click to deselect.
+
+A selected placeable has a visible outline.
+A selected placeable's id is displayed in the editor.
+
+Thinking about making the gameDiv an iron-page, and add another iron-page for the properties page for a selected placeable.
+Maybe switching to the other iron-page will destroy the canvas in the gameDiv?
+If so, then the saving/loading data will need done first so that the canvas can be re-loaded when switching back to gameDiv?
+
 ===========================================================
 ===========================================================
 ===========================================================
