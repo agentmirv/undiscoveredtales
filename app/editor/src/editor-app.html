@@ -131,14 +131,20 @@
 
         <div class="app-body">
             <div class="main-view">
-                <div id="gameDiv" style="background-color:black; height: 100%"></div> 
+                <paper-tabs selected="{{mainIndex}}" scrollable>
+                    <paper-tab>Map</paper-tab>
+                    <paper-tab>Dialog</paper-tab>
+                </paper-tabs>
+                <iron-pages selected="{{mainIndex}}" selected-attribute="visible">
+                    <div id="gameDiv" style="background-color:black; height: 100%"></div> 
+                </iron-pages>
             </div>
             <div class="drawer helptext">
-                <paper-tabs selected="{{index}}" scrollable>
+                <paper-tabs selected="{{sideIndex}}" scrollable>
                     <paper-tab>Tiles</paper-tab>
                     <paper-tab>Tokens</paper-tab>
                 </paper-tabs>
-                <iron-pages selected="{{index}}" selected-attribute="visible">
+                <iron-pages selected="{{sideIndex}}" selected-attribute="visible">
                     <div>
                         <ul class="grid">
                             <template is="dom-repeat" items="{{tiles}}">
@@ -190,7 +196,8 @@
                     mainState.host = this;
                 });
 
-                this.index = 0;
+                this.sideIndex = 0;
+                this.mainIndex = 0;
             }
 
             handleTileClick (event) {
@@ -205,7 +212,11 @@
 
             static get properties() {
                 return {
-                    index: {
+                    mainIndex: {
+                        type: Number,
+                        observer: '_pageChanged'
+                    },
+                    sideIndex: {
                         type: Number,
                         observer: '_pageChanged'
                     },
