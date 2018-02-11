@@ -201,13 +201,17 @@
             }
 
             handleTileClick (event) {
-                var tileData = mainState.tiles[event.model.index];
-                mainState.addTile(tileData);
+                if (this.mainIndex == 0) {
+                    var tileData = mainState.tiles[event.model.index];
+                    mainState.addTile(tileData);
+                }
             }
 
             handleTokenClick (event) {
-                var tokenData = mainState.tokens[event.model.index];
-                mainState.addToken(tokenData);
+                if (this.mainIndex == 0) {
+                    var tokenData = mainState.tokens[event.model.index];
+                    mainState.addToken(tokenData);
+                }
             }
 
             static get properties() {
