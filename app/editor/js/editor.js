@@ -145,10 +145,14 @@ var mainState = {
         //=================================================
         this.game.origDragPoint = null;
         this.game.deleteInstance = null;
+        this.game.input.activePointer.leftButton.onDown.add(this.onLeftMouseButtonDown);
         this.game.input.activePointer.leftButton.onUp.add(this.onLeftMouseButtonUp);
         this.game.input.activePointer.rightButton.onDown.add(this.onRightMouseButtonDown);
         this.game.input.activePointer.rightButton.onUp.add(this.onRightMouseButtonUp);
         this.game.input.mouse.mouseWheelCallback = this.mouseWheelCallback;
+    },
+
+    onLeftMouseButtonDown: function(button) {
     },
 
     onLeftMouseButtonUp: function(button) {
@@ -161,7 +165,11 @@ var mainState = {
 
     onRightMouseButtonDown: function (button) {
         if (button.parent.leftButton.isDown) {
-            if (button.game.deleteInstance == null && button.parent.targetObject != null && button.parent.targetObject.sprite != null && (button.parent.targetObject.sprite instanceof Tile || button.parent.targetObject.sprite instanceof Token)) {
+            if (button.game.deleteInstance == null && 
+                button.parent.targetObject != null && 
+                button.parent.targetObject.sprite != null && 
+                (button.parent.targetObject.sprite instanceof Tile || button.parent.targetObject.sprite instanceof Token)
+            ) {
                 button.game.deleteInstance = button.parent.targetObject.sprite;
                 button.game.deleteInstance.delete();
             } else if (button.game.deleteInstance != null) {
@@ -195,10 +203,19 @@ var mainState = {
     },
 
     update: function () {
+        if (this.game.input.activePointer.leftButton.isDown) {
+            if (this.game.origDragPoint) {
+                // move the camera by the amount the mouse has moved since last update	
+                this.game.player.body.x += this.game.origDragPoint.x - this.game.input.activePointer.position.x;
+                this.game.player.body.y += this.game.origDragPoint.y - this.game.input.activePointer.position.y;
+            }
+            // set new drag origin to current position	
+            this.game.origDragPoint = this.game.input.activePointer.position.clone();
+        }
+        /*
         var playerVelocity = 400;
         this.game.player.body.setZeroVelocity();
 
-        /*
         if (this.cursors.up.isDown) {
             this.game.player.body.moveUp(playerVelocity)
         }
@@ -213,17 +230,6 @@ var mainState = {
             this.game.player.body.moveRight(playerVelocity);
         }
         */
-        
-        if (this.game.input.activePointer.leftButton.isDown) {
-            if (this.game.origDragPoint) {
-                // move the camera by the amount the mouse has moved since last update	
-                this.game.player.body.x += this.game.origDragPoint.x - this.game.input.activePointer.position.x;
-                this.game.player.body.y += this.game.origDragPoint.y - this.game.input.activePointer.position.y;
-            }
-            // set new drag origin to current position	
-            this.game.origDragPoint = this.game.input.activePointer.position.clone();
-        }
-        
     },
 
     render: function () {
