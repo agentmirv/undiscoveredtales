@@ -8,12 +8,21 @@ function Placeable(game, imageKey) {
     this.deleteConfirm = false;
     this.inputEnabled = true;
 
+    this.highlight = game.make.tileSprite(this.x, this.y, this.width, this.height, 'pixelOrange');
+    this.highlight.alpha = 0.5;
+    this.highlight.visible = false;
+    this.addChild(this.highlight);
+
+    // TODO: Does highlight need the anchor set explicitly, or can it get it from the parent somehow?
     if (this.width > this.height) {
         this.anchor.set(0.5, 1);
+        this.highlight.anchor.set(0.5, 1);
     } else if (this.width > this.height) {
         this.anchor.set(1, 0.5);
+        this.highlight.anchor.set(1, 0.5);
     } else {
         this.anchor.set(0.5, 0.5);
+        this.highlight.anchor.set(0.5, 0.5);
     }
 }
 
@@ -90,4 +99,12 @@ Placeable.prototype.deleteCancel = function () {
             this.deleteConfirm = false;
         } 
     }            
+}
+
+Placeable.prototype.highlight = function () {
+    this.highlight.visible = true;
+}
+
+Placeable.prototype.unHighlight = function () {
+    this.highlight.visible = false;
 }
