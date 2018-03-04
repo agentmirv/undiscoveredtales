@@ -108,3 +108,11 @@ Placeable.prototype.highlight = function () {
 Placeable.prototype.unHighlight = function () {
     this.highlight.visible = false;
 }
+
+Placeable.prototype.toggleHighlight = function () {
+    if(this.highlight.visible) {
+        this.highlight.visible = false;
+    } else {
+        this.highlight.visible = true;
+    }
+}

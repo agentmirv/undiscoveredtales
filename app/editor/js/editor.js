@@ -145,6 +145,7 @@ var mainState = {
         //=================================================
         this.game.origDragPoint = null;
         this.game.deleteInstance = null;
+        this.game.selectInstance = null;
         this.game.input.activePointer.leftButton.onDown.add(this.onLeftMouseButtonDown);
         this.game.input.activePointer.leftButton.onUp.add(this.onLeftMouseButtonUp);
         this.game.input.activePointer.rightButton.onDown.add(this.onRightMouseButtonDown);
@@ -153,6 +154,24 @@ var mainState = {
     },
 
     onLeftMouseButtonDown: function(button) {
+        if (button.parent.targetObject != null && 
+            button.parent.targetObject.sprite instanceof Placeable
+        ) {
+            if (button.game.selectInstance != null &&
+                button.game.selectInstance.name != button.parent.targetObject.sprite.name
+            ) {
+                button.game.selectInstance.unHighlight();
+            } 
+
+            button.game.selectInstance = button.parent.targetObject.sprite;
+            button.game.selectInstance.toggleHighlight();
+            
+        } else {
+            if (button.game.selectInstance != null) {
+                button.game.selectInstance.unHighlight();
+                button.game.selectInstance = null;
+            }             
+        }
     },
 
     onLeftMouseButtonUp: function(button) {
@@ -167,8 +186,7 @@ var mainState = {
         if (button.parent.leftButton.isDown) {
             if (button.game.deleteInstance == null && 
                 button.parent.targetObject != null && 
-                button.parent.targetObject.sprite != null && 
-                (button.parent.targetObject.sprite instanceof Tile || button.parent.targetObject.sprite instanceof Token)
+                button.parent.targetObject.sprite instanceof Placeable
             ) {
                 button.game.deleteInstance = button.parent.targetObject.sprite;
                 button.game.deleteInstance.delete();
@@ -183,7 +201,9 @@ var mainState = {
     },
 
     onRightMouseButtonUp: function (button) {
-        if (button.parent.targetObject != null && button.parent.targetObject.sprite != null && (button.parent.targetObject.sprite instanceof Tile || button.parent.targetObject.sprite instanceof Token)) {
+        if (button.parent.targetObject != null && 
+            button.parent.targetObject.sprite instanceof Placeable
+        ) {
             button.parent.targetObject.disableDrag();
         }
     },
@@ -249,13 +269,17 @@ var mainState = {
     
     addTile: function (data) {
         var newInstance = new Tile(this.game, data);
+        newInstance.name = this.game.mapTileLayer.length;
         this.game.mapTileLayer.addChild(newInstance);
         var fadeInTween = this.game.add.tween(newInstance).from({ alpha: 0 }, 600, Phaser.Easing.Linear.None, true, 0, 0, false);
+        console.log("added Tile", newInstance.name);
     },
 
     addToken: function (data) {
         var newInstance = new Token(this.game, data);
+        newInstance.name = this.game.mapTileLayer.length;
         this.game.tokenLayer.addChild(newInstance);
         var fadeInTween = this.game.add.tween(newInstance).from({ alpha: 0 }, 600, Phaser.Easing.Linear.None, true, 0, 0, false);
+        console.log("added Token", newInstance.name);
     }
 }
