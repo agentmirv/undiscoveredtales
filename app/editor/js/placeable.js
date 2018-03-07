@@ -101,6 +101,10 @@ Placeable.prototype.deleteCancel = function () {
     }            
 }
 
+Placeable.prototype.isHighlighted = function () {
+    return this.highlight.visible;
+}
+
 Placeable.prototype.highlight = function () {
     this.highlight.visible = true;
 }

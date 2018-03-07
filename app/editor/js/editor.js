@@ -153,7 +153,7 @@ var mainState = {
         this.game.input.mouse.mouseWheelCallback = this.mouseWheelCallback;
     },
 
-    onLeftMouseButtonDown: function(button) {
+    onLeftMouseButtonDown: function (button) {
         if (button.parent.targetObject != null && 
             button.parent.targetObject.sprite instanceof Placeable
         ) {
@@ -165,16 +165,21 @@ var mainState = {
 
             button.game.selectInstance = button.parent.targetObject.sprite;
             button.game.selectInstance.toggleHighlight();
+            if (!button.game.selectInstance.isHighlighted()) {
+                button.game.selectInstance = null;
+            } 
+            button.game.state.getCurrentState().host._objectSelected(button.game.selectInstance);
             
         } else {
             if (button.game.selectInstance != null) {
                 button.game.selectInstance.unHighlight();
                 button.game.selectInstance = null;
-            }             
+                button.game.state.getCurrentState().host._objectSelected(button.game.selectInstance);
+            }
         }
     },
 
-    onLeftMouseButtonUp: function(button) {
+    onLeftMouseButtonUp: function (button) {
         button.game.origDragPoint = null;
         if (button.game.deleteInstance != null) {
             button.game.deleteInstance.deleteCancel();
@@ -208,7 +213,7 @@ var mainState = {
         }
     },
 
-    mouseWheelCallback: function(event) {
+    mouseWheelCallback: function (event) {
         var pointer = this.input.activePointer;
         if (pointer.rightButton.isDown) {
             if(pointer.targetObject != null){
@@ -269,7 +274,7 @@ var mainState = {
     
     addTile: function (data) {
         var newInstance = new Tile(this.game, data);
-        newInstance.name = this.game.mapTileLayer.length;
+        newInstance.name = "tile-" + this.game.mapTileLayer.length;
         this.game.mapTileLayer.addChild(newInstance);
         var fadeInTween = this.game.add.tween(newInstance).from({ alpha: 0 }, 600, Phaser.Easing.Linear.None, true, 0, 0, false);
         console.log("added Tile", newInstance.name);
@@ -277,7 +282,7 @@ var mainState = {
 
     addToken: function (data) {
         var newInstance = new Token(this.game, data);
-        newInstance.name = this.game.mapTileLayer.length;
+        newInstance.name = "token-" + this.game.tokenLayer.length;
         this.game.tokenLayer.addChild(newInstance);
         var fadeInTween = this.game.add.tween(newInstance).from({ alpha: 0 }, 600, Phaser.Easing.Linear.None, true, 0, 0, false);
         console.log("added Token", newInstance.name);

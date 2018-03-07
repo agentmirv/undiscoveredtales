@@ -1050,7 +1050,11 @@ Maybe switching to the other iron-page will destroy the canvas in the gameDiv?
 If so, then the saving/loading data will need done first so that the canvas can be re-loaded when switching back to gameDiv?
 
 ===========================================================
+2018 March 6, Tuesday 8:35 pm ~~~
 ===========================================================
+The selection happens in the game. 
+For the selected object, does the polymer element have an Object property, or just an index property?
+
 ===========================================================
 ===========================================================
 ===========================================================
