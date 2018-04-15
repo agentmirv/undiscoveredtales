@@ -155,7 +155,7 @@ var mainState = {
 
     onLeftMouseButtonDown: function (button) {
         if (button.parent.targetObject != null && 
-            button.parent.targetObject.sprite instanceof Placeable
+            button.parent.targetObject.sprite instanceof Token
         ) {
             if (button.game.selectInstance != null &&
                 button.game.selectInstance.name != button.parent.targetObject.sprite.name
