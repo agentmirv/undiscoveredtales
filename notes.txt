@@ -1056,7 +1056,23 @@ The selection happens in the game.
 For the selected object, does the polymer element have an Object property, or just an index property?
 
 ===========================================================
+2018 November 17, Saturday 2:44 PM ~~~
 ===========================================================
+Planning on refactoring in Phaser 3 and ES6
+* Node, Webpack, Babel
+* ES6 imports
+* States become Scenes
+* No groups / flat display list
+* Game objects access global systems through Plugins
+* Game objects belong to a Scene, not World (the property is scene and world is no longer used)
+* Game objects centered by default
+* Signals become Events
+* Scene systems
+
+Start with one Scene with a debug grid backround, a world camera, and basic camera input.
+
+Created a new branch for refactor (phaser3)?
+
 ===========================================================
 ===========================================================
 ===========================================================
