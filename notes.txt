@@ -1078,6 +1078,12 @@ Reviewing this codebase again, the game and the editor don't appear to share a l
 They do share data and assets.
 Should the game and the editor be separate repositories?
 
+Perhaps the game and the editor (not including the DOM pieces) are different Scenes within phaser.
+The game hud can be its own Scene running at the same time as the map Scene.
+This would be in favor of a single repository.
+
+Feels like a huge refactor, let's take it slow.
+
 ===========================================================
 ===========================================================
 ===========================================================
