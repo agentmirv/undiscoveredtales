@@ -1073,6 +1073,11 @@ Start with one Scene with a debug grid backround, a world camera, and basic came
 
 Created a new branch for refactor (phaser3)?
 
+Replace the editor's polymer components with react?
+Reviewing this codebase again, the game and the editor don't appear to share a lot of code.
+They do share data and assets.
+Should the game and the editor be separate repositories?
+
 ===========================================================
 ===========================================================
 ===========================================================
