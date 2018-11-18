@@ -1084,6 +1084,15 @@ This would be in favor of a single repository.
 
 Feels like a huge refactor, let's take it slow.
 
+Phaser 3 Containers are like Phaser 2 Groups:
+https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.Container.html
+
+Retrieving Property Names with `Object.getOwnPropertyNames` and `Object.keys`
+http://adripofjavascript.com/blog/drips/retrieving-property-names-with-object-getownpropertynames-and-object-keys.html
+
+Dealing With Objects in JavaScript With Object.assign, Object.keys and hasOwnProperty
+https://alligator.io/js/dealing-with-objects/
+
 ===========================================================
 ===========================================================
 ===========================================================

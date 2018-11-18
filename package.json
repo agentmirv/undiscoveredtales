@@ -1,0 +1,32 @@
+{
+  "name": "undiscoveredtales",
+  "version": "1.0.0",
+  "description": "Undiscovered Tales will (someday) be a way to experience homebrew scenarios for the board game Mansions of Madness Second Edition.",
+  "scripts": {
+    "build": "webpack --mode development",
+    "start": "webpack-dev-server --mode development --open --hot"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/agentmirv/undiscoveredtales.git"
+  },
+  "author": "Marvin S",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/agentmirv/undiscoveredtales/issues"
+  },
+  "homepage": "https://github.com/agentmirv/undiscoveredtales#readme",
+  "devDependencies": {
+    "@babel/core": "^7.1.6",
+    "@babel/preset-env": "^7.1.6",
+    "babel-loader": "^8.0.4",
+    "copy-webpack-plugin": "^4.6.0",
+    "html-webpack-plugin": "^3.2.0",
+    "webpack": "^4.25.1",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.1.10"
+  },
+  "dependencies": {
+    "phaser": "^3.15.1"
+  }
+}
