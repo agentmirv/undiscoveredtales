@@ -25,6 +25,22 @@ export default class MainScene extends Phaser.Scene {
     }
     
     update () {
+        var playerVelocity = 400
         
+        this.player.body.setVelocity(0, 0)
+
+        if (this.cursors.up.isDown) {
+            this.player.body.setVelocityY(-playerVelocity);
+        }
+        else if (this.cursors.down.isDown) {
+            this.player.body.setVelocityY(playerVelocity);
+        }
+
+        if (this.cursors.left.isDown) {
+            this.player.body.setVelocityX(-playerVelocity);
+        }
+        else if (this.cursors.right.isDown) {
+            this.player.body.setVelocityX(playerVelocity);
+        }
     }
 }
