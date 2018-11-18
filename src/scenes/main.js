@@ -1,4 +1,5 @@
 import Phaser from 'phaser'
+import PlayerSprite from 'player'
 
 export default class MainScene extends Phaser.Scene {
     constructor(){
@@ -14,5 +15,7 @@ export default class MainScene extends Phaser.Scene {
 
     create () {
         this.add.tileSprite(0, 0, 2560, 2560, 'background');
+        this.player = new PlayerSprite(this, 0, 0);
+        this.add.existing(this.player);
     }    
 }

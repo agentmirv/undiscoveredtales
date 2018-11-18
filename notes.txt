@@ -1105,6 +1105,17 @@ http://labs.phaser.io/edit.html?src=src\camera\follow%20user%20controlled%20spri
 Visual Studio Code - Intellisense for Phaser.js?
 http://www.html5gamedevs.com/topic/27418-visual-studio-code-intellisense-for-phaserjs/
 
+TsLint: Ignore Definition Files
+
+#4 Webpack configuration - Resolve modules | Build a portfolio with ReactJs
+https://www.youtube.com/watch?v=riEgwz_v6YY
+
+Resolve
+https://webpack.js.org/configuration/resolve/
+
+How do I extend a game object?
+https://github.com/samme/phaser3-faq/wiki#how-do-i-extend-a-game-object
+
 ===========================================================
 ===========================================================
 ===========================================================
