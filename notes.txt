@@ -1116,6 +1116,12 @@ https://webpack.js.org/configuration/resolve/
 How do I extend a game object?
 https://github.com/samme/phaser3-faq/wiki#how-do-i-extend-a-game-object
 
+Phaser 3.3 News and Part 1 of a huge guide to Phaser Scenes.
+https://phaser.io/phaser3/devlog/119
+
+Phaser.Scenes.Settings.Config
+https://photonstorm.github.io/phaser3-docs/Phaser.Scenes.Settings.html#.Config
+
 ===========================================================
 ===========================================================
 ===========================================================

@@ -4,6 +4,7 @@
   "description": "Undiscovered Tales will (someday) be a way to experience homebrew scenarios for the board game Mansions of Madness Second Edition.",
   "scripts": {
     "build": "webpack --mode development",
+    "watch": "webpack --watch --mode development",
     "start": "webpack-dev-server --mode development --open --hot"
   },
   "repository": {
