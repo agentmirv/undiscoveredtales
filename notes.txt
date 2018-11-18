@@ -1102,6 +1102,9 @@ http://labs.phaser.io/edit.html?src=src\input\keyboard\cursor%20keys.js
 Camera - Follow User Controlled Sprite
 http://labs.phaser.io/edit.html?src=src\camera\follow%20user%20controlled%20sprite.js
 
+Visual Studio Code - Intellisense for Phaser.js?
+http://www.html5gamedevs.com/topic/27418-visual-studio-code-intellisense-for-phaserjs/
+
 ===========================================================
 ===========================================================
 ===========================================================
