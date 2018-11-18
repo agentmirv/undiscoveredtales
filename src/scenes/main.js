@@ -5,6 +5,7 @@ export default class MainScene extends Phaser.Scene {
         super({
             key: 'main'
         })
+        this.player = null
     }
 
     preload() {
@@ -12,6 +13,6 @@ export default class MainScene extends Phaser.Scene {
     }
 
     create () {
-        this.add.tileSprite(0, 0, 2560, 2560, 'backgrounddebug');
+        this.add.tileSprite(0, 0, 2560, 2560, 'background');
     }    
 }

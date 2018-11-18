@@ -1,5 +1,6 @@
 {
     "image": {
-        "backgrounddebug": "assets/image/debug-grid-1920x1920.png"
+        "backgrounddebug": "assets/image/debug-grid-1920x1920.png",
+        "background": "assets/image/tilebackground.png"
     }
 }

@@ -4,8 +4,8 @@ import PreloadScene from './scenes/preload';
 import MainScene from './scenes/main';
 
 const gameConfig = {
-    width: 680,
-    height: 400,
+    width: 1280,
+    height: 720,
     scene: [ BootScene, PreloadScene, MainScene ]
 }
 

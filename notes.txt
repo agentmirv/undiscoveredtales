@@ -1094,7 +1094,14 @@ Dealing With Objects in JavaScript With Object.assign, Object.keys and hasOwnPro
 https://alligator.io/js/dealing-with-objects/
 
 ===========================================================
+2018 November 18, Sunday 1:20 AM ~~~
 ===========================================================
+Input - Keyboard - Cursor Keys
+http://labs.phaser.io/edit.html?src=src\input\keyboard\cursor%20keys.js
+
+Camera - Follow User Controlled Sprite
+http://labs.phaser.io/edit.html?src=src\camera\follow%20user%20controlled%20sprite.js
+
 ===========================================================
 ===========================================================
 ===========================================================
