@@ -18,10 +18,17 @@ export default class MainScene extends Phaser.Scene {
     }
 
     create () {
+        this.cameras.main.setBounds(0, 0, 1920 * 2, 1080 * 2);
+        this.physics.world.setBounds(0, 0, 1920 * 2, 1080 * 2);
+        this.cursors = this.input.keyboard.createCursorKeys();
+        
         this.add.tileSprite(0, 0, 2560, 2560, 'background');
+
         this.player = new PlayerSprite(this, 0, 0);
         this.physics.add.existing(this.player);
-        this.cursors = this.input.keyboard.createCursorKeys();
+        this.player.body.setCollideWorldBounds(true);
+    
+        this.cameras.main.startFollow(this.player, true, 0.05, 0.05);
     }
     
     update () {
