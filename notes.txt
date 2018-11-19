@@ -1123,7 +1123,14 @@ Phaser.Scenes.Settings.Config
 https://photonstorm.github.io/phaser3-docs/Phaser.Scenes.Settings.html#.Config
 
 ===========================================================
+2018 November 19, Monday 7:39 AM ~~~
 ===========================================================
+Video Game Project - Tilesprite Scrolling
+https://docs.idew.org/video-game/project-references/phaser-coding/tilesprite-scrolling
+
+Class: TileSprite
+https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.TileSprite.html
+
 ===========================================================
 ===========================================================
 ===========================================================

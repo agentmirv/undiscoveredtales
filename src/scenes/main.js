@@ -28,7 +28,7 @@ export default class MainScene extends Phaser.Scene {
         this.physics.add.existing(this.player);
         this.player.body.setCollideWorldBounds(true);
     
-        this.cameras.main.startFollow(this.player, true, 0.05, 0.05);
+        this.cameras.main.startFollow(this.player, true, 0.8, 0.8);
     }
     
     update () {
