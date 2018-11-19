@@ -1,5 +1,5 @@
 import Phaser from 'phaser'
-import PlayerSprite from 'player'
+import PlayerSprite from 'player/PlayerSprite'
 
 export default class MainScene extends Phaser.Scene {
     constructor(){

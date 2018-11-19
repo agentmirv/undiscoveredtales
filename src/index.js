@@ -1,7 +1,7 @@
 import Phaser from 'phaser'
-import BootScene from 'scenes/boot';
-import PreloadScene from 'scenes/preload';
-import MainScene from 'scenes/main';
+import BootScene from 'scene/BootScene';
+import PreloadScene from 'scene/PreloadScene';
+import MainScene from 'scene/MainScene';
 
 const gameConfig = {
     width: 1280,
