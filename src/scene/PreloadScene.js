@@ -8,17 +8,14 @@ export default class PreloadScene extends Phaser.Scene {
     }
 
     preload() {
-        console.log('preload.preload')
         this.loadAssets(this.cache.json.get('assets'))
     }
 
     create () {
-        console.log('preload.create')
         this.scene.start('main')
     }
 
     loadAssets(json) {
-        console.log('preload.loadAssets')
         Object.keys(json).forEach((group) => {
             Object.keys(json[group]).forEach((key) => {
 

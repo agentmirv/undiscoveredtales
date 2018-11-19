@@ -1,5 +1,4 @@
 import Phaser from 'phaser'
-import PlayerSprite from 'player/PlayerSprite'
 
 export default class MainScene extends Phaser.Scene {
     constructor(){
@@ -24,15 +23,13 @@ export default class MainScene extends Phaser.Scene {
         
         this.add.tileSprite(0, 0, 2560, 2560, 'background');
 
-        this.player = new PlayerSprite(this, 0, 0);
-        this.physics.add.existing(this.player);
-        this.player.body.setCollideWorldBounds(true);
-    
+        this.player = this.add.player(0, 0)
+        
         this.cameras.main.startFollow(this.player, true, 0.8, 0.8);
     }
     
     update () {
-        var playerVelocity = 400
+        const playerVelocity = 400
         
         this.player.body.setVelocity(0, 0)
 

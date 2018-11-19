@@ -8,12 +8,10 @@ export default class BootScene extends Phaser.Scene {
     }
 
     preload() {
-        console.log('boot.preload')
         this.load.json('assets', 'assets/json/assets.json')
     }
 
     create () {
-        console.log('boot.create')
         this.scene.start('preload')
     }    
 }

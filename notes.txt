@@ -1131,6 +1131,12 @@ https://docs.idew.org/video-game/project-references/phaser-coding/tilesprite-scr
 Class: TileSprite
 https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.TileSprite.html
 
+Create a Dialog Modal Plugin in Phaser 3 – Part 1
+https://gamedevacademy.org/create-a-dialog-modal-plugin-in-phaser-3-part-1/
+
+Create a Dialog Modal Plugin in Phaser 3 – Part 2
+https://gamedevacademy.org/create-a-dialog-modal-plugin-in-phaser-3-part-2/
+
 ===========================================================
 ===========================================================
 ===========================================================
