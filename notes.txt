@@ -1137,6 +1137,9 @@ https://gamedevacademy.org/create-a-dialog-modal-plugin-in-phaser-3-part-1/
 Create a Dialog Modal Plugin in Phaser 3 – Part 2
 https://gamedevacademy.org/create-a-dialog-modal-plugin-in-phaser-3-part-2/
 
+Phaser 3 - Loading screen & asset organization
+https://jwiese.eu/en/blog/2018/04/phaser-3---loading-screen--asset-organization/
+
 ===========================================================
 ===========================================================
 ===========================================================

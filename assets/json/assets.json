@@ -1,6 +1,19 @@
 {
     "image": {
         "backgrounddebug": "assets/image/debug-grid-1920x1920.png",
-        "background": "assets/image/tilebackground.png"
+        "background": "assets/image/tilebackground.png",
+        "pixelBlack": "assets/image/000000-1.png",
+        "pixelOrange": "assets/image/FF4D00-1.png",
+        "pixelTransparent": "assets/image/1x1.png",
+        "revealPointer": "assets/image/RevealPointer.png",
+        "hudButton": "assets/image/HudButton.png",
+        "arrow": "assets/image/plain-arrow.png",
+        "interlaced-tentacles": "assets/image/interlaced-tentacles.png",
+        "light-backpack": "assets/image/light-backpack.png",
+        "bookmarklet": "assets/image/bookmarklet.png"
+    },
+    "spritesheet": {
+        "tileWallsSheet": ["assets/image/TileWalls.png", { "frameWidth": 96, "frameHeight": 96} ],
+        "tileWallsSheet2": ["assets/image/TileWalls2.png", { "frameWidth": 96, "frameHeight": 96} ]
     }
 }
