@@ -12,20 +12,22 @@ export default class MainScene extends Phaser.Scene {
             }
         })
         
-        this.player = null
+        this.gamedata = null
         this.cursors = null
+        this.player = null
     }
 
     create () {
-        this.cameras.main.setBounds(0, 0, 1920 * 2, 1080 * 2);
-        this.physics.world.setBounds(0, 0, 1920 * 2, 1080 * 2);
-        this.cursors = this.input.keyboard.createCursorKeys();
+        this.gamedata = this.cache.json.get('gamedata')
+        this.cameras.main.setBounds(0, 0, 1920 * 2, 1080 * 2)
+        this.physics.world.setBounds(0, 0, 1920 * 2, 1080 * 2)
+        this.cursors = this.input.keyboard.createCursorKeys()
         
-        this.add.tileSprite(0, 0, 2560, 2560, 'background');
+        this.add.tileSprite(0, 0, 1920 * 2, 1080 * 2, 'background')
 
-        this.player = this.add.player(0, 0)
+        this.player = this.add.player(this.gamedata.playerStart.x, this.gamedata.playerStart.y)
         
-        this.cameras.main.startFollow(this.player, true, 0.8, 0.8);
+        this.cameras.main.startFollow(this.player, true, 0.8, 0.8)
     }
     
     update () {
@@ -34,17 +36,17 @@ export default class MainScene extends Phaser.Scene {
         this.player.body.setVelocity(0, 0)
 
         if (this.cursors.up.isDown) {
-            this.player.body.setVelocityY(-playerVelocity);
+            this.player.body.setVelocityY(-playerVelocity)
         }
         else if (this.cursors.down.isDown) {
-            this.player.body.setVelocityY(playerVelocity);
+            this.player.body.setVelocityY(playerVelocity)
         }
 
         if (this.cursors.left.isDown) {
-            this.player.body.setVelocityX(-playerVelocity);
+            this.player.body.setVelocityX(-playerVelocity)
         }
         else if (this.cursors.right.isDown) {
-            this.player.body.setVelocityX(playerVelocity);
+            this.player.body.setVelocityX(playerVelocity)
         }
     }
 }
