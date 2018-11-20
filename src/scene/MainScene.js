@@ -28,6 +28,10 @@ export default class MainScene extends Phaser.Scene {
         this.player = this.add.player(this.gamedata.playerStart.x, this.gamedata.playerStart.y)
         
         this.cameras.main.startFollow(this.player, true, 0.8, 0.8)
+
+        //=================================================
+        // Test
+        this.add.image(this.gamedata.playerStart.x, this.gamedata.playerStart.y, 'token-explore')
     }
     
     update () {

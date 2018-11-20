@@ -5,12 +5,26 @@
         "pixelBlack": "assets/image/000000-1.png",
         "pixelOrange": "assets/image/FF4D00-1.png",
         "pixelTransparent": "assets/image/1x1.png",
+        "pixelWhite": "assets/image/FFFFFF-1.png",
         "revealPointer": "assets/image/RevealPointer.png",
         "hudButton": "assets/image/HudButton.png",
         "arrow": "assets/image/plain-arrow.png",
         "interlaced-tentacles": "assets/image/interlaced-tentacles.png",
         "light-backpack": "assets/image/light-backpack.png",
-        "bookmarklet": "assets/image/bookmarklet.png"
+        "bookmarklet": "assets/image/bookmarklet.png",
+
+        "tile-lobby": "assets/image/tiles/lobby.png",
+        "tile-study": "assets/image/tiles/study.png",
+        "tile-hall-end": "assets/image/tiles/hall-end.png",
+        "tile-hall-corner-1": "assets/image/tiles/hall-corner-1.png",
+
+        "token-wall-north": "assets/image/tokens/WallTokenN.png",
+        "token-explore": "assets/image/tokens/lantern-flame.png",
+        "token-search": "assets/image/tokens/uncertainty.png",
+        "token-bird": "assets/image/tokens/raven.png",
+        "token-investigators": "assets/image/tokens/run.png",
+        "token-deep-one": "assets/image/tokens/toad-teeth.png",
+        "token-cultsigil": "assets/image/tokens/pentacle.png"
     },
     "spritesheet": {
         "tileWallsSheet": ["assets/image/TileWalls.png", { "frameWidth": 96, "frameHeight": 96} ],

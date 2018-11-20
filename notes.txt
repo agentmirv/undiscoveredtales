@@ -1141,6 +1141,41 @@ Phaser 3 - Loading screen & asset organization
 https://jwiese.eu/en/blog/2018/04/phaser-3---loading-screen--asset-organization/
 
 ===========================================================
+2018 November 20, Tuesday 8:32 AM ~~~
+===========================================================
+Render Texture - Save Texture
+http://labs.phaser.io/edit.html?src=src\game%20objects\render%20texture\save%20texture.js
+
+Render Texture - Resize Texture
+http://labs.phaser.io/view.html?src=src\game%20objects\render%20texture\resize%20render%20texture.js
+
+image(key [, url] [, xhrSettings])
+https://photonstorm.github.io/phaser3-docs/Phaser.Loader.LoaderPlugin.html#image
+
+* If you wish to replace an existing file then remove it from the Texture Manager first, before loading a new one.
+
+===========================================================
+2018 November 20, Tuesday 4:22 PM ~~~
+===========================================================
+Scaling in Phaser 3
+https://phasergames.com/scaling-in-phaser-3/
+
+Draw a scaling Image Object on RenderTexture #3454
+https://github.com/photonstorm/phaser/issues/3454
+
+Render Texture issues #3823
+https://github.com/photonstorm/phaser/issues/3823
+
+How do I draw an Image from GameObjectFactory (this.make.image) to a RenderTexture
+http://www.html5gamedevs.com/topic/40262-how-do-i-draw-an-image-from-gameobjectfactory-thismakeimage-to-a-rendertexture/?tab=comments#comment-229498
+
+===========================================================
+===========================================================
+===========================================================
+===========================================================
+===========================================================
+===========================================================
+===========================================================
 ===========================================================
 ===========================================================
 ===========================================================

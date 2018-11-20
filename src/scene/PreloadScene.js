@@ -12,7 +12,7 @@ export default class PreloadScene extends Phaser.Scene {
     }
 
     create () {
-        this.scene.start('main')
+        this.scene.start('postload')
     }
 
     // https://github.com/johwiese/Phaser3-Loading-screen-asset-organization/blob/master/src/scenes/preload.js

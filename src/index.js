@@ -1,6 +1,7 @@
 import Phaser from 'phaser'
 import BootScene from 'scene/BootScene';
 import PreloadScene from 'scene/PreloadScene';
+import PostloadScene from 'scene/PostloadScene';
 import MainScene from 'scene/MainScene';
 import PlayerPlugin from 'player/PlayerPlugin';
 
@@ -15,6 +16,7 @@ const gameConfig = {
     scene: [ 
         BootScene, 
         PreloadScene, 
+        PostloadScene, 
         MainScene 
     ]
 }
