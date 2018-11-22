@@ -20,15 +20,15 @@ export default class PostloadScene extends Phaser.Scene {
         // ImageTokens BitmapData
         for (var i = 0; i < gamedata.imageTokens.length; i++) {
             const gridWidth = 96;
+            const gridWidthHalf = gridWidth / 2
             const imageTokenData = gamedata.imageTokens[i];
 
             if (imageTokenData.imageKey != null) {
-                //const image = this.textures.get(imageTokenData.imageKey).getSourceImage()
                 const image = this.make.image({ key: imageTokenData.imageKey }, false)
-                const renderTexture = this.make.renderTexture({ width: image.width, height: image.height }, false);
+                const renderTexture = this.make.renderTexture({ width: gridWidth, height: gridWidth }, false);
                 image.displayWidth = gridWidth
                 image.displayHeight = gridWidth
-                renderTexture.draw(image, 64, 64) // how to set x and y?
+                renderTexture.draw(image, gridWidthHalf, gridWidthHalf) 
                 this.textures.remove(imageTokenData.imageKey)
                 renderTexture.saveTexture(imageTokenData.imageKey)
             }
