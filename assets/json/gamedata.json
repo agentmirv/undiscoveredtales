@@ -891,30 +891,30 @@
   ],
   "imageTiles": [
     {
-      "imageKey": "lobby",
+      "imageKey": "tile-lobby",
       "imageSrc": "assets/images/tiles/lobby.png",
-      "floorColor": "#bbb5af",
+      "floorColor": 12301743, 
       "name": "Lobby",
       "namePosition": "NW"
     },
     {
-      "imageKey": "study",
+      "imageKey": "tile-study",
       "imageSrc": "assets/images/tiles/study.png",
-      "floorColor": "#836544",
+      "floorColor": 8611140,
       "name": "Study",
       "namePosition": "NW"
     },
     {
-      "imageKey": "hall-end",
+      "imageKey": "tile-hall-end",
       "imageSrc": "assets/images/tiles/hall-end.png",
-      "floorColor": "#7c8fac",
+      "floorColor": 8163244, 
       "name": "Hall End",
       "namePosition": "NW"
     },
     {
-      "imageKey": "hall-corner-1",
+      "imageKey": "tile-hall-corner-1",
       "imageSrc": "assets/images/tiles/hall-corner-1.png",
-      "floorColor": "#743232",
+      "floorColor": 7615026,
       "name": "Hall Corner 1",
       "namePosition": "NE"
     }

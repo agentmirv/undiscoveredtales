@@ -31,7 +31,7 @@ export default class MainScene extends Phaser.Scene {
 
         //=================================================
         // Test
-        this.add.image(this.gamedata.playerStart.x, this.gamedata.playerStart.y, 'token-explore')
+        this.add.image(this.gamedata.playerStart.x, this.gamedata.playerStart.y, 'tile-lobby')
     }
     
     update () {

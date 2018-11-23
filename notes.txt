@@ -1170,7 +1170,11 @@ How do I draw an Image from GameObjectFactory (this.make.image) to a RenderTextu
 http://www.html5gamedevs.com/topic/40262-how-do-i-draw-an-image-from-gameobjectfactory-thismakeimage-to-a-rendertexture/?tab=comments#comment-229498
 
 ===========================================================
+2018 November 22, Thursday 7:41 PM ~~~
 ===========================================================
+Hex to Decimal converter
+https://www.rapidtables.com/convert/number/hex-to-decimal.html?x=bbb5af
+
 ===========================================================
 ===========================================================
 ===========================================================
