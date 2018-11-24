@@ -27,7 +27,7 @@
       "id": "maptile-lobby",
       "x": 1248,
       "y": 1248,
-      "imageKey": "lobby",
+      "imageKey": "tile-lobby",
       "floorColor": "0xbbb5af",      
       "angle": 180,
       "entryTokenIds": [
@@ -40,7 +40,7 @@
       "id": "maptile-study",
       "x": 1824,
       "y": 1536,
-      "imageKey": "study",
+      "imageKey": "tile-study",
       "floorColor": "0x836544",
       "angle": 0,
       "entryTokenIds": [
@@ -51,7 +51,7 @@
       "id": "maptile-hall-end",
       "x": 1248,
       "y": 960,
-      "imageKey": "hall-end",
+      "imageKey": "tile-hall-end",
       "floorColor": "0x7c8fac",
       "angle": 0,
       "entryTokenIds": [
@@ -63,7 +63,7 @@
       "id": "maptile-hall-corner-1",
       "x": 960,
       "y": 960,
-      "imageKey": "hall-corner-1",
+      "imageKey": "tile-hall-corner-1",
       "floorColor": "0x743232",
       "angle": 270,
       "entryTokenIds": [
@@ -77,7 +77,7 @@
       "id":"token-wall1-lobby",
       "x":1392,
       "y":1008,
-      "imageKey": "wall-north",
+      "imageKey": "token-wall-north",
       "angle":0,
       "addToWorld": true
     },
@@ -85,7 +85,7 @@
       "id":"token-wall2-lobby",
       "x":1488,
       "y":1104,
-      "imageKey": "wall-north",
+      "imageKey": "token-wall-north",
       "angle":90,
       "addToWorld": true
     },
@@ -93,7 +93,7 @@
       "id":"token-wall3-lobby",
       "x":1008,
       "y":1392,
-      "imageKey": "wall-north",
+      "imageKey": "token-wall-north",
       "angle":270,
       "addToWorld": true
     },
@@ -101,7 +101,7 @@
       "id":"token-wall-study",
       "x":1968,
       "y":1488,
-      "imageKey": "wall-north",
+      "imageKey": "token-wall-north",
       "angle":180,
       "addToWorld": true
     },
@@ -109,7 +109,7 @@
       "id":"token-investigators-lobby",
       "x":1248,
       "y":1432,
-      "imageKey": "investigators",
+      "imageKey": "token-investigators",
       "angle":0,
       "addToWorld": false
     },
@@ -117,7 +117,7 @@
       "id":"token-box-lobby",
       "x":1248,
       "y":1248,
-      "imageKey":"search",
+      "imageKey":"token-search",
       "angle":0,
       "dialogGroupId": "box-lobby",
       "addToWorld": true
@@ -126,7 +126,7 @@
       "id":"token-door1-lobby",
       "x":1104,
       "y":960,
-      "imageKey":"explore",
+      "imageKey":"token-explore",
       "angle":0,
       "dialogGroupId":"dialog-door1-lobby",
       "addToWorld": true
@@ -136,7 +136,7 @@
       "x":960,
       "y":1104,
       "angle":0,
-      "imageKey":"explore",
+      "imageKey":"token-explore",
       "dialogGroupId":"dialog-door2-lobby",
       "addToWorld": true
     },
@@ -144,7 +144,7 @@
       "id":"token-door3-lobby",
       "x":1536,
       "y":1392,
-      "imageKey":"explore",
+      "imageKey":"token-explore",
       "angle":0,
       "dialogGroupId":"dialog-door3-lobby",
       "addToWorld": true
@@ -153,7 +153,7 @@
       "id":"token-fireplace-study",
       "x":1776,
       "y":1488,
-      "imageKey":"search",
+      "imageKey":"token-search",
       "angle":0,
       "dialogGroupId":"dialog-fireplace-study",
       "addToWorld": true
@@ -162,7 +162,7 @@
       "id":"token-bird-hall",
       "x":816,
       "y":816,
-      "imageKey":"bird",
+      "imageKey":"token-bird",
       "angle":0,
       "dialogGroupId":"dialog-bird-hall",
       "addToWorld": true
@@ -171,7 +171,7 @@
       "id":"token-door-east-bedroom",
       "x":1536,
       "y":816,
-      "imageKey":"explore",
+      "imageKey":"token-explore",
       "angle":0,
       "dialogGroupId":"dialog-door-east-bedroom",
       "clickConditions": [
@@ -192,7 +192,7 @@
       "id":"token-door-west-bedroom",
       "x":672,
       "y":1008,
-      "imageKey":"explore",
+      "imageKey":"token-explore",
       "angle":0,
       "dialogGroupId":"dialog-door-west-bedroom",
       "addToWorld": true
@@ -201,7 +201,7 @@
       "id":"token-wall1-hall",
       "x":816,
       "y":720,
-      "imageKey": "wall-north",
+      "imageKey": "token-wall-north",
       "angle":0,
       "addToWorld": true
     },
@@ -209,7 +209,7 @@
       "id":"token-wall2-hall",
       "x":1392,
       "y":720,
-      "imageKey": "wall-north",
+      "imageKey": "token-wall-north",
       "angle":0,
       "addToWorld": true
     },
@@ -217,7 +217,7 @@
       "id":"token-deep-one-beast",
       "x":1392,
       "y":816,
-      "imageKey": "deep-one",
+      "imageKey": "token-deep-one",
       "angle":0,
       "addToWorld": false
     }

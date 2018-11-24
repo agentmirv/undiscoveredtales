@@ -1,4 +1,5 @@
 import Phaser from 'phaser'
+import MapTileSprite from 'map/MapTileSprite'
 
 export default class MainScene extends Phaser.Scene {
     constructor(){
@@ -31,7 +32,11 @@ export default class MainScene extends Phaser.Scene {
 
         //=================================================
         // Test
-        this.add.image(this.gamedata.playerStart.x, this.gamedata.playerStart.y, 'tile-lobby')
+        //this.add.sprite(this.gamedata.playerStart.x, this.gamedata.playerStart.y, 'arrow')
+        //this.add.sprite(this.gamedata.playerStart.x, this.gamedata.playerStart.y, 'tile-lobby')
+        //this.add.existing(new MapTileSprite(this, this.gamedata.playerStart.x, this.gamedata.playerStart.y, 'tile-lobby'))
+        this.add.mapTile(this.gamedata.playerStart.x, this.gamedata.playerStart.y, 'maptile-lobby')
+        this.add.mapToken(this.gamedata.playerStart.x, this.gamedata.playerStart.y, 'token-investigators-lobby')
     }
     
     update () {
