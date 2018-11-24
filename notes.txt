@@ -1176,7 +1176,20 @@ Hex to Decimal converter
 https://www.rapidtables.com/convert/number/hex-to-decimal.html?x=bbb5af
 
 ===========================================================
+2018 November 23, Thursday 10:07 PM ~~~
 ===========================================================
+Generator
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator
+
+StartRevealGroup
+    MakeRevealDialogData
+        MakeRevealDialog
+            RevealDialog
+                data = { "actions": [{  "type": "continueReveal" }], "revealGroup": revealGroup };
+                this.processActions(data)
+                BaseDialog
+                    ContinueRevealGroup(game, buttonData.revealGroup)
+
 ===========================================================
 ===========================================================
 ===========================================================
