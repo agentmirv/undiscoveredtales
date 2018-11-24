@@ -1,5 +1,4 @@
 import Phaser from 'phaser'
-import MapTileSprite from 'map/MapTileSprite'
 
 export default class MainScene extends Phaser.Scene {
     constructor(){

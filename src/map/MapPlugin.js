@@ -15,22 +15,18 @@ export default class MapPlugin extends Phaser.Plugins.BasePlugin {
 
     createMapTile (x, y, id)
     {
-        // gamedata = this.scene.cache.json.get('gamedata')
-        // const data = gamedata.mapTiles.find((item) => item.id == id);
         const data = this.scene.cache.json.get('gamedata').mapTiles.find((item) => item.id == id);
-        const texture = data.imageKey
-        const mapTile = this.scene.add.existing(new MapTileSprite(this.scene, x, y, texture))
+        const mapTile = new MapTileSprite(this.scene, x, y, data.imageKey, data.angle)
+        this.scene.add.existing(mapTile)
 
         return mapTile
     }
 
     createMapToken (x, y, id)
     {
-        // gamedata = this.scene.cache.json.get('gamedata')
-        // const data = gamedata.mapTokens.find((item) => item.id == id);
         const data = this.scene.cache.json.get('gamedata').mapTokens.find((item) => item.id == id);
-        const texture = data.imageKey
-        const mapToken = this.scene.add.existing(new MapTokenSprite(this.scene, x, y, texture))
+        const mapToken = new MapTokenSprite(this.scene, x, y, data.imageKey, data.angle)
+        this.scene.add.existing(mapToken)
 
         return mapToken
     }
