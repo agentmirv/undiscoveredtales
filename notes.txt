@@ -1191,7 +1191,31 @@ StartRevealGroup
                     ContinueRevealGroup(game, buttonData.revealGroup)
 
 ===========================================================
+2018 November 25, Sunday 8:08 AM ~~~
 ===========================================================
+Scenes - Ui Scene Es6
+https://labs.phaser.io/edit.html?src=src\scenes\ui%20scene%20es6.js
+
+class SceneA extends Phaser.Scene {
+    constructor ()
+    {
+        super('GameScene');
+
+    clickHandler (pointer, box)
+    {
+        this.events.emit('addScore');
+
+class SceneB extends Phaser.Scene {
+
+    constructor ()
+    {
+        super({ key: 'UIScene', active: true });
+
+    create ()
+    {
+        let ourGame = this.scene.get('GameScene');
+        ourGame.events.on('addScore', function () {
+
 ===========================================================
 ===========================================================
 ===========================================================
