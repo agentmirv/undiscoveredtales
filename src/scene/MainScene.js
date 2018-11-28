@@ -1,4 +1,5 @@
 import Phaser from 'phaser'
+import MapTokenSprite from 'map/MapTokenSprite'
 
 export default class MainScene extends Phaser.Scene {
     constructor(){
@@ -34,8 +35,14 @@ export default class MainScene extends Phaser.Scene {
         //this.add.sprite(this.gamedata.playerStart.x, this.gamedata.playerStart.y, 'arrow')
         //this.add.sprite(this.gamedata.playerStart.x, this.gamedata.playerStart.y, 'tile-lobby')
         //this.add.existing(new MapTileSprite(this, this.gamedata.playerStart.x, this.gamedata.playerStart.y, 'tile-lobby'))
-        this.add.mapTile(this.gamedata.playerStart.x, this.gamedata.playerStart.y, 'maptile-lobby')
+        //this.add.mapTile(this.gamedata.playerStart.x, this.gamedata.playerStart.y, 'maptile-lobby')
         this.add.mapToken(this.gamedata.playerStart.x, this.gamedata.playerStart.y, 'token-investigators-lobby')
+
+        this.input.on('gameobjectup', (pointer, gameObject) => {
+            if (gameObject instanceof MapTokenSprite) {
+                this.player.emit('testevent', gameObject)
+            }
+        }, this)
     }
     
     update () {
