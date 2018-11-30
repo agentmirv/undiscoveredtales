@@ -3,9 +3,8 @@ import Phaser from 'phaser'
 export default class PlayerSprite extends Phaser.GameObjects.Sprite {
     constructor (scene, x, y) {
         super(scene, x, y)
-        this.on('testevent', (gameObject) => { 
-            console.log(gameObject) 
-        })
+        this.on('moveToMapToken', this.handleMoveToMapToken)
+        this.cutsceneCamera = false
     }
 
     updateMoveCursor (cursors) {
@@ -31,5 +30,21 @@ export default class PlayerSprite extends Phaser.GameObjects.Sprite {
     updateMoveDragPoint (dragPoint) {
         this.x += dragPoint.x
         this.y += dragPoint.y
+    }
+
+    handleMoveToMapToken (mapToken) {
+        if (!this.cutsceneCamera) {
+            this.cutsceneCamera = true
+            const tween = this.scene.tweens.add({
+                targets: this,
+                x: mapToken.x,
+                y: mapToken.y,
+                ease: 'Power1',
+                duration: 1200,
+                onComplete: (tween, target) => { 
+                    this.cutsceneCamera = false
+                },
+            })
+        }
     }
 }

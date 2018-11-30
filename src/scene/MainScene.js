@@ -41,7 +41,7 @@ export default class MainScene extends Phaser.Scene {
 
         this.input.on('gameobjectup', (pointer, gameObject) => {
             if (gameObject instanceof MapTokenSprite) {
-                this.player.emit('testevent', gameObject)
+                this.player.emit('moveToMapToken', gameObject)
             }
         }, this)
     }
