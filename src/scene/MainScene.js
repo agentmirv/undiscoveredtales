@@ -16,6 +16,7 @@ export default class MainScene extends Phaser.Scene {
         this.gamedata = null
         this.cursors = null
         this.player = null
+        this.origDragPoint = null
     }
 
     create () {
@@ -46,22 +47,16 @@ export default class MainScene extends Phaser.Scene {
     }
     
     update () {
-        const playerVelocity = 400
-        
-        this.player.body.setVelocity(0, 0)
-
-        if (this.cursors.up.isDown) {
-            this.player.body.setVelocityY(-playerVelocity)
-        }
-        else if (this.cursors.down.isDown) {
-            this.player.body.setVelocityY(playerVelocity)
-        }
-
-        if (this.cursors.left.isDown) {
-            this.player.body.setVelocityX(-playerVelocity)
-        }
-        else if (this.cursors.right.isDown) {
-            this.player.body.setVelocityX(playerVelocity)
+        if (this.input.activePointer.isDown) {
+            if (this.origDragPoint) {
+                const dragPoint = new Phaser.Math.Vector2(this.origDragPoint.x - this.input.activePointer.position.x, this.origDragPoint.y - this.input.activePointer.position.y)
+                this.player.updateMoveDragPoint(dragPoint)
+            }
+            // set new drag origin to current position	
+            this.origDragPoint = this.input.activePointer.position.clone();
+        } else {
+            this.origDragPoint = null;
+            this.player.updateMoveCursor(this.cursors)
         }
     }
 }
