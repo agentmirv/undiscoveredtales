@@ -1227,7 +1227,20 @@ https://rexrainbow.github.io/phaser3-rex-notes/docs/site/tween/#ease-equations
 Quad.easeOut
 
 ===========================================================
+2018 December 1, Saturday 8:15 AM ~~~
 ===========================================================
+StartDialogGroup
+    var dialogData = dialogGroup.dialogs[0];
+    dialogData = dialogGroup.dialogs.find(function (item) { return item.id == condition.dialogId });
+    ProcessDialogType
+        MakeActionDialog
+        MakeStatementDialog
+        MakeSkillTestDialog
+        MakeCustomDialog
+        BaseDialog
+            ContinueDialogGroup
+                var dialogData = dialogGroup.dialogs.find(function (item) { return item.id == dialogId });
+
 ===========================================================
 ===========================================================
 ===========================================================
