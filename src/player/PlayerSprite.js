@@ -43,6 +43,7 @@ export default class PlayerSprite extends Phaser.GameObjects.Sprite {
                 duration: 1200,
                 onComplete: (tween, target) => { 
                     this.cutsceneCamera = false
+                    mapToken.emit('activate', this)
                 },
             })
         }
