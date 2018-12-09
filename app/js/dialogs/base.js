@@ -94,6 +94,7 @@ function MakeProcessActions(game) {
                             game.hud.startPlayerPhase();
                         } else if (action.command == "scenarioEventEnd") {
                             // Scenario Event End
+                            // Not used?
                             buttonData.dialogGroup.doneSignal.dispatch();
                         } else if (action.command == "makeMonster") {
                             // Make Monster

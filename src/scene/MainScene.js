@@ -14,6 +14,10 @@ export default class MainScene extends Phaser.Scene {
         })
         
         this.gamedata = null
+        this.gamedataInstances = {
+            mapTokens: [],
+            mapTiles: []
+        }
         this.cursors = null
         this.player = null
         this.origDragPoint = null
@@ -32,18 +36,17 @@ export default class MainScene extends Phaser.Scene {
         this.cameras.main.startFollow(this.player, true, 0.8, 0.8)
 
         //=================================================
-        // Test
-        //this.add.sprite(this.gamedata.playerStart.x, this.gamedata.playerStart.y, 'arrow')
-        //this.add.sprite(this.gamedata.playerStart.x, this.gamedata.playerStart.y, 'tile-lobby')
-        //this.add.existing(new MapTileSprite(this, this.gamedata.playerStart.x, this.gamedata.playerStart.y, 'tile-lobby'))
-        //this.add.mapTile(this.gamedata.playerStart.x, this.gamedata.playerStart.y, 'maptile-lobby')
-        this.add.mapToken(this.gamedata.playerStart.x, this.gamedata.playerStart.y, 'token-investigators-lobby')
-
+        // Events
         this.input.on('gameobjectup', (pointer, gameObject) => {
             if (gameObject instanceof MapTokenSprite) {
                 this.player.emit('moveToMapToken', gameObject)
             }
         }, this)
+        
+        //=================================================
+        // Test
+        this.add.mapTile(this.gamedata.playerStart.x, this.gamedata.playerStart.y, 'maptile-lobby')
+        this.add.mapToken(this.gamedata.playerStart.x, this.gamedata.playerStart.y, 'token-investigators-lobby')
     }
     
     update () {

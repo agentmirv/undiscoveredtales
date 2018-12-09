@@ -1,17 +1,17 @@
 import Phaser from 'phaser'
 
 export default class MapTokenSprite extends Phaser.GameObjects.Sprite {
-    constructor (scene, x, y, texture, angle) {
-        super(scene, x, y, texture)
-        this.angle = angle
+    constructor (scene, x, y, data) {
+        super(scene, x, y, data.imageKey)
+        debugger
+        this.data = data
+        this.angle = data.angle
         this.setInteractive()
+        this.setDepth(5)
         this.on('activate', this.handleActivate, this)
     }
 
     handleActivate (sender) {
-        // Start Dialog Group
-        console.log('activate')
-        console.log(sender)
-        console.log(this)
+        console.log(this.data)
     }
 }
