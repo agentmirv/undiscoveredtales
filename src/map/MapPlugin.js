@@ -23,7 +23,6 @@ export default class MapPlugin extends Phaser.Plugins.BasePlugin {
 
     createMapToken (x, y, id) {
         const data = this.scene.cache.json.get('gamedata').mapTokens.find((item) => item.id == id)
-        debugger
         const mapToken = new MapTokenSprite(this.scene, x, y, data)
         this.scene.add.existing(mapToken)
         this.scene.gamedataInstances.mapTokens.push(mapToken)

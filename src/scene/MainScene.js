@@ -36,14 +36,6 @@ export default class MainScene extends Phaser.Scene {
         this.cameras.main.startFollow(this.player, true, 0.8, 0.8)
 
         //=================================================
-        // Events
-        this.input.on('gameobjectup', (pointer, gameObject) => {
-            if (gameObject instanceof MapTokenSprite) {
-                this.player.emit('moveToMapToken', gameObject)
-            }
-        }, this)
-        
-        //=================================================
         // Test
         this.add.mapTile(this.gamedata.playerStart.x, this.gamedata.playerStart.y, 'maptile-lobby')
         this.add.mapToken(this.gamedata.playerStart.x, this.gamedata.playerStart.y, 'token-investigators-lobby')
