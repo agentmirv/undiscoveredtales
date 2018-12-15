@@ -1242,8 +1242,59 @@ StartDialogGroup
                 var dialogData = dialogGroup.dialogs.find(function (item) { return item.id == dialogId });
 
 ===========================================================
+2018 December 12, Wednesday 7:25 PM ~~~
 ===========================================================
+Phaser. Actions
+https://photonstorm.github.io/phaser3-docs/Phaser.Actions.html
+
+Group actions
+https://rexrainbow.github.io/phaser3-rex-notes/docs/site/groupactions/
+
+Phaser.GameObjects. Graphics
+https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.Graphics.html
+
 ===========================================================
+Call Function In Another Scene Es6
+http://labs.phaser.io/edit.html?src=src\scenes\call%20function%20in%20another%20scene%20es6.js
+
+class SceneA extends Phaser.Scene {
+    ...
+    let sceneB = this.scene.get('MySecondScene');
+    let position = sceneB.getPosition();
+
+===========================================================
+Phaser 3.3 News and Part 1 of a huge guide to Phaser Scenes.
+https://phaser.io/phaser3/devlog/119
+
+    API Docs and TypeScript Defs
+    Phaser 3.3 Release
+    Containers
+    What is a Scene?
+    What does Game still control?
+    What happens when you create a Scene
+    Scene Settings
+    Scene Systems
+    Configuring Plugins
+    Scene Injection Map
+    Cross Talk - Calling a Scene function
+        Calling a Scene Function
+        Listening for Scene Events
+        Exchange Data via the Game Registry
+
+The second part of the huge Scenes tutorial and the new 3.7 Loader updates.
+https://phaser.io/phaser3/devlog/121
+
+    Scene Updating and Rendering
+        Scene List
+        Scene List Input
+    Controlling Scene Order
+        Moving Scenes
+        Scene Ordering Demo
+    Spawning Multiple Scenes
+        Scene Rendering
+        Multi Scene Demo
+        How the Scene dragging is done
+
 ===========================================================
 ===========================================================
 ===========================================================
