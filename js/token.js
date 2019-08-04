@@ -10,7 +10,8 @@ function MakeToken(game, id) {
         tokenData.y,
         tokenData.imageKey,
         tokenData.dialogGroupId,
-        tokenData.addToWorld);
+        tokenData.addToWorld,
+        tokenData.angle);
 
     game.gamedataInstances.mapTokens.push(tokenInstance);
     game.add.tween(tokenInstance).from({ alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
@@ -23,13 +24,16 @@ function MakeToken(game, id) {
 }
 
 //=========================================================
-function TokenSprite(game, id, x, y, imageKey, dialogGroupId, addToWorld) {
+function TokenSprite(game, id, x, y, imageKey, dialogGroupId, addToWorld, angle) {
     Phaser.Sprite.call(this, game, x, y, ImageHelper.getImage(game, imageKey));
 
     this.id = id;
     this.imageKey = imageKey;
     this.dialogGroupId = dialogGroupId;
     this.addToWorld = addToWorld;
+    this.angle = angle;
+    
+    this.anchor.setTo(0.5, 0.5);
 
     if (this.dialogGroupId != null) {
         this.inputEnabled = true;

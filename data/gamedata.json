@@ -25,10 +25,11 @@
   "mapTiles": [
     {
       "id": "maptile-lobby",
-      "x": 960,
-      "y": 960,
-      "imageKey": "maptile-lobby-image",
-      "angle": 0,
+      "x": 1248,
+      "y": 1248,
+      "imageKey": "lobby",
+      "floorColor": "0xbbb5af",      
+      "angle": 180,
       "entryTokenIds": [
         "token-door1-lobby",
         "token-door2-lobby",
@@ -37,9 +38,10 @@
     },
     {
       "id": "maptile-study",
-      "x": 1536,
-      "y": 1248,
-      "imageKey": "maptile-study-image",
+      "x": 1824,
+      "y": 1536,
+      "imageKey": "study",
+      "floorColor": "0x836544",
       "angle": 0,
       "entryTokenIds": [
         "token-door3-lobby"
@@ -47,9 +49,10 @@
     },
     {
       "id": "maptile-hall-end",
-      "x": 960,
-      "y": 672,
-      "imageKey": "maptile-hall-end-image",
+      "x": 1248,
+      "y": 960,
+      "imageKey": "hall-end",
+      "floorColor": "0x7c8fac",
       "angle": 0,
       "entryTokenIds": [
         "token-door1-lobby",
@@ -58,9 +61,10 @@
     },
     {
       "id": "maptile-hall-corner-1",
-      "x": 672,
-      "y": 672,
-      "imageKey": "maptile-hall-corner-1-image",
+      "x": 960,
+      "y": 960,
+      "imageKey": "hall-corner-1",
+      "floorColor": "0x743232",
       "angle": 270,
       "entryTokenIds": [
         "token-door1-lobby",
@@ -71,99 +75,104 @@
   "mapTokens":[
     {
       "id":"token-wall1-lobby",
-      "x":1344,
-      "y":960,
-      "imageKey": "wall-north-image",
+      "x":1392,
+      "y":1008,
+      "imageKey": "wall-north",
+      "angle":0,
       "addToWorld": true
     },
     {
       "id":"token-wall2-lobby",
-      "x":1440,
-      "y":1056,
-      "imageKey": "wall-east-image",
+      "x":1488,
+      "y":1104,
+      "imageKey": "wall-north",
+      "angle":90,
       "addToWorld": true
     },
     {
       "id":"token-wall3-lobby",
-      "x":960,
-      "y":1344,
-      "imageKey": "wall-west-image",
+      "x":1008,
+      "y":1392,
+      "imageKey": "wall-north",
+      "angle":270,
       "addToWorld": true
     },
     {
       "id":"token-wall-study",
-      "x":1920,
-      "y":1440,
-      "imageKey": "wall-south-image",
+      "x":1968,
+      "y":1488,
+      "imageKey": "wall-north",
+      "angle":180,
       "addToWorld": true
     },
     {
       "id":"token-investigators-lobby",
-      "x":1200,
-      "y":1384,
-      "imageKey": "investigators-image",
+      "x":1248,
+      "y":1432,
+      "imageKey": "investigators",
+      "angle":0,
       "addToWorld": false
     },
     {
       "id":"token-box-lobby",
-      "x":1200,
-      "y":1200,
-      "imageKey":"search-image",
+      "x":1248,
+      "y":1248,
+      "imageKey":"search",
+      "angle":0,
       "dialogGroupId": "box-lobby",
       "addToWorld": true
     },
     {
       "id":"token-door1-lobby",
-      "x":1056,
-      "y":912,
-      "imageKey":"explore-image",
+      "x":1104,
+      "y":960,
+      "imageKey":"explore",
+      "angle":0,
       "dialogGroupId":"dialog-door1-lobby",
       "addToWorld": true
     },
     {
       "id":"token-door2-lobby",
-      "x":912,
-      "y":1056,
-      "imageKey":"explore-image",
+      "x":960,
+      "y":1104,
+      "angle":0,
+      "imageKey":"explore",
       "dialogGroupId":"dialog-door2-lobby",
       "addToWorld": true
     },
     {
       "id":"token-door3-lobby",
-      "x":1488,
-      "y":1344,
-      "imageKey":"explore-image",
+      "x":1536,
+      "y":1392,
+      "imageKey":"explore",
+      "angle":0,
       "dialogGroupId":"dialog-door3-lobby",
       "addToWorld": true
     },
     {
-      "id":"token-wall-study",
-      "x":1920,
-      "y":1440,
-      "imageKey": "wall-south-image",
-      "addToWorld": true
-    },
-    {
       "id":"token-fireplace-study",
-      "x":1728,
-      "y":1440,
-      "imageKey":"search-image",
+      "x":1776,
+      "y":1488,
+      "imageKey":"search",
+      "angle":0,
       "dialogGroupId":"dialog-fireplace-study",
       "addToWorld": true
     },
     {
       "id":"token-bird-hall",
-      "x":768,
-      "y":768,
-      "imageKey":"bird-image",
+      "x":816,
+      "y":816,
+      "imageKey":"bird",
+      "angle":0,
       "dialogGroupId":"dialog-bird-hall",
       "addToWorld": true
     },
     {
       "id":"token-door-east-bedroom",
-      "x":1488,
-      "y":768,
-      "imageKey":"explore-image",
+      "x":1536,
+      "y":816,
+      "imageKey":"explore",
+      "angle":0,
       "dialogGroupId":"dialog-door-east-bedroom",
       "clickConditions": [
         {
@@ -181,31 +190,35 @@
     },
     {
       "id":"token-door-west-bedroom",
-      "x":624,
-      "y":960,
-      "imageKey":"explore-image",
+      "x":672,
+      "y":1008,
+      "imageKey":"explore",
+      "angle":0,
       "dialogGroupId":"dialog-door-west-bedroom",
       "addToWorld": true
     },
     {
       "id":"token-wall1-hall",
-      "x":768,
-      "y":672,
-      "imageKey": "wall-north-image",
+      "x":816,
+      "y":720,
+      "imageKey": "wall-north",
+      "angle":0,
       "addToWorld": true
     },
     {
       "id":"token-wall2-hall",
-      "x":1344,
-      "y":672,
-      "imageKey": "wall-north-image",
+      "x":1392,
+      "y":720,
+      "imageKey": "wall-north",
+      "angle":0,
       "addToWorld": true
     },
     {
       "id":"token-deep-one-beast",
-      "x":1344,
-      "y":768,
-      "imageKey": "deep-one-image",
+      "x":1392,
+      "y":816,
+      "imageKey": "deep-one",
+      "angle":0,
       "addToWorld": false
     }
   ],
@@ -246,7 +259,7 @@
           },
           {
             "text": "You hear a faint rustling behind this door. Place an Explore token.",
-            "addSingleToken" : [ "token-door3-lobby" ]
+            "addSingleToken" : "token-door3-lobby"
           },
           {
             "text": "Two other doors lead from this room. Place Explore tokens.",
@@ -271,7 +284,7 @@
           {
             "id": "reveal-study-dialog-fireplace",
             "text": "Cold drafts blow in from the disused fireplace. Place a Search token.",
-            "addSingleToken" : [ "token-fireplace-study" ]
+            "addSingleToken" : "token-fireplace-study" 
           },
           {
             "id": "reveal-study-explored",
@@ -295,17 +308,17 @@
           {
             "id": "reveal-halls-dialog-bird",
             "text": "A white cockatoo is perched atop the edge of an upended table. Its feathers are dusty and unkempt. You wonder if this is the only living thing in the house. In the quiet, the bird watches you with its black beady eyes. Place an Interact token.",
-            "addSingleToken" : [ "token-bird-hall" ]
+            "addSingleToken" : "token-bird-hall"
           },
           {
             "id": "reveal-halls-dialog-door-east",
             "text": "This door leads to the east bedroom.",
-            "addSingleToken" : [ "token-door-east-bedroom" ]
+            "addSingleToken" : "token-door-east-bedroom"
           },
           {
             "id": "reveal-halls-dialog-door-west",
             "text": "This door leads to the west bedroom.",
-            "addSingleToken" : [ "token-door-west-bedroom" ]
+            "addSingleToken" : "token-door-west-bedroom"
           },
           {
             "id": "reveal-halls-explored",
@@ -320,13 +333,13 @@
           {
             "id": "reveal-halls-dialog-door-east-broken",
             "text": "You hear a low guttural roar. The door rattles as something smashes it violently from the other side, then the door crashes open.",
-            "showSingleToken" : [ "token-door-east-bedroom" ],
+            "showSingleToken" : "token-door-east-bedroom",
             "actions": [{"type": "setGlobal", "globalId": "door-east-bedroom", "value": "broken" }]
           },
           {
             "id": "reveal-halls-deep-one-beast",
             "text": "A hideous beast shambles through the broken door. It sniffs the air and begins to hunt. Spawn a Deep One in the Hall End.",
-            "addSingleToken" : [ "token-deep-one-beast" ],
+            "addSingleToken" : "token-deep-one-beast",
             "actions": [{ "type": "hud", "command": "makeMonster", "monsterId": "deep-one" }]
           }          
         ]
@@ -348,7 +361,7 @@
       "dialogs": [
           {
             "id": "dialog-box-lobby",
-            "imageKey": "search-image",
+            "imageKey": "search",
             "text": "A heavy wooden box lies on the table. The lid can be opened by moving an ornate latch.",
             "type": "action",
             "buttons": [
@@ -359,7 +372,7 @@
           },
           {
             "id": "dialog-box-lobby-tried",
-            "imageKey": "search-image",
+            "imageKey": "search",
             "text": "You want to search the damned box, but you feel the cursed latch mocking you.",
             "type": "action",
             "buttons": [
@@ -370,7 +383,7 @@
           },
           {
             "id": "dialog-box-lobby-skilltest",
-            "imageKey": "search-image",
+            "imageKey": "search",
             "text": "The unholy design of the latch depicts a humanoid form with beast-like appendages. You steel yourself for designs of an immoral calculus. (Test Will) ",
             "type": "skilltest",
             "skillTarget": 2,
@@ -385,7 +398,7 @@
           },
           {
             "id": "dialog-box-lobby-skilltest-success",
-            "imageKey": "search-image",
+            "imageKey": "search",
             "text": "You unfasten the latch with a subtle twist, revealing a newspaper clipping inside the box. The article describes the discovery of human remains in the Malahath River. The paper is two weeks old, according to the date. Gain 1 Clue. Then discard this Search token.",
             "type": "statement",
             "buttons": [
@@ -396,7 +409,7 @@
           },
           {
             "id": "dialog-box-lobby-skilltest-fail",
-            "imageKey": "search-image",
+            "imageKey": "search",
             "text": "Your hands shake as you attempt to handle the latch. The image of a man-beast stalking you from the shadows clouds your mind. Feeling confounded, you set the box back down.",
             "type": "statement",
             "buttons": [ ]
@@ -415,7 +428,7 @@
       "dialogs": [
         {
           "id": "dialog-door1-lobby",
-          "imageKey": "explore-image",
+          "imageKey": "explore",
           "text": "This door leads deeper into the mansion.",
           "type": "action",
           "buttons": [
@@ -431,7 +444,7 @@
       "dialogs": [
         {
           "id": "dialog-door2-lobby",
-          "imageKey": "explore-image",
+          "imageKey": "explore",
           "text": "This door leads deeper into the mansion.",
           "type": "action",
           "buttons": [
@@ -447,7 +460,7 @@
       "dialogs": [
         {
           "id": "dialog-door3-lobby",
-          "imageKey": "explore-image",
+          "imageKey": "explore",
           "text": "This door leads to a room at the front of the house. The handle is ice cold.",
           "type": "action",
           "buttons": [
@@ -463,7 +476,7 @@
       "dialogs": [
         {
           "id": "dialog-fireplace-study",
-          "imageKey": "search-image",
+          "imageKey": "search",
           "text": "You see something glint under the pile of ash and blackened wood.",
           "type": "action",
           "buttons": [
@@ -474,7 +487,7 @@
         },
         {
           "id": "dialog-fireplace-study-searched",
-          "imageKey": "cultsigil-image",
+          "imageKey": "cultsigil",
           "text": "As you sift through the ash, your hands and shirt become covered in soot. But your hard work pays off. Gain the Cult Sigil Unique Item and 1 Clue. Then discard this Search token.",
           "type": "statement",
           "buttons": [
@@ -490,7 +503,7 @@
       "dialogs": [
         {
           "id": "dialog-bird-hall",
-          "imageKey": "bird-image",
+          "imageKey": "bird",
           "text": "There is a toppled bowl on the floor, engraved with the name \"Maxwell\". As you approach, the bird’s crest expands, giving the appearance of a tall white crown.",
           "type": "custom",
           "buttons": [
@@ -501,7 +514,7 @@
         },
         {
           "id": "dialog-bird-hall-hello",
-          "imageKey": "bird-image",
+          "imageKey": "bird",
           "text": "The bird responds in a loud, raspy voice, \"Hello Max.\" The bird tilts his head at you. After a moment, he finally prompts you. \"Best or Beast?\" The bird Max waits for you to answer.",
           "type": "custom",
           "buttons": [
@@ -511,7 +524,7 @@
         },
         {
           "id": "dialog-bird-hall-snub",
-          "imageKey": "bird-image",
+          "imageKey": "bird",
           "text": "The bird stares at you for a moment and then it turns its back. You feel you have offended the bird in some way.",
           "type": "custom",
           "buttons": [
@@ -521,7 +534,7 @@
         },
         {
           "id": "dialog-bird-hall-snub-recover",
-          "imageKey": "bird-image",
+          "imageKey": "bird",
           "text": "The bird squawks interrupting you, \"... Max! Hello Max.\" The bird beats its wings loudly. After a moment, he stops and prompts you. \"Beast or Best?\" The bird Max waits for you to answer.",
           "type": "custom",
           "buttons": [
@@ -531,7 +544,7 @@
         },
         {
           "id": "dialog-bird-hall-snub-ignored",
-          "imageKey": "bird-image",
+          "imageKey": "bird",
           "text": "The bird claws at you and takes off to the east. Drop 1 random item and suffer 1 facedown Damage (Agility negates). Max hovers for a moment and disappears into a tiny square opening in the ceiling above the door to the east bedroom. You hear the bird squawk loudly and then go silent.",
           "type": "statement",
           "buttons": [
@@ -545,7 +558,7 @@
         },
         {
           "id": "dialog-bird-hall-beast",
-          "imageKey": "bird-image",
+          "imageKey": "bird",
           "text": "The bird flutters his wings and takes off to the east. He hovers for a moment and disappears into a tiny square opening in the ceiling above the door to the east bedroom. You hear the bird squawk loudly and then go silent.",
           "type": "statement",
           "buttons": [
@@ -559,7 +572,7 @@
         },
         {
           "id": "dialog-bird-hall-best",
-          "imageKey": "bird-image",
+          "imageKey": "bird",
           "text": "The bird flutters his wings and takes off to the west. He hovers for a moment and disappears into a tiny square opening in the ceiling above the door to the west bedroom. You hear the bird murmur, almost sounding like language, then go silent.",
           "type": "statement",
           "buttons": [
@@ -578,14 +591,14 @@
       "dialogs": [
         {
           "id": "dialog-door-east-bedroom",
-          "imageKey": "explore-image",
+          "imageKey": "explore",
           "text": "A rising sun is carved into the door to the east bedroom. There is no handle on this door.",
           "type": "statement",
           "buttons": [ ]
         },
         {
           "id": "dialog-door-east-bedroom-broken",
-          "imageKey": "explore-image",
+          "imageKey": "explore",
           "text": "The door to the east bedroom is smashed and hanging by a single hinge.",
           "type": "action",
           "buttons": [
@@ -612,7 +625,7 @@
       "dialogs": [
         {
           "id": "dialog-door-west-bedroom",
-          "imageKey": "explore-image",
+          "imageKey": "explore",
           "text": "A setting sun is carved into the door of the west bedroom. There is no handle on this door.",
           "type": "statement",
           "buttons": [ ]
@@ -732,14 +745,14 @@
       "sourceId": "deep-one",
       "name": "Deep One 2",
       "baseHitPoints": "5",
-      "imageKey": "deep-one-image-2"
+      "imageKey": "deep-one"
     }
   ],
   "monsterSource": [
     {
       "id": "deep-one",
       "name": "Deep One",
-      "imageKey": "deep-one-image",
+      "imageKey": "deep-one",
       "baseHitPoints": "4",
       "attacks": [
         {
@@ -878,132 +891,62 @@
   ],
   "imageTiles": [
     {
-      "imageKey": "maptile-lobby-image",
-      "width": 6,
-      "height": 6,
-      "spritesheet": "tileWallsSheet",
+      "imageKey": "lobby",
+      "imageSrc": "assets/images/tiles/lobby.png",
       "floorColor": "#bbb5af",
-      "walls": [
-        0, 4, 1, 1, 4, 2,
-        4, 4, 4, 4, 4, 4,
-        3, 4, 4, 4, 4, 5,
-        3, 4, 4, 4, 4, 5,
-        4, 4, 4, 4, 4, 4,
-        6, 7, 7, 7, 7, 8
-      ]
+      "name": "Lobby",
+      "namePosition": "NW"
     },
     {
-      "imageKey": "maptile-study-image",
-      "width": 6,
-      "height": 3,
-      "spritesheet": "tileWallsSheet",
+      "imageKey": "study",
+      "imageSrc": "assets/images/tiles/study.png",
       "floorColor": "#836544",
-      "walls": [
-        0, 1, 1, 1, 1, 2,
-        4, 4, 4, 4, 4, 5,
-        6, 7, 7, 7, 4, 8
-      ]
+      "name": "Study",
+      "namePosition": "NW"
     },
     {
-      "imageKey": "maptile-hall-end-image",
-      "width": 6,
-      "height": 3,
+      "imageKey": "hall-end",
+      "imageSrc": "assets/images/tiles/hall-end.png",
       "floorColor": "#7c8fac",
-      "spritesheet": "tileWallsSheet",
-      "walls": [
-        1, 1, 1, 1, 4, 2,
-        4, 4, 4, 4, 4, 4,
-        7, 4, 7, 7, 7, 8
-      ]
+      "name": "Hall End",
+      "namePosition": "NW"
     },
     {
-      "imageKey": "maptile-hall-corner-1-image",
-      "width": 6,
-      "height": 3,
+      "imageKey": "hall-corner-1",
+      "imageSrc": "assets/images/tiles/hall-corner-1.png",
       "floorColor": "#743232",
-      "spritesheet": "tileWallsSheet",
-      "walls": [
-        1, 1, 4, 1, 1, 2,
-        4, 4, 4, 4, 4, 4,
-        7, 4, 7, 4, 4, 5
-      ]
+      "name": "Hall Corner 1",
+      "namePosition": "NE"
     }
   ],
   "imageTokens": [
     {
-      "imageKey": "deep-one-image",
-      "primaryImageKey": "deepOne",
-      "backgroundImageKey": "squareBackground",
-      "maskImageKey": "monsterMask",
-      "imagePrimaryColor": "0xFFFFFF",
-      "imageShadowColor": "0xc300ff",
-      "backgroundColor": "0x28511c",
-      "maskColor": "0x727272"
+      "imageKey": "wall-north",
+      "src": "assets/images/tokens/WallTokenN.png"
     },
     {
-      "imageKey": "deep-one-image-2",
-      "primaryImageKey": "deepOne",
-      "backgroundImageKey": "squareBackground",
-      "maskImageKey": "monsterMask",
-      "imagePrimaryColor": "0xFFFFFF",
-      "imageShadowColor": "0xFF0000",
-      "backgroundColor": "0x28511c",
-      "maskColor": "0x727272"
+      "imageKey": "explore",
+      "src": "assets/images/tokens/lantern-flame.png"
     },
     {
-      "imageKey": "explore-image",
-      "primaryImageKey": "explore",
-      "backgroundImageKey": "circleToken",
-      "imagePrimaryColor": "0xFF0000",
-      "imageShadowColor": "0x770000"
+      "imageKey": "search",
+      "src": "assets/images/tokens/uncertainty.png"
     },
     {
-      "imageKey": "search-image",
-      "primaryImageKey": "search",
-      "backgroundImageKey": "circleToken",
-      "imagePrimaryColor": "0xFFFF00",
-      "imageShadowColor": "0xAAAA00"
+      "imageKey": "bird",
+      "src": "assets/images/tokens/raven.png"
     },
     {
-      "imageKey": "investigators-image",
-      "primaryImageKey": "investigator",
-      "backgroundImageKey": "circleToken",
-      "imagePrimaryColor": "0xFFFFFF",
-      "imageShadowColor": "0x000000"
+      "imageKey": "investigators",
+      "src": "assets/images/tokens/run.png"
     },
     {
-      "imageKey": "cultsigil-image",
-      "primaryImageKey": "pentacle",
-      "backgroundImageKey": "squareToken",
-      "imagePrimaryColor": "0xFF0000",
-      "imageShadowColor": "0xFFFF00"
+      "imageKey": "deep-one",
+      "src": "assets/images/tokens/toad-teeth.png"
     },
     {
-      "imageKey": "bird-image",
-      "primaryImageKey": "bird",
-      "backgroundImageKey": "circleToken",
-      "imagePrimaryColor": "0xFFFFFF",
-      "imageShadowColor": "0x7400ff"
-    },
-    {
-      "imageKey": "wall-north-image",
-      "backgroundImageKey": "wall",
-      "backgroundImageAngle": 0
-    },
-    {
-      "imageKey": "wall-east-image",
-      "backgroundImageKey": "wall",
-      "backgroundImageAngle": 90
-    },
-    {
-      "imageKey": "wall-west-image",
-      "backgroundImageKey": "wall",
-      "backgroundImageAngle": 270
-    },
-    {
-      "imageKey": "wall-south-image",
-      "backgroundImageKey": "wall",
-      "backgroundImageAngle": 180
+      "imageKey": "cultsigil",
+      "src": "assets/images/tokens/pentacle.png"
     }
   ]
 }

@@ -1,7 +1,7 @@
 /* global Phaser */
 //=========================================================
 function PlayerSprite(game, x, y) {
-    Phaser.Sprite.call(this, game, x, y, 'pixelTransparent');
+    Phaser.Sprite.call(this, game, x, y, 'pixelWhite');
     game.world.addChild(this);
     game.physics.p2.enable(this);
     game.camera.follow(this, Phaser.Camera.FOLLOW_LOCKON, 0.8, 0.8);
